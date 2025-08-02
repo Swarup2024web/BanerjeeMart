@@ -2,207 +2,184 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>ChatGPT Inspired UI</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <title>Chat Interface</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
   <style>
-    * { box-sizing: border-box; }
-    body {
-      font-family: 'Roboto', sans-serif;
+    * {
       margin: 0;
-      background: #fff;
-      color: #000;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Roboto", sans-serif;
+      background: #f0f2f5;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
-      position: relative;
+      height: 100vh;
     }
 
-    header {
+    .main-container {
+      flex: 1;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 16px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 10px;
     }
 
-    .time { font-weight: bold; }
-    .plus-button {
-      background: #f2ebff;
-      color: #6b4edb;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-weight: bold;
+    .action-buttons {
       display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .title {
-      font-size: 24px;
-      font-weight: 600;
-      text-align: center;
-      margin: 24px 0 16px;
-    }
-
-    .button-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 14px;
-      width: 90%;
-      max-width: 500px;
-      margin: 0 auto;
-    }
-
-    .btn {
-      display: flex;
-      align-items: center;
+      flex-wrap: wrap;
       justify-content: center;
-      padding: 12px;
-      border-radius: 25px;
-      border: none;
-      font-weight: 500;
-      font-size: 15px;
-      background-color: #f5f5f5;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      transition: background 0.2s ease;
+      gap: 15px;
+      margin-bottom: 10px;
+      transition: 0.3s ease-in-out;
+    }
+
+    .action-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px;
+      border-radius: 15px;
+      background: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      width: 65px;
       cursor: pointer;
-      gap: 8px;
+      transition: all 0.3s;
     }
 
-    .btn:hover {
-      background-color: #e0e0e0;
+    .action-button:hover {
+      transform: scale(1.05);
     }
 
-    .material-icons {
-      font-size: 20px;
+    .action-button i {
+      font-size: 30px;
     }
 
-    .colored {
-      color: #6b4edb;
+    .label {
+      font-size: 12px;
+      margin-top: 4px;
+      text-align: center;
     }
 
-    .hidden {
-      display: none;
+    .more-btn {
+      margin: 0 auto 12px auto;
+      display: inline-block;
+      padding: 5px 15px;
+      background: #673ab7;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
     }
 
     .chatbox {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      border-top: 1px solid #ddd;
       background: #fff;
-      padding: 8px 12px;
+      padding: 10px;
+      border-top: 1px solid #ccc;
+      position: relative;
       display: flex;
       align-items: center;
       gap: 10px;
-      transition: all 0.2s ease;
     }
 
-    .chatbox input[type="text"] {
+    .chatbox input {
       flex: 1;
-      padding: 10px 16px;
-      border-radius: 30px;
+      padding: 10px 15px;
       border: 1px solid #ccc;
-      font-size: 16px;
-      outline: none;
+      border-radius: 25px;
+      font-size: 14px;
     }
 
-    .extra-icons {
+    .chat-actions {
       display: none;
-      gap: 8px;
-      align-items: center;
+      position: absolute;
+      bottom: 55px;
+      left: 20px;
+      gap: 10px;
     }
 
-    .extra-icons.visible {
-      display: flex;
+    .chat-actions i {
+      font-size: 26px;
+      color: #555;
+      background: #eee;
+      padding: 8px;
+      border-radius: 50%;
     }
 
-    .icon-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-    }
-
-    @media (max-width: 500px) {
-      .btn {
-        font-size: 14px;
-        padding: 10px;
+    @media (max-width: 600px) {
+      .action-button {
+        width: 60px;
       }
 
-      .plus-button {
-        font-size: 14px;
-        padding: 5px 12px;
+      .chat-actions {
+        left: 10px;
       }
     }
+
+    /* Icon colors */
+    .i-blue { color: #2196f3; }
+    .i-green { color: #4caf50; }
+    .i-red { color: #f44336; }
+    .i-purple { color: #9c27b0; }
+    .i-orange { color: #ff9800; }
+    .i-teal { color: #009688; }
+    .i-brown { color: #795548; }
+    .i-pink { color: #e91e63; }
   </style>
 </head>
 <body>
-
-  <header>
-    <div class="time">8:45</div>
-    <div class="plus-button">
-      <span class="material-icons">star</span>
-      Get Plus
-    </div>
-  </header>
-
-  <div class="title">What can I help with?</div>
-
-  <div class="button-grid">
-    <!-- Initially visible -->
-    <button class="btn"><span class="material-icons colored">image</span> Create image</button>
-    <button class="btn"><span class="material-icons colored">description</span> Summarize text</button>
-    <button class="btn"><span class="material-icons colored">emoji_objects</span> Brainstorm</button>
-    <button class="btn"><span class="material-icons colored">event_note</span> Make a plan</button>
-
-    <!-- Hidden buttons -->
-    <div id="moreButtons" class="hidden">
-      <button class="btn"><span class="material-icons colored">analytics</span> Analyze images</button>
-      <button class="btn"><span class="material-icons colored">support</span> Get advice</button>
-      <button class="btn"><span class="material-icons colored">bar_chart</span> Analyze data</button>
-      <button class="btn"><span class="material-icons colored">edit</span> Help me write</button>
-      <button class="btn"><span class="material-icons colored">code</span> Code</button>
-      <button class="btn"><span class="material-icons colored">redeem</span> Surprise me</button>
+  <div class="main-container">
+    <div class="action-buttons" id="actions">
+      <div class="action-button"><i class="material-icons i-blue">home</i><div class="label">Home</div></div>
+      <div class="action-button"><i class="material-icons i-green">person</i><div class="label">Profile</div></div>
+      <div class="action-button"><i class="material-icons i-red">settings</i><div class="label">Settings</div></div>
+      <div class="action-button"><i class="material-icons i-purple">chat</i><div class="label">Messages</div></div>
     </div>
 
-    <!-- Toggle button -->
-    <button class="btn" onclick="toggleMoreButtons()" id="moreToggle">
-      <span class="material-icons colored">expand_more</span> More
-    </button>
-  </div>
+    <button class="more-btn" id="moreBtn">More</button>
 
-  <div class="chatbox">
-    <div class="extra-icons" id="extraIcons">
-      <button class="icon-btn"><span class="material-icons colored">attach_file</span></button>
-      <button class="icon-btn"><span class="material-icons colored">image</span></button>
+    <div class="chatbox">
+      <input type="text" placeholder="Type your message..." id="chatInput"/>
+      <div class="chat-actions" id="chatActions">
+        <i class="material-icons i-teal">attach_file</i>
+        <i class="material-icons i-orange">image</i>
+      </div>
     </div>
-    <input type="text" placeholder="Ask anything..." onfocus="showExtras()" onblur="hideExtras()" />
   </div>
 
   <script>
-    const moreSection = document.getElementById('moreButtons');
-    const toggleBtn = document.getElementById('moreToggle');
-    let expanded = false;
+    const moreBtn = document.getElementById("moreBtn");
+    const actions = document.getElementById("actions");
+    let moreAdded = false;
 
-    function toggleMoreButtons() {
-      expanded = !expanded;
-      moreSection.classList.toggle('hidden', !expanded);
-      toggleBtn.innerHTML = `<span class="material-icons colored">${expanded ? 'expand_less' : 'expand_more'}</span> ${expanded ? 'Less' : 'More'}`;
-    }
+    moreBtn.addEventListener("click", () => {
+      if (!moreAdded) {
+        actions.innerHTML += `
+          <div class="action-button"><i class="material-icons i-teal">event</i><div class="label">Events</div></div>
+          <div class="action-button"><i class="material-icons i-brown">notifications</i><div class="label">Alerts</div></div>
+          <div class="action-button"><i class="material-icons i-pink">help</i><div class="label">Help</div></div>
+          <div class="action-button"><i class="material-icons i-orange">info</i><div class="label">Info</div></div>
+        `;
+        moreAdded = true;
+        moreBtn.style.display = "none";
+      }
+    });
 
-    function showExtras() {
-      document.getElementById('extraIcons').classList.add('visible');
-    }
+    const chatInput = document.getElementById("chatInput");
+    const chatActions = document.getElementById("chatActions");
 
-    function hideExtras() {
+    chatInput.addEventListener("focus", () => {
+      chatActions.style.display = "flex";
+    });
+
+    chatInput.addEventListener("blur", () => {
       setTimeout(() => {
-        document.getElementById('extraIcons').classList.remove('visible');
-      }, 150);
-    }
+        chatActions.style.display = "none";
+      }, 300);
+    });
   </script>
-
 </body>
-                            </html>
+</html>
