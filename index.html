@@ -1,132 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ChatGPT Style UI</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&display=swap">
-  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-  <script src="https://unpkg.com/@mui/material@5.15.15/umd/material-ui.development.js" crossorigin></script>
-  <script src="https://unpkg.com/@emotion/react@11.11.4/dist/emotion-react.umd.min.js" crossorigin></script>
-  <script src="https://unpkg.com/@emotion/styled@11.11.5/dist/emotion-styled.umd.min.js" crossorigin></script>
-  <script src="https://unpkg.com/@mui/icons-material@5.15.15/umd/material-ui-icons.umd.min.js" crossorigin></script>
+  <meta charset="UTF-8">
+  <title>ChatGPT Inspired UI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
+      font-family: 'Segoe UI', sans-serif;
       margin: 0;
-      font-family: 'Roboto', sans-serif;
+      padding: 0;
       background: #fff;
+      color: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    #root {
-      padding-bottom: 60px;
+
+    header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      font-size: 18px;
+    }
+
+    .time {
+      font-weight: bold;
+    }
+
+    .plus-button {
+      background: #f2ebff;
+      color: #6b4edb;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: 600;
+      margin: 30px 0 20px;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      border-radius: 25px;
+      border: none;
+      font-weight: 500;
+      font-size: 16px;
+      background-color: #f5f5f5;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      transition: background 0.2s ease;
+    }
+
+    .btn:hover {
+      background-color: #e0e0e0;
+    }
+
+    footer {
+      margin-top: 40px;
+      padding: 12px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 80%;
+      border-radius: 30px;
+      border: 1px solid #ccc;
+      outline: none;
+    }
+
+    .input-area {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
-  <div id="root"></div>
 
-  <script type="text/javascript">
-    const {
-      Button,
-      CssBaseline,
-      ThemeProvider,
-      createTheme,
-      Typography,
-      Box,
-      Grid,
-      TextField,
-      AppBar,
-      Toolbar,
-      Container
-    } = MaterialUI;
+  <header>
+    <div class="time">8:45</div>
+    <div class="plus-button">★ Get Plus</div>
+  </header>
 
-    const { Star } = MaterialUIIcons;
+  <div class="title">What can I help with?</div>
 
-    const theme = createTheme({
-      palette: {
-        mode: 'light',
-        primary: {
-          main: '#6b4edb',
-        },
-        background: {
-          default: '#ffffff',
-        },
-      },
-      shape: {
-        borderRadius: 20,
-      },
-      typography: {
-        fontFamily: 'Roboto, sans-serif',
-      },
-    });
+  <div class="button-grid">
+    <button class="btn">🖼️ Create image</button>
+    <button class="btn">📄 Summarize text</button>
+    <button class="btn">💡 Brainstorm</button>
+    <button class="btn">📝 Make a plan</button>
+    <button class="btn">👁️ Analyze images</button>
+    <button class="btn">🎓 Get advice</button>
+    <button class="btn">📊 Analyze data</button>
+    <button class="btn">✍️ Help me write</button>
+    <button class="btn">👨‍💻 Code</button>
+    <button class="btn">🎁 Surprise me</button>
+  </div>
 
-    const features = [
-      'Create image',
-      'Summarize text',
-      'Brainstorm',
-      'Make a plan',
-      'Analyze images',
-      'Get advice',
-      'Analyze data',
-      'Help me write',
-      'Code',
-      'Surprise me'
-    ];
+  <footer class="input-area">
+    <input type="text" placeholder="Ask anything" />
+  </footer>
 
-    function App() {
-      const handleClick = (feature) => {
-        alert('You clicked: ' + feature);
-      };
-
-      return React.createElement(ThemeProvider, { theme },
-        React.createElement(CssBaseline, null),
-        React.createElement(AppBar, { position: "static", color: "default", elevation: 0 },
-          React.createElement(Toolbar, { sx: { justifyContent: 'space-between' } },
-            React.createElement(Typography, { variant: "subtitle1" }, "8:45"),
-            React.createElement(Button, {
-              variant: "contained",
-              color: "primary",
-              startIcon: React.createElement(Star, null),
-              sx: { borderRadius: 10 }
-            }, "Get Plus")
-          )
-        ),
-        React.createElement(Container, null,
-          React.createElement(Box, { mt: 4, textAlign: "center" },
-            React.createElement(Typography, { variant: "h5", fontWeight: "bold", mb: 3 },
-              "What can I help with?"
-            ),
-            React.createElement(Grid, {
-              container: true,
-              spacing: 2,
-              justifyContent: "center"
-            },
-              features.map((feature, index) =>
-                React.createElement(Grid, { item: true, xs: 6, sm: 6, key: index },
-                  React.createElement(Button, {
-                    variant: "outlined",
-                    fullWidth: true,
-                    onClick: () => handleClick(feature),
-                    sx: { height: 50 }
-                  }, feature)
-                )
-              )
-            ),
-            React.createElement(Box, { mt: 5, px: 2 },
-              React.createElement(TextField, {
-                fullWidth: true,
-                label: "Ask anything",
-                variant: "outlined",
-                InputProps: { sx: { borderRadius: '30px' } }
-              })
-            )
-          )
-        )
-      );
-    }
-
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(React.createElement(App));
-  </script>
 </body>
 </html>
