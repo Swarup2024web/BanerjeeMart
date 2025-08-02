@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Student-Teacher Q&A Chat</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Q&A Chat</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
       background: #f0f2f5;
       display: flex;
       justify-content: center;
@@ -16,113 +17,178 @@
     }
     .chat-container {
       width: 100%;
-      max-width: 480px;
+      max-width: 500px;
       height: 90vh;
-      background: white;
-      border-radius: 16px;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      border-radius: 20px;
       overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      background: white;
     }
-    .chat-header {
-      background: linear-gradient(45deg, #4a148c, #7b1fa2);
+    .header {
+      background: #3f51b5;
       color: white;
-      padding: 16px;
-      text-align: center;
-      font-size: 1.2rem;
-      font-weight: bold;
+      padding: 1rem;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
-    .chat-box {
+    .header .material-icons {
+      font-size: 1.5rem;
+    }
+    .messages {
       flex: 1;
-      padding: 12px;
       overflow-y: auto;
+      padding: 1rem;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 0.75rem;
     }
     .message {
-      max-width: 70%;
-      padding: 10px 14px;
-      border-radius: 14px;
+      max-width: 80%;
+      padding: 0.75rem 1rem;
+      border-radius: 1rem;
       font-size: 0.95rem;
-      word-wrap: break-word;
+      line-height: 1.3;
     }
     .student {
+      background: #e0f7fa;
       align-self: flex-start;
-      background-color: #e1bee7;
       border-top-left-radius: 0;
     }
     .teacher {
+      background: #dcedc8;
       align-self: flex-end;
-      background-color: #dcedc8;
       border-top-right-radius: 0;
     }
-    .chat-input {
-      display: flex;
+    .input-area {
+      padding: 0.5rem;
       border-top: 1px solid #ccc;
-      padding: 8px;
-      gap: 6px;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
     }
-    .chat-input select, .chat-input input {
-      padding: 10px;
-      border-radius: 12px;
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .input-row input[type="text"] {
+      flex: 1;
+      padding: 0.6rem 1rem;
       border: 1px solid #ccc;
+      border-radius: 1.5rem;
       font-size: 1rem;
     }
-    .chat-input input {
-      flex: 1;
-    }
-    .chat-input button {
-      background: #7b1fa2;
+    .input-row button {
+      background: #3f51b5;
       color: white;
       border: none;
-      padding: 10px 16px;
-      border-radius: 12px;
+      padding: 0.6rem;
+      border-radius: 50%;
       cursor: pointer;
-      font-weight: bold;
     }
-    .chat-input button:hover {
-      background: #6a1b9a;
+    .icon-bar {
+      margin-top: 0.5rem;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+    .icon-bar .material-icons {
+      cursor: pointer;
+      font-size: 1.8rem;
+      transition: transform 0.2s;
+    }
+    .icon-bar .material-icons:hover {
+      transform: scale(1.2);
+    }
+    .more-actions {
+      display: none;
+    }
+    .icon-red { color: #f44336; }
+    .icon-blue { color: #2196f3; }
+    .icon-green { color: #4caf50; }
+    .icon-orange { color: #ff9800; }
+    .icon-purple { color: #9c27b0; }
+    .icon-teal { color: #009688; }
+
+    @media(max-width: 480px) {
+      .chat-container {
+        height: 100vh;
+        border-radius: 0;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="chat-container">
-    <div class="chat-header">📚 Student–Teacher Q&A Chat</div>
-    <div class="chat-box" id="chatBox"></div>
-    <div class="chat-input">
-      <select id="roleSelect">
-        <option value="student">👨‍🎓 Student</option>
-        <option value="teacher">👨‍🏫 Teacher</option>
-      </select>
-      <input type="text" id="messageInput" placeholder="Type your message..." />
-      <button onclick="sendMessage()">Send</button>
-    </div>
+
+<div class="chat-container">
+  <div class="header">
+    <span class="material-icons">school</span> Student Q&A
   </div>
 
-  <script>
-    const chatBox = document.getElementById('chatBox');
-    const roleSelect = document.getElementById('roleSelect');
-    const messageInput = document.getElementById('messageInput');
+  <div class="messages" id="messages"></div>
 
-    function sendMessage() {
-      const message = messageInput.value.trim();
-      if (!message) return;
-      const role = roleSelect.value;
+  <div class="input-area">
+    <div class="input-row">
+      <input type="text" id="questionInput" placeholder="Ask your question..." />
+      <button onclick="sendMessage()">
+        <span class="material-icons">send</span>
+      </button>
+    </div>
 
-      const msgDiv = document.createElement('div');
-      msgDiv.className = 'message ' + (role === 'student' ? 'student' : 'teacher');
-      msgDiv.textContent = message;
+    <div class="icon-bar">
+      <span class="material-icons icon-red" title="Send Image">image</span>
+      <span class="material-icons icon-blue" title="Send File">attach_file</span>
+      <span class="material-icons icon-green" title="Voice">mic</span>
+      <span class="material-icons icon-orange" title="More" onclick="toggleMore()">more_horiz</span>
 
-      chatBox.appendChild(msgDiv);
-      messageInput.value = '';
-      chatBox.scrollTop = chatBox.scrollHeight;
+      <div class="more-actions" id="moreActions">
+        <span class="material-icons icon-purple" title="Emoji">emoji_emotions</span>
+        <span class="material-icons icon-teal" title="Camera">photo_camera</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const messages = document.getElementById('messages');
+  const input = document.getElementById('questionInput');
+
+  function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
+    const msg = document.createElement('div');
+    msg.className = 'message student';
+    msg.textContent = text;
+    msg.onclick = () => replyToStudent(text);
+    messages.appendChild(msg);
+    input.value = '';
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function replyToStudent(studentText) {
+    const reply = prompt(`Your reply to: "${studentText}"`);
+    if (reply) {
+      const msg = document.createElement('div');
+      msg.className = 'message teacher';
+      msg.textContent = reply;
+      messages.appendChild(msg);
+      messages.scrollTop = messages.scrollHeight;
     }
+  }
 
-    messageInput.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') sendMessage();
-    });
-  </script>
+  function toggleMore() {
+    const more = document.getElementById('moreActions');
+    more.style.display = more.style.display === 'flex' ? 'none' : 'flex';
+    more.style.gap = '0.8rem';
+    more.style.justifyContent = 'center';
+    more.style.marginTop = '0.5rem';
+  }
+</script>
+
 </body>
 </html>
