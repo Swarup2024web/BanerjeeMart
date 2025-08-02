@@ -3,40 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <title>ChatGPT Inspired UI</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       font-family: 'Roboto', sans-serif;
       margin: 0;
-      padding: 0;
       background: #fff;
       color: #000;
       display: flex;
       flex-direction: column;
-      align-items: center;
       min-height: 100vh;
+      position: relative;
     }
 
     header {
-      width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 12px 16px;
-      font-size: 18px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.06);
     }
 
-    .time {
-      font-weight: bold;
-    }
-
+    .time { font-weight: bold; }
     .plus-button {
       background: #f2ebff;
       color: #6b4edb;
@@ -51,8 +42,8 @@
     .title {
       font-size: 24px;
       font-weight: 600;
-      margin: 30px 0 20px;
       text-align: center;
+      margin: 24px 0 16px;
     }
 
     .button-grid {
@@ -61,6 +52,7 @@
       gap: 14px;
       width: 90%;
       max-width: 500px;
+      margin: 0 auto;
     }
 
     .btn {
@@ -85,25 +77,53 @@
 
     .material-icons {
       font-size: 20px;
-      vertical-align: middle;
     }
 
-    footer {
-      margin-top: 40px;
-      padding: 12px;
-      width: 100%;
+    .colored {
+      color: #6b4edb;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .chatbox {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border-top: 1px solid #ddd;
+      background: #fff;
+      padding: 8px 12px;
       display: flex;
-      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
     }
 
-    input[type="text"] {
-      padding: 10px 18px;
-      width: 80%;
-      max-width: 500px;
+    .chatbox input[type="text"] {
+      flex: 1;
+      padding: 10px 16px;
       border-radius: 30px;
       border: 1px solid #ccc;
-      outline: none;
       font-size: 16px;
+      outline: none;
+    }
+
+    .extra-icons {
+      display: none;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .extra-icons.visible {
+      display: flex;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
     }
 
     @media (max-width: 500px) {
@@ -132,47 +152,57 @@
   <div class="title">What can I help with?</div>
 
   <div class="button-grid">
-    <button class="btn" onclick="handleClick('Create image')">
-      <span class="material-icons">image</span> Create image
-    </button>
-    <button class="btn" onclick="handleClick('Summarize text')">
-      <span class="material-icons">description</span> Summarize text
-    </button>
-    <button class="btn" onclick="handleClick('Brainstorm')">
-      <span class="material-icons">emoji_objects</span> Brainstorm
-    </button>
-    <button class="btn" onclick="handleClick('Make a plan')">
-      <span class="material-icons">event_note</span> Make a plan
-    </button>
-    <button class="btn" onclick="handleClick('Analyze images')">
-      <span class="material-icons">analytics</span> Analyze images
-    </button>
-    <button class="btn" onclick="handleClick('Get advice')">
-      <span class="material-icons">support</span> Get advice
-    </button>
-    <button class="btn" onclick="handleClick('Analyze data')">
-      <span class="material-icons">bar_chart</span> Analyze data
-    </button>
-    <button class="btn" onclick="handleClick('Help me write')">
-      <span class="material-icons">edit</span> Help me write
-    </button>
-    <button class="btn" onclick="handleClick('Code')">
-      <span class="material-icons">code</span> Code
-    </button>
-    <button class="btn" onclick="handleClick('Surprise me')">
-      <span class="material-icons">redeem</span> Surprise me
+    <!-- Initially visible -->
+    <button class="btn"><span class="material-icons colored">image</span> Create image</button>
+    <button class="btn"><span class="material-icons colored">description</span> Summarize text</button>
+    <button class="btn"><span class="material-icons colored">emoji_objects</span> Brainstorm</button>
+    <button class="btn"><span class="material-icons colored">event_note</span> Make a plan</button>
+
+    <!-- Hidden buttons -->
+    <div id="moreButtons" class="hidden">
+      <button class="btn"><span class="material-icons colored">analytics</span> Analyze images</button>
+      <button class="btn"><span class="material-icons colored">support</span> Get advice</button>
+      <button class="btn"><span class="material-icons colored">bar_chart</span> Analyze data</button>
+      <button class="btn"><span class="material-icons colored">edit</span> Help me write</button>
+      <button class="btn"><span class="material-icons colored">code</span> Code</button>
+      <button class="btn"><span class="material-icons colored">redeem</span> Surprise me</button>
+    </div>
+
+    <!-- Toggle button -->
+    <button class="btn" onclick="toggleMoreButtons()" id="moreToggle">
+      <span class="material-icons colored">expand_more</span> More
     </button>
   </div>
 
-  <footer>
-    <input type="text" placeholder="Ask anything" />
-  </footer>
+  <div class="chatbox">
+    <div class="extra-icons" id="extraIcons">
+      <button class="icon-btn"><span class="material-icons colored">attach_file</span></button>
+      <button class="icon-btn"><span class="material-icons colored">image</span></button>
+    </div>
+    <input type="text" placeholder="Ask anything..." onfocus="showExtras()" onblur="hideExtras()" />
+  </div>
 
   <script>
-    function handleClick(task) {
-      alert("You clicked: " + task);
+    const moreSection = document.getElementById('moreButtons');
+    const toggleBtn = document.getElementById('moreToggle');
+    let expanded = false;
+
+    function toggleMoreButtons() {
+      expanded = !expanded;
+      moreSection.classList.toggle('hidden', !expanded);
+      toggleBtn.innerHTML = `<span class="material-icons colored">${expanded ? 'expand_less' : 'expand_more'}</span> ${expanded ? 'Less' : 'More'}`;
+    }
+
+    function showExtras() {
+      document.getElementById('extraIcons').classList.add('visible');
+    }
+
+    function hideExtras() {
+      setTimeout(() => {
+        document.getElementById('extraIcons').classList.remove('visible');
+      }, 150);
     }
   </script>
 
 </body>
-</html>
+                            </html>
