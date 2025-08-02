@@ -1,160 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chat UI</title>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  <meta charset="UTF-8">
+  <title>Student-Teacher Q&A Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      margin: 0;
       font-family: 'Roboto', sans-serif;
-      background: #f3f4f6;
+      background: #f0f2f5;
       display: flex;
-      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       height: 100vh;
-      justify-content: flex-end;
     }
-
     .chat-container {
       width: 100%;
-      max-width: 600px;
-      margin: auto;
-      padding: 12px;
-    }
-
-    .action-bar {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      padding: 10px;
+      max-width: 480px;
+      height: 90vh;
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      margin-bottom: 10px;
-      transition: all 0.3s ease;
-    }
-
-    .action-bar .material-icons {
-      font-size: 28px;
-      cursor: pointer;
-      padding: 8px;
-      border-radius: 50%;
-      transition: background 0.3s ease;
-    }
-
-    .action-bar .material-icons:hover {
-      background: #eee;
-    }
-
-    .icon-red { color: #e53935; }
-    .icon-blue { color: #1e88e5; }
-    .icon-green { color: #43a047; }
-    .icon-purple { color: #8e24aa; }
-    .icon-orange { color: #fb8c00; }
-    .icon-teal { color: #00897b; }
-
-    .more-icons {
-      display: none;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-    }
-
-    .chatbox {
+      border-radius: 16px;
       display: flex;
-      align-items: center;
-      background: white;
-      padding: 10px;
-      border-radius: 30px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      flex-direction: column;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      overflow: hidden;
     }
-
-    .chatbox input {
-      border: none;
-      outline: none;
-      flex: 1;
-      padding: 10px 15px;
-      border-radius: 30px;
-      font-size: 16px;
-    }
-
-    .chatbox-icons {
-      display: none;
-      gap: 8px;
-      margin-left: 10px;
-    }
-
-    .chatbox-icons .material-icons {
-      font-size: 24px;
-      cursor: pointer;
-      color: #666;
-    }
-
-    .more-btn {
-      background: none;
-      border: none;
-      color: #333;
-      cursor: pointer;
-      margin-top: 5px;
+    .chat-header {
+      background: linear-gradient(45deg, #4a148c, #7b1fa2);
+      color: white;
+      padding: 16px;
+      text-align: center;
+      font-size: 1.2rem;
       font-weight: bold;
     }
-
-    @media screen and (max-width: 480px) {
-      .chat-container {
-        padding: 6px;
-      }
+    .chat-box {
+      flex: 1;
+      padding: 12px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .message {
+      max-width: 70%;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      word-wrap: break-word;
+    }
+    .student {
+      align-self: flex-start;
+      background-color: #e1bee7;
+      border-top-left-radius: 0;
+    }
+    .teacher {
+      align-self: flex-end;
+      background-color: #dcedc8;
+      border-top-right-radius: 0;
+    }
+    .chat-input {
+      display: flex;
+      border-top: 1px solid #ccc;
+      padding: 8px;
+      gap: 6px;
+    }
+    .chat-input select, .chat-input input {
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    .chat-input input {
+      flex: 1;
+    }
+    .chat-input button {
+      background: #7b1fa2;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .chat-input button:hover {
+      background: #6a1b9a;
     }
   </style>
 </head>
 <body>
-
-<div class="chat-container">
-  <div class="action-bar">
-    <span class="material-icons icon-red">thumb_up</span>
-    <span class="material-icons icon-blue">lightbulb</span>
-    <span class="material-icons icon-green">bolt</span>
-    <span class="material-icons icon-purple">help</span>
-    <div class="more-icons" id="moreIcons">
-      <span class="material-icons icon-orange">settings</span>
-      <span class="material-icons icon-teal">visibility</span>
-      <span class="material-icons icon-red">extension</span>
-      <span class="material-icons icon-blue">translate</span>
-    </div>
-    <button class="more-btn" id="moreBtn">More</button>
-  </div>
-
-  <div class="chatbox">
-    <input type="text" id="chatInput" placeholder="Type your message..."/>
-    <div class="chatbox-icons" id="chatIcons">
-      <span class="material-icons">attach_file</span>
-      <span class="material-icons">image</span>
+  <div class="chat-container">
+    <div class="chat-header">📚 Student–Teacher Q&A Chat</div>
+    <div class="chat-box" id="chatBox"></div>
+    <div class="chat-input">
+      <select id="roleSelect">
+        <option value="student">👨‍🎓 Student</option>
+        <option value="teacher">👨‍🏫 Teacher</option>
+      </select>
+      <input type="text" id="messageInput" placeholder="Type your message..." />
+      <button onclick="sendMessage()">Send</button>
     </div>
   </div>
-</div>
 
-<script>
-  const moreBtn = document.getElementById('moreBtn');
-  const moreIcons = document.getElementById('moreIcons');
-  const chatInput = document.getElementById('chatInput');
-  const chatIcons = document.getElementById('chatIcons');
+  <script>
+    const chatBox = document.getElementById('chatBox');
+    const roleSelect = document.getElementById('roleSelect');
+    const messageInput = document.getElementById('messageInput');
 
-  moreBtn.addEventListener('click', () => {
-    moreIcons.style.display = 'flex';
-    moreBtn.style.display = 'none';
-  });
+    function sendMessage() {
+      const message = messageInput.value.trim();
+      if (!message) return;
+      const role = roleSelect.value;
 
-  chatInput.addEventListener('focus', () => {
-    chatIcons.style.display = 'flex';
-  });
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'message ' + (role === 'student' ? 'student' : 'teacher');
+      msgDiv.textContent = message;
 
-  chatInput.addEventListener('blur', () => {
-    if (chatInput.value === '') {
-      setTimeout(() => chatIcons.style.display = 'none', 200);
+      chatBox.appendChild(msgDiv);
+      messageInput.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
     }
-  });
-</script>
 
+    messageInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') sendMessage();
+    });
+  </script>
 </body>
 </html>
