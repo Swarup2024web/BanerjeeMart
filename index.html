@@ -3,183 +3,158 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chat Interface</title>
+  <title>Chat UI</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
-      font-family: "Roboto", sans-serif;
-      background: #f0f2f5;
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background: #f3f4f6;
       display: flex;
       flex-direction: column;
       height: 100vh;
-    }
-
-    .main-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
       justify-content: flex-end;
-      padding: 10px;
     }
 
-    .action-buttons {
+    .chat-container {
+      width: 100%;
+      max-width: 600px;
+      margin: auto;
+      padding: 12px;
+    }
+
+    .action-bar {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 15px;
-      margin-bottom: 10px;
-      transition: 0.3s ease-in-out;
-    }
-
-    .action-button {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 8px;
-      border-radius: 15px;
+      gap: 10px;
+      padding: 10px;
       background: white;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      width: 65px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .action-bar .material-icons {
+      font-size: 28px;
       cursor: pointer;
-      transition: all 0.3s;
+      padding: 8px;
+      border-radius: 50%;
+      transition: background 0.3s ease;
     }
 
-    .action-button:hover {
-      transform: scale(1.05);
+    .action-bar .material-icons:hover {
+      background: #eee;
     }
 
-    .action-button i {
-      font-size: 30px;
-    }
+    .icon-red { color: #e53935; }
+    .icon-blue { color: #1e88e5; }
+    .icon-green { color: #43a047; }
+    .icon-purple { color: #8e24aa; }
+    .icon-orange { color: #fb8c00; }
+    .icon-teal { color: #00897b; }
 
-    .label {
-      font-size: 12px;
-      margin-top: 4px;
-      text-align: center;
-    }
-
-    .more-btn {
-      margin: 0 auto 12px auto;
-      display: inline-block;
-      padding: 5px 15px;
-      background: #673ab7;
-      color: white;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
+    .more-icons {
+      display: none;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
     }
 
     .chatbox {
-      background: #fff;
-      padding: 10px;
-      border-top: 1px solid #ccc;
-      position: relative;
       display: flex;
       align-items: center;
-      gap: 10px;
+      background: white;
+      padding: 10px;
+      border-radius: 30px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
     .chatbox input {
+      border: none;
+      outline: none;
       flex: 1;
       padding: 10px 15px;
-      border: 1px solid #ccc;
-      border-radius: 25px;
-      font-size: 14px;
+      border-radius: 30px;
+      font-size: 16px;
     }
 
-    .chat-actions {
+    .chatbox-icons {
       display: none;
-      position: absolute;
-      bottom: 55px;
-      left: 20px;
-      gap: 10px;
+      gap: 8px;
+      margin-left: 10px;
     }
 
-    .chat-actions i {
-      font-size: 26px;
-      color: #555;
-      background: #eee;
-      padding: 8px;
-      border-radius: 50%;
+    .chatbox-icons .material-icons {
+      font-size: 24px;
+      cursor: pointer;
+      color: #666;
     }
 
-    @media (max-width: 600px) {
-      .action-button {
-        width: 60px;
+    .more-btn {
+      background: none;
+      border: none;
+      color: #333;
+      cursor: pointer;
+      margin-top: 5px;
+      font-weight: bold;
+    }
+
+    @media screen and (max-width: 480px) {
+      .chat-container {
+        padding: 6px;
       }
-
-      .chat-actions {
-        left: 10px;
-      }
     }
-
-    /* Icon colors */
-    .i-blue { color: #2196f3; }
-    .i-green { color: #4caf50; }
-    .i-red { color: #f44336; }
-    .i-purple { color: #9c27b0; }
-    .i-orange { color: #ff9800; }
-    .i-teal { color: #009688; }
-    .i-brown { color: #795548; }
-    .i-pink { color: #e91e63; }
   </style>
 </head>
 <body>
-  <div class="main-container">
-    <div class="action-buttons" id="actions">
-      <div class="action-button"><i class="material-icons i-blue">home</i><div class="label">Home</div></div>
-      <div class="action-button"><i class="material-icons i-green">person</i><div class="label">Profile</div></div>
-      <div class="action-button"><i class="material-icons i-red">settings</i><div class="label">Settings</div></div>
-      <div class="action-button"><i class="material-icons i-purple">chat</i><div class="label">Messages</div></div>
-    </div>
 
+<div class="chat-container">
+  <div class="action-bar">
+    <span class="material-icons icon-red">thumb_up</span>
+    <span class="material-icons icon-blue">lightbulb</span>
+    <span class="material-icons icon-green">bolt</span>
+    <span class="material-icons icon-purple">help</span>
+    <div class="more-icons" id="moreIcons">
+      <span class="material-icons icon-orange">settings</span>
+      <span class="material-icons icon-teal">visibility</span>
+      <span class="material-icons icon-red">extension</span>
+      <span class="material-icons icon-blue">translate</span>
+    </div>
     <button class="more-btn" id="moreBtn">More</button>
-
-    <div class="chatbox">
-      <input type="text" placeholder="Type your message..." id="chatInput"/>
-      <div class="chat-actions" id="chatActions">
-        <i class="material-icons i-teal">attach_file</i>
-        <i class="material-icons i-orange">image</i>
-      </div>
-    </div>
   </div>
 
-  <script>
-    const moreBtn = document.getElementById("moreBtn");
-    const actions = document.getElementById("actions");
-    let moreAdded = false;
+  <div class="chatbox">
+    <input type="text" id="chatInput" placeholder="Type your message..."/>
+    <div class="chatbox-icons" id="chatIcons">
+      <span class="material-icons">attach_file</span>
+      <span class="material-icons">image</span>
+    </div>
+  </div>
+</div>
 
-    moreBtn.addEventListener("click", () => {
-      if (!moreAdded) {
-        actions.innerHTML += `
-          <div class="action-button"><i class="material-icons i-teal">event</i><div class="label">Events</div></div>
-          <div class="action-button"><i class="material-icons i-brown">notifications</i><div class="label">Alerts</div></div>
-          <div class="action-button"><i class="material-icons i-pink">help</i><div class="label">Help</div></div>
-          <div class="action-button"><i class="material-icons i-orange">info</i><div class="label">Info</div></div>
-        `;
-        moreAdded = true;
-        moreBtn.style.display = "none";
-      }
-    });
+<script>
+  const moreBtn = document.getElementById('moreBtn');
+  const moreIcons = document.getElementById('moreIcons');
+  const chatInput = document.getElementById('chatInput');
+  const chatIcons = document.getElementById('chatIcons');
 
-    const chatInput = document.getElementById("chatInput");
-    const chatActions = document.getElementById("chatActions");
+  moreBtn.addEventListener('click', () => {
+    moreIcons.style.display = 'flex';
+    moreBtn.style.display = 'none';
+  });
 
-    chatInput.addEventListener("focus", () => {
-      chatActions.style.display = "flex";
-    });
+  chatInput.addEventListener('focus', () => {
+    chatIcons.style.display = 'flex';
+  });
 
-    chatInput.addEventListener("blur", () => {
-      setTimeout(() => {
-        chatActions.style.display = "none";
-      }, 300);
-    });
-  </script>
+  chatInput.addEventListener('blur', () => {
+    if (chatInput.value === '') {
+      setTimeout(() => chatIcons.style.display = 'none', 200);
+    }
+  });
+</script>
+
 </body>
 </html>
