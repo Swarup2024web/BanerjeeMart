@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>ChatGPT Inspired UI</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Roboto', sans-serif;
       margin: 0;
       padding: 0;
       background: #fff;
@@ -14,6 +20,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      min-height: 100vh;
     }
 
     header {
@@ -23,6 +30,7 @@
       align-items: center;
       padding: 12px 16px;
       font-size: 18px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
     }
 
     .time {
@@ -35,20 +43,24 @@
       padding: 6px 16px;
       border-radius: 20px;
       font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .title {
       font-size: 24px;
       font-weight: 600;
       margin: 30px 0 20px;
+      text-align: center;
     }
 
     .button-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 14px;
       width: 90%;
-      max-width: 400px;
+      max-width: 500px;
     }
 
     .btn {
@@ -59,14 +71,21 @@
       border-radius: 25px;
       border: none;
       font-weight: 500;
-      font-size: 16px;
+      font-size: 15px;
       background-color: #f5f5f5;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       transition: background 0.2s ease;
+      cursor: pointer;
+      gap: 8px;
     }
 
     .btn:hover {
       background-color: #e0e0e0;
+    }
+
+    .material-icons {
+      font-size: 20px;
+      vertical-align: middle;
     }
 
     footer {
@@ -78,18 +97,25 @@
     }
 
     input[type="text"] {
-      padding: 10px;
+      padding: 10px 18px;
       width: 80%;
+      max-width: 500px;
       border-radius: 30px;
       border: 1px solid #ccc;
       outline: none;
+      font-size: 16px;
     }
 
-    .input-area {
-      display: flex;
-      justify-content: center;
-      width: 100%;
-      margin-bottom: 20px;
+    @media (max-width: 500px) {
+      .btn {
+        font-size: 14px;
+        padding: 10px;
+      }
+
+      .plus-button {
+        font-size: 14px;
+        padding: 5px 12px;
+      }
     }
   </style>
 </head>
@@ -97,27 +123,56 @@
 
   <header>
     <div class="time">8:45</div>
-    <div class="plus-button">★ Get Plus</div>
+    <div class="plus-button">
+      <span class="material-icons">star</span>
+      Get Plus
+    </div>
   </header>
 
   <div class="title">What can I help with?</div>
 
   <div class="button-grid">
-    <button class="btn">🖼️ Create image</button>
-    <button class="btn">📄 Summarize text</button>
-    <button class="btn">💡 Brainstorm</button>
-    <button class="btn">📝 Make a plan</button>
-    <button class="btn">👁️ Analyze images</button>
-    <button class="btn">🎓 Get advice</button>
-    <button class="btn">📊 Analyze data</button>
-    <button class="btn">✍️ Help me write</button>
-    <button class="btn">👨‍💻 Code</button>
-    <button class="btn">🎁 Surprise me</button>
+    <button class="btn" onclick="handleClick('Create image')">
+      <span class="material-icons">image</span> Create image
+    </button>
+    <button class="btn" onclick="handleClick('Summarize text')">
+      <span class="material-icons">description</span> Summarize text
+    </button>
+    <button class="btn" onclick="handleClick('Brainstorm')">
+      <span class="material-icons">emoji_objects</span> Brainstorm
+    </button>
+    <button class="btn" onclick="handleClick('Make a plan')">
+      <span class="material-icons">event_note</span> Make a plan
+    </button>
+    <button class="btn" onclick="handleClick('Analyze images')">
+      <span class="material-icons">analytics</span> Analyze images
+    </button>
+    <button class="btn" onclick="handleClick('Get advice')">
+      <span class="material-icons">support</span> Get advice
+    </button>
+    <button class="btn" onclick="handleClick('Analyze data')">
+      <span class="material-icons">bar_chart</span> Analyze data
+    </button>
+    <button class="btn" onclick="handleClick('Help me write')">
+      <span class="material-icons">edit</span> Help me write
+    </button>
+    <button class="btn" onclick="handleClick('Code')">
+      <span class="material-icons">code</span> Code
+    </button>
+    <button class="btn" onclick="handleClick('Surprise me')">
+      <span class="material-icons">redeem</span> Surprise me
+    </button>
   </div>
 
-  <footer class="input-area">
+  <footer>
     <input type="text" placeholder="Ask anything" />
   </footer>
+
+  <script>
+    function handleClick(task) {
+      alert("You clicked: " + task);
+    }
+  </script>
 
 </body>
 </html>
