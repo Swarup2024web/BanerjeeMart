@@ -2,116 +2,134 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Mini GPT Chatbot</title>
+  <title>Knowledge Bot</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    * { box-sizing: border-box; }
     body {
-      margin: 0; padding: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #00c6ff, #0072ff);
-      height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: #f3f4f6;
+      margin: 0;
+      padding: 0;
     }
-    .chat-container {
-      background: white; padding: 20px; border-radius: 16px;
-      width: 95%; max-width: 400px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+
+    header {
+      background: #6200ea;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.5rem;
+      letter-spacing: 1px;
     }
-    h2 {
-      text-align: center; color: #0072ff;
+
+    main {
+      padding: 20px;
+      max-width: 700px;
+      margin: auto;
     }
-    #nameSection, #chatSection {
-      display: none;
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
     }
-    .chat-log {
-      height: 250px; overflow-y: auto; border: 1px solid #ccc;
-      padding: 10px; margin: 10px 0; background: #f0f0f0; border-radius: 8px;
-    }
-    input, button {
-      padding: 10px; border-radius: 8px; border: 1px solid #ccc;
-      width: 100%; margin-top: 10px;
-    }
+
     button {
-      background: #0072ff; color: white; border: none; cursor: pointer;
+      width: 100%;
+      padding: 12px;
+      background: #03dac5;
+      border: none;
+      font-size: 16px;
+      color: black;
+      border-radius: 10px;
+      cursor: pointer;
     }
-    .message { margin: 5px 0; }
-    .bot { color: #333; }
-    .user { text-align: right; color: #0072ff; }
+
+    .output {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
   </style>
 </head>
 <body>
+  <header>🌍 Knowledge Bot</header>
+  <main>
+    <select id="dataType">
+      <option value="capital">🌐 Capital Finder</option>
+      <option value="flower">🌸 National Flower</option>
+      <option value="cricket">🏏 Cricket Facts</option>
+      <option value="motivation">💡 Motivation</option>
+    </select>
 
-<div class="chat-container">
-  <h2>Mini GPT</h2>
+    <input type="text" id="queryInput" placeholder="Type your query... e.g. India, Sachin Tendulkar, etc." />
+    <button onclick="getAnswer()">🔍 Get Answer</button>
 
-  <div id="nameSection">
-    <input type="text" id="username" placeholder="Enter your name" />
-    <button onclick="startChat()">Start Chat</button>
-  </div>
+    <div class="output" id="resultBox"></div>
+  </main>
 
-  <div id="chatSection">
-    <div id="chatLog" class="chat-log"></div>
-    <input type="text" id="userInput" placeholder="Type your message..." />
-    <button onclick="sendMessage()">Send</button>
-  </div>
-</div>
+  <script>
+    let capitalData = {}, flowerData = {}, cricketData = {}, motivationData = [];
 
-<script>
-  let userName = "";
+    async function loadAllData() {
+      const files = {
+        capital: "capitals.json",
+        flower: "flowers.json",
+        cricket: "cricket.json",
+        motivation: "motivation.json"
+      };
 
-  window.onload = () => {
-    document.getElementById("nameSection").style.display = "block";
-  };
+      try {
+        const [capRes, flowerRes, cricketRes, motRes] = await Promise.all([
+          fetch(files.capital),
+          fetch(files.flower),
+          fetch(files.cricket),
+          fetch(files.motivation)
+        ]);
 
-  function startChat() {
-    const input = document.getElementById("username").value.trim();
-    if (input !== "") {
-      userName = input;
-      document.getElementById("nameSection").style.display = "none";
-      document.getElementById("chatSection").style.display = "block";
-      botReply(`Welcome, ${userName}! I'm your Mini GPT.`);
+        capitalData = await capRes.json();
+        flowerData = await flowerRes.json();
+        cricketData = await cricketRes.json();
+        motivationData = await motRes.json();
+
+      } catch (err) {
+        document.getElementById("resultBox").innerText = "Error loading data.";
+      }
     }
-  }
 
-  function sendMessage() {
-    const input = document.getElementById("userInput");
-    const message = input.value.trim();
-    if (message === "") return;
+    function getAnswer() {
+      const type = document.getElementById("dataType").value;
+      const query = document.getElementById("queryInput").value.trim().toUpperCase();
+      let result = "No result found.";
 
-    addMessage("You", message, "user");
-    input.value = "";
-    getBotReply(message.toLowerCase());
-  }
+      if (!query && type !== "motivation") {
+        document.getElementById("resultBox").innerText = "Please enter something.";
+        return;
+      }
 
-  function addMessage(sender, text, className) {
-    const log = document.getElementById("chatLog");
-    const msg = document.createElement("div");
-    msg.className = `message ${className}`;
-    msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
-    log.appendChild(msg);
-    log.scrollTop = log.scrollHeight;
-  }
+      switch (type) {
+        case "capital":
+          result = capitalData[query] || "Capital not found.";
+          break;
+        case "flower":
+          result = flowerData[query] || "Flower not found.";
+          break;
+        case "cricket":
+          result = cricketData[query] || "No info found for that cricket topic.";
+          break;
+        case "motivation":
+          result = motivationData[Math.floor(Math.random() * motivationData.length)] || "No quote found.";
+          break;
+      }
 
-  function botReply(text) {
-    setTimeout(() => {
-      addMessage("Bot", text, "bot");
-    }, 400);
-  }
-
-  function getBotReply(input) {
-    if (input.includes("hello") || input.includes("hi")) {
-      botReply(`Hi ${userName}! How can I help you?`);
-    } else if (input.includes("thank")) {
-      botReply(`You're welcome, ${userName}!`);
-    } else if (input.includes("your name")) {
-      botReply(`I'm Mini GPT, your friendly AI!`);
-    } else if (input.includes("bye")) {
-      botReply(`Goodbye, ${userName}. Talk to you soon!`);
-    } else {
-      botReply(`Sorry ${userName}, I didn’t understand that. Try something else.`);
+      document.getElementById("resultBox").innerText = result;
     }
-  }
-</script>
 
+    loadAllData();
+  </script>
 </body>
-      </html>
+</html>
