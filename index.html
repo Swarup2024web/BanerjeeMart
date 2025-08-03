@@ -1,194 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Student Q&A Chat</title>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  <meta charset="UTF-8">
+  <title>Mini GPT Chatbot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    * { box-sizing: border-box; }
     body {
-      margin: 0;
+      margin: 0; padding: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: #f0f2f5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      height: 100vh; display: flex; align-items: center; justify-content: center;
     }
     .chat-container {
-      width: 100%;
-      max-width: 500px;
-      height: 90vh;
-      display: flex;
-      flex-direction: column;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-      background: white;
+      background: white; padding: 20px; border-radius: 16px;
+      width: 95%; max-width: 400px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     }
-    .header {
-      background: #3f51b5;
-      color: white;
-      padding: 1rem;
-      font-size: 1.25rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+    h2 {
+      text-align: center; color: #0072ff;
     }
-    .header .material-icons {
-      font-size: 1.5rem;
-    }
-    .messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-    .message {
-      max-width: 80%;
-      padding: 0.75rem 1rem;
-      border-radius: 1rem;
-      font-size: 0.95rem;
-      line-height: 1.3;
-    }
-    .student {
-      background: #e0f7fa;
-      align-self: flex-start;
-      border-top-left-radius: 0;
-    }
-    .teacher {
-      background: #dcedc8;
-      align-self: flex-end;
-      border-top-right-radius: 0;
-    }
-    .input-area {
-      padding: 0.5rem;
-      border-top: 1px solid #ccc;
-      display: flex;
-      flex-direction: column;
-      background: #fff;
-    }
-    .input-row {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .input-row input[type="text"] {
-      flex: 1;
-      padding: 0.6rem 1rem;
-      border: 1px solid #ccc;
-      border-radius: 1.5rem;
-      font-size: 1rem;
-    }
-    .input-row button {
-      background: #3f51b5;
-      color: white;
-      border: none;
-      padding: 0.6rem;
-      border-radius: 50%;
-      cursor: pointer;
-    }
-    .icon-bar {
-      margin-top: 0.5rem;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 0.8rem;
-    }
-    .icon-bar .material-icons {
-      cursor: pointer;
-      font-size: 1.8rem;
-      transition: transform 0.2s;
-    }
-    .icon-bar .material-icons:hover {
-      transform: scale(1.2);
-    }
-    .more-actions {
+    #nameSection, #chatSection {
       display: none;
     }
-    .icon-red { color: #f44336; }
-    .icon-blue { color: #2196f3; }
-    .icon-green { color: #4caf50; }
-    .icon-orange { color: #ff9800; }
-    .icon-purple { color: #9c27b0; }
-    .icon-teal { color: #009688; }
-
-    @media(max-width: 480px) {
-      .chat-container {
-        height: 100vh;
-        border-radius: 0;
-      }
+    .chat-log {
+      height: 250px; overflow-y: auto; border: 1px solid #ccc;
+      padding: 10px; margin: 10px 0; background: #f0f0f0; border-radius: 8px;
     }
+    input, button {
+      padding: 10px; border-radius: 8px; border: 1px solid #ccc;
+      width: 100%; margin-top: 10px;
+    }
+    button {
+      background: #0072ff; color: white; border: none; cursor: pointer;
+    }
+    .message { margin: 5px 0; }
+    .bot { color: #333; }
+    .user { text-align: right; color: #0072ff; }
   </style>
 </head>
 <body>
 
 <div class="chat-container">
-  <div class="header">
-    <span class="material-icons">school</span> Student Q&A
+  <h2>Mini GPT</h2>
+
+  <div id="nameSection">
+    <input type="text" id="username" placeholder="Enter your name" />
+    <button onclick="startChat()">Start Chat</button>
   </div>
 
-  <div class="messages" id="messages"></div>
-
-  <div class="input-area">
-    <div class="input-row">
-      <input type="text" id="questionInput" placeholder="Ask your question..." />
-      <button onclick="sendMessage()">
-        <span class="material-icons">send</span>
-      </button>
-    </div>
-
-    <div class="icon-bar">
-      <span class="material-icons icon-red" title="Send Image">image</span>
-      <span class="material-icons icon-blue" title="Send File">attach_file</span>
-      <span class="material-icons icon-green" title="Voice">mic</span>
-      <span class="material-icons icon-orange" title="More" onclick="toggleMore()">more_horiz</span>
-
-      <div class="more-actions" id="moreActions">
-        <span class="material-icons icon-purple" title="Emoji">emoji_emotions</span>
-        <span class="material-icons icon-teal" title="Camera">photo_camera</span>
-      </div>
-    </div>
+  <div id="chatSection">
+    <div id="chatLog" class="chat-log"></div>
+    <input type="text" id="userInput" placeholder="Type your message..." />
+    <button onclick="sendMessage()">Send</button>
   </div>
 </div>
 
 <script>
-  const messages = document.getElementById('messages');
-  const input = document.getElementById('questionInput');
+  let userName = "";
 
-  function sendMessage() {
-    const text = input.value.trim();
-    if (!text) return;
-    const msg = document.createElement('div');
-    msg.className = 'message student';
-    msg.textContent = text;
-    msg.onclick = () => replyToStudent(text);
-    messages.appendChild(msg);
-    input.value = '';
-    messages.scrollTop = messages.scrollHeight;
-  }
+  window.onload = () => {
+    document.getElementById("nameSection").style.display = "block";
+  };
 
-  function replyToStudent(studentText) {
-    const reply = prompt(`Your reply to: "${studentText}"`);
-    if (reply) {
-      const msg = document.createElement('div');
-      msg.className = 'message teacher';
-      msg.textContent = reply;
-      messages.appendChild(msg);
-      messages.scrollTop = messages.scrollHeight;
+  function startChat() {
+    const input = document.getElementById("username").value.trim();
+    if (input !== "") {
+      userName = input;
+      document.getElementById("nameSection").style.display = "none";
+      document.getElementById("chatSection").style.display = "block";
+      botReply(`Welcome, ${userName}! I'm your Mini GPT.`);
     }
   }
 
-  function toggleMore() {
-    const more = document.getElementById('moreActions');
-    more.style.display = more.style.display === 'flex' ? 'none' : 'flex';
-    more.style.gap = '0.8rem';
-    more.style.justifyContent = 'center';
-    more.style.marginTop = '0.5rem';
+  function sendMessage() {
+    const input = document.getElementById("userInput");
+    const message = input.value.trim();
+    if (message === "") return;
+
+    addMessage("You", message, "user");
+    input.value = "";
+    getBotReply(message.toLowerCase());
+  }
+
+  function addMessage(sender, text, className) {
+    const log = document.getElementById("chatLog");
+    const msg = document.createElement("div");
+    msg.className = `message ${className}`;
+    msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
+    log.appendChild(msg);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function botReply(text) {
+    setTimeout(() => {
+      addMessage("Bot", text, "bot");
+    }, 400);
+  }
+
+  function getBotReply(input) {
+    if (input.includes("hello") || input.includes("hi")) {
+      botReply(`Hi ${userName}! How can I help you?`);
+    } else if (input.includes("thank")) {
+      botReply(`You're welcome, ${userName}!`);
+    } else if (input.includes("your name")) {
+      botReply(`I'm Mini GPT, your friendly AI!`);
+    } else if (input.includes("bye")) {
+      botReply(`Goodbye, ${userName}. Talk to you soon!`);
+    } else {
+      botReply(`Sorry ${userName}, I didn’t understand that. Try something else.`);
+    }
   }
 </script>
 
 </body>
-</html>
+      </html>
