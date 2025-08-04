@@ -1,135 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Knowledge Bot</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Swarup Academy</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#6750A4" />
+  <link rel="icon" href="icon.png" />
+  <link rel="apple-touch-icon" href="icon.png" />
+
+  <!-- Material 3 Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@1" rel="stylesheet" />
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(reg => console.log("Service Worker Registered"))
+          .catch(err => console.error("SW registration failed:", err));
+      });
+    }
+  </script>
+
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f3f4f6;
+    :root {
+      --primary: #6750A4;
+      --on-primary: #FFFFFF;
+      --surface: #FFFFFF;
+      --on-surface: #1C1B1F;
+      --nav-color: #F0EBF8;
+      --nav-active: #6750A4;
+    }
+
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: var(--surface);
+      color: var(--on-surface);
+      padding-bottom: 80px;
     }
 
     header {
-      background: #6200ea;
-      color: white;
+      background: var(--primary);
+      color: var(--on-primary);
       padding: 20px;
       text-align: center;
-      font-size: 1.5rem;
-      letter-spacing: 1px;
+      font-size: 24px;
+      font-weight: 600;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     }
 
     main {
       padding: 20px;
-      max-width: 700px;
-      margin: auto;
+      text-align: center;
     }
 
-    input, select {
-      width: 100%;
-      padding: 12px;
-      font-size: 16px;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: var(--nav-color);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
     }
 
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #03dac5;
-      border: none;
-      font-size: 16px;
-      color: black;
-      border-radius: 10px;
-      cursor: pointer;
+    .nav-item {
+      text-decoration: none;
+      text-align: center;
+      color: var(--on-surface);
+      font-size: 13px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    .output {
-      margin-top: 20px;
-      padding: 15px;
-      border-radius: 10px;
-      background: #fff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    .material-symbols-outlined {
+      font-size: 24px;
+      margin-bottom: 2px;
+    }
+
+    .nav-item.active {
+      color: var(--nav-active);
+    }
+
+    @media (min-width: 600px) {
+      .bottom-nav {
+        width: 400px;
+        margin: auto;
+        left: 0;
+        right: 0;
+      }
     }
   </style>
 </head>
 <body>
-  <header>🌍 Knowledge Bot</header>
+
+  <header>
+    Swarup Academy
+  </header>
+
   <main>
-    <select id="dataType">
-      <option value="capital">🌐 Capital Finder</option>
-      <option value="flower">🌸 National Flower</option>
-      <option value="cricket">🏏 Cricket Facts</option>
-      <option value="motivation">💡 Motivation</option>
-    </select>
-
-    <input type="text" id="queryInput" placeholder="Type your query... e.g. India, Sachin Tendulkar, etc." />
-    <button onclick="getAnswer()">🔍 Get Answer</button>
-
-    <div class="output" id="resultBox"></div>
+    <h2>Welcome to Swarup Academy</h2>
+    <p>This is your mobile-style learning app. Use the bottom nav bar to browse.</p>
   </main>
 
-  <script>
-    let capitalData = {}, flowerData = {}, cricketData = {}, motivationData = [];
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item active">
+      <span class="material-symbols-outlined">home</span>
+      Home
+    </a>
+    <a href="books.html" class="nav-item">
+      <span class="material-symbols-outlined">menu_book</span>
+      Books
+    </a>
+    <a href="notes.html" class="nav-item">
+      <span class="material-symbols-outlined">sticky_note_2</span>
+      Notes
+    </a>
+  </nav>
 
-    async function loadAllData() {
-      const files = {
-        capital: "capitals.json",
-        flower: "flowers.json",
-        cricket: "cricket.json",
-        motivation: "motivation.json"
-      };
-
-      try {
-        const [capRes, flowerRes, cricketRes, motRes] = await Promise.all([
-          fetch(files.capital),
-          fetch(files.flower),
-          fetch(files.cricket),
-          fetch(files.motivation)
-        ]);
-
-        capitalData = await capRes.json();
-        flowerData = await flowerRes.json();
-        cricketData = await cricketRes.json();
-        motivationData = await motRes.json();
-
-      } catch (err) {
-        document.getElementById("resultBox").innerText = "Error loading data.";
-      }
-    }
-
-    function getAnswer() {
-      const type = document.getElementById("dataType").value;
-      const query = document.getElementById("queryInput").value.trim().toUpperCase();
-      let result = "No result found.";
-
-      if (!query && type !== "motivation") {
-        document.getElementById("resultBox").innerText = "Please enter something.";
-        return;
-      }
-
-      switch (type) {
-        case "capital":
-          result = capitalData[query] || "Capital not found.";
-          break;
-        case "flower":
-          result = flowerData[query] || "Flower not found.";
-          break;
-        case "cricket":
-          result = cricketData[query] || "No info found for that cricket topic.";
-          break;
-        case "motivation":
-          result = motivationData[Math.floor(Math.random() * motivationData.length)] || "No quote found.";
-          break;
-      }
-
-      document.getElementById("resultBox").innerText = result;
-    }
-
-    loadAllData();
-  </script>
 </body>
 </html>
