@@ -2,156 +2,92 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Swarup Academy</title>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#6750A4">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', sans-serif;
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log('Service Worker registered'))
+        .catch(err => console.error('Service Worker registration failed:', err));
     }
-    body {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      background-color: #f7f5fa;
-    }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #6750A4;
-      color: white;
-      padding: 16px 20px;
-      font-size: 20px;
-      font-weight: bold;
-    }
-    header button {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 28px;
-      cursor: pointer;
-    }
-    main {
-      flex: 1;
-      padding: 20px;
-    }
-    section {
-      margin-bottom: 24px;
-      background: white;
-      padding: 16px;
-      border-radius: 12px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-    }
-    section h2 {
-      font-size: 18px;
-      margin-bottom: 10px;
-      color: #333;
-    }
-    section p {
-      font-size: 15px;
-      color: #444;
-    }
-    nav {
-      display: flex;
-      justify-content: space-around;
-      background: white;
-      border-top: 1px solid #ccc;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      height: 60px;
-      z-index: 99;
-    }
-    nav a {
-      flex: 1;
-      text-align: center;
-      padding: 8px 0;
-      text-decoration: none;
-      color: #888;
-    }
-    nav a.active span {
-      color: #6750A4;
-    }
-    nav span {
-      font-size: 26px;
-      display: block;
-    }
-  </style>
+  </script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
-<body>
+<body style="margin:0; font-family:Arial, sans-serif; background:#F6F6F6;">
 
-  <header>
-    Swarup Academy
-    <button id="installBtn" title="Install App">
-      <span class="material-symbols-outlined">download</span>
+  <!-- Header -->
+  <header style="background:#6750A4; color:white; padding:12px 16px; display:flex; align-items:center; justify-content:space-between;">
+    <h1 style="margin:0; font-size:20px;">Swarup Academy</h1>
+    <button id="installBtn" style="background:none; border:none; color:white; font-size:24px; cursor:pointer; display:none;" title="Install App">
+      <span class="material-icons">download</span>
     </button>
   </header>
 
-  <main>
-    <section>
-      <h2>👋 Warm Welcome</h2>
-      <p>Welcome to Swarup Academy! I’m here to help you learn, grow, and succeed in your academic journey.</p>
+  <!-- Main Content -->
+  <main style="padding:16px;">
+
+    <!-- Welcome Section -->
+    <section style="margin-bottom:24px; background:white; padding:16px; border-radius:12px; box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+      <h2 style="margin-top:0; color:#333;">👋 Warm Welcome</h2>
+      <p>Hello dear students! Welcome to Swarup Academy where learning becomes fun and friendly. Let’s grow together 🌱</p>
     </section>
 
-    <section>
-      <h2>📚 Subjects I Teach</h2>
-      <p>English, Science, Mathematics, Geography, History — From Class 1 to 10 (All Boards).</p>
+    <!-- Subjects Section -->
+    <section style="margin-bottom:24px; background:white; padding:16px; border-radius:12px; box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+      <h2 style="margin-top:0; color:#333;">📚 Subjects I Teach</h2>
+      <ul style="padding-left:18px; color:#555;">
+        <li>Mathematics (Class 5-10)</li>
+        <li>Science (Class 6-10)</li>
+        <li>English Grammar & Writing</li>
+      </ul>
     </section>
 
-    <section>
-      <h2>🌟 Reviews by Students</h2>
-      <p>“Sir explains concepts clearly!”<br>“Best teacher I’ve ever had!”<br>“Makes tough topics easy to understand.”</p>
+    <!-- Reviews Section -->
+    <section style="background:white; padding:16px; border-radius:12px; box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+      <h2 style="margin-top:0; color:#333;">🌟 Reviews by Students</h2>
+      <p style="margin: 8px 0;">"Sir explains everything so simply. I love learning now!" – Riya, Class 7</p>
+      <p style="margin: 8px 0;">"His notes are super helpful for exams!" – Arjun, Class 9</p>
     </section>
+
   </main>
 
-  <nav>
-    <a href="index.html" class="active">
-      <span class="material-symbols-outlined">home</span>
+  <!-- Bottom Navigation -->
+  <nav style="position:fixed; bottom:0; left:0; right:0; background:#fff; border-top:1px solid #ddd; display:flex; justify-content:space-around; padding:8px 0;">
+    <a href="index.html" style="text-align:center; color:#6750A4;">
+      <span class="material-icons" style="display:block;">home</span>
     </a>
-    <a href="notes.html">
-      <span class="material-symbols-outlined">note</span>
+    <a href="notes.html" style="text-align:center; color:#888;">
+      <span class="material-icons" style="display:block;">description</span>
     </a>
-    <a href="questions.html">
-      <span class="material-symbols-outlined">quiz</span>
+    <a href="questions.html" style="text-align:center; color:#888;">
+      <span class="material-icons" style="display:block;">quiz</span>
     </a>
   </nav>
 
+  <!-- Install Button Script -->
   <script>
-    // Service Worker
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log('SW registered'))
-        .catch(err => console.log('SW failed', err));
-    }
-
-    // PWA Install Prompt
     let deferredPrompt;
     const installBtn = document.getElementById('installBtn');
-    installBtn.style.display = 'none';
 
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      installBtn.style.display = 'inline';
+      installBtn.style.display = 'inline-block';
     });
 
-    installBtn.addEventListener('click', () => {
+    installBtn.addEventListener('click', async () => {
       if (deferredPrompt) {
         deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(choice => {
-          if (choice.outcome === 'accepted') {
-            installBtn.style.display = 'none';
-          }
-          deferredPrompt = null;
-        });
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          console.log('App installed');
+          installBtn.style.display = 'none';
+        }
+        deferredPrompt = null;
       }
     });
   </script>
+
 </body>
 </html>
