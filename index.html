@@ -2,137 +2,137 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Swarup Academy</title>
-
-  <!-- PWA Manifest and Meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Swarup Akademi</title>
   <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#6750A4" />
   <link rel="icon" href="icon.png" />
-  <link rel="apple-touch-icon" href="icon.png" />
+  <meta name="theme-color" content="#6750A4"/>
 
-  <!-- Material 3 Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@1" rel="stylesheet" />
-
-  <!-- Register Service Worker -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js')
-          .then(reg => console.log("Service Worker Registered"))
-          .catch(err => console.error("SW registration failed:", err));
-      });
-    }
-  </script>
-
-  <!-- Inline CSS -->
+  <!-- Material Symbols -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  
   <style>
-    :root {
-      --primary: #6750A4;
-      --on-primary: #FFFFFF;
-      --surface: #FFFFFF;
-      --on-surface: #1C1B1F;
-      --nav-color: #F0EBF8;
-      --nav-active: #6750A4;
-    }
-
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
     }
-
     body {
-      font-family: 'Roboto', sans-serif;
-      background: var(--surface);
-      color: var(--on-surface);
-      padding-bottom: 80px;
-    }
-
-    header {
-      background: var(--primary);
-      color: var(--on-primary);
-      padding: 20px;
-      text-align: center;
-      font-size: 24px;
-      font-weight: 600;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    }
-
-    main {
-      padding: 20px;
-      text-align: center;
-    }
-
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 70px;
-      background: var(--nav-color);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
-      border-top-left-radius: 16px;
-      border-top-right-radius: 16px;
-    }
-
-    .nav-item {
-      text-decoration: none;
-      text-align: center;
-      color: var(--on-surface);
-      font-size: 13px;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      min-height: 100vh;
+      background: #f6f6f6;
     }
-
-    .material-symbols-outlined {
+    header {
+      background: #6750A4;
+      color: white;
+      text-align: center;
+      padding: 16px;
+      font-size: 1.4em;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    main {
+      flex: 1;
+      padding: 20px;
+      text-align: center;
+    }
+    nav {
+      display: flex;
+      justify-content: space-around;
+      background: #fff;
+      border-top: 1px solid #ccc;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      height: 60px;
+      z-index: 10;
+    }
+    nav a {
+      flex: 1;
+      text-align: center;
+      padding: 8px 0;
+      color: #333;
+      text-decoration: none;
+      font-size: 12px;
+    }
+    nav a span {
+      display: block;
       font-size: 24px;
-      margin-bottom: 2px;
+      color: #6750A4;
     }
 
-    .nav-item.active {
-      color: var(--nav-active);
-    }
-
-    @media (min-width: 600px) {
-      .bottom-nav {
-        width: 400px;
-        margin: auto;
-        left: 0;
-        right: 0;
-      }
+    #installBtn {
+      margin-top: 30px;
+      padding: 12px 24px;
+      background-color: #6750A4;
+      color: white;
+      border: none;
+      border-radius: 24px;
+      font-size: 16px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
   <header>
-    Swarup Academy
+    Swarup Akademi
   </header>
 
   <main>
-    <h2>Welcome to Swarup Academy</h2>
-    <p>This is your learning app. Use the bottom nav to explore Books and Notes.</p>
+    <h2>Welcome to Swarup Akademi</h2>
+    <p>This is a demo home page for the app-like responsive website.</p>
+
+    <button id="installBtn" style="display: none;">
+      📥 Install Swarup Akademi
+    </button>
   </main>
 
-  <nav class="bottom-nav">
-    <a href="index.html" class="nav-item active">
+  <nav>
+    <a href="index.html">
       <span class="material-symbols-outlined">home</span>
       Home
     </a>
-    <a href="books.html" class="nav-item">
+    <a href="books.html">
       <span class="material-symbols-outlined">menu_book</span>
       Books
     </a>
-    <a href="notes.html" class="nav-item">
-      <span class="material-symbols-outlined">sticky_note_2</span>
+    <a href="notes.html">
+      <span class="material-symbols-outlined">note</span>
       Notes
     </a>
   </nav>
 
+  <script>
+    // PWA Service Worker Registration
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log('Service Worker Registered'))
+        .catch(err => console.error('Service Worker Failed:', err));
+    }
+
+    // Install Prompt Logic
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = 'inline-block';
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          installBtn.style.display = 'none';
+        }
+        deferredPrompt = null;
+      }
+    });
+  </script>
 </body>
 </html>
