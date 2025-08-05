@@ -3,275 +3,213 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Product Page - Local Shop</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  <title>Fresh Mart - Product Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <style>
-    body {
+    :root {
+      --primary: #43a047;
+      --accent: #fdd835;
+      --text: #212121;
+      --bg: #ffffff;
+      --card: #f9f9f9;
+    }
+    * {
+      box-sizing: border-box;
       margin: 0;
+      padding: 0;
+    }
+    body {
       font-family: 'Roboto', sans-serif;
-      background-color: #fdfbfb;
-      color: #333;
+      background-color: var(--bg);
+      color: var(--text);
     }
-
     header {
-      background: linear-gradient(to right, #ffe259, #ffa751);
-      color: #fff;
-      padding: 16px;
+      background-color: var(--primary);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    main {
+      padding: 1rem;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
+      flex-direction: column;
+      gap: 1.5rem;
     }
-
-    header .material-icons {
-      cursor: pointer;
-      font-size: 28px;
-    }
-
-    .container {
-      padding: 16px;
-    }
-
     .product {
       display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      align-items: center;
-    }
-
-    .product-img {
-      flex: 1 1 300px;
-      text-align: center;
-      padding: 12px;
-    }
-
-    .product-img img {
-      width: 100%;
-      max-width: 320px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    .product-info {
-      flex: 2 1 400px;
-    }
-
-    .product-info h2 {
-      margin-top: 0;
-      font-size: 28px;
-      color: #222;
-    }
-
-    .ratings {
-      display: flex;
-      align-items: center;
-      margin: 8px 0;
-    }
-
-    .ratings .material-icons {
-      color: #fbc02d;
-    }
-
-    .ratings span {
-      margin-left: 6px;
-      font-weight: bold;
-    }
-
-    .details, .nutrition {
-      margin: 16px 0;
-      background: #fff8e1;
-      padding: 12px 16px;
+      flex-direction: column;
+      background: var(--card);
       border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-
-    .details h3, .nutrition h3 {
-      margin-top: 0;
-      color: #ff8f00;
-    }
-
-    .order-section {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      margin: 16px 0;
-    }
-
-    .order-section input {
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      width: 100px;
-    }
-
-    .order-section label {
-      font-weight: 500;
-      color: #555;
-    }
-
-    .add-to-cart {
-      margin-top: 20px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .add-to-cart button {
-      background: #ff8f00;
-      color: white;
-      padding: 10px 30px;
-      border: none;
-      border-radius: 30px;
-      font-size: 16px;
-      cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    }
-
-    .reviews {
-      margin: 32px 0;
-    }
-
-    .reviews h3 {
-      margin-bottom: 10px;
-      color: #5d4037;
-    }
-
-    .review {
-      background: #fffde7;
-      padding: 10px 16px;
+    .product-img {
+      width: 100%;
+      padding: 10px;
+      object-fit: contain;
       border-radius: 8px;
-      margin-bottom: 10px;
     }
-
-    .load-more {
-      text-align: center;
-      margin-top: 10px;
+    .product-title {
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-top: 1rem;
     }
-
-    .load-more button {
-      background: #8bc34a;
-      color: white;
-      border: none;
-      padding: 8px 20px;
-      border-radius: 20px;
-      cursor: pointer;
+    .price {
+      color: var(--primary);
+      font-size: 1.3rem;
+      margin: 0.5rem 0;
     }
-
-    .similar {
-      margin: 32px 0;
-    }
-
-    .similar h3 {
-      margin-bottom: 10px;
-      color: #4a148c;
-    }
-
-    .similar-products {
+    .rating {
       display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 1rem;
+      margin-bottom: 1rem;
     }
-
+    .material-icons {
+      vertical-align: middle;
+      color: var(--accent);
+    }
+    .details, .nutrition {
+      margin-top: 1rem;
+    }
+    h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.4rem;
+      border-bottom: 2px solid var(--primary);
+      display: inline-block;
+      padding-bottom: 2px;
+    }
+    ul {
+      margin-left: 1rem;
+    }
+    .add-to-cart {
+      margin: 1.5rem auto 0;
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
+      background-color: var(--accent);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .similar-products {
+      margin-top: 2rem;
+    }
+    .similar-products h3 {
+      margin-bottom: 1rem;
+    }
+    .similar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1rem;
+    }
     .similar-item {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 0.5rem;
       text-align: center;
-      width: 120px;
     }
-
     .similar-item img {
       width: 100%;
-      padding: 8px;
-      border-radius: 10px;
-      background-color: #f3e5f5;
+      height: 100px;
+      object-fit: contain;
+      padding: 10px;
     }
-
     .similar-item p {
-      margin: 6px 0 0;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
       font-weight: 500;
-      font-size: 14px;
     }
-
-    @media (max-width: 600px) {
-      .order-section {
+    @media (min-width: 768px) {
+      .product {
         flex-direction: row;
-        justify-content: flex-start;
+        gap: 2rem;
+      }
+      .product-img {
+        width: 300px;
+        height: auto;
+      }
+      .product-info {
+        flex: 1;
       }
     }
   </style>
 </head>
 <body>
-
   <header>
-    <span class="material-icons" onclick="history.back()">arrow_back</span>
-    <h2>Dip’s Local Mart</h2>
-    <span class="material-icons">shopping_cart</span>
+    Fresh Mart
   </header>
 
-  <div class="container">
-    <div class="product">
-      <div class="product-img">
-        <img src="https://via.placeholder.com/300x300.png?text=Product+Image" alt="Product Image">
-      </div>
+  <main>
+    <section class="product">
+      <img src="assets/product.jpg" alt="Product Image" class="product-img" />
+
       <div class="product-info">
-        <h2>Fresh Mango Pickle</h2>
-        <div class="ratings">
-          <span class="material-icons">star</span>
-          <span>4.6 / 5</span>
+        <div class="product-title">Organic Farm Fresh Apples (1kg)</div>
+        <div class="price">₹150</div>
+        <div class="rating">
+          <span class="material-icons">star</span> 4.5/5
         </div>
+
         <div class="details">
-          <h3>Details</h3>
-          <p>Authentic homemade mango pickle made with traditional spices. 100% organic and no preservatives.</p>
+          <h3>Product Details</h3>
+          <ul>
+            <li>Origin: Himachal Pradesh</li>
+            <li>Type: Fuji Apples</li>
+            <li>100% Organic, No pesticides</li>
+          </ul>
         </div>
+
         <div class="nutrition">
           <h3>Nutritious Value</h3>
-          <p>Per 100g: Energy 80 kcal, Fat 2g, Carbs 14g, Protein 1g, Sodium 500mg</p>
+          <ul>
+            <li>Calories: 52 kcal per 100g</li>
+            <li>Carbohydrates: 14g</li>
+            <li>Fiber: 2.4g</li>
+            <li>Vitamin C: 7%</li>
+          </ul>
         </div>
-        <div class="order-section">
-          <label for="qty">Quantity</label>
-          <input type="number" id="qty" placeholder="e.g. 1 kg">
-          <label for="price">Price</label>
-          <input type="text" id="price" placeholder="₹120/kg">
-        </div>
-        <div class="add-to-cart">
-          <button>Add to Cart</button>
-        </div>
+
+        <button class="add-to-cart" onclick="addToCart()">
+          <span class="material-icons">shopping_cart</span> Add to Cart
+        </button>
       </div>
-    </div>
+    </section>
 
-    <div class="reviews">
-      <h3>Customer Reviews</h3>
-      <div class="review">Excellent taste and quality! – Ramesh</div>
-      <div class="review">Just like my grandma used to make. – Sunita</div>
-      <div class="review">Spicy and tangy, I love it. – Ahmed</div>
-      <div class="review">Will definitely buy again. – Priya</div>
-      <div class="review">Good packaging and fast delivery. – Karan</div>
-      <div class="load-more"><button>Load More</button></div>
-    </div>
-
-    <div class="similar">
+    <section class="similar-products">
       <h3>Similar Products</h3>
-      <div class="similar-products">
+      <div class="similar-grid">
         <div class="similar-item">
-          <img src="https://via.placeholder.com/100.png?text=Pickle+1" alt="Pickle 1">
-          <p>Lemon Pickle</p>
+          <img src="assets/product.jpg" alt="Item" />
+          <p>Bananas (1 Dozen)</p>
         </div>
         <div class="similar-item">
-          <img src="https://via.placeholder.com/100.png?text=Pickle+2" alt="Pickle 2">
-          <p>Garlic Pickle</p>
+          <img src="assets/product.jpg" alt="Item" />
+          <p>Orange (500g)</p>
         </div>
         <div class="similar-item">
-          <img src="https://via.placeholder.com/100.png?text=Pickle+3" alt="Pickle 3">
-          <p>Green Chilli</p>
-        </div>
-        <div class="similar-item">
-          <img src="https://via.placeholder.com/100.png?text=Pickle+4" alt="Pickle 4">
-          <p>Mixed Pickle</p>
-        </div>
-        <div class="similar-item">
-          <img src="https://via.placeholder.com/100.png?text=Pickle+5" alt="Pickle 5">
-          <p>Sweet Mango</p>
+          <img src="assets/product.jpg" alt="Item" />
+          <p>Guava (1kg)</p>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
+  </main>
 
+  <script>
+    function addToCart() {
+      alert("Product added to cart!");
+    }
+  </script>
 </body>
-            </html>
+                               </html>
