@@ -4,345 +4,205 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Product Page</title>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
-      font-family: 'Roboto', sans-serif;
-      background: #f1f2f6;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f7fa;
+      margin: 0;
+      padding: 0;
       color: #333;
     }
-
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: #fff;
-      padding: 16px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-
-    .back-arrow {
-      font-size: 24px;
-      color: #1e88e5;
-      margin-bottom: 10px;
-      display: inline-flex;
-      align-items: center;
-      cursor: pointer;
-    }
-
-    .back-arrow .material-icons {
-      margin-right: 4px;
-    }
-
-    .carousel {
-      overflow: hidden;
-      border-radius: 12px;
-    }
-
-    .carousel img {
-      width: 100%;
-      display: none;
-      border-radius: 12px;
-    }
-
-    .carousel img.active {
-      display: block;
-    }
-
-    .product-name {
-      font-size: 24px;
-      font-weight: bold;
-      color: #0d47a1;
-      margin: 16px 0 8px;
-    }
-
-    .qnty-price {
+    header {
+      background-color: #2874f0;
+      color: white;
+      padding: 10px 20px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
-      flex-wrap: nowrap;
-      gap: 20px;
     }
-
-    .price {
-      font-size: 20px;
-      font-weight: bold;
-      color: #388e3c;
+    header .back-arrow {
+      cursor: pointer;
+      font-size: 24px;
+      margin-right: 10px;
     }
-
-    select {
-      padding: 6px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+    }
+    .product-img {
+      width: 100%;
+      max-width: 300px;
+      display: block;
+      margin: 10px auto;
+      border-radius: 10px;
+    }
+    .selector {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+    .selector select, .selector input {
+      padding: 8px;
       font-size: 16px;
     }
-
-    .add-cart-btn {
-      background: #ff6f00;
-      color: #fff;
+    .price {
+      font-size: 18px;
+      font-weight: bold;
+      color: #d32f2f;
+    }
+    .add-cart {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .add-cart button {
+      background-color: #ff9f00;
+      color: white;
       border: none;
-      padding: 12px 18px;
-      border-radius: 8px;
+      padding: 12px 25px;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    section {
+      background: white;
+      margin: 20px 0;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    h2 {
+      margin-top: 0;
+      color: #2874f0;
+    }
+    .stars {
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 10px auto 20px;
-      cursor: pointer;
-      transition: background 0.3s;
+      gap: 6px;
+      font-size: 22px;
+      color: gold;
+      margin-bottom: 5px;
     }
-
-    .add-cart-btn:hover {
-      background: #e65100;
-    }
-
-    .add-cart-btn .material-icons {
-      margin-right: 6px;
-    }
-
-    .ratings {
-      color: #ff9800;
-      margin-bottom: 16px;
-    }
-
-    .dates {
-      font-size: 14px;
-      color: #555;
-      margin-bottom: 16px;
-    }
-
-    .product-details {
-      font-size: 16px;
-      line-height: 1.6;
-      margin-bottom: 24px;
-    }
-
-    .reviews {
-      margin-bottom: 24px;
-    }
-
-    .reviews h3 {
-      margin-bottom: 10px;
-      color: #0d47a1;
-    }
-
-    .review-row {
-      background: #f8f9fa;
-      border-left: 4px solid #1e88e5;
+    .review {
+      margin: 15px 0;
       padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 6px;
-      display: none;
+      background: #f1f1f1;
+      border-radius: 5px;
     }
-
-    .review-row.visible {
-      display: block;
+    .load-more {
+      text-align: center;
+      margin-top: 10px;
     }
-
-    .review-row .stars {
-      color: #ffca28;
-      margin-bottom: 4px;
-    }
-
-    .review-text {
-      font-size: 14px;
-      color: #333;
-    }
-
-    .load-more-btn {
-      display: block;
-      margin: 10px auto;
-      padding: 8px 16px;
-      background: #6200ea;
-      color: #fff;
+    .load-more button {
+      background-color: #2874f0;
+      color: white;
+      padding: 8px 20px;
       border: none;
-      border-radius: 6px;
+      border-radius: 4px;
       cursor: pointer;
     }
-
-    .similar-products h3 {
-      margin-bottom: 10px;
-      color: #1a237e;
+    .similar-products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 20px;
     }
-
-    .similar-carousel {
-      display: flex;
-      overflow-x: auto;
-      gap: 12px;
-      padding-bottom: 10px;
+    .similar-products img {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      padding: 5px;
     }
-
-    .similar-item {
+    .similar-products p {
       text-align: center;
-      flex-shrink: 0;
-    }
-
-    .similar-item img {
-      width: 120px;
-      height: 80px;
-      border-radius: 8px;
-      object-fit: cover;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
-
-    .similar-item span {
-      font-size: 14px;
-      display: block;
-      margin-top: 6px;
-      color: #333;
+      margin-top: 5px;
     }
   </style>
 </head>
 <body>
+
+  <header>
+    <div class="back-arrow" onclick="history.back()">←</div>
+    <h1>Product Details</h1>
+  </header>
+
   <div class="container">
 
-    <!-- Back Arrow -->
-    <div class="back-arrow" onclick="window.history.back()">
-      <span class="material-icons">arrow_back</span> Back
+    <img src="assets/product.png" alt="Product" class="product-img"/>
+
+    <div class="selector">
+      <div>
+        <label>Quantity:</label>
+        <select id="quantity" onchange="updatePrice()">
+          <option value="1">1 unit</option>
+          <option value="2">2 units</option>
+          <option value="3">3 units</option>
+          <option value="4">4 units</option>
+        </select>
+      </div>
+      <div class="price" id="price">₹100</div>
     </div>
 
-    <!-- Carousel -->
-    <div class="carousel" id="carousel">
-      <img src="assets/product.png" class="active">
-      <img src="assets/product.png">
+    <div class="add-cart">
+      <button>Add to Cart</button>
     </div>
 
-    <!-- Product Name -->
-    <div class="product-name">Awesome Flipkart-Style Product</div>
+    <section>
+      <h2>Details</h2>
+      <p>This product is made from organic ingredients and best for everyday health needs. Enjoy freshness and quality in every packet.</p>
+    </section>
 
-    <!-- Quantity and Price -->
-    <div class="qnty-price">
-      <select id="quantity">
-        <option value="1">Qty: 1</option>
-        <option value="2">Qty: 2</option>
-        <option value="3">Qty: 3</option>
-        <option value="4">Qty: 4</option>
-        <option value="5">Qty: 5</option>
-      </select>
-      <div class="price">₹<span id="price">499</span></div>
-    </div>
+    <section>
+      <h2>Nutritious Value</h2>
+      <p>Calories: 90 kcal per 100g<br>Protein: 3.5g<br>Carbohydrates: 15g<br>Fat: 2g<br>Fibre: 1.5g</p>
+    </section>
 
-    <!-- Add to Cart -->
-    <button class="add-cart-btn">
-      <span class="material-icons">add_shopping_cart</span> Add to Cart
-    </button>
-
-    <!-- Star Ratings -->
-    <div class="ratings">
-      <span class="material-icons">star</span>
-      <span class="material-icons">star</span>
-      <span class="material-icons">star</span>
-      <span class="material-icons">star_half</span>
-      <span class="material-icons">star_outline</span>
-    </div>
-
-    <!-- Dates -->
-    <div class="dates">
-      <div>Mfg: <strong>2025-07-01</strong></div>
-      <div>Exp: <strong>2026-12-31</strong></div>
-    </div>
-
-    <!-- Product Details -->
-    <div class="product-details">
-      This amazing product delivers excellent quality and durability. Perfect for everyday use, environmentally safe, and budget-friendly.
-    </div>
-
-    <!-- Reviews -->
-    <div class="reviews">
-      <h3>Customer Reviews</h3>
-
-      <div class="review-row visible">
-        <div class="stars">★★★★★</div>
-        <div class="review-text">Excellent product, exceeded expectations!</div>
+    <section>
+      <h2>Customer Reviews</h2>
+      <div class="stars">
+        ⭐⭐⭐⭐☆ <span style="font-size:16px;">4.0</span>
       </div>
+      <div class="review">⭐️⭐️⭐️⭐️⭐️ — Amazing product! Loved the quality. – Riya</div>
+      <div class="review">⭐️⭐️⭐️⭐️ — Good one, packing was neat. – Aditya</div>
+      <div class="review">⭐️⭐️⭐️⭐️⭐️ — Will definitely buy again! – Meena</div>
+      <div class="review">⭐️⭐️⭐️ — Average, delivery was late. – Raj</div>
+      <div class="review">⭐️⭐️⭐️⭐️ — Very useful and healthy. – Kavya</div>
+      <div class="load-more"><button>Load More Reviews</button></div>
+    </section>
 
-      <div class="review-row visible">
-        <div class="stars">★★★★☆</div>
-        <div class="review-text">Great quality and fast delivery.</div>
-      </div>
-
-      <div class="review-row visible">
-        <div class="stars">★★★☆☆</div>
-        <div class="review-text">It's okay, but could be improved.</div>
-      </div>
-
-      <div class="review-row visible">
-        <div class="stars">★★☆☆☆</div>
-        <div class="review-text">Not very durable as expected.</div>
-      </div>
-
-      <div class="review-row visible">
-        <div class="stars">★☆☆☆☆</div>
-        <div class="review-text">Disappointed. Poor quality.</div>
-      </div>
-
-      <!-- Hidden more reviews -->
-      <div class="review-row">
-        <div class="stars">★★★★★</div>
-        <div class="review-text">Value for money! Will buy again.</div>
-      </div>
-
-      <div class="review-row">
-        <div class="stars">★★★☆☆</div>
-        <div class="review-text">Average quality. Okay for the price.</div>
-      </div>
-
-      <button class="load-more-btn" onclick="loadMoreReviews()">Load More Reviews</button>
-    </div>
-
-    <!-- Similar Products -->
-    <div class="similar-products">
-      <h3>Similar Products</h3>
-      <div class="similar-carousel">
-        <div class="similar-item">
-          <img src="assets/product.png" />
-          <span>Item 1</span>
+    <section>
+      <h2>Similar Products</h2>
+      <div class="similar-products">
+        <div>
+          <img src="assets/product.png" alt="Similar Product 1"/>
+          <p>Healthy Snack</p>
         </div>
-        <div class="similar-item">
-          <img src="assets/product.png" />
-          <span>Item 2</span>
+        <div>
+          <img src="assets/product.png" alt="Similar Product 2"/>
+          <p>Organic Nuts</p>
         </div>
-        <div class="similar-item">
-          <img src="assets/product.png" />
-          <span>Item 3</span>
+        <div>
+          <img src="assets/product.png" alt="Similar Product 3"/>
+          <p>Natural Bar</p>
         </div>
-        <div class="similar-item">
-          <img src="assets/product.png" />
-          <span>Item 4</span>
-        </div>
-        <div class="similar-item">
-          <img src="assets/product.png" />
-          <span>Item 5</span>
+        <div>
+          <img src="assets/product.png" alt="Similar Product 4"/>
+          <p>Fruit Pack</p>
         </div>
       </div>
-    </div>
+    </section>
 
   </div>
 
-  <!-- JavaScript -->
   <script>
-    const pricePerItem = 499;
-    const priceSpan = document.getElementById("price");
-    const quantitySelector = document.getElementById("quantity");
-
-    quantitySelector.addEventListener("change", () => {
-      const qty = parseInt(quantitySelector.value);
-      priceSpan.textContent = (qty * pricePerItem).toString();
-    });
-
-    const carouselImages = document.querySelectorAll("#carousel img");
-    let index = 0;
-    setInterval(() => {
-      carouselImages.forEach((img, i) => img.classList.toggle("active", i === index));
-      index = (index + 1) % carouselImages.length;
-    }, 3000);
-
-    function loadMoreReviews() {
-      document.querySelectorAll(".review-row:not(.visible)").forEach(row => row.classList.add("visible"));
-      document.querySelector(".load-more-btn").style.display = 'none';
+    function updatePrice() {
+      const pricePerUnit = 100;
+      const qty = document.getElementById("quantity").value;
+      const total = pricePerUnit * qty;
+      document.getElementById("price").innerText = "₹" + total;
     }
   </script>
+
 </body>
-      </html>
+        </html>
