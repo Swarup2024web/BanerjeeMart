@@ -58,11 +58,13 @@
       margin: 16px 0 8px;
     }
 
-    .price-qnty {
+    .qnty-price {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 16px;
+      flex-wrap: nowrap;
+      gap: 20px;
     }
 
     .price {
@@ -132,6 +134,11 @@
       padding: 10px;
       margin-bottom: 10px;
       border-radius: 6px;
+      display: none;
+    }
+
+    .review-row.visible {
+      display: block;
     }
 
     .review-row .stars {
@@ -142,6 +149,17 @@
     .review-text {
       font-size: 14px;
       color: #333;
+    }
+
+    .load-more-btn {
+      display: block;
+      margin: 10px auto;
+      padding: 8px 16px;
+      background: #6200ea;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
     }
 
     .similar-products h3 {
@@ -156,25 +174,24 @@
       padding-bottom: 10px;
     }
 
-    .similar-carousel img {
+    .similar-item {
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .similar-item img {
       width: 120px;
       height: 80px;
       border-radius: 8px;
-      flex-shrink: 0;
       object-fit: cover;
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
 
-    @media (max-width: 600px) {
-      .price-qnty {
-        flex-direction: column;
-        gap: 10px;
-        align-items: flex-start;
-      }
-
-      .add-cart-btn {
-        width: 100%;
-      }
+    .similar-item span {
+      font-size: 14px;
+      display: block;
+      margin-top: 6px;
+      color: #333;
     }
   </style>
 </head>
@@ -182,22 +199,21 @@
   <div class="container">
 
     <!-- Back Arrow -->
-    <div class="back-arrow" onclick="history.back()">
+    <div class="back-arrow" onclick="window.history.back()">
       <span class="material-icons">arrow_back</span> Back
     </div>
 
-    <!-- Sec1 - Carousel -->
+    <!-- Carousel -->
     <div class="carousel" id="carousel">
       <img src="assets/product.png" class="active">
       <img src="assets/product.png">
     </div>
 
-    <!-- Sec2 - Product Name -->
+    <!-- Product Name -->
     <div class="product-name">Awesome Flipkart-Style Product</div>
 
-    <!-- Sec3 - Price + Qnty -->
-    <div class="price-qnty">
-      <div class="price">₹<span id="price">499</span></div>
+    <!-- Quantity and Price -->
+    <div class="qnty-price">
       <select id="quantity">
         <option value="1">Qty: 1</option>
         <option value="2">Qty: 2</option>
@@ -205,14 +221,15 @@
         <option value="4">Qty: 4</option>
         <option value="5">Qty: 5</option>
       </select>
+      <div class="price">₹<span id="price">499</span></div>
     </div>
 
-    <!-- Sec4 - Add to Cart -->
+    <!-- Add to Cart -->
     <button class="add-cart-btn">
       <span class="material-icons">add_shopping_cart</span> Add to Cart
     </button>
 
-    <!-- Sec5 - Ratings -->
+    <!-- Star Ratings -->
     <div class="ratings">
       <span class="material-icons">star</span>
       <span class="material-icons">star</span>
@@ -221,55 +238,84 @@
       <span class="material-icons">star_outline</span>
     </div>
 
-    <!-- Sec6 - Dates -->
+    <!-- Dates -->
     <div class="dates">
       <div>Mfg: <strong>2025-07-01</strong></div>
       <div>Exp: <strong>2026-12-31</strong></div>
     </div>
 
-    <!-- Sec7 - Product Details -->
+    <!-- Product Details -->
     <div class="product-details">
       This amazing product delivers excellent quality and durability. Perfect for everyday use, environmentally safe, and budget-friendly.
     </div>
 
-    <!-- Sec8 - Reviews -->
+    <!-- Reviews -->
     <div class="reviews">
       <h3>Customer Reviews</h3>
 
-      <div class="review-row">
+      <div class="review-row visible">
         <div class="stars">★★★★★</div>
-        <div class="review-text">Absolutely loved it! Quality is top-notch.</div>
+        <div class="review-text">Excellent product, exceeded expectations!</div>
       </div>
 
-      <div class="review-row">
+      <div class="review-row visible">
         <div class="stars">★★★★☆</div>
-        <div class="review-text">Very good, but packaging could be better.</div>
+        <div class="review-text">Great quality and fast delivery.</div>
+      </div>
+
+      <div class="review-row visible">
+        <div class="stars">★★★☆☆</div>
+        <div class="review-text">It's okay, but could be improved.</div>
+      </div>
+
+      <div class="review-row visible">
+        <div class="stars">★★☆☆☆</div>
+        <div class="review-text">Not very durable as expected.</div>
+      </div>
+
+      <div class="review-row visible">
+        <div class="stars">★☆☆☆☆</div>
+        <div class="review-text">Disappointed. Poor quality.</div>
+      </div>
+
+      <!-- Hidden more reviews -->
+      <div class="review-row">
+        <div class="stars">★★★★★</div>
+        <div class="review-text">Value for money! Will buy again.</div>
       </div>
 
       <div class="review-row">
         <div class="stars">★★★☆☆</div>
-        <div class="review-text">Average. Not bad, not great either.</div>
+        <div class="review-text">Average quality. Okay for the price.</div>
       </div>
 
-      <div class="review-row">
-        <div class="stars">★★☆☆☆</div>
-        <div class="review-text">Expected more for the price.</div>
-      </div>
-
-      <div class="review-row">
-        <div class="stars">★☆☆☆☆</div>
-        <div class="review-text">Not satisfied. Product quality was poor.</div>
-      </div>
+      <button class="load-more-btn" onclick="loadMoreReviews()">Load More Reviews</button>
     </div>
 
-    <!-- Sec9 - Similar Products -->
+    <!-- Similar Products -->
     <div class="similar-products">
       <h3>Similar Products</h3>
       <div class="similar-carousel">
-        <img src="assets/product.png" />
-        <img src="assets/product.png" />
-        <img src="assets/product.png" />
-        <img src="assets/product.png" />
+        <div class="similar-item">
+          <img src="assets/product.png" />
+          <span>Item 1</span>
+        </div>
+        <div class="similar-item">
+          <img src="assets/product.png" />
+          <span>Item 2</span>
+        </div>
+        <div class="similar-item">
+          <img src="assets/product.png" />
+          <span>Item 3</span>
+        </div>
+        <div class="similar-item">
+          <img src="assets/product.png" />
+          <span>Item 4</span>
+        </div>
+        <div class="similar-item">
+          <img src="assets/product.png" />
+          <span>Item 5</span>
+        </div>
       </div>
     </div>
 
@@ -286,13 +332,17 @@
       priceSpan.textContent = (qty * pricePerItem).toString();
     });
 
-    // Optional: auto carousel
-    const images = document.querySelectorAll("#carousel img");
+    const carouselImages = document.querySelectorAll("#carousel img");
     let index = 0;
     setInterval(() => {
-      images.forEach((img, i) => img.classList.toggle("active", i === index));
-      index = (index + 1) % images.length;
+      carouselImages.forEach((img, i) => img.classList.toggle("active", i === index));
+      index = (index + 1) % carouselImages.length;
     }, 3000);
+
+    function loadMoreReviews() {
+      document.querySelectorAll(".review-row:not(.visible)").forEach(row => row.classList.add("visible"));
+      document.querySelector(".load-more-btn").style.display = 'none';
+    }
   </script>
 </body>
-  </html>
+      </html>
