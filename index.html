@@ -2,233 +2,292 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Product Page - Local Shop</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Brand Shop • Product</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
+    /* —— Base & Typography —— */
     body {
       margin: 0;
-      font-family: 'Roboto', sans-serif;
-      background: #f1f6ff;
+      font-family: 'Montserrat', sans-serif;
+      background: #f0f4f8;
       color: #333;
     }
+    h1, h2, h3 { margin: 0 0 .5rem; }
+    h1 { font-size: 2rem; font-weight: 600; }
+    h2 { font-size: 1.25rem; font-weight: 600; color: #264653; }
+    h3 { font-size: 1rem; font-weight: 600; color: #2a9d8f; }
 
+    /* —— Header —— */
     header {
-      background: #1a73e8;
-      color: white;
-      padding: 10px 20px;
       display: flex;
       align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      background: #2a9d8f;
+      color: white;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-
     header .material-icons {
       cursor: pointer;
-      margin-right: 10px;
+      margin-right: .75rem;
+      font-size: 1.5rem;
+    }
+    header h1 {
+      flex: 1;
+      font-weight: 400;
+      font-size: 1.5rem;
     }
 
+    /* —— Container —— */
     main {
-      padding: 20px;
+      max-width: 800px;
+      margin: 1rem auto;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    .section {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid #e5e5e5;
+    }
+    .section:last-child {
+      border-bottom: none;
     }
 
-    .product-image {
-      width: 100%;
-      max-width: 300px;
-      margin: 0 auto;
-      padding: 10px;
-      display: block;
-    }
-
-    h1.product-title {
+    /* —— Product Hero —— */
+    .hero {
       text-align: center;
-      font-size: 24px;
-      margin-bottom: 10px;
-      color: #1a237e;
+      background: #e9c46a;
+      padding: 2rem 1rem;
+    }
+    .hero img {
+      max-width: 240px;
+      border-radius: 8px;
+      border: 4px solid #264653;
+    }
+    .hero h2 {
+      margin-top: 1rem;
+      color: #264653;
     }
 
-    .quantity-price {
+    /* —— Qty & Price —— */
+    .buybox {
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
-      gap: 10px;
-      margin: 15px 0;
+      gap: 1rem;
       flex-wrap: wrap;
+      margin-bottom: .5rem;
     }
-
-    .quantity-price label {
-      font-weight: bold;
-    }
-
-    .quantity-price input {
-      padding: 8px;
-      width: 80px;
+    .buybox select,
+    .buybox input {
+      padding: .6rem .8rem;
+      font-size: 1rem;
       border: 1px solid #ccc;
-      border-radius: 5px;
+      border-radius: 6px;
+      flex: 1;
+      max-width: 120px;
     }
-
-    .add-to-cart {
+    .buybox .price {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #e76f51;
       text-align: center;
-      margin-top: 10px;
+      flex: 1;
     }
 
-    .add-to-cart button {
-      background: #ff6f00;
-      color: white;
+    /* —— Add to Cart —— */
+    .add-cart {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .add-cart button {
+      background: #e76f51;
       border: none;
-      padding: 12px 25px;
-      font-size: 16px;
+      color: white;
+      padding: .75rem 2rem;
+      font-size: 1rem;
       border-radius: 6px;
       cursor: pointer;
+      transition: background .3s;
+    }
+    .add-cart button:hover {
+      background: #d65a3e;
     }
 
-    section {
-      background: white;
-      margin-top: 20px;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    /* —— Details & Nutrition —— */
+    .section p, .section ul {
+      line-height: 1.5;
+      font-size: .95rem;
+    }
+    .section ul {
+      padding-left: 1rem;
+      list-style: disc;
     }
 
-    section h2 {
-      margin-top: 0;
-      color: #0d47a1;
-    }
-
-    .rating {
+    /* —— Reviews —— */
+    .rating-summary {
       display: flex;
-      align-items: center;
       justify-content: center;
-      gap: 5px;
-      margin: 10px 0;
+      align-items: center;
+      gap: .5rem;
+      margin-bottom: .75rem;
     }
-
-    .rating .material-icons {
-      color: #ffb300;
+    .rating-summary .material-icons {
+      color: #f4a261;
     }
-
     .reviews .review {
-      border-bottom: 1px solid #ddd;
-      padding: 10px 0;
+      border-top: 1px solid #e5e5e5;
+      padding: .75rem 0;
+      font-size: .9rem;
     }
-
-    .similar-products {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 15px;
-      text-align: center;
+    .reviews .review:first-of-type {
+      border-top: none;
     }
-
-    .similar-products img {
-      width: 100%;
-      border-radius: 8px;
-      padding: 5px;
-    }
-
-    .similar-products p {
-      font-size: 14px;
-      margin: 5px 0 0;
-    }
-
     .load-more {
       text-align: center;
-      margin-top: 10px;
+      margin-top: .75rem;
     }
-
     .load-more button {
-      background: #03a9f4;
-      color: white;
-      padding: 10px 20px;
+      background: #2a9d8f;
       border: none;
-      border-radius: 5px;
+      color: white;
+      padding: .5rem 1.5rem;
+      border-radius: 6px;
       cursor: pointer;
+      transition: background .3s;
+    }
+    .load-more button:hover {
+      background: #23867a;
     }
 
-    @media(max-width: 500px) {
-      .quantity-price {
-        flex-direction: row;
-        justify-content: center;
-      }
+    /* —— Similar Products —— */
+    .similar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+      gap: 1rem;
+      text-align: center;
+    }
+    .similar-grid img {
+      width: 100%;
+      border-radius: 6px;
+      border: 2px solid #2a9d8f;
+      padding: 4px;
+      background: #f1f4f8;
+    }
+    .similar-grid p {
+      margin: .5rem 0 0;
+      font-size: .9rem;
+      font-weight: 600;
+    }
+
+    @media(max-width:600px) {
+      .buybox { flex-direction: column; }
     }
   </style>
 </head>
 <body>
 
-<header>
-  <span class="material-icons" onclick="history.back()">arrow_back</span>
-  <h2>Local Shop</h2>
-</header>
+  <header>
+    <span class="material-icons" onclick="history.back()">arrow_back</span>
+    <h1>My Local Brand</h1>
+  </header>
 
-<main>
-  <img src="assets/product.png" alt="Product" class="product-image">
-  <h1 class="product-title">Tasty Snack Pack</h1>
-
-  <div class="quantity-price">
-    <label for="quantity">Quantity:</label>
-    <input type="number" id="quantity" min="1" value="1" onchange="calculatePrice()">
-    <label for="price">Price:</label>
-    <input type="text" id="price" value="₹50" readonly>
-  </div>
-
-  <div class="add-to-cart">
-    <button>Add to Cart</button>
-  </div>
-
-  <section class="details">
-    <h2>Details</h2>
-    <p>This delicious snack pack is made with high-quality ingredients, perfect for tea time or school lunch boxes.</p>
-  </section>
-
-  <section class="nutrition">
-    <h2>Nutritious Value</h2>
-    <ul>
-      <li>Calories: 150 kcal</li>
-      <li>Protein: 2.5g</li>
-      <li>Carbohydrates: 20g</li>
-      <li>Fat: 5g</li>
-    </ul>
-  </section>
-
-  <section class="reviews">
-    <h2>Customer Reviews</h2>
-    <div class="rating">
-      <span class="material-icons">star</span>
-      <span class="material-icons">star</span>
-      <span class="material-icons">star</span>
-      <span class="material-icons">star_half</span>
-      <span class="material-icons">star_border</span>
-      <strong>3.5/5</strong>
+  <main>
+    <!-- Hero / Product Image & Name -->
+    <div class="section hero">
+      <img src="assets/product.png" alt="Product">
+      <h2>Organic Honey Jar • 500g</h2>
     </div>
-    <div class="review">⭐️⭐️⭐️⭐️ "Very tasty and fresh!"</div>
-    <div class="review">⭐️⭐️⭐️ "Good value for money."</div>
-    <div class="review">⭐️⭐️⭐️⭐️⭐️ "My kids love it!"</div>
-    <div class="review">⭐️⭐️ "Not that crispy."</div>
-    <div class="review">⭐️⭐️⭐️⭐️ "Great flavor!"</div>
-    <div class="load-more">
-      <button>Load More</button>
+
+    <!-- Quantity & Price -->
+    <div class="section">
+      <div class="buybox">
+        <select id="qty" onchange="updatePrice()">
+          <option value="1">1 Jar</option>
+          <option value="2">2 Jars</option>
+          <option value="3">3 Jars</option>
+          <option value="5">5 Jars</option>
+        </select>
+        <div class="price">₹<span id="price">450</span></div>
+      </div>
+      <div class="add-cart">
+        <button><span class="material-icons">add_shopping_cart</span> Add to Cart</button>
+      </div>
     </div>
-  </section>
 
-  <section class="similar">
-    <h2>Similar Products</h2>
-    <div class="similar-products">
-      <div><img src="assets/product.png" alt="Product 1"><p>Sweet Cookies</p></div>
-      <div><img src="assets/product.png" alt="Product 2"><p>Crunchy Bites</p></div>
-      <div><img src="assets/product.png" alt="Product 3"><p>Energy Bars</p></div>
-      <div><img src="assets/product.png" alt="Product 4"><p>Tea Snacks</p></div>
+    <!-- Details -->
+    <div class="section">
+      <h2>Details</h2>
+      <p>Our pure organic honey is hand-harvested from local farms, unfiltered, and rich in natural antioxidants. Perfect as a natural sweetener or wellness booster.</p>
     </div>
-  </section>
-</main>
 
-<script>
-  function calculatePrice() {
-    const quantity = parseInt(document.getElementById('quantity').value);
-    const unitPrice = 50;
-    document.getElementById('price').value = `₹${unitPrice * quantity}`;
-  }
-</script>
+    <!-- Nutritious Value -->
+    <div class="section">
+      <h2>Nutritious Value</h2>
+      <ul>
+        <li>Energy: 304 kcal</li>
+        <li>Carbs: 82 g</li>
+        <li>Protein: 0.3 g</li>
+        <li>Fat: 0 g</li>
+        <li>Antioxidants: High</li>
+      </ul>
+    </div>
 
+    <!-- Reviews -->
+    <div class="section reviews">
+      <h2>Customer Reviews</h2>
+      <div class="rating-summary">
+        <span class="material-icons">star</span>
+        <span class="material-icons">star</span>
+        <span class="material-icons">star</span>
+        <span class="material-icons">star_half</span>
+        <span class="material-icons">star_border</span>
+        <strong>3.5/5</strong>
+      </div>
+      <div class="review">
+        <strong>★★★★☆</strong> “Smooth taste and pure quality.” – Anjali
+      </div>
+      <div class="review">
+        <strong>★★★★★</strong> “Absolutely love it!” – Rohit
+      </div>
+      <div class="review">
+        <strong>★★★☆☆</strong> “Good but a bit pricey.” – Priya
+      </div>
+      <div class="review">
+        <strong>★★★★☆</strong> “Perfect for my morning tea.” – Sanjay
+      </div>
+      <div class="review">
+        <strong>★★☆☆☆</strong> “Too thick for my taste.” – Meera
+      </div>
+      <div class="load-more">
+        <button onclick="loadMore()">Load More</button>
+      </div>
+    </div>
+
+    <!-- Similar Products -->
+    <div class="section">
+      <h2>Similar Products</h2>
+      <div class="similar-grid">
+        <div><img src="assets/product.png" alt=""><p>Wildflower Honey</p></div>
+        <div><img src="assets/product.png" alt=""><p>Acacia Honey</p></div>
+        <div><img src="assets/product.png" alt=""><p>Multiflora Honey</p></div>
+        <div><img src="assets/product.png" alt=""><p>Royal Jelly</p></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const basePrice = 450;
+    function updatePrice() {
+      const qty = parseInt(document.getElementById('qty').value);
+      document.getElementById('price').textContent = qty * basePrice;
+    }
+    function loadMore() {
+      alert('Load more reviews…'); // placeholder
+    }
+  </script>
 </body>
   </html>
