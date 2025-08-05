@@ -3,102 +3,140 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Product Detail | B-Mart</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  <title>Product Details</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
-    * {
-      margin: 0; padding: 0; box-sizing: border-box;
+    body {
+      margin: 0;
       font-family: 'Roboto', sans-serif;
+      background: #f9f9f9;
+      color: #333;
     }
 
-    body {
-      background: #f9f9f9;
-      padding-bottom: 80px;
+    .header {
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      padding: 12px 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header .material-icons {
+      font-size: 24px;
+      cursor: pointer;
+      color: #555;
     }
 
     .container {
-      max-width: 600px;
-      margin: auto;
       padding: 16px;
     }
 
     .product-image {
       width: 100%;
-      height: auto;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      height: 250px;
+      object-fit: contain;
+      border-radius: 10px;
+      background: #fff;
+      margin-bottom: 16px;
     }
 
-    .title {
-      font-size: 24px;
-      font-weight: 700;
-      margin-top: 16px;
-      color: #333;
-    }
-
-    .category {
-      font-size: 16px;
-      color: #777;
-      margin-top: 4px;
+    .product-title {
+      font-size: 22px;
+      font-weight: 600;
     }
 
     .price {
-      font-size: 22px;
-      color: #388e3c;
-      font-weight: 600;
-      margin: 12px 0;
+      color: #2e7d32;
+      font-size: 18px;
+      margin: 6px 0;
     }
 
     .description {
-      font-size: 16px;
-      color: #555;
-      line-height: 1.6;
+      margin: 12px 0;
+      line-height: 1.5;
+    }
+
+    .section-title {
+      margin-top: 24px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .nutrition-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    .nutrition-table th,
+    .nutrition-table td {
+      padding: 8px;
+      text-align: left;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .similar-products {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .similar-item {
+      background: white;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .similar-item img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    .similar-item-title {
+      font-size: 14px;
+      margin-top: 8px;
     }
 
     .bottom-bar {
       position: fixed;
       bottom: 0;
-      left: 0;
-      right: 0;
+      width: 100%;
       background: white;
-      box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
-      padding: 12px 16px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      z-index: 100;
+      align-items: center;
+      padding: 10px 16px;
+      box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
     }
 
-    .qty-control {
+    .quantity-control {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
-    .qty-control button {
-      background: #eee;
-      border: none;
-      padding: 6px 10px;
-      font-size: 18px;
-      border-radius: 8px;
+    .quantity-btn {
+      font-size: 20px;
       cursor: pointer;
+      padding: 6px;
+      border-radius: 50%;
+      background: #eeeeee;
     }
 
-    .qty {
-      font-size: 16px;
-      font-weight: 500;
-      width: 24px;
-      text-align: center;
-    }
-
-    .add-btn {
-      background: #2196f3;
+    .cart-btn {
+      background: #6200ea;
       color: white;
-      padding: 10px 16px;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
+      padding: 10px 18px;
+      border-radius: 24px;
       font-size: 16px;
       display: flex;
       align-items: center;
@@ -106,57 +144,88 @@
       cursor: pointer;
     }
 
-    .add-btn i {
+    .cart-btn .material-icons {
       font-size: 20px;
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <img src="assets/product.png" alt="Product" class="product-image">
-    
-    <h1 class="title">Fresh Apples (1kg)</h1>
-    <p class="category">Category: Fruits</p>
-    <p class="price">₹120</p>
-
-    <p class="description">
-      Enjoy the taste of nature's goodness! These hand-picked, organic apples are packed with vitamins and freshness. Perfect for a healthy snack or delicious desserts.
-    </p>
+  <!-- Header with back icon -->
+  <div class="header">
+    <span class="material-icons" onclick="history.back()">arrow_back</span>
   </div>
 
-  <div class="bottom-bar">
-    <div class="qty-control">
-      <button onclick="decreaseQty()"><i class="material-icons-outlined">remove</i></button>
-      <span class="qty" id="qty">1</span>
-      <button onclick="increaseQty()"><i class="material-icons-outlined">add</i></button>
+  <div class="container">
+    <img src="assets/product.png" class="product-image" alt="Product Image">
+
+    <div class="product-title">Fresh Apple (1kg)</div>
+    <div class="price">₹120</div>
+    <div class="description">
+      Juicy and sweet apples sourced directly from the orchards. 100% organic and rich in fiber.
     </div>
-    <button class="add-btn" onclick="addToCart()">
-      <i class="material-icons-outlined">shopping_cart</i>
+
+    <!-- Nutritious Value -->
+    <div class="section-title">Nutritious Value (per 100g)</div>
+    <table class="nutrition-table">
+      <tr><th>Nutrient</th><th>Amount</th></tr>
+      <tr><td>Calories</td><td>52 kcal</td></tr>
+      <tr><td>Carbohydrates</td><td>14 g</td></tr>
+      <tr><td>Fiber</td><td>2.4 g</td></tr>
+      <tr><td>Sugar</td><td>10 g</td></tr>
+      <tr><td>Vitamin C</td><td>4.6 mg</td></tr>
+    </table>
+
+    <!-- Similar Products -->
+    <div class="section-title">Similar Products</div>
+    <div class="similar-products">
+      <div class="similar-item">
+        <img src="assets/product.png" alt="Apple">
+        <div class="similar-item-title">Green Apple</div>
+      </div>
+      <div class="similar-item">
+        <img src="assets/product.png" alt="Apple">
+        <div class="similar-item-title">Red Apple</div>
+      </div>
+      <div class="similar-item">
+        <img src="assets/product.png" alt="Apple">
+        <div class="similar-item-title">Apple Juice</div>
+      </div>
+      <div class="similar-item">
+        <img src="assets/product.png" alt="Apple">
+        <div class="similar-item-title">Apple Jam</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom fixed quantity + add to cart -->
+  <div class="bottom-bar">
+    <div class="quantity-control">
+      <span class="material-icons quantity-btn" onclick="decrease()">remove</span>
+      <span id="qty">1</span>
+      <span class="material-icons quantity-btn" onclick="increase()">add</span>
+    </div>
+    <div class="cart-btn" onclick="addToCart()">
+      <span class="material-icons">add_shopping_cart</span>
       Add to Cart
-    </button>
+    </div>
   </div>
 
   <script>
-    let qty = 1;
-    const qtyDisplay = document.getElementById('qty');
-
-    function increaseQty() {
-      qty++;
-      qtyDisplay.textContent = qty;
+    let quantity = 1;
+    function increase() {
+      quantity++;
+      document.getElementById('qty').textContent = quantity;
     }
-
-    function decreaseQty() {
-      if (qty > 1) {
-        qty--;
-        qtyDisplay.textContent = qty;
+    function decrease() {
+      if (quantity > 1) {
+        quantity--;
+        document.getElementById('qty').textContent = quantity;
       }
     }
-
     function addToCart() {
-      alert(`Added ${qty} item(s) to cart!`);
+      alert("Added " + quantity + " item(s) to cart!");
     }
   </script>
-
 </body>
-</html>
+                          </html>
