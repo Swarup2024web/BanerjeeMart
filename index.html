@@ -1,219 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Product Detail</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  <meta charset="UTF-8">
+  <title>Banerjee Mart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Roboto', sans-serif;
+    body { margin: 0; font-family: Arial, sans-serif; background: #f6f6f6; }
+    header { background-color: #2e7d32; color: white; padding: 10px; text-align: center; }
+    .header-row { margin: 5px 0; }
+    .search-box input {
+      width: 90%; padding: 10px; border: none; border-radius: 10px;
+      font-size: 16px; margin: 10px auto; display: block;
+    }
+    .address { font-size: 14px; color: #c8e6c9; }
+
+    .slider { display: flex; overflow-x: auto; scroll-behavior: smooth; margin: 10px 0; }
+    .slider img {
+      width: 90vw; max-width: 600px; margin: auto; border-radius: 10px;
     }
 
-    body {
-      background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .container {
-      padding: 16px;
-    }
-
-    .top-bar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 16px;
-    }
-
-    .top-bar .material-icons {
-      cursor: pointer;
-      font-size: 28px;
-    }
-
+    .section { padding: 10px; background: white; margin: 10px 0; border-radius: 10px; }
+    .section h2 { font-size: 20px; margin-bottom: 10px; }
+    .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+    
     .product-card {
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-      text-align: center;
+      background: #fafafa; padding: 10px; border-radius: 10px;
+      text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-
     .product-card img {
-      width: 100%;
-      max-width: 300px;
-      border-radius: 12px;
+      width: 100px; height: 100px; object-fit: contain;
+    }
+    .product-card h4 { margin: 8px 0 4px; font-size: 14px; }
+    .price { color: green; font-weight: bold; margin: 4px 0; }
+    .quantity-control {
+      display: flex; justify-content: center; align-items: center; gap: 5px;
+    }
+    .quantity-control button {
+      background: #2e7d32; color: white; border: none; padding: 5px 10px; border-radius: 5px;
+      cursor: pointer;
+    }
+    .cart-btn {
+      margin-top: 5px;
+      background: orange; color: white; border: none; padding: 5px 10px; border-radius: 5px;
     }
 
-    .product-card h2 {
-      margin-top: 12px;
-      font-size: 22px;
-    }
-
-    .product-card p.price {
-      color: #0288d1;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .nutrition,
-    .similar-products {
-      margin-top: 24px;
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(6px);
-      border-radius: 12px;
-      padding: 16px;
-    }
-
-    .nutrition h3,
-    .similar-products h3 {
-      font-size: 18px;
-      margin-bottom: 12px;
-      color: #0277bd;
-    }
-
-    .nutrition ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    .nutrition ul li {
-      padding: 4px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .similar-products .item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .similar-products .item img {
-      width: 50px;
-      height: 50px;
-      border-radius: 8px;
-    }
-
-    .bottom-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(10px);
-      padding: 12px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top: 1px solid rgba(0, 0, 0, 0.1);
-    }
-
-    .quantity {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .quantity button {
-      background-color: #03a9f4;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      padding: 6px 10px;
-      font-size: 18px;
+    .load-more {
+      display: block; margin: 15px auto; padding: 10px 20px;
+      background: #2e7d32; color: white; border: none; border-radius: 5px;
       cursor: pointer;
     }
 
-    .quantity span {
-      font-size: 16px;
-    }
-
-    .add-to-cart {
-      background-color: #0288d1;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 16px;
-      cursor: pointer;
+    @media(max-width: 500px) {
+      .search-box input { font-size: 14px; }
+      .product-card h4 { font-size: 13px; }
     }
   </style>
 </head>
 <body>
 
-  <div class="top-bar">
-    <span class="material-icons" onclick="history.back()">arrow_back</span>
-    <h2>Product Details</h2>
+  <!-- Header -->
+  <header>
+    <div class="header-row"><h1>Banerjee Mart</h1></div>
+    <div class="search-box header-row">
+      <input type="text" placeholder="Search atta, ghee, tea, shampoo...">
+    </div>
+    <div class="header-row address">📍 743349 | Confirm availability at checkout</div>
+  </header>
+
+  <!-- Promo Slider -->
+  <div class="slider">
+    <img src="assets/promo1.jpg" alt="Promo 1">
+    <img src="assets/promo2.jpg" alt="Promo 2">
+    <img src="assets/promo3.jpg" alt="Promo 3">
+    <img src="assets/promo4.jpg" alt="Promo 4">
+    <img src="assets/promo5.jpg" alt="Promo 5">
   </div>
 
-  <div class="container">
-    <div class="product-card">
-      <img src="assets/product.png" alt="Product Image" />
-      <h2>Organic Rice (1kg)</h2>
-      <p class="price">₹75</p>
-    </div>
-
-    <div class="nutrition">
-      <h3>Nutritious Value (per 100g)</h3>
-      <ul>
-        <li>Energy: 130 kcal</li>
-        <li>Protein: 2.7 g</li>
-        <li>Fat: 0.3 g</li>
-        <li>Carbohydrate: 28.2 g</li>
-        <li>Fiber: 0.4 g</li>
-      </ul>
-    </div>
-
-    <div class="similar-products">
-      <h3>Similar Products</h3>
-      <div class="item">
-        <img src="assets/product.png" alt="Similar Product 1" />
-        <div>
-          <strong>Basmati Rice 1kg</strong><br/>
-          ₹90
-        </div>
-      </div>
-      <div class="item">
-        <img src="assets/product.png" alt="Similar Product 2" />
-        <div>
-          <strong>Brown Rice 1kg</strong><br/>
-          ₹85
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="bottom-bar">
-    <div class="quantity">
-      <button onclick="decreaseQty()">remove</button>
-      <span id="qty">1</span>
-      <button onclick="increaseQty()">add</button>
-    </div>
-    <button class="add-to-cart">
-      <span class="material-icons">shopping_cart</span> Add to Cart
-    </button>
-  </div>
+  <!-- Section Template -->
+  <div id="sections"></div>
 
   <script>
-    let qty = 1;
-    function increaseQty() {
-      qty++;
-      document.getElementById('qty').innerText = qty;
-    }
-    function decreaseQty() {
-      if (qty > 1) qty--;
-      document.getElementById('qty').innerText = qty;
+    const sections = [
+      { title: "Groceries & Food" },
+      { title: "Beauty & Personal Care" },
+      { title: "Household Essentials" },
+      { title: "Students Need" }
+    ];
+
+    const dummyProducts = Array.from({ length: 30 }, (_, i) => ({
+      name: `Item ${i+1}`,
+      price: (Math.random() * 100 + 10).toFixed(0),
+      img: "https://via.placeholder.com/100"
+    }));
+
+    const sectionsContainer = document.getElementById("sections");
+
+    sections.forEach(section => {
+      const div = document.createElement("div");
+      div.className = "section";
+      div.innerHTML = `<h2>${section.title}</h2><div class="products"></div><button class="load-more">Load More</button>`;
+      sectionsContainer.appendChild(div);
+
+      const productDiv = div.querySelector('.products');
+      const loadMoreBtn = div.querySelector('.load-more');
+      let visibleCount = 0;
+
+      function loadProducts() {
+        const items = dummyProducts.slice(visibleCount, visibleCount + 12);
+        items.forEach(p => {
+          const card = document.createElement("div");
+          card.className = "product-card";
+          card.innerHTML = `
+            <img src="${p.img}" alt="${p.name}">
+            <h4>${p.name}</h4>
+            <div class="price">₹${p.price}</div>
+            <div class="quantity-control">
+              <button onclick="changeQty(this, -1)">−</button>
+              <span>1</span>
+              <button onclick="changeQty(this, 1)">+</button>
+            </div>
+            <button class="cart-btn">🛒 Add</button>
+          `;
+          productDiv.appendChild(card);
+        });
+        visibleCount += items.length;
+        if (visibleCount >= dummyProducts.length) loadMoreBtn.style.display = "none";
+      }
+
+      loadMoreBtn.addEventListener("click", loadProducts);
+      loadProducts(); // Initial load
+    });
+
+    function changeQty(el, delta) {
+      const span = el.parentElement.querySelector("span");
+      let val = parseInt(span.innerText);
+      val = Math.max(1, val + delta);
+      span.innerText = val;
     }
   </script>
 
