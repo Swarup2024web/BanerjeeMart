@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel - Banerjee Mart</title>
+  <script type="module" src="firebaseConfig.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 20px;
+      background: #f4f7fa;
+      color: #333;
+    }
+    h2 {
+      color: #1e88e5;
+      margin-top: 40px;
+    }
+    .section {
+      background: #fff;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    button {
+      background: #1e88e5;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1565c0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 12px;
+      text-align: left;
+    }
+    th {
+      background: #e3f2fd;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Banerjee Mart Admin Panel</h1>
+
+  <!-- Add Items Section -->
+  <div class="section">
+    <h2>Add New Item</h2>
+    <label for="itemName">Item Name</label>
+    <input type="text" id="itemName" placeholder="Enter item name">
+
+    <label for="itemPrice">Price</label>
+    <input type="number" id="itemPrice" placeholder="Enter price in ₹">
+
+    <label for="itemImage">Image URL (from GitHub)</label>
+    <input type="text" id="itemImage" placeholder="Enter image link">
+
+    <label for="itemCategory">Category</label>
+    <select id="itemCategory">
+      <option value="cat1">Groceries and food</option>
+      <option value="cat2">Beauty and personal care</option>
+      <option value="cat3">Household essentials</option>
+      <option value="cat4">Students need</option>
+      <option value="cat5">Others</option>
+    </select>
+
+    <button id="addItemBtn">Add Item</button>
+  </div>
+
+  <!-- Manage Orders Section -->
+  <div class="section">
+    <h2>Manage Orders</h2>
+    <table id="ordersTable">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Address</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="ordersBody">
+        <!-- Orders will be populated here -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Firebase interaction -->
+  <script type="module">
+    import { getFirestore, collection, addDoc, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { db } from './firebaseConfig.js';
+
+    const itemName = document.getElementById("itemName");
+    const itemPrice = document.getElementById("itemPrice");
+    const itemImage = document.getElementById("itemImage");
+    const itemCategory = document.getElementById("itemCategory");
+    const addItemBtn = document.getElementById("addItemBtn");
+
+    addItemBtn.addEventListener("click", async () => {
+      if (!itemName.value || !itemPrice.value || !itemImage.value) {
+        alert("Please fill all fields");
+        return;
+      }
+
+      await addDoc(collection(db, "products"), {
+        name: itemName.value,
+        price: parseFloat(itemPrice.value),
+        image: itemImage.value,
+        category: itemCategory.value
+      });
+
+      alert("Item added successfully!");
+      itemName.value = "";
+      itemPrice.value = "";
+      itemImage.value = "";
+      itemCategory.value = "cat1";
+    });
+
+    // Load orders
+    async function loadOrders() {
+      const ordersBody = document.getElementById("ordersBody");
+      ordersBody.innerHTML = "";
+      const querySnapshot = await getDocs(collection(db, "orders"));
+      querySnapshot.forEach(docSnap => {
+        const order = docSnap.data();
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td>${order.username}</td>
+          <td>${order.address}</td>
+          <td>
+            <select data-id="${docSnap.id}">
+              <option value="Processing" ${order.status === "Processing" ? "selected" : ""}>Processing</option>
+              <option value="On the Way" ${order.status === "On the Way" ? "selected" : ""}>On the Way</option>
+              <option value="Delivered" ${order.status === "Delivered" ? "selected" : ""}>Delivered</option>
+            </select>
+          </td>
+        `;
+        ordersBody.appendChild(row);
+      });
+    }
+
+    // Update order status
+    document.addEventListener("change", async (e) => {
+      if (e.target.tagName === "SELECT" && e.target.dataset.id) {
+        const orderId = e.target.dataset.id;
+        await updateDoc(doc(db, "orders", orderId), {
+          status: e.target.value
+        });
+        alert("Order status updated!");
+      }
+    });
+
+    loadOrders();
+  </script>
+</body>
+</html>
