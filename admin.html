@@ -2,167 +2,181 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Panel</title>
+  <title>Admin Panel - Banerjee Mart</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    * { box-sizing: border-box; font-family: Arial; }
-    body { margin: 0; padding: 20px; background: #f4f8fb; color: #333; }
-    h2 { color: #2b6cb0; }
-
-    .container { max-width: 1000px; margin: auto; }
-
-    .form-section, .orders-section {
-      background: #fff; padding: 20px; border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05); margin-bottom: 30px;
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f3f4f6;
     }
-
+    h2 {
+      margin-top: 40px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+    }
     input, select, button {
-      padding: 10px; margin: 8px 0; width: 100%;
-      border: 1px solid #ccc; border-radius: 8px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
     }
-
     button {
-      background-color: #2b6cb0; color: white; cursor: pointer;
-      transition: background 0.3s;
+      background: #4CAF50;
+      color: white;
+      cursor: pointer;
     }
-
     button:hover {
-      background-color: #225e9e;
+      background: #45a049;
     }
 
     table {
-      width: 100%; border-collapse: collapse;
-      overflow-x: auto;
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
     }
-
     th, td {
-      text-align: left; padding: 10px;
-      border-bottom: 1px solid #ddd;
+      border: 1px solid #ccc;
+      padding: 12px;
+      text-align: left;
+    }
+    th {
+      background-color: #f1f1f1;
     }
 
-    .table-responsive {
-      overflow-x: auto;
-    }
-
-    @media (min-width: 600px) {
-      .form-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      thead {
+        display: none;
+      }
+      tr {
+        margin-bottom: 15px;
+      }
+      td {
+        position: relative;
+        padding-left: 50%;
+      }
+      td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        font-weight: bold;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="form-section">
-      <h2>Add Product</h2>
-      <div class="form-grid">
-        <input type="text" id="itemName" placeholder="Item Name">
-        <input type="number" id="itemPrice" placeholder="Item Price">
-        <input type="text" id="itemImage" placeholder="Image URL from GitHub Assets">
-        <select id="itemCategory">
-          <option value="cat1">Category 1</option>
-          <option value="cat2">Category 2</option>
-          <option value="cat3">Category 3</option>
-          <option value="cat4">Category 4</option>
-          <option value="cat5">Category 5</option>
-        </select>
-      </div>
-      <button onclick="addProduct()">Add Product</button>
-    </div>
+  <h1>🛒 Admin Panel - Banerjee Mart</h1>
 
-    <div class="orders-section">
-      <h2>Manage Orders</h2>
-      <div class="table-responsive">
-        <table id="ordersTable">
-          <thead>
-            <tr>
-              <th>Username</th>
-              <th>Address</th>
-              <th>Status</th>
-              <th>Update</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+  <h2>Add New Item</h2>
+  <form id="productForm">
+    <input type="text" id="name" placeholder="Item Name" required>
+    <input type="number" id="price" placeholder="Price" required>
+    <input type="text" id="image" placeholder="Image Link (GitHub Asset)" required>
+    <select id="category" required>
+      <option value="">Select Category</option>
+      <option value="cat1">cat1</option>
+      <option value="cat2">cat2</option>
+      <option value="cat3">cat3</option>
+      <option value="cat4">cat4</option>
+      <option value="cat5">cat5</option>
+    </select>
+    <button type="submit">Add Item</button>
+  </form>
 
-  <!-- Firebase & JS -->
+  <h2>Order Management</h2>
+  <table id="ordersTable">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Address</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="ordersBody">
+      <!-- Orders will be listed here -->
+    </tbody>
+  </table>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-    import { firebaseConfig } from "./firebaseConfig.js";
+    import { firebaseConfig } from './firebaseConfig.js';
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Add Product Function
-    async function addProduct() {
-      const name = document.getElementById('itemName').value.trim();
-      const price = parseFloat(document.getElementById('itemPrice').value);
-      const image = document.getElementById('itemImage').value.trim();
-      const category = document.getElementById('itemCategory').value;
+    const form = document.getElementById('productForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const price = parseFloat(document.getElementById('price').value);
+      const image = document.getElementById('image').value.trim();
+      const category = document.getElementById('category').value;
 
       if (!name || !price || !image || !category) {
-        alert("Please fill all fields.");
+        alert('Please fill out all fields.');
         return;
       }
 
       try {
         await addDoc(collection(db, "products"), {
-          name,
-          price,
-          image,
-          category,
-          timestamp: new Date()
+          name, price, image, category
         });
-        alert("Product added successfully!");
-        document.getElementById('itemName').value = '';
-        document.getElementById('itemPrice').value = '';
-        document.getElementById('itemImage').value = '';
-        document.getElementById('itemCategory').value = 'cat1';
+        alert("✅ Product added!");
+        form.reset();
       } catch (err) {
-        alert("Error: " + err.message);
+        console.error("❌ Error adding product:", err);
+        alert("❌ Failed to add product.");
       }
-    }
+    });
 
-    // Load Orders
     async function loadOrders() {
-      const ordersTable = document.querySelector("#ordersTable tbody");
-      ordersTable.innerHTML = "";
+      const ordersRef = collection(db, "orders");
+      const snapshot = await getDocs(ordersRef);
+      const ordersBody = document.getElementById("ordersBody");
+      ordersBody.innerHTML = "";
 
-      const querySnapshot = await getDocs(collection(db, "orders"));
-      querySnapshot.forEach((docSnap) => {
+      snapshot.forEach(docSnap => {
         const order = docSnap.data();
         const row = document.createElement("tr");
 
         row.innerHTML = `
-          <td>${order.username || "N/A"}</td>
-          <td>${order.address || "N/A"}</td>
-          <td>
-            <select>
-              <option value="Processing" ${order.status === "Processing" ? "selected" : ""}>Processing</option>
-              <option value="On the Way" ${order.status === "On the Way" ? "selected" : ""}>On the Way</option>
-              <option value="Delivered" ${order.status === "Delivered" ? "selected" : ""}>Delivered</option>
+          <td data-label="Username">${order.username}</td>
+          <td data-label="Address">${order.address}</td>
+          <td data-label="Status">
+            <select onchange="updateStatus('${docSnap.id}', this.value)">
+              <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>processing</option>
+              <option value="on the way" ${order.status === 'on the way' ? 'selected' : ''}>on the way</option>
+              <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>delivered</option>
             </select>
           </td>
-          <td><button data-id="${docSnap.id}">Update</button></td>
         `;
-
-        row.querySelector("button").addEventListener("click", async () => {
-          const newStatus = row.querySelector("select").value;
-          await updateDoc(doc(db, "orders", docSnap.id), {
-            status: newStatus
-          });
-          alert("Order status updated!");
-        });
-
-        ordersTable.appendChild(row);
+        ordersBody.appendChild(row);
       });
     }
+
+    window.updateStatus = async function (id, status) {
+      const orderRef = doc(db, "orders", id);
+      try {
+        await updateDoc(orderRef, { status });
+        alert("✅ Status updated!");
+      } catch (err) {
+        console.error("❌ Error updating status:", err);
+      }
+    };
 
     loadOrders();
   </script>
