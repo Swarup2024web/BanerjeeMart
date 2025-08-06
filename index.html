@@ -3,229 +3,151 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Product Details</title>
+  <title>Product Detail</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      font-family: 'Roboto', sans-serif;
-      background: #f9f9f9;
-      color: #333;
-    }
-
-    .header {
-      display: flex;
-      align-items: center;
-      background: #ffffff;
-      padding: 12px 16px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .header .material-icons {
-      font-size: 24px;
-      cursor: pointer;
-      color: #555;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #dff6ff, #baeaff);
+      backdrop-filter: blur(12px);
+      color: #222;
     }
 
     .container {
-      padding: 16px;
+      max-width: 500px;
+      margin: 30px auto;
+      padding: 20px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.3);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
     }
 
-    .product-image {
+    .back-btn {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: 18px;
+      color: #0077b6;
+      margin-bottom: 15px;
+    }
+
+    .back-btn .material-icons {
+      margin-right: 6px;
+    }
+
+    .product-img {
       width: 100%;
-      height: 250px;
-      object-fit: contain;
-      border-radius: 10px;
-      background: #fff;
-      margin-bottom: 16px;
+      height: auto;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      object-fit: cover;
     }
 
     .product-title {
-      font-size: 22px;
-      font-weight: 600;
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 8px;
     }
 
-    .price {
-      color: #2e7d32;
-      font-size: 18px;
-      margin: 6px 0;
+    .product-price {
+      font-size: 20px;
+      color: #0077b6;
+      margin-bottom: 10px;
     }
 
-    .description {
-      margin: 12px 0;
-      line-height: 1.5;
+    .product-description {
+      margin-bottom: 20px;
     }
 
-    .section-title {
-      margin-top: 24px;
-      font-size: 18px;
-      font-weight: 600;
+    h3 {
+      margin-top: 30px;
+      color: #015c9b;
     }
 
-    .nutrition-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-
-    .nutrition-table th,
-    .nutrition-table td {
-      padding: 8px;
-      text-align: left;
-      border: 1px solid #ccc;
-      font-size: 14px;
+    ul, ol {
+      padding-left: 20px;
     }
 
     .similar-products {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 10px;
+      gap: 12px;
     }
 
-    .similar-item {
-      background: white;
-      border-radius: 8px;
+    .similar-card {
+      background: rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
       padding: 10px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       text-align: center;
+      backdrop-filter: blur(10px);
     }
 
-    .similar-item img {
+    .similar-card img {
       width: 100%;
       height: 100px;
       object-fit: cover;
-      border-radius: 6px;
+      border-radius: 8px;
+      margin-bottom: 5px;
     }
 
-    .similar-item-title {
-      font-size: 14px;
-      margin-top: 8px;
-    }
-
-    .bottom-bar {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 16px;
-      box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
-    }
-
-    .quantity-control {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .quantity-btn {
-      font-size: 20px;
-      cursor: pointer;
-      padding: 6px;
-      border-radius: 50%;
-      background: #eeeeee;
-    }
-
-    .cart-btn {
-      background: #6200ea;
-      color: white;
-      padding: 10px 18px;
-      border-radius: 24px;
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-    }
-
-    .cart-btn .material-icons {
-      font-size: 20px;
+    .footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 12px;
+      color: #555;
     }
   </style>
 </head>
 <body>
-
-  <!-- Header with back icon -->
-  <div class="header">
-    <span class="material-icons" onclick="history.back()">arrow_back</span>
-  </div>
-
   <div class="container">
-    <img src="assets/product.png" class="product-image" alt="Product Image">
-
-    <div class="product-title">Fresh Apple (1kg)</div>
-    <div class="price">₹120</div>
-    <div class="description">
-      Juicy and sweet apples sourced directly from the orchards. 100% organic and rich in fiber.
+    <!-- Back Button -->
+    <div class="back-btn" onclick="history.back()">
+      <span class="material-icons">arrow_back</span> Back
     </div>
 
-    <!-- Nutritious Value -->
-    <div class="section-title">Nutritious Value (per 100g)</div>
-    <table class="nutrition-table">
-      <tr><th>Nutrient</th><th>Amount</th></tr>
-      <tr><td>Calories</td><td>52 kcal</td></tr>
-      <tr><td>Carbohydrates</td><td>14 g</td></tr>
-      <tr><td>Fiber</td><td>2.4 g</td></tr>
-      <tr><td>Sugar</td><td>10 g</td></tr>
-      <tr><td>Vitamin C</td><td>4.6 mg</td></tr>
-    </table>
+    <!-- Product Image -->
+    <img src="assets/product.jpg" alt="Product Image" class="product-img">
+
+    <!-- Product Info -->
+    <div class="product-title">Organic Honey</div>
+    <div class="product-price">₹249 / 500ml</div>
+    <div class="product-description">
+      100% pure organic honey collected from natural bee farms. No preservatives, no additives. Rich in taste and nutrition.
+    </div>
+
+    <!-- Nutrition Info -->
+    <h3>Nutritional Value (per 100g)</h3>
+    <ul>
+      <li>Energy: 304 kcal</li>
+      <li>Carbohydrates: 82g</li>
+      <li>Sugar: 76g</li>
+      <li>Protein: 0.3g</li>
+      <li>Fat: 0g</li>
+    </ul>
 
     <!-- Similar Products -->
-    <div class="section-title">Similar Products</div>
+    <h3>Similar Products</h3>
     <div class="similar-products">
-      <div class="similar-item">
-        <img src="assets/product.png" alt="Apple">
-        <div class="similar-item-title">Green Apple</div>
+      <div class="similar-card">
+        <img src="assets/jaggery.jpg" alt="Jaggery">
+        <div>Organic Jaggery</div>
+        <div>₹99 / 1kg</div>
       </div>
-      <div class="similar-item">
-        <img src="assets/product.png" alt="Apple">
-        <div class="similar-item-title">Red Apple</div>
+      <div class="similar-card">
+        <img src="assets/sugarcane.jpg" alt="Sugarcane Juice">
+        <div>Sugarcane Juice</div>
+        <div>₹49 / 500ml</div>
       </div>
-      <div class="similar-item">
-        <img src="assets/product.png" alt="Apple">
-        <div class="similar-item-title">Apple Juice</div>
-      </div>
-      <div class="similar-item">
-        <img src="assets/product.png" alt="Apple">
-        <div class="similar-item-title">Apple Jam</div>
-      </div>
+    </div>
+
+    <div class="footer">
+      &copy; 2025 Swarup's B-Shop. All rights reserved.
     </div>
   </div>
-
-  <!-- Bottom fixed quantity + add to cart -->
-  <div class="bottom-bar">
-    <div class="quantity-control">
-      <span class="material-icons quantity-btn" onclick="decrease()">remove</span>
-      <span id="qty">1</span>
-      <span class="material-icons quantity-btn" onclick="increase()">add</span>
-    </div>
-    <div class="cart-btn" onclick="addToCart()">
-      <span class="material-icons">add_shopping_cart</span>
-      Add to Cart
-    </div>
-  </div>
-
-  <script>
-    let quantity = 1;
-    function increase() {
-      quantity++;
-      document.getElementById('qty').textContent = quantity;
-    }
-    function decrease() {
-      if (quantity > 1) {
-        quantity--;
-        document.getElementById('qty').textContent = quantity;
-      }
-    }
-    function addToCart() {
-      alert("Added " + quantity + " item(s) to cart!");
-    }
-  </script>
 </body>
-                          </html>
+</html>
