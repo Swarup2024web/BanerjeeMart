@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <title>Banerjee Mart</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js"></script>
   <style>
     body { margin: 0; font-family: Arial, sans-serif; background: #f6f6f6; }
     header { background-color: #2e7d32; color: white; padding: 10px; text-align: center; }
@@ -14,15 +17,31 @@
     }
     .address { font-size: 14px; color: #c8e6c9; }
 
-    .slider { display: flex; overflow-x: auto; scroll-behavior: smooth; margin: 10px 0; }
-    .slider img {
-      width: 90vw; max-width: 600px; margin: auto; border-radius: 10px;
+    .slider-container { position: relative; width: 100%; overflow: hidden; }
+    .slider {
+      display: flex; transition: transform 0.3s ease-in-out;
     }
+    .slider img {
+      min-width: 100%; max-height: 200px; object-fit: cover; border-radius: 10px;
+    }
+    .slider-btn {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: rgba(0,0,0,0.5); color: white; border: none;
+      font-size: 24px; padding: 5px 10px; cursor: pointer;
+      z-index: 2;
+    }
+    .left-btn { left: 10px; }
+    .right-btn { right: 10px; }
 
     .section { padding: 10px; background: white; margin: 10px 0; border-radius: 10px; }
     .section h2 { font-size: 20px; margin-bottom: 10px; }
-    .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
-    
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+    }
+
     .product-card {
       background: #fafafa; padding: 10px; border-radius: 10px;
       text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -42,6 +61,7 @@
     .cart-btn {
       margin-top: 5px;
       background: orange; color: white; border: none; padding: 5px 10px; border-radius: 5px;
+      cursor: pointer;
     }
 
     .load-more {
@@ -50,10 +70,30 @@
       cursor: pointer;
     }
 
-    @media(max-width: 500px) {
-      .search-box input { font-size: 14px; }
-      .product-card h4 { font-size: 13px; }
+    @media (max-width: 500px) {
+      .products {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
+
+    @media (min-width: 501px) {
+      .products {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .popup {
+      position: fixed;
+      bottom: 20px; left: 50%;
+      transform: translateX(-50%);
+      background: #4caf50; color: white;
+      padding: 10px 20px;
+      border-radius: 10px;
+      opacity: 0; transition: opacity 0.3s ease-in-out;
+      z-index: 1000;
+    }
+
+    .popup.show { opacity: 1; }
   </style>
 </head>
 <body>
@@ -64,22 +104,57 @@
     <div class="search-box header-row">
       <input type="text" placeholder="Search atta, ghee, tea, shampoo...">
     </div>
-    <div class="header-row address">📍 743349 | Confirm availability at checkout</div>
+    <div class="header-row address" id="userAddress">📍 Loading address...</div>
   </header>
 
   <!-- Promo Slider -->
-  <div class="slider">
-    <img src="assets/promo1.png" alt="Promo 1">
-    <img src="assets/promo2.png" alt="Promo 2">
-    <img src="assets/promo3.png" alt="Promo 3">
-    <img src="assets/promo4.png" alt="Promo 4">
-    <img src="assets/promo5.png" alt="Promo 5">
+  <div class="slider-container">
+    <button class="slider-btn left-btn" onclick="moveSlide(-1)">&#10094;</button>
+    <div class="slider" id="slider">
+      <img src="assets/promo1.jpg" alt="Promo 1">
+      <img src="assets/promo2.jpg" alt="Promo 2">
+      <img src="assets/promo3.jpg" alt="Promo 3">
+      <img src="assets/promo4.jpg" alt="Promo 4">
+      <img src="assets/promo5.jpg" alt="Promo 5">
+    </div>
+    <button class="slider-btn right-btn" onclick="moveSlide(1)">&#10095;</button>
   </div>
 
-  <!-- Section Template -->
+  <!-- Sections -->
   <div id="sections"></div>
 
+  <!-- Popup -->
+  <div class="popup" id="popup">Added to cart</div>
+
+  <!-- JS -->
   <script>
+    // Firebase Setup
+    const firebaseConfig = {
+      apiKey: "YOUR-API-KEY",
+      authDomain: "YOUR-PROJECT.firebaseapp.com",
+      projectId: "YOUR-PROJECT-ID",
+      databaseURL: "YOUR-REALTIME-DB-URL",
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Fetch address
+    firebase.database().ref("users/user1/address").on("value", (snapshot) => {
+      const address = snapshot.val();
+      document.getElementById("userAddress").innerText = `📍 ${address}`;
+    });
+
+    // Slider logic
+    let currentSlide = 0;
+    const slider = document.getElementById('slider');
+    const totalSlides = slider.children.length;
+
+    function moveSlide(direction) {
+      currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+      slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }
+
+    // Product data
     const sections = [
       { title: "Groceries & Food" },
       { title: "Beauty & Personal Care" },
@@ -93,20 +168,20 @@
       img: "https://via.placeholder.com/100"
     }));
 
-    const sectionsContainer = document.getElementById("sections");
+    const container = document.getElementById("sections");
 
     sections.forEach(section => {
       const div = document.createElement("div");
       div.className = "section";
       div.innerHTML = `<h2>${section.title}</h2><div class="products"></div><button class="load-more">Load More</button>`;
-      sectionsContainer.appendChild(div);
+      container.appendChild(div);
 
       const productDiv = div.querySelector('.products');
       const loadMoreBtn = div.querySelector('.load-more');
-      let visibleCount = 0;
+      let visible = 0;
 
-      function loadProducts() {
-        const items = dummyProducts.slice(visibleCount, visibleCount + 12);
+      function load() {
+        const items = dummyProducts.slice(visible, visible + 12);
         items.forEach(p => {
           const card = document.createElement("div");
           card.className = "product-card";
@@ -119,23 +194,30 @@
               <span>1</span>
               <button onclick="changeQty(this, 1)">+</button>
             </div>
-            <button class="cart-btn">🛒 Add</button>
+            <button class="cart-btn" onclick="addToCart('${p.name}')">🛒 Add</button>
           `;
           productDiv.appendChild(card);
         });
-        visibleCount += items.length;
-        if (visibleCount >= dummyProducts.length) loadMoreBtn.style.display = "none";
+        visible += items.length;
+        if (visible >= dummyProducts.length) loadMoreBtn.style.display = "none";
       }
 
-      loadMoreBtn.addEventListener("click", loadProducts);
-      loadProducts(); // Initial load
+      loadMoreBtn.addEventListener("click", load);
+      load(); // First load
     });
 
-    function changeQty(el, delta) {
-      const span = el.parentElement.querySelector("span");
-      let val = parseInt(span.innerText);
+    function changeQty(btn, delta) {
+      const span = btn.parentElement.querySelector("span");
+      let val = parseInt(span.textContent);
       val = Math.max(1, val + delta);
-      span.innerText = val;
+      span.textContent = val;
+    }
+
+    function addToCart(name) {
+      const popup = document.getElementById("popup");
+      popup.textContent = `${name} added to cart`;
+      popup.classList.add("show");
+      setTimeout(() => popup.classList.remove("show"), 2000);
     }
   </script>
 
