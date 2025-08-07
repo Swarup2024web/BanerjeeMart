@@ -4,222 +4,103 @@
   <meta charset="UTF-8">
   <title>Banerjee Mart</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js"></script>
-  <style>
-    body { margin: 0; font-family: Arial, sans-serif; background: #f6f6f6; }
-    header { background-color: #2e7d32; color: white; padding: 10px; text-align: center; }
-    .header-row { margin: 5px 0; }
-    .search-box input {
-      width: 90%; padding: 10px; border: none; border-radius: 10px;
-      font-size: 16px; margin: 10px auto; display: block;
-    }
-    .address { font-size: 14px; color: #c8e6c9; }
-
-    .slider-container { position: relative; width: 100%; overflow: hidden; }
-    .slider {
-      display: flex; transition: transform 0.3s ease-in-out;
-    }
-    .slider img {
-      min-width: 100%; max-height: 200px; object-fit: cover; border-radius: 10px;
-    }
-    .slider-btn {
-      position: absolute; top: 50%; transform: translateY(-50%);
-      background: rgba(0,0,0,0.5); color: white; border: none;
-      font-size: 24px; padding: 5px 10px; cursor: pointer;
-      z-index: 2;
-    }
-    .left-btn { left: 10px; }
-    .right-btn { right: 10px; }
-
-    .section { padding: 10px; background: white; margin: 10px 0; border-radius: 10px; }
-    .section h2 { font-size: 20px; margin-bottom: 10px; }
-
-    .products {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 10px;
-    }
-
-    .product-card {
-      background: #fafafa; padding: 10px; border-radius: 10px;
-      text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .product-card img {
-      width: 100px; height: 100px; object-fit: contain;
-    }
-    .product-card h4 { margin: 8px 0 4px; font-size: 14px; }
-    .price { color: green; font-weight: bold; margin: 4px 0; }
-    .quantity-control {
-      display: flex; justify-content: center; align-items: center; gap: 5px;
-    }
-    .quantity-control button {
-      background: #2e7d32; color: white; border: none; padding: 5px 10px; border-radius: 5px;
-      cursor: pointer;
-    }
-    .cart-btn {
-      margin-top: 5px;
-      background: orange; color: white; border: none; padding: 5px 10px; border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .load-more {
-      display: block; margin: 15px auto; padding: 10px 20px;
-      background: #2e7d32; color: white; border: none; border-radius: 5px;
-      cursor: pointer;
-    }
-
-    @media (max-width: 500px) {
-      .products {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (min-width: 501px) {
-      .products {
-        grid-template-columns: repeat(4, 1fr);
-      }
-    }
-
-    .popup {
-      position: fixed;
-      bottom: 20px; left: 50%;
-      transform: translateX(-50%);
-      background: #4caf50; color: white;
-      padding: 10px 20px;
-      border-radius: 10px;
-      opacity: 0; transition: opacity 0.3s ease-in-out;
-      z-index: 1000;
-    }
-
-    .popup.show { opacity: 1; }
-  </style>
 </head>
-<body>
+<body style="margin:0; font-family:Arial, sans-serif; background:#f8f9fa;">
 
   <!-- Header -->
-  <header>
-    <div class="header-row"><h1>Banerjee Mart</h1></div>
-    <div class="search-box header-row">
-      <input type="text" placeholder="Search atta, ghee, tea, shampoo...">
+  <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px; background:white; box-shadow:0 1px 5px rgba(0,0,0,0.1);">
+    <div style="font-size:20px; font-weight:bold; color:#007bff;">🅱️ Banerjee <span style="color:gray;">Mart</span></div>
+    <div style="display:flex; align-items:center; gap:15px;">
+      <span style="font-size:18px;">🔍</span>
+      <span style="font-size:18px;">🛒<sup style="color:white; background:red; border-radius:50%; padding:2px 6px; font-size:12px;">4</sup></span>
     </div>
-    <div class="header-row address" id="userAddress">📍 Loading address...</div>
-  </header>
-
-  <!-- Promo Slider -->
-  <div class="slider-container">
-    <button class="slider-btn left-btn" onclick="moveSlide(-1)">&#10094;</button>
-    <div class="slider" id="slider">
-      <img src="assets/promo1.jpg" alt="Promo 1">
-      <img src="assets/promo2.jpg" alt="Promo 2">
-      <img src="assets/promo3.jpg" alt="Promo 3">
-      <img src="assets/promo4.jpg" alt="Promo 4">
-      <img src="assets/promo5.jpg" alt="Promo 5">
-    </div>
-    <button class="slider-btn right-btn" onclick="moveSlide(1)">&#10095;</button>
   </div>
 
-  <!-- Sections -->
-  <div id="sections"></div>
+  <!-- Category Icons -->
+  <div style="display:flex; justify-content:space-around; background:white; padding:10px 0; margin-top:5px;">
+    <div style="text-align:center;">
+      <div style="font-size:24px;">🛍️</div>
+      <div style="font-size:12px;">Groceries</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:24px;">🍽️</div>
+      <div style="font-size:12px;">Foods</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:24px;">✏️</div>
+      <div style="font-size:12px;">Stationary</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:24px;">❤️</div>
+      <div style="font-size:12px;">Healthcare</div>
+    </div>
+  </div>
 
-  <!-- Popup -->
-  <div class="popup" id="popup">Added to cart</div>
+  <!-- Welcome Banner -->
+  <div style="margin:15px; background:#007bff; color:white; border-radius:15px; padding:20px; position:relative;">
+    <div style="font-size:12px; background:#3399ff; padding:3px 10px; border-radius:10px; display:inline-block;">FAST DELIVERY</div>
+    <h2 style="margin:10px 0;">Welcome to Banerjee Mart</h2>
+    <p style="font-size:14px;">Fresh groceries & essentials delivered to your door</p>
+    <button style="background:white; color:#007bff; padding:10px 20px; border:none; border-radius:10px; font-weight:bold; margin-top:10px;">Shop Now ➜</button>
+  </div>
 
-  <!-- JS -->
-  <script>
-    // Firebase Setup
-    const firebaseConfig = {
-      apiKey: "YOUR-API-KEY",
-      authDomain: "YOUR-PROJECT.firebaseapp.com",
-      projectId: "YOUR-PROJECT-ID",
-      databaseURL: "YOUR-REALTIME-DB-URL",
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+  <!-- Quick Options -->
+  <div style="display:flex; justify-content:space-around; padding:10px;">
+    <div style="background:white; border-radius:15px; padding:15px; text-align:center; width:30%; box-shadow:0 1px 5px rgba(0,0,0,0.1);">
+      <div style="font-size:20px;">📈</div>
+      <div style="font-size:14px;">Best Deals</div>
+    </div>
+    <div style="background:white; border-radius:15px; padding:15px; text-align:center; width:30%; box-shadow:0 1px 5px rgba(0,0,0,0.1);">
+      <div style="font-size:20px;">⭐</div>
+      <div style="font-size:14px;">My Orders</div>
+    </div>
+    <div style="background:white; border-radius:15px; padding:15px; text-align:center; width:30%; box-shadow:0 1px 5px rgba(0,0,0,0.1);">
+      <div style="font-size:20px;">⚡</div>
+      <div style="font-size:14px;">Profile</div>
+    </div>
+  </div>
 
-    // Fetch address
-    firebase.database().ref("users/user1/address").on("value", (snapshot) => {
-      const address = snapshot.val();
-      document.getElementById("userAddress").innerText = `📍 ${address}`;
-    });
+  <!-- Featured Products -->
+  <div style="padding:15px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+      <h3 style="margin:0;">Featured Products</h3>
+      <a href="#" style="color:#007bff; font-size:14px;">View All ➜</a>
+    </div>
+    <div style="display:flex; flex-wrap:wrap; gap:10px;">
+      <div style="flex:1 1 48%; background:white; padding:15px; border-radius:10px; box-shadow:0 1px 5px rgba(0,0,0,0.1); min-width:140px;">
+        📦<br>
+        <span>Item 1</span>
+      </div>
+      <div style="flex:1 1 48%; background:white; padding:15px; border-radius:10px; box-shadow:0 1px 5px rgba(0,0,0,0.1); min-width:140px;">
+        📦<br>
+        <span>Item 2</span>
+      </div>
+    </div>
+  </div>
 
-    // Slider logic
-    let currentSlide = 0;
-    const slider = document.getElementById('slider');
-    const totalSlides = slider.children.length;
-
-    function moveSlide(direction) {
-      currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
-      slider.style.transform = `translateX(-${currentSlide * 100}%)`;
-    }
-
-    // Product data
-    const sections = [
-      { title: "Groceries & Food" },
-      { title: "Beauty & Personal Care" },
-      { title: "Household Essentials" },
-      { title: "Students Need" }
-    ];
-
-    const dummyProducts = Array.from({ length: 30 }, (_, i) => ({
-      name: `Item ${i+1}`,
-      price: (Math.random() * 100 + 10).toFixed(0),
-      img: "https://via.placeholder.com/100"
-    }));
-
-    const container = document.getElementById("sections");
-
-    sections.forEach(section => {
-      const div = document.createElement("div");
-      div.className = "section";
-      div.innerHTML = `<h2>${section.title}</h2><div class="products"></div><button class="load-more">Load More</button>`;
-      container.appendChild(div);
-
-      const productDiv = div.querySelector('.products');
-      const loadMoreBtn = div.querySelector('.load-more');
-      let visible = 0;
-
-      function load() {
-        const items = dummyProducts.slice(visible, visible + 12);
-        items.forEach(p => {
-          const card = document.createElement("div");
-          card.className = "product-card";
-          card.innerHTML = `
-            <img src="${p.img}" alt="${p.name}">
-            <h4>${p.name}</h4>
-            <div class="price">₹${p.price}</div>
-            <div class="quantity-control">
-              <button onclick="changeQty(this, -1)">−</button>
-              <span>1</span>
-              <button onclick="changeQty(this, 1)">+</button>
-            </div>
-            <button class="cart-btn" onclick="addToCart('${p.name}')">🛒 Add</button>
-          `;
-          productDiv.appendChild(card);
-        });
-        visible += items.length;
-        if (visible >= dummyProducts.length) loadMoreBtn.style.display = "none";
-      }
-
-      loadMoreBtn.addEventListener("click", load);
-      load(); // First load
-    });
-
-    function changeQty(btn, delta) {
-      const span = btn.parentElement.querySelector("span");
-      let val = parseInt(span.textContent);
-      val = Math.max(1, val + delta);
-      span.textContent = val;
-    }
-
-    function addToCart(name) {
-      const popup = document.getElementById("popup");
-      popup.textContent = `${name} added to cart`;
-      popup.classList.add("show");
-      setTimeout(() => popup.classList.remove("show"), 2000);
-    }
-  </script>
+  <!-- Bottom Navigation -->
+  <div style="position:fixed; bottom:0; left:0; right:0; background:white; display:flex; justify-content:space-around; padding:10px 0; box-shadow:0 -1px 5px rgba(0,0,0,0.1);">
+    <div style="text-align:center;">
+      <div>🏠</div>
+      <div style="font-size:12px;">Home</div>
+    </div>
+    <div style="text-align:center;">
+      <div>📋</div>
+      <div style="font-size:12px;">Categories</div>
+    </div>
+    <div style="text-align:center;">
+      <div>🛒<sup style="color:white; background:red; border-radius:50%; padding:2px 6px; font-size:10px;">4</sup></div>
+      <div style="font-size:12px;">Cart</div>
+    </div>
+    <div style="text-align:center;">
+      <div>📦</div>
+      <div style="font-size:12px;">Orders</div>
+    </div>
+    <div style="text-align:center;">
+      <div>👤</div>
+      <div style="font-size:12px;">Profile</div>
+    </div>
+  </div>
 
 </body>
-</html>
+        </html>
