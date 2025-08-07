@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cart - Banerjee Mart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body style="margin:0; font-family:Arial, sans-serif; background:#f8f9fa;">
+
+  <!-- Header -->
+  <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px; background:white; box-shadow:0 1px 5px rgba(0,0,0,0.1);">
+    <div style="font-size:20px; font-weight:bold; color:#007bff;">🅱️ Banerjee <span style="color:gray;">Mart</span></div>
+    <div style="display:flex; align-items:center; gap:15px;">
+      <span style="font-size:18px;">🔍</span>
+      <span style="font-size:18px; position:relative;">
+        🛒<sup style="color:white; background:red; border-radius:50%; padding:2px 6px; font-size:12px;">4</sup>
+      </span>
+      <span style="font-size:18px;">👤</span>
+    </div>
+  </div>
+
+  <!-- Page Title -->
+  <div style="padding:20px 15px 5px; font-size:20px; font-weight:600;">Shopping Cart</div>
+  <div style="padding:0 15px 10px; font-size:14px; color:#555;">4 items</div>
+
+  <!-- Cart Items -->
+  <div style="padding:0 15px;">
+    
+    <!-- Item -->
+    <div style="background:white; border-radius:10px; padding:15px; margin-bottom:15px; box-shadow:0 1px 5px rgba(0,0,0,0.05); display:flex; align-items:center;">
+      <div style="margin-right:10px;"><span style="font-size:32px;">📦</span></div>
+      <div style="flex-grow:1;">
+        <div style="font-weight:600;">Fresh Tomatoes</div>
+        <div style="color:green;">₹40 / kg</div>
+        <div style="color:gray; font-size:14px;">Total: ₹40</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:5px;">
+        <button style="padding:5px 10px; border-radius:6px; border:1px solid #ddd; background:white;">−</button>
+        <span>1</span>
+        <button style="padding:5px 10px; border-radius:6px; border:1px solid #ddd; background:white;">＋</button>
+      </div>
+      <div style="margin-left:10px; color:red; font-size:20px;">🗑️</div>
+    </div>
+
+    <!-- Item -->
+    <div style="background:white; border-radius:10px; padding:15px; margin-bottom:15px; box-shadow:0 1px 5px rgba(0,0,0,0.05); display:flex; align-items:center;">
+      <div style="margin-right:10px;"><span style="font-size:32px;">📦</span></div>
+      <div style="flex-grow:1;">
+        <div style="font-weight:600;">Basmati Rice</div>
+        <div style="color:green;">₹120 / kg</div>
+        <div style="color:gray; font-size:14px;">Total: ₹120</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:5px;">
+        <button style="padding:5px 10px; border-radius:6px; border:1px solid #ddd; background:white;">−</button>
+        <span>1</span>
+        <button style="padding:5px 10px; border-radius:6px; border:1px solid #ddd; background:white;">＋</button>
+      </div>
+      <div style="margin-left:10px; color:red; font-size:20px;">🗑️</div>
+    </div>
+
+    <!-- Item -->
+    <div style="background:white; border-radius:10px; padding:15px; margin-bottom:15px; box-shadow:0 1px 5px rgba(0,0,0,0.05); display:flex; align-items:center;">
+      <div style="margin-right:10px;"><span style="font-size:32px;">📦</span></div>
+      <div style="flex-grow:1;">
+        <div style="font-weight:600;">Onions</div>
+        <div style="color:green;">₹30 / kg</div>
+        <div style="color:gray; font-size:14px;">Total: ₹30</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:5px;">
+        <button style="padding:5px 10px; border-radius:6px; border:1px solid #ddd; background:white;">−</button>
+        <span>1</span>
+        <button style="padding:5px 10px; border-radius:6px; border:1px solid #ddd; background:white;">＋</button>
+      </div>
+      <div style="margin-left:10px; color:red; font-size:20px;">🗑️</div>
+    </div>
+
+  </div>
+
+  <!-- Total & Checkout -->
+  <div style="position:fixed; bottom:60px; left:0; right:0; background:white; padding:15px; box-shadow:0 -1px 5px rgba(0,0,0,0.05); display:flex; justify-content:space-between; align-items:center;">
+    <div style="font-size:18px;"><strong>Total:</strong></div>
+    <div style="font-size:18px; color:green;"><strong>₹215</strong></div>
+  </div>
+  <div style="position:fixed; bottom:0; left:0; right:0; padding:15px; background:white; border-top:1px solid #ddd;">
+    <button style="width:100%; padding:15px; background:#007bff; color:white; border:none; border-radius:10px; font-size:16px; font-weight:600;">Checkout</button>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div style="position:fixed; bottom:0; left:0; right:0; background:white; display:flex; justify-content:space-around; padding:10px 0; box-shadow:0 -1px 5px rgba(0,0,0,0.1); z-index:1;">
+    <div style="text-align:center;">
+      <div>🏠</div>
+      <div style="font-size:12px;">Home</div>
+    </div>
+    <div style="text-align:center;">
+      <div>📋</div>
+      <div style="font-size:12px;">Categories</div>
+    </div>
+    <div style="text-align:center;">
+      <div>🛒<sup style="color:white; background:red; border-radius:50%; padding:2px 6px; font-size:10px;">4</sup></div>
+      <div style="font-size:12px;">Cart</div>
+    </div>
+    <div style="text-align:center;">
+      <div>📦</div>
+      <div style="font-size:12px;">Orders</div>
+    </div>
+    <div style="text-align:center;">
+      <div>👤</div>
+      <div style="font-size:12px;">Profile</div>
+    </div>
+  </div>
+
+</body>
+</html>
