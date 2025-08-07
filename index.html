@@ -3,286 +3,154 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Banerjee Mart</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <link rel="stylesheet" href="style.css" />
-  <script type="module" src="firebaseConfig.js"></script>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      background: #f9f9f9;
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 16px;
-      background: #fff;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-
-    header h1 {
-      font-size: 20px;
-      color: #1a73e8;
-      font-weight: bold;
-    }
-
-    header .icons {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .badge {
-      background: orange;
-      color: white;
-      font-size: 12px;
-      border-radius: 50%;
-      padding: 2px 6px;
-      position: absolute;
-      top: -5px;
-      right: -8px;
-    }
-
-    /* Categories */
-    .categories {
-      display: flex;
-      justify-content: space-around;
-      background: #fff;
-      padding: 16px 0;
-      text-align: center;
-    }
-
-    .categories div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-size: 14px;
-    }
-
-    .categories i {
-      font-size: 22px;
-      margin-bottom: 4px;
-    }
-
-    /* Banner */
-    .banner {
-      background: linear-gradient(135deg, #007bff, #1a73e8);
-      color: #fff;
-      padding: 24px 16px;
-      border-radius: 20px;
-      margin: 16px;
-      position: relative;
-    }
-
-    .banner h2 {
-      font-size: 22px;
-      margin: 0;
-    }
-
-    .badge-banner {
-      background-color: rgba(255,255,255,0.2);
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 12px;
-      margin-bottom: 8px;
-      font-size: 13px;
-      font-weight: bold;
-    }
-
-    .banner p {
-      margin: 6px 0 16px;
-    }
-
-    .banner button {
-      background: #fff;
-      color: #007bff;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 10px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    /* Quick Actions */
-    .quick-actions {
-      display: flex;
-      justify-content: space-around;
-      padding: 16px;
-      background: #fff;
-      border-radius: 16px;
-      margin: 16px;
-    }
-
-    .quick-actions div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-size: 14px;
-    }
-
-    .quick-actions i {
-      font-size: 20px;
-      margin-bottom: 6px;
-    }
-
-    /* Featured */
-    .featured {
-      padding: 0 16px 80px;
-    }
-
-    .featured h3 {
-      font-size: 18px;
-      margin-bottom: 4px;
-    }
-
-    .featured .subtitle {
-      font-size: 13px;
-      color: #555;
-      margin-bottom: 12px;
-    }
-
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 16px;
-    }
-
-    .product {
-      background: #fff;
-      padding: 12px;
-      border-radius: 12px;
-      text-align: center;
-      font-size: 14px;
-    }
-
-    .product img {
-      max-width: 100%;
-      height: 80px;
-      object-fit: contain;
-    }
-
-    /* Bottom Nav */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: #fff;
-      display: flex;
-      justify-content: space-around;
-      border-top: 1px solid #ddd;
-      padding: 6px 0;
-    }
-
-    .bottom-nav a {
-      font-size: 12px;
-      color: #333;
-      text-align: center;
-      text-decoration: none;
-      flex: 1;
-    }
-
-    .bottom-nav a i {
-      font-size: 18px;
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    .bottom-nav .active {
-      color: #007bff;
-    }
-  </style>
+  <title>My Shop</title>
+  <link href="style.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 </head>
 <body>
-
   <!-- Header -->
-  <header>
-    <h1><i class="fas fa-box"></i> Banerjee <span style="color:#ccc;">Mart</span></h1>
-    <div class="icons">
-      <i class="fas fa-search"></i>
-      <div style="position: relative;">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="badge">4</span>
-      </div>
-      <i class="fas fa-user"></i>
+  <header class="header">
+    <h1>My Shop</h1>
+    <div class="header-icons">
+      <span class="material-icons" id="search-icon">search</span>
     </div>
   </header>
 
-  <!-- Categories -->
-  <div class="categories">
-    <div><i class="fas fa-shopping-basket" style="color:#5fd78b;"></i><span>Groceries</span></div>
-    <div><i class="fas fa-utensils" style="color:#ffb24d;"></i><span>Foods</span></div>
-    <div><i class="fas fa-pencil-ruler" style="color:#90b4fe;"></i><span>Stationary</span></div>
-    <div><i class="fas fa-heart" style="color:#f98c9c;"></i><span>Healthcare</span></div>
+  <!-- Search Bar -->
+  <div id="search-bar" class="hidden">
+    <input type="text" id="search-input" placeholder="Search products..." />
   </div>
 
   <!-- Banner -->
-  <section class="banner" id="banner">
-    <div class="badge-banner"><i class="fas fa-bolt"></i> FAST DELIVERY</div>
-    <h2>Welcome to Banerjee Mart</h2>
-    <p>Fresh groceries & essentials delivered to your door</p>
-    <button id="shopNowBtn">Shop Now <i class="fas fa-arrow-right"></i></button>
-  </section>
-
-  <!-- Quick Actions -->
-  <div class="quick-actions">
-    <div><i class="fas fa-chart-line"></i><span>Best Deals</span></div>
-    <div><i class="fas fa-star"></i><span>My Orders</span></div>
-    <div><i class="fas fa-bolt" style="color: #4ce29c;"></i><span>Profile</span></div>
+  <div id="banner">
+    <h2>Big Sale Today!</h2>
+    <button id="shop-now-btn">Shop Now</button>
   </div>
 
+  <!-- Categories -->
+  <section id="categories">
+    <h2>Categories</h2>
+    <div class="category-list">
+      <button class="category-btn" data-category="all">All</button>
+      <button class="category-btn" data-category="electronics">Electronics</button>
+      <button class="category-btn" data-category="fashion">Fashion</button>
+      <button class="category-btn" data-category="grocery">Grocery</button>
+    </div>
+  </section>
+
+  <!-- Navigation Links -->
+  <nav class="quick-links">
+    <button onclick="location.href='index.html'">Best Deals</button>
+    <button onclick="location.href='orders.html'">My Orders</button>
+    <button onclick="location.href='profile.html'">Profile</button>
+  </nav>
+
   <!-- Featured Products -->
-  <section class="featured">
-    <h3>Featured Products</h3>
-    <p class="subtitle">Top picks for you</p>
-    <div class="product-grid" id="productGrid">
-      <!-- Dynamic Products from Firebase -->
+  <section id="featured-products">
+    <div class="section-header">
+      <h2>Featured Products</h2>
+      <button onclick="location.href='products.html'" class="view-all-btn">View All <span class="material-icons">chevron_right</span></button>
+    </div>
+    <div class="product-list" id="featured-list">
+      <!-- Products will be injected here -->
     </div>
   </section>
 
   <!-- Bottom Navigation -->
-  <nav class="bottom-nav">
-    <a href="#" class="active"><i class="fas fa-home"></i>Home</a>
-    <a href="#"><i class="fas fa-th-large"></i>Categories</a>
-    <a href="#"><i class="fas fa-shopping-cart"></i>Cart <span class="badge">4</span></a>
-    <a href="#"><i class="fas fa-box"></i>Orders</a>
-    <a href="#"><i class="fas fa-user"></i>Profile</a>
-  </nav>
+  <footer class="bottom-nav">
+    <a href="index.html"><span class="material-icons">home</span><br/>Home</a>
+    <a href="new.html"><span class="material-icons">fiber_new</span><br/>New</a>
+    <a href="categories.html"><span class="material-icons">category</span><br/>Categories</a>
+    <a href="cart.html"><span class="material-icons">shopping_cart</span><br/>Cart</a>
+    <a href="orders.html"><span class="material-icons">assignment</span><br/>Orders</a>
+  </footer>
 
-  <!-- Firebase Script -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-    import { firebaseConfig } from './firebaseConfig.js';
+  <script>
+    // Firebase Config
+    const firebaseConfig = {
+      // your config here
+    };
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    // Toggle Search Bar
+    document.getElementById("search-icon").addEventListener("click", () => {
+      const searchBar = document.getElementById("search-bar");
+      searchBar.classList.toggle("hidden");
+    });
 
-    const productGrid = document.getElementById("productGrid");
+    // Close Banner
+    document.getElementById("shop-now-btn").addEventListener("click", () => {
+      document.getElementById("banner").style.display = "none";
+    });
 
-    async function fetchProducts() {
-      const querySnapshot = await getDocs(collection(db, "products"));
+    // Load Featured Products
+    async function loadFeaturedProducts() {
+      const list = document.getElementById("featured-list");
+      list.innerHTML = "";
+      const querySnapshot = await db.collection("products").where("featured", "==", true).get();
       querySnapshot.forEach((doc) => {
-        const data = doc.data();
+        const product = doc.data();
         const div = document.createElement("div");
-        div.className = "product";
+        div.classList.add("product-card");
         div.innerHTML = `
-          <img src="${data.image}" alt="${data.name}" />
-          <p>${data.name}</p>
-          <strong>₹${data.price}</strong>
+          <img src="${product.image}" alt="${product.name}" />
+          <h3>${product.name}</h3>
+          <p>₹${product.price}</p>
         `;
-        productGrid.appendChild(div);
+        list.appendChild(div);
       });
     }
 
-    fetchProducts();
+    // Filter Products by Category
+    document.querySelectorAll(".category-btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const category = btn.getAttribute("data-category");
+        const list = document.getElementById("featured-list");
+        list.innerHTML = "";
 
-    document.getElementById("shopNowBtn").addEventListener("click", () => {
-      document.getElementById("banner").style.display = "none";
+        let query;
+        if (category === "all") {
+          query = db.collection("products").where("featured", "==", true);
+        } else {
+          query = db.collection("products").where("featured", "==", true).where("category", "==", category);
+        }
+
+        const snapshot = await query.get();
+        snapshot.forEach(doc => {
+          const product = doc.data();
+          const div = document.createElement("div");
+          div.classList.add("product-card");
+          div.innerHTML = `
+            <img src="${product.image}" alt="${product.name}" />
+            <h3>${product.name}</h3>
+            <p>₹${product.price}</p>
+          `;
+          list.appendChild(div);
+        });
+      });
     });
+
+    // Initial Load
+    loadFeaturedProducts();
   </script>
+
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 0; }
+    .header { display: flex; justify-content: space-between; padding: 10px; background: #2196f3; color: white; }
+    .header-icons span { cursor: pointer; }
+    #search-bar { display: flex; padding: 10px; background: #f1f1f1; }
+    #search-bar.hidden { display: none; }
+    #banner { padding: 20px; background: #ffe082; text-align: center; }
+    .category-list button, .quick-links button, .view-all-btn { margin: 5px; padding: 5px 10px; }
+    .product-card { border: 1px solid #ccc; padding: 10px; margin: 10px; text-align: center; }
+    .product-card img { width: 100px; height: 100px; object-fit: cover; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; padding: 10px; }
+    .bottom-nav { display: flex; justify-content: space-around; background: #eee; padding: 10px 0; position: fixed; width: 100%; bottom: 0; }
+    .bottom-nav a { text-align: center; color: black; text-decoration: none; font-size: 12px; }
+    .bottom-nav span { font-size: 24px; }
+  </style>
 </body>
-                                                                            </html>
+  </html>
