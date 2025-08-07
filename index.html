@@ -1,106 +1,262 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Banerjee Mart</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f7fa;
+    }
+
+    header {
+      background-color: #fff;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .brand {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #1d4ed8;
+    }
+
+    .nav-icons {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .nav-icons i {
+      font-size: 1.2rem;
+      color: #475569;
+      position: relative;
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -8px;
+      right: -10px;
+      background-color: orange;
+      color: #fff;
+      border-radius: 50%;
+      font-size: 0.6rem;
+      padding: 2px 6px;
+    }
+
+    .categories {
+      display: flex;
+      justify-content: space-around;
+      padding: 1rem 0;
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .categories div {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #374151;
+    }
+
+    .categories i {
+      font-size: 1.5rem;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .categories .green { color: #10b981; }
+    .categories .orange { color: #f97316; }
+    .categories .blue { color: #3b82f6; }
+    .categories .red { color: #ef4444; }
+
+    .banner {
+      background: linear-gradient(to right, #2563eb, #1e3a8a);
+      color: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin: 1rem;
+      text-align: center;
+    }
+
+    .banner h2 {
+      margin-bottom: 0.5rem;
+    }
+
+    .banner p {
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .banner button {
+      padding: 0.5rem 1rem;
+      background-color: white;
+      color: #2563eb;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .features {
+      display: flex;
+      justify-content: space-around;
+      padding: 1rem;
+    }
+
+    .features div {
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      flex: 1;
+      margin: 0 5px;
+    }
+
+    .features i {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .products-section {
+      margin: 1rem;
+    }
+
+    .products-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .products-header h3 {
+      font-size: 1.1rem;
+      color: #111827;
+    }
+
+    .products-header a {
+      color: #2563eb;
+      font-size: 0.9rem;
+      text-decoration: none;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 1rem;
+    }
+
+    .product-card {
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .product-card i {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: #4b5563;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #fff;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-around;
+      padding: 0.5rem 0;
+    }
+
+    footer div {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #374151;
+    }
+
+    footer i {
+      display: block;
+      font-size: 1.2rem;
+      margin-bottom: 2px;
+    }
+
+    footer .active {
+      color: #2563eb;
+    }
+  </style>
 </head>
-<body style="margin:0; font-family:Arial, sans-serif; background:#f8f9fa;">
+<body>
 
   <!-- Header -->
-  <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px; background:white; box-shadow:0 1px 5px rgba(0,0,0,0.1);">
-    <div style="font-size:20px; font-weight:bold; color:#007bff;">🅱️ Banerjee <span style="color:gray;">Mart</span></div>
-    <div style="display:flex; align-items:center; gap:15px;">
-      <span style="font-size:18px;">🔍</span>
-      <span style="font-size:18px;">🛒<sup style="color:white; background:red; border-radius:50%; padding:2px 6px; font-size:12px;">4</sup></span>
+  <header>
+    <div class="brand">Banerjee Mart</div>
+    <div class="nav-icons">
+      <i class="fas fa-search"></i>
+      <i class="fas fa-shopping-cart">
+        <span class="cart-badge">4</span>
+      </i>
+      <i class="fas fa-user-circle"></i>
     </div>
+  </header>
+
+  <!-- Categories -->
+  <div class="categories">
+    <div><i class="fas fa-shopping-basket green"></i>Groceries</div>
+    <div><i class="fas fa-utensils orange"></i>Foods</div>
+    <div><i class="fas fa-pencil-alt blue"></i>Stationary</div>
+    <div><i class="fas fa-heartbeat red"></i>Healthcare</div>
   </div>
 
-  <!-- Category Icons -->
-  <div style="display:flex; justify-content:space-around; background:white; padding:10px 0; margin-top:5px;">
-    <div style="text-align:center;">
-      <div style="font-size:24px;">🛍️</div>
-      <div style="font-size:12px;">Groceries</div>
-    </div>
-    <div style="text-align:center;">
-      <div style="font-size:24px;">🍽️</div>
-      <div style="font-size:12px;">Foods</div>
-    </div>
-    <div style="text-align:center;">
-      <div style="font-size:24px;">✏️</div>
-      <div style="font-size:12px;">Stationary</div>
-    </div>
-    <div style="text-align:center;">
-      <div style="font-size:24px;">❤️</div>
-      <div style="font-size:12px;">Healthcare</div>
-    </div>
+  <!-- Banner -->
+  <div class="banner">
+    <h2>Welcome to Banerjee Mart</h2>
+    <p>Fresh groceries & essentials delivered to your door</p>
+    <button>Shop Now <i class="fas fa-arrow-right"></i></button>
   </div>
 
-  <!-- Welcome Banner -->
-  <div style="margin:15px; background:#007bff; color:white; border-radius:15px; padding:20px; position:relative;">
-    <div style="font-size:12px; background:#3399ff; padding:3px 10px; border-radius:10px; display:inline-block;">FAST DELIVERY</div>
-    <h2 style="margin:10px 0;">Welcome to Banerjee Mart</h2>
-    <p style="font-size:14px;">Fresh groceries & essentials delivered to your door</p>
-    <button style="background:white; color:#007bff; padding:10px 20px; border:none; border-radius:10px; font-weight:bold; margin-top:10px;">Shop Now ➜</button>
-  </div>
-
-  <!-- Quick Options -->
-  <div style="display:flex; justify-content:space-around; padding:10px;">
-    <div style="background:white; border-radius:15px; padding:15px; text-align:center; width:30%; box-shadow:0 1px 5px rgba(0,0,0,0.1);">
-      <div style="font-size:20px;">📈</div>
-      <div style="font-size:14px;">Best Deals</div>
-    </div>
-    <div style="background:white; border-radius:15px; padding:15px; text-align:center; width:30%; box-shadow:0 1px 5px rgba(0,0,0,0.1);">
-      <div style="font-size:20px;">⭐</div>
-      <div style="font-size:14px;">My Orders</div>
-    </div>
-    <div style="background:white; border-radius:15px; padding:15px; text-align:center; width:30%; box-shadow:0 1px 5px rgba(0,0,0,0.1);">
-      <div style="font-size:20px;">⚡</div>
-      <div style="font-size:14px;">Profile</div>
-    </div>
+  <!-- Feature Cards -->
+  <div class="features">
+    <div><i class="fas fa-bolt" style="color:#3b82f6;"></i><br>Best Deals</div>
+    <div><i class="fas fa-box" style="color:#f59e0b;"></i><br>My Orders</div>
+    <div><i class="fas fa-user-check" style="color:#10b981;"></i><br>Profile</div>
   </div>
 
   <!-- Featured Products -->
-  <div style="padding:15px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-      <h3 style="margin:0;">Featured Products</h3>
-      <a href="#" style="color:#007bff; font-size:14px;">View All ➜</a>
+  <div class="products-section">
+    <div class="products-header">
+      <h3>Featured Products</h3>
+      <a href="#">View All <i class="fas fa-angle-right"></i></a>
     </div>
-    <div style="display:flex; flex-wrap:wrap; gap:10px;">
-      <div style="flex:1 1 48%; background:white; padding:15px; border-radius:10px; box-shadow:0 1px 5px rgba(0,0,0,0.1); min-width:140px;">
-        📦<br>
-        <span>Item 1</span>
-      </div>
-      <div style="flex:1 1 48%; background:white; padding:15px; border-radius:10px; box-shadow:0 1px 5px rgba(0,0,0,0.1); min-width:140px;">
-        📦<br>
-        <span>Item 2</span>
-      </div>
+    <div class="product-grid">
+      <div class="product-card"><i class="fas fa-box"></i><br>Product 1</div>
+      <div class="product-card"><i class="fas fa-box"></i><br>Product 2</div>
+      <div class="product-card"><i class="fas fa-box"></i><br>Product 3</div>
+      <div class="product-card"><i class="fas fa-box"></i><br>Product 4</div>
     </div>
   </div>
 
   <!-- Bottom Navigation -->
-  <div style="position:fixed; bottom:0; left:0; right:0; background:white; display:flex; justify-content:space-around; padding:10px 0; box-shadow:0 -1px 5px rgba(0,0,0,0.1);">
-    <div style="text-align:center;">
-      <div>🏠</div>
-      <div style="font-size:12px;">Home</div>
-    </div>
-    <div style="text-align:center;">
-      <div>📋</div>
-      <div style="font-size:12px;">Categories</div>
-    </div>
-    <div style="text-align:center;">
-      <div>🛒<sup style="color:white; background:red; border-radius:50%; padding:2px 6px; font-size:10px;">4</sup></div>
-      <div style="font-size:12px;">Cart</div>
-    </div>
-    <div style="text-align:center;">
-      <div>📦</div>
-      <div style="font-size:12px;">Orders</div>
-    </div>
-    <div style="text-align:center;">
-      <div>👤</div>
-      <div style="font-size:12px;">Profile</div>
-    </div>
-  </div>
+  <footer>
+    <div class="active"><i class="fas fa-home"></i>Home</div>
+    <div><i class="fas fa-th-large"></i>Categories</div>
+    <div><i class="fas fa-shopping-cart"></i>Cart</div>
+    <div><i class="fas fa-box-open"></i>Orders</div>
+    <div><i class="fas fa-user"></i>Profile</div>
+  </footer>
 
 </body>
-        </html>
+    </html>
