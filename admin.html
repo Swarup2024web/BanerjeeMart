@@ -2,183 +2,105 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Panel - Banerjee Mart</title>
+  <title>Banerjee Mart</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background: #f3f4f6;
-    }
-    h2 {
-      margin-top: 40px;
-    }
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #ccc;
-    }
-    input, select, button {
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    button {
-      background: #4CAF50;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #45a049;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      background: white;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 12px;
-      text-align: left;
-    }
-    th {
-      background-color: #f1f1f1;
-    }
-
-    @media (max-width: 768px) {
-      table, thead, tbody, th, td, tr {
-        display: block;
-      }
-      thead {
-        display: none;
-      }
-      tr {
-        margin-bottom: 15px;
-      }
-      td {
-        position: relative;
-        padding-left: 50%;
-      }
-      td::before {
-        content: attr(data-label);
-        position: absolute;
-        left: 10px;
-        font-weight: bold;
-      }
-    }
-  </style>
 </head>
-<body>
-  <h1>🛒 Admin Panel - Banerjee Mart</h1>
+<body style="margin:0; font-family:Arial, sans-serif; background:#f8f9fa;">
 
-  <h2>Add New Item</h2>
-  <form id="productForm">
-    <input type="text" id="name" placeholder="Item Name" required>
-    <input type="number" id="price" placeholder="Price" required>
-    <input type="text" id="image" placeholder="Image Link (GitHub Asset)" required>
-    <select id="category" required>
-      <option value="">Select Category</option>
-      <option value="cat1">cat1</option>
-      <option value="cat2">cat2</option>
-      <option value="cat3">cat3</option>
-      <option value="cat4">cat4</option>
-      <option value="cat5">cat5</option>
-    </select>
-    <button type="submit">Add Item</button>
-  </form>
+  <!-- Header -->
+  <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px; background:white; box-shadow:0 1px 5px rgba(0,0,0,0.1);">
+    <div style="font-size:20px; font-weight:bold; color:#007bff;">🅱️ Banerjee <span style="color:gray;">Mart</span></div>
+    <div style="display:flex; align-items:center; gap:15px;">
+      <span style="font-size:18px;">🔍</span>
+      <span style="font-size:18px;">🛒<sup style="color:white; background:red; border-radius:50%; padding:2px 6px; font-size:12px;">4</sup></span>
+    </div>
+  </div>
 
-  <h2>Order Management</h2>
-  <table id="ordersTable">
-    <thead>
-      <tr>
-        <th>Username</th>
-        <th>Address</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody id="ordersBody">
-      <!-- Orders will be listed here -->
-    </tbody>
-  </table>
+  <!-- Category Icons -->
+  <div style="display:flex; justify-content:space-around; background:white; padding:10px 0; margin-top:5px;">
+    <div style="text-align:center;">
+      <div style="font-size:24px;">🛍️</div>
+      <div style="font-size:12px;">Groceries</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:24px;">🍽️</div>
+      <div style="font-size:12px;">Foods</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:24px;">✏️</div>
+      <div style="font-size:12px;">Stationary</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:24px;">❤️</div>
+      <div style="font-size:12px;">Healthcare</div>
+    </div>
+  </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-    import { firebaseConfig } from './firebaseConfig.js';
+  <!-- Welcome Banner -->
+  <div style="margin:15px; background:#007bff; color:white; border-radius:15px; padding:20px; position:relative;">
+    <div style="font-size:12px; background:#3399ff; padding:3px 10px; border-radius:10px; display:inline-block;">FAST DELIVERY</div>
+    <h2 style="margin:10px 0;">Welcome to Banerjee Mart</h2>
+    <p style="font-size:14px;">Fresh groceries & essentials delivered to your door</p>
+    <button style="background:white; color:#007bff; padding:10px 20px; border:none; border-radius:10px; font-weight:bold; margin-top:10px;">Shop Now ➜</button>
+  </div>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+  <!-- Quick Options -->
+  <div style="display:flex; justify-content:space-around; padding:10px;">
+    <div style="background:white; border-radius:15px; padding:15px; text-align:center; width:30%; box-shadow:0 1px 5px rgba(0,0,0,0.1);">
+      <div style="font-size:20px;">📈</div>
+      <div style="font-size:14px;">Best Deals</div>
+    </div>
+    <div style="background:white; border-radius:15px; padding:15px; text-align:center; width:30%; box-shadow:0 1px 5px rgba(0,0,0,0.1);">
+      <div style="font-size:20px;">⭐</div>
+      <div style="font-size:14px;">My Orders</div>
+    </div>
+    <div style="background:white; border-radius:15px; padding:15px; text-align:center; width:30%; box-shadow:0 1px 5px rgba(0,0,0,0.1);">
+      <div style="font-size:20px;">⚡</div>
+      <div style="font-size:14px;">Profile</div>
+    </div>
+  </div>
 
-    const form = document.getElementById('productForm');
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const name = document.getElementById('name').value.trim();
-      const price = parseFloat(document.getElementById('price').value);
-      const image = document.getElementById('image').value.trim();
-      const category = document.getElementById('category').value;
+  <!-- Featured Products -->
+  <div style="padding:15px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+      <h3 style="margin:0;">Featured Products</h3>
+      <a href="#" style="color:#007bff; font-size:14px;">View All ➜</a>
+    </div>
+    <div style="display:flex; flex-wrap:wrap; gap:10px;">
+      <div style="flex:1 1 48%; background:white; padding:15px; border-radius:10px; box-shadow:0 1px 5px rgba(0,0,0,0.1); min-width:140px;">
+        📦<br>
+        <span>Item 1</span>
+      </div>
+      <div style="flex:1 1 48%; background:white; padding:15px; border-radius:10px; box-shadow:0 1px 5px rgba(0,0,0,0.1); min-width:140px;">
+        📦<br>
+        <span>Item 2</span>
+      </div>
+    </div>
+  </div>
 
-      if (!name || !price || !image || !category) {
-        alert('Please fill out all fields.');
-        return;
-      }
+  <!-- Bottom Navigation -->
+  <div style="position:fixed; bottom:0; left:0; right:0; background:white; display:flex; justify-content:space-around; padding:10px 0; box-shadow:0 -1px 5px rgba(0,0,0,0.1);">
+    <div style="text-align:center;">
+      <div>🏠</div>
+      <div style="font-size:12px;">Home</div>
+    </div>
+    <div style="text-align:center;">
+      <div>📋</div>
+      <div style="font-size:12px;">Categories</div>
+    </div>
+    <div style="text-align:center;">
+      <div>🛒<sup style="color:white; background:red; border-radius:50%; padding:2px 6px; font-size:10px;">4</sup></div>
+      <div style="font-size:12px;">Cart</div>
+    </div>
+    <div style="text-align:center;">
+      <div>📦</div>
+      <div style="font-size:12px;">Orders</div>
+    </div>
+    <div style="text-align:center;">
+      <div>👤</div>
+      <div style="font-size:12px;">Profile</div>
+    </div>
+  </div>
 
-      try {
-        await addDoc(collection(db, "products"), {
-          name, price, image, category
-        });
-        alert("✅ Product added!");
-        form.reset();
-      } catch (err) {
-        console.error("❌ Error adding product:", err);
-        alert("❌ Failed to add product.");
-      }
-    });
-
-    async function loadOrders() {
-      const ordersRef = collection(db, "orders");
-      const snapshot = await getDocs(ordersRef);
-      const ordersBody = document.getElementById("ordersBody");
-      ordersBody.innerHTML = "";
-
-      snapshot.forEach(docSnap => {
-        const order = docSnap.data();
-        const row = document.createElement("tr");
-
-        row.innerHTML = `
-          <td data-label="Username">${order.username}</td>
-          <td data-label="Address">${order.address}</td>
-          <td data-label="Status">
-            <select onchange="updateStatus('${docSnap.id}', this.value)">
-              <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>processing</option>
-              <option value="on the way" ${order.status === 'on the way' ? 'selected' : ''}>on the way</option>
-              <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>delivered</option>
-            </select>
-          </td>
-        `;
-        ordersBody.appendChild(row);
-      });
-    }
-
-    window.updateStatus = async function (id, status) {
-      const orderRef = doc(db, "orders", id);
-      try {
-        await updateDoc(orderRef, { status });
-        alert("✅ Status updated!");
-      } catch (err) {
-        console.error("❌ Error updating status:", err);
-      }
-    };
-
-    loadOrders();
-  </script>
 </body>
-  </html>
+                      </html>
