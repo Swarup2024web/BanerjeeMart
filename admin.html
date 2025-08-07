@@ -1,106 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Banerjee Mart</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel</title>
+  <script type="module" src="firebaseConfig.js"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f3f4f6;
+    }
+
+    header {
+      background: #1e293b;
+      color: #fff;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .form-container {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .form-container h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    .form-group button {
+      width: 100%;
+      padding: 12px;
+      background: #1e40af;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .form-group button:hover {
+      background: #1d4ed8;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+      margin-top: 2rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+    }
+
+    table th, table td {
+      padding: 12px 15px;
+      border: 1px solid #e5e7eb;
+      text-align: left;
+    }
+
+    table th {
+      background: #f1f5f9;
+    }
+
+    @media (max-width: 600px) {
+      .form-container {
+        padding: 15px;
+      }
+
+      table th, table td {
+        padding: 8px;
+      }
+    }
+  </style>
 </head>
-<body style="margin:0; font-family:Arial, sans-serif; background:#f8f9fa;">
+<body>
+  <header><i class="fas fa-tools"></i> ADMIN PANEL</header>
 
-  <!-- Header -->
-  <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px; background:white; box-shadow:0 1px 5px rgba(0,0,0,0.1);">
-    <div style="font-size:20px; font-weight:bold; color:#007bff;">🅱️ Banerjee <span style="color:gray;">Mart</span></div>
-    <div style="display:flex; align-items:center; gap:15px;">
-      <span style="font-size:18px;">🔍</span>
-      <span style="font-size:18px;">🛒<sup style="color:white; background:red; border-radius:50%; padding:2px 6px; font-size:12px;">4</sup></span>
-    </div>
-  </div>
-
-  <!-- Category Icons -->
-  <div style="display:flex; justify-content:space-around; background:white; padding:10px 0; margin-top:5px;">
-    <div style="text-align:center;">
-      <div style="font-size:24px;">🛍️</div>
-      <div style="font-size:12px;">Groceries</div>
-    </div>
-    <div style="text-align:center;">
-      <div style="font-size:24px;">🍽️</div>
-      <div style="font-size:12px;">Foods</div>
-    </div>
-    <div style="text-align:center;">
-      <div style="font-size:24px;">✏️</div>
-      <div style="font-size:12px;">Stationary</div>
-    </div>
-    <div style="text-align:center;">
-      <div style="font-size:24px;">❤️</div>
-      <div style="font-size:12px;">Healthcare</div>
-    </div>
-  </div>
-
-  <!-- Welcome Banner -->
-  <div style="margin:15px; background:#007bff; color:white; border-radius:15px; padding:20px; position:relative;">
-    <div style="font-size:12px; background:#3399ff; padding:3px 10px; border-radius:10px; display:inline-block;">FAST DELIVERY</div>
-    <h2 style="margin:10px 0;">Welcome to Banerjee Mart</h2>
-    <p style="font-size:14px;">Fresh groceries & essentials delivered to your door</p>
-    <button style="background:white; color:#007bff; padding:10px 20px; border:none; border-radius:10px; font-weight:bold; margin-top:10px;">Shop Now ➜</button>
-  </div>
-
-  <!-- Quick Options -->
-  <div style="display:flex; justify-content:space-around; padding:10px;">
-    <div style="background:white; border-radius:15px; padding:15px; text-align:center; width:30%; box-shadow:0 1px 5px rgba(0,0,0,0.1);">
-      <div style="font-size:20px;">📈</div>
-      <div style="font-size:14px;">Best Deals</div>
-    </div>
-    <div style="background:white; border-radius:15px; padding:15px; text-align:center; width:30%; box-shadow:0 1px 5px rgba(0,0,0,0.1);">
-      <div style="font-size:20px;">⭐</div>
-      <div style="font-size:14px;">My Orders</div>
-    </div>
-    <div style="background:white; border-radius:15px; padding:15px; text-align:center; width:30%; box-shadow:0 1px 5px rgba(0,0,0,0.1);">
-      <div style="font-size:20px;">⚡</div>
-      <div style="font-size:14px;">Profile</div>
-    </div>
-  </div>
-
-  <!-- Featured Products -->
-  <div style="padding:15px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-      <h3 style="margin:0;">Featured Products</h3>
-      <a href="#" style="color:#007bff; font-size:14px;">View All ➜</a>
-    </div>
-    <div style="display:flex; flex-wrap:wrap; gap:10px;">
-      <div style="flex:1 1 48%; background:white; padding:15px; border-radius:10px; box-shadow:0 1px 5px rgba(0,0,0,0.1); min-width:140px;">
-        📦<br>
-        <span>Item 1</span>
+  <div class="container">
+    <div class="form-container">
+      <h2><i class="fas fa-plus-circle"></i> Add Product</h2>
+      <div class="form-group">
+        <label>Product Name</label>
+        <input type="text" id="name" placeholder="Enter product name" required />
       </div>
-      <div style="flex:1 1 48%; background:white; padding:15px; border-radius:10px; box-shadow:0 1px 5px rgba(0,0,0,0.1); min-width:140px;">
-        📦<br>
-        <span>Item 2</span>
+      <div class="form-group">
+        <label>Category</label>
+        <input type="text" id="category" placeholder="e.g. electronics, food..." required />
+      </div>
+      <div class="form-group">
+        <label>Price (₹)</label>
+        <input type="number" id="price" placeholder="Enter price" required />
+      </div>
+      <div class="form-group">
+        <label>Image URL</label>
+        <input type="url" id="image" placeholder="Paste image URL here" />
+      </div>
+      <div class="form-group">
+        <button id="addBtn"><i class="fas fa-database"></i> Add to Firebase</button>
       </div>
     </div>
-  </div>
 
-  <!-- Bottom Navigation -->
-  <div style="position:fixed; bottom:0; left:0; right:0; background:white; display:flex; justify-content:space-around; padding:10px 0; box-shadow:0 -1px 5px rgba(0,0,0,0.1);">
-    <div style="text-align:center;">
-      <div>🏠</div>
-      <div style="font-size:12px;">Home</div>
-    </div>
-    <div style="text-align:center;">
-      <div>📋</div>
-      <div style="font-size:12px;">Categories</div>
-    </div>
-    <div style="text-align:center;">
-      <div>🛒<sup style="color:white; background:red; border-radius:50%; padding:2px 6px; font-size:10px;">4</sup></div>
-      <div style="font-size:12px;">Cart</div>
-    </div>
-    <div style="text-align:center;">
-      <div>📦</div>
-      <div style="font-size:12px;">Orders</div>
-    </div>
-    <div style="text-align:center;">
-      <div>👤</div>
-      <div style="font-size:12px;">Profile</div>
+    <div class="table-responsive">
+      <table id="productTable">
+        <thead>
+          <tr>
+            <th><i class="fas fa-hashtag"></i> #</th>
+            <th><i class="fas fa-box-open"></i> Name</th>
+            <th><i class="fas fa-list"></i> Category</th>
+            <th><i class="fas fa-rupee-sign"></i> Price</th>
+            <th><i class="fas fa-image"></i> Image</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
     </div>
   </div>
 
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { firebaseConfig } from './firebaseConfig.js';
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const productsRef = collection(db, "products");
+
+    const nameInput = document.getElementById("name");
+    const categoryInput = document.getElementById("category");
+    const priceInput = document.getElementById("price");
+    const imageInput = document.getElementById("image");
+    const addBtn = document.getElementById("addBtn");
+    const tableBody = document.getElementById("tableBody");
+
+    async function addProduct() {
+      const name = nameInput.value.trim();
+      const category = categoryInput.value.trim();
+      const price = parseFloat(priceInput.value);
+      const image = imageInput.value.trim();
+
+      if (!name || !category || isNaN(price)) {
+        alert("Please fill all required fields.");
+        return;
+      }
+
+      try {
+        await addDoc(productsRef, {
+          name,
+          category,
+          price,
+          image,
+          timestamp: new Date()
+        });
+
+        nameInput.value = "";
+        categoryInput.value = "";
+        priceInput.value = "";
+        imageInput.value = "";
+
+        alert("Product added!");
+        fetchProducts();
+      } catch (error) {
+        console.error("Error adding product:", error);
+        alert("Error saving to Firebase.");
+      }
+    }
+
+    async function fetchProducts() {
+      tableBody.innerHTML = "";
+      const snapshot = await getDocs(productsRef);
+      let count = 1;
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${count++}</td>
+          <td>${data.name}</td>
+          <td>${data.category}</td>
+          <td>₹${data.price}</td>
+          <td><img src="${data.image}" alt="Image" width="60" /></td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    addBtn.addEventListener("click", addProduct);
+    fetchProducts();
+  </script>
 </body>
-                      </html>
+        </html>
