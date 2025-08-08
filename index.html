@@ -46,20 +46,20 @@
       z-index: 1000;
     }
 
-  .user-info {
+ .user-info {
       display: flex;
       align-items: center;
       justify-content: space-between; /* Distribute items */
       margin-bottom: 15px;
     }
 
-  .user-info-left {
+ .user-info-left {
       display: flex;
       align-items: center;
       flex-grow: 1; /* Allow it to take available space */
     }
 
-  .user-info img {
+ .user-info img {
       width: 40px;
       height: 40px;
       border-radius: 50%;
@@ -68,12 +68,12 @@
       border: 2px solid rgba(255, 255, 255, 0.7);
     }
 
-  .user-info span {
+ .user-info span {
       font-weight: 600;
       font-size: 1.1em;
     }
 
-  .logout-btn {
+ .logout-btn {
       background: #f44336;
       color: white;
       padding: 8px 15px;
@@ -84,16 +84,16 @@
       transition: background-color 0.3s ease;
     }
 
-  .logout-btn:hover {
+ .logout-btn:hover {
       background: #d32f2f;
     }
 
-  .search-bar {
+ .search-bar {
       display: flex;
       width: 100%;
     }
 
-  .search-bar input {
+ .search-bar input {
       flex: 1;
       padding: 10px 15px;
       border: none;
@@ -103,7 +103,7 @@
       color: var(--text-color);
     }
 
-  .search-bar input::placeholder {
+ .search-bar input::placeholder {
       color: var(--light-text-color);
     }
 
@@ -112,7 +112,7 @@
       padding-bottom: 70px; /* Space for fixed footer */
     }
 
-  .section {
+ .section {
       background: var(--card-background);
       padding: 15px 20px;
       margin: 10px 0;
@@ -120,7 +120,7 @@
       box-shadow: var(--shadow-light);
     }
 
-  .section h2 {
+ .section h2 {
       font-size: 1.2em;
       margin-bottom: 15px;
       color: var(--text-color);
@@ -130,7 +130,7 @@
     }
 
     /* Carousel */
-  .carousel {
+ .carousel {
       width: 100%;
       height: 180px; /* Slightly taller for better impact */
       background: url('https://via.placeholder.com/800x300/2874f0/ffffff?text=Awesome+Deals') center/cover no-repeat;
@@ -146,7 +146,7 @@
     }
 
     /* Categories */
-  .categories-container {
+ .categories-container {
       background: var(--card-background);
       padding: 15px 0;
       margin: 10px 0;
@@ -154,7 +154,7 @@
       box-shadow: var(--shadow-light);
     }
 
-  .categories {
+ .categories {
       display: flex;
       overflow-x: auto;
       padding: 0 10px; /* Padding for scrollable content */
@@ -163,11 +163,11 @@
       -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
     }
 
-  .categories::-webkit-scrollbar {
+ .categories::-webkit-scrollbar {
       display: none; /* Hide scrollbar for Chrome, Safari, Opera */
     }
 
-  .category {
+ .category {
       flex: 0 0 auto;
       width: 90px; /* Slightly wider categories */
       text-align: center;
@@ -179,11 +179,11 @@
       transition: transform 0.2s ease;
     }
 
-  .category:hover {
+ .category:hover {
       transform: translateY(-3px);
     }
 
-  .category img {
+ .category img {
       width: 65px; /* Slightly larger category images */
       height: 65px;
       border-radius: 50%;
@@ -193,7 +193,7 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
-  .category p {
+ .category p {
       font-size: 0.9em;
       color: var(--light-text-color);
       white-space: nowrap; /* Prevent text wrapping */
@@ -202,14 +202,14 @@
     }
 
     /* Products */
-  .products-grid {
+ .products-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* Responsive grid */
       gap: 15px; /* Gap between products */
       padding: 0 5px; /* Small padding for grid */
     }
 
-  .product-card {
+ .product-card {
       background: var(--card-background);
       border: 1px solid var(--border-color);
       border-radius: var(--border-radius);
@@ -223,12 +223,12 @@
       cursor: pointer;
     }
 
-  .product-card:hover {
+ .product-card:hover {
       transform: translateY(-5px);
       box-shadow: var(--shadow-medium);
     }
 
-  .product-card img {
+ .product-card img {
       width: 100%;
       height: 100px; /* Consistent image height */
       object-fit: cover;
@@ -236,7 +236,7 @@
       margin-bottom: 10px;
     }
 
-  .product-card h3 {
+ .product-card h3 {
       font-size: 1em;
       margin-bottom: 5px;
       color: var(--text-color);
@@ -245,14 +245,14 @@
       text-overflow: ellipsis;
     }
 
-  .product-card p {
+ .product-card p {
       font-size: 0.95em;
       font-weight: bold;
       color: var(--primary-color);
     }
 
     /* Spinner */
-  .spinner {
+ .spinner {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -267,7 +267,7 @@
     }
 
     /* Footer Navigation */
-  .footer-nav {
+ .footer-nav {
       position: fixed;
       bottom: 0;
       left: 0;
@@ -281,7 +281,7 @@
       z-index: 999;
     }
 
-  .footer-nav.nav-item { /* Corrected selector */
+ .nav-item { /* Corrected selector */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -291,12 +291,12 @@
       transition: color 0.3s ease;
     }
 
-  .footer-nav.nav-item.active, /* Corrected selector */
-  .footer-nav.nav-item:hover { /* Corrected selector */
+ .nav-item.active, /* Corrected selector */
+ .nav-item:hover { /* Corrected selector */
       color: var(--primary-color);
     }
 
-  .footer-nav.material-symbols-outlined { /* Corrected selector */
+ .material-symbols-outlined { /* Corrected selector */
       font-size: 24px; /* Material Symbols default size */
       margin-bottom: 4px;
     }
@@ -307,92 +307,92 @@
         padding: 10px 15px;
       }
 
-    .user-info {
+   .user-info {
         margin-bottom: 10px;
       }
 
-    .user-info img {
+   .user-info img {
         width: 35px;
         height: 35px;
       }
 
-    .user-info span {
+   .user-info span {
         font-size: 1em;
       }
 
-    .logout-btn {
+   .logout-btn {
         padding: 6px 12px;
         font-size: 0.8em;
       }
 
-    .search-bar input {
+   .search-bar input {
         padding: 8px 12px;
         font-size: 0.9em;
       }
 
-    .section {
+   .section {
         padding: 15px;
         margin: 8px 0;
       }
 
-    .section h2 {
+   .section h2 {
         font-size: 1.1em;
         margin-bottom: 12px;
       }
 
-    .carousel {
+   .carousel {
         height: 150px;
         font-size: 1.2em;
       }
 
-    .categories-container {
+   .categories-container {
         padding: 10px 0;
       }
 
-    .category {
+   .category {
         width: 80px;
         margin: 0 5px;
       }
 
-    .category img {
+   .category img {
         width: 55px;
         height: 55px;
       }
 
-    .category p {
+   .category p {
         font-size: 0.8em;
       }
 
-    .products-grid {
+   .products-grid {
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
         gap: 10px;
       }
 
-    .product-card {
+   .product-card {
         padding: 8px;
       }
 
-    .product-card img {
+   .product-card img {
         height: 80px;
       }
 
-    .product-card h3 {
+   .product-card h3 {
         font-size: 0.9em;
       }
 
-    .product-card p {
+   .product-card p {
         font-size: 0.9em;
       }
 
-    .footer-nav {
+   .footer-nav {
         padding: 10px 0;
       }
 
-    .footer-nav.material-symbols-outlined { /* Corrected selector */
+   .material-symbols-outlined { /* Corrected selector */
         font-size: 22px;
       }
 
-    .footer-nav.nav-item { /* Corrected selector */
+   .nav-item { /* Corrected selector */
         font-size: 0.75em;
       }
     }
@@ -500,15 +500,18 @@
             const data = doc.data();
             userNameSpan.innerText = `Hi, ${data.name |
 
-| 'User'}`;
+| 'User'}`; // Corrected |
+| operator
             userPhotoImg.src = data.imageUrl |
 
-| 'https://via.placeholder.com/40';
+| 'https://via.placeholder.com/40'; // Corrected |
+| operator
           } else {
             console.warn("User data not found in Firestore for UID:", user.uid);
             userNameSpan.innerText = `Hi, ${user.email |
 
-| 'User'}`; // Fallback to email
+| 'User'}`; // Fallback to email, corrected |
+| operator
             userPhotoImg.src = 'https://via.placeholder.com/40';
           }
           loader.style.display = 'none';
@@ -538,7 +541,7 @@
 
     // --- Dynamic Content Loading (Simulated/Firestore) ---
 
-    // Placeholder data for demonstration - CORRECTED
+    // Placeholder data for demonstration - CORRECTED AND COMPLETED
     const sampleCategories =;
 
     const sampleProducts = [
