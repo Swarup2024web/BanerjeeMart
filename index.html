@@ -155,6 +155,12 @@
       width: 80px;
       text-decoration: none;
       color: var(--text-on-surface);
+      position: relative;
+    }
+    
+    .flex-item.active .category-icon-wrapper {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px var(--primary-color);
     }
 
     .category-icon-wrapper {
@@ -166,6 +172,7 @@
       border-radius: 50%;
       background-color: var(--background-color);
       border: 1px solid var(--border-color);
+      transition: border-color 0.3s, box-shadow 0.3s;
     }
 
     .category-icon-wrapper .material-symbols-outlined {
@@ -463,13 +470,14 @@
       const productDetails = document.createElement('div');
       productDetails.className = 'product-details';
       
+      const pricePerItem = product.price; // Store the original price per item
       const totalPriceElement = document.createElement('p');
       totalPriceElement.className = 'product-total-price';
-      totalPriceElement.textContent = `Total: ₹${product.price.toFixed(2)}`;
+      totalPriceElement.textContent = `Total: ₹${pricePerItem.toFixed(2)}`;
 
       productDetails.innerHTML = `
         <h4 class="product-title">${product.name}</h4>
-        <p class="product-price">₹${product.price}</p>
+        <p class="product-price">₹${pricePerItem}</p>
       `;
 
       productDetails.appendChild(totalPriceElement);
@@ -502,7 +510,7 @@
       
       const updateTotalPrice = () => {
           const qty = parseInt(qtySpan.textContent);
-          const newTotal = (product.price * qty).toFixed(2);
+          const newTotal = (pricePerItem * qty).toFixed(2);
           totalPriceElement.textContent = `Total: ₹${newTotal}`;
       };
 
@@ -633,7 +641,8 @@
             document.querySelectorAll('.category-link').forEach(l => l.classList.remove('active'));
             // Add 'active' class to the clicked link
             e.currentTarget.classList.add('active');
-            window.history.pushState(null, '', `?category=${category}`);
+            // Remove `?category=...` from URL to prevent issues with initial load
+            window.history.pushState(null, '', `index.html`);
             fetchProducts(category);
         });
     });
