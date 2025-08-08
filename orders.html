@@ -33,6 +33,11 @@
       --error-container: #F9DEDC;
       --on-error-container: #410E0B;
       
+      --success-color: #00875A;
+      --on-success: #FFFFFF;
+      --success-container: #C8F7DC;
+      --on-success-container: #002115;
+      
       --background-color: #FFFBFE;
       --on-background: #1C1B1F;
       --surface-color: #FFFBFE;
@@ -189,13 +194,17 @@
         border-radius: 100px; /* Pill shape */
         white-space: nowrap;
     }
-    .status-confirmed {
+    .status-on-the-way {
         color: var(--on-primary-container);
         background-color: var(--primary-container);
     }
+    .status-delivered {
+        color: var(--on-success-container);
+        background-color: var(--success-container);
+    }
     .status-cancelled {
-        color: var(--on-error-container);
-        background-color: var(--error-container);
+        color: var(--on-surface-variant);
+        background-color: var(--surface-variant);
     }
     .order-items-list {
         list-style: none;
@@ -260,6 +269,7 @@
         background-color: var(--surface-variant);
         color: var(--on-surface-variant);
         cursor: not-allowed;
+        box-shadow: none;
     }
 
     .no-orders-message {
@@ -267,6 +277,14 @@
       padding: 50px 20px;
       color: var(--on-surface-variant);
       font-size: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .no-orders-message .material-symbols-rounded {
+        font-size: 48px;
+        color: var(--outline);
     }
 
     /* Bottom Navigation */
@@ -338,7 +356,10 @@
     <div class="section">
       <h3 class="section-header">Your Orders</h3>
       <div id="orders-container" class="orders-container">
-        <div class="no-orders-message" id="no-orders-msg" style="display: none;">You have not placed any orders yet.</div>
+        <div class="no-orders-message" id="no-orders-msg">
+            <span class="material-symbols-rounded">sentiment_dissatisfied</span>
+            You have not placed any orders yet.
+        </div>
       </div>
     </div>
   </div>
@@ -392,7 +413,7 @@
     function renderOrders(orders) {
         ordersContainer.innerHTML = '';
         if (orders.length === 0) {
-            noOrdersMsg.style.display = 'block';
+            noOrdersMsg.style.display = 'flex'; // Use flex for a nice vertical align
             return;
         }
 
@@ -402,7 +423,26 @@
             const orderCard = document.createElement('div');
             orderCard.className = 'order-card';
 
-            const statusClass = order.status === 'Confirmed' ? 'status-confirmed' : 'status-cancelled';
+            let statusClass;
+            let statusText;
+            switch (order.status) {
+                case 'Confirmed':
+                    statusClass = 'status-on-the-way';
+                    statusText = 'On the Way';
+                    break;
+                case 'Delivered':
+                    statusClass = 'status-delivered';
+                    statusText = 'Delivered';
+                    break;
+                case 'Cancelled':
+                    statusClass = 'status-cancelled';
+                    statusText = 'Cancelled';
+                    break;
+                default:
+                    statusClass = '';
+                    statusText = order.status;
+            }
+            
             const isCancellable = order.status === 'Confirmed';
 
             let itemsListHtml = '';
@@ -421,7 +461,7 @@
                         <div class="order-id">Order ID: ${order.id.slice(0, 8)}</div>
                         <div class="order-date">${formatDate(order.createdAt)}</div>
                     </div>
-                    <div class="order-status ${statusClass}">${order.status}</div>
+                    <div class="order-status ${statusClass}">${statusText}</div>
                 </div>
                 <ul class="order-items-list">
                     ${itemsListHtml}
@@ -440,9 +480,15 @@
                         <span>₹${order.total.toFixed(2)}</span>
                     </div>
                 </div>
-                <button class="cancel-order-btn" data-order-id="${order.id}" ${!isCancellable ? 'disabled' : ''}>
-                    ${!isCancellable ? 'Cancelled' : 'Cancel Order'}
+                ${isCancellable ? `
+                <button class="cancel-order-btn" data-order-id="${order.id}">
+                    Cancel Order
                 </button>
+                ` : `
+                <button class="cancel-order-btn" disabled>
+                    ${statusText}
+                </button>
+                `}
             `;
             ordersContainer.appendChild(orderCard);
         });
@@ -452,7 +498,6 @@
                 const orderId = e.currentTarget.dataset.orderId;
                 if (confirm('Are you sure you want to cancel this order?')) {
                     try {
-                        // Optimistically update the UI
                         e.currentTarget.disabled = true;
                         e.currentTarget.textContent = 'Cancelling...';
                         
@@ -461,7 +506,6 @@
                     } catch (error) {
                         console.error("Error cancelling order:", error);
                         alert("An error occurred while cancelling the order.");
-                        // Re-enable button if something went wrong
                         e.currentTarget.disabled = false;
                         e.currentTarget.textContent = 'Cancel Order';
                     }
@@ -479,7 +523,7 @@
             renderOrders(orders);
           }, err => {
             console.error("Error fetching orders:", err);
-            ordersContainer.innerHTML = '<p>Could not load your orders. Please try again later.</p>';
+            ordersContainer.innerHTML = '<p class="no-orders-message">Could not load your orders. Please try again later.</p>';
           });
     }
 
@@ -497,7 +541,6 @@
       } catch (e) {
         console.error("Error fetching user:", e);
       } finally {
-        // Hide loading overlay and show main content
         loadingOverlay.classList.add('hidden');
         mainContent.style.display = 'block';
       }
