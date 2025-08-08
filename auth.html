@@ -5,222 +5,143 @@
   <title>Banerjee Mart - Auth</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
     body {
-      font-family: sans-serif;
-      background-color: #f0f0f0;
+      background: linear-gradient(to right, #f9d423, #ff4e50);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding: 20px;
     }
-
-    h2 {
-      text-align: center;
-      color: #333;
+    h1 {
+      color: #fff;
+      margin-bottom: 20px;
+      font-size: 2em;
     }
-
-    .auth-container {
-      max-width: 400px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
     }
-
-    input[type="email"], input[type="password"] {
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0;
+    .tabs button {
+      padding: 10px 20px;
       border: none;
-      background-color: #1976d2;
-      color: white;
+      background: #fff;
+      color: #ff4e50;
       font-weight: bold;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
+      transition: 0.3s;
     }
-
-    button:hover {
-      background-color: #1565c0;
+    .tabs button.active {
+      background: #ff4e50;
+      color: #fff;
     }
-
-    .link {
-      color: #1976d2;
+    .form {
+      background: #ffffffcc;
+      padding: 20px;
+      width: 100%;
+      max-width: 400px;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.2);
+    }
+    .form input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    .form button {
+      width: 100%;
+      background: #ff4e50;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      margin-top: 10px;
       cursor: pointer;
-      text-align: center;
-      display: block;
-      margin-top: 10px;
+      transition: 0.3s;
     }
-
-    .logout-btn {
-      margin-top: 20px;
-      background-color: #d32f2f;
+    .form button:hover {
+      background: #e64545;
     }
-
-    .hidden {
-      display: none;
+    .logout {
+      margin-top: 30px;
+      background: #1e90ff;
     }
-
-    .msg {
-      text-align: center;
-      margin-top: 10px;
-      color: green;
-    }
-
-    .error {
-      color: red;
+    .form a {
+      color: #ff4e50;
+      text-decoration: none;
+      font-size: 0.9em;
     }
   </style>
 </head>
 <body>
 
-  <h2>Banerjee Mart - Login / Register</h2>
+  <h1>🛒 Banerjee Mart</h1>
 
-  <div class="auth-container">
-
-    <!-- Login Form -->
-    <div id="loginForm">
-      <input type="email" id="loginEmail" placeholder="Email">
-      <input type="password" id="loginPassword" placeholder="Password">
-      <button onclick="login()">Login</button>
-      <span class="link" onclick="showRegister()">Don't have an account? Register</span>
-      <span class="link" onclick="showForgot()">Forgot Password?</span>
-    </div>
-
-    <!-- Register Form -->
-    <div id="registerForm" class="hidden">
-      <input type="email" id="registerEmail" placeholder="Email">
-      <input type="password" id="registerPassword" placeholder="Password">
-      <button onclick="register()">Register</button>
-      <span class="link" onclick="showLogin()">Already have an account? Login</span>
-    </div>
-
-    <!-- Forgot Password Form -->
-    <div id="forgotForm" class="hidden">
-      <input type="email" id="forgotEmail" placeholder="Enter your email">
-      <button onclick="forgotPassword()">Send Reset Link</button>
-      <span class="link" onclick="showLogin()">Back to Login</span>
-    </div>
-
-    <!-- Logout Section -->
-    <div id="logoutSection" class="hidden">
-      <p class="msg">You are logged in!</p>
-      <button class="logout-btn" onclick="logout()">Logout</button>
-    </div>
-
-    <p class="msg" id="message"></p>
+  <div class="tabs">
+    <button class="active" onclick="showTab('login')">Login</button>
+    <button onclick="showTab('register')">Register</button>
+    <button onclick="showTab('forgot')">Forgot Password</button>
   </div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <!-- Login Form -->
+  <div id="login" class="form">
+    <h2>Login</h2>
+    <input type="email" placeholder="Email" id="loginEmail">
+    <input type="password" placeholder="Password" id="loginPassword">
+    <button onclick="login()">Login</button>
+  </div>
+
+  <!-- Register Form -->
+  <div id="register" class="form" style="display: none;">
+    <h2>Register</h2>
+    <input type="text" placeholder="Full Name" id="registerName">
+    <input type="email" placeholder="Email" id="registerEmail">
+    <input type="password" placeholder="Password" id="registerPassword">
+    <button onclick="register()">Register</button>
+  </div>
+
+  <!-- Forgot Password Form -->
+  <div id="forgot" class="form" style="display: none;">
+    <h2>Reset Password</h2>
+    <input type="email" placeholder="Email" id="forgotEmail">
+    <button onclick="resetPassword()">Send Reset Link</button>
+  </div>
+
+  <!-- Logout -->
+  <div class="form logout">
+    <button onclick="logout()">Logout</button>
+  </div>
 
   <script>
-    // ✅ Replace this with your Firebase config
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      projectId: "YOUR_PROJECT_ID",
-      appId: "YOUR_APP_ID"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-
-    const message = document.getElementById("message");
-
-    function showLogin() {
-      document.getElementById("loginForm").classList.remove("hidden");
-      document.getElementById("registerForm").classList.add("hidden");
-      document.getElementById("forgotForm").classList.add("hidden");
-      document.getElementById("logoutSection").classList.add("hidden");
-      message.innerText = '';
-    }
-
-    function showRegister() {
-      document.getElementById("registerForm").classList.remove("hidden");
-      document.getElementById("loginForm").classList.add("hidden");
-      document.getElementById("forgotForm").classList.add("hidden");
-      message.innerText = '';
-    }
-
-    function showForgot() {
-      document.getElementById("forgotForm").classList.remove("hidden");
-      document.getElementById("loginForm").classList.add("hidden");
-      document.getElementById("registerForm").classList.add("hidden");
-      message.innerText = '';
-    }
-
-    function showLogout() {
-      document.getElementById("logoutSection").classList.remove("hidden");
-      document.getElementById("loginForm").classList.add("hidden");
-      document.getElementById("registerForm").classList.add("hidden");
-      document.getElementById("forgotForm").classList.add("hidden");
-      message.innerText = 'You are logged in!';
-    }
-
-    function register() {
-      const email = document.getElementById("registerEmail").value;
-      const password = document.getElementById("registerPassword").value;
-
-      auth.createUserWithEmailAndPassword(email, password)
-        .then(() => {
-          message.innerText = "Registered successfully!";
-          showLogout();
-        })
-        .catch(error => {
-          message.innerText = error.message;
-          message.classList.add("error");
-        });
-    }
-
-    function login() {
-      const email = document.getElementById("loginEmail").value;
-      const password = document.getElementById("loginPassword").value;
-
-      auth.signInWithEmailAndPassword(email, password)
-        .then(() => {
-          message.innerText = "Login successful!";
-          showLogout();
-        })
-        .catch(error => {
-          message.innerText = error.message;
-          message.classList.add("error");
-        });
-    }
-
-    function logout() {
-      auth.signOut().then(() => {
-        showLogin();
-        message.innerText = "Logged out successfully.";
+    function showTab(tab) {
+      const tabs = ['login', 'register', 'forgot'];
+      tabs.forEach(id => {
+        document.getElementById(id).style.display = id === tab ? 'block' : 'none';
       });
+      const buttons = document.querySelectorAll('.tabs button');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
     }
 
-    function forgotPassword() {
-      const email = document.getElementById("forgotEmail").value;
-      auth.sendPasswordResetEmail(email)
-        .then(() => {
-          message.innerText = "Password reset link sent to your email.";
-        })
-        .catch(error => {
-          message.innerText = error.message;
-          message.classList.add("error");
-        });
+    // Placeholder Firebase functions (can be replaced later)
+    function login() {
+      alert("Login logic to be implemented.");
     }
-
-    // Auto-detect login state
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        showLogout();
-      } else {
-        showLogin();
-      }
-    });
+    function register() {
+      alert("Register logic to be implemented.");
+    }
+    function resetPassword() {
+      alert("Password reset logic to be implemented.");
+    }
+    function logout() {
+      alert("Logout logic to be implemented.");
+    }
   </script>
 
 </body>
