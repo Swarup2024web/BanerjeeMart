@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Orders - Banerjee Mart</title>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+
+  <style>
+    /* Material 3.0-inspired CSS variables and general styles */
+    :root {
+      --primary-color: #2874f0;
+      --surface-color: #ffffff;
+      --background-color: #f1f3f6;
+      --text-on-primary: #ffffff;
+      --text-on-surface: #1f1f1f;
+      --text-muted: #555555;
+      --border-color: #e0e0e0;
+      --border-radius: 8px;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+      background: var(--background-color);
+      color: var(--text-on-surface);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-bottom: 70px; /* Space for the bottom navigation bar */
+    }
+
+    /* Header */
+    .header {
+      background: var(--primary-color);
+      padding: 12px 16px;
+      color: var(--text-on-primary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .header-logo {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    /* Main Content */
+    .section {
+      margin-top: 10px;
+      background: var(--surface-color);
+      padding: 16px;
+      border-radius: var(--border-radius);
+    }
+    .order-card {
+      background: var(--surface-color);
+      padding: 16px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 12px;
+    }
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+    }
+    .order-id {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .order-status {
+      font-size: 14px;
+      color: var(--primary-color);
+      font-weight: 700;
+    }
+    .order-summary {
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    .order-total {
+      font-weight: 700;
+      color: green;
+      font-size: 16px;
+    }
+    .no-orders-message {
+      text-align: center;
+      padding: 50px 20px;
+      color: var(--text-muted);
+    }
+    
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: var(--surface-color);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+    .nav-item {
+      text-align: center;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .nav-item.active {
+      color: var(--primary-color);
+    }
+    .nav-item .material-symbols-outlined {
+      font-size: 24px;
+    }
+    .nav-item-label {
+      font-size: 12px;
+    }
+
+    /* Media Queries for larger screens */
+    @media (min-width: 600px) {
+      .header {
+        padding: 15px 30px;
+      }
+      .container {
+        padding-bottom: 0;
+      }
+      .bottom-nav {
+        display: none; /* Hide bottom nav on desktop */
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-logo">Banerjee Mart</div>
+    <div id="user-name">Welcome</div>
+  </div>
+
+  <div class="container">
+    <div class="section">
+      <h3 class="section-header">Your Orders</h3>
+      <div id="orders-list">
+        <div class="no-orders-message" id="no-orders-msg" style="display: none;">You haven't placed any orders yet.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <span class="material-symbols-outlined">home</span>
+      <div class="nav-item-label">Home</div>
+    </a>
+    <a href="orders.html" class="nav-item active">
+      <span class="material-symbols-outlined">package_2</span>
+      <div class="nav-item-label">Orders</div>
+    </a>
+    <a href="cart.html" class="nav-item">
+      <span class="material-symbols-outlined">shopping_cart</span>
+      <div class="nav-item-label">Cart</div>
+    </a>
+    <a href="profile.html" class="nav-item">
+      <span class="material-symbols-outlined">person</span>
+      <div class="nav-item-label">Profile</div>
+    </a>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
+      authDomain: "banerjee-mart.firebaseapp.com",
+      projectId: "banerjee-mart",
+      storageBucket: "banerjee-mart.appspot.com",
+      messagingSenderId: "183628570952",
+      appId: "1:183628570952:web:3028bb258001d004d9537d"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const ordersListContainer = document.getElementById('orders-list');
+    const noOrdersMsg = document.getElementById('no-orders-msg');
+
+    // Helper function to format order date
+    function formatDate(timestamp) {
+        if (!timestamp) return 'N/A';
+        const date = timestamp.toDate();
+        return date.toLocaleDateString('en-IN', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    }
+
+    // Function to render orders
+    function renderOrders(orders) {
+        ordersListContainer.innerHTML = '';
+        if (orders.length === 0) {
+            noOrdersMsg.style.display = 'block';
+            return;
+        }
+
+        noOrdersMsg.style.display = 'none';
+
+        orders.forEach(order => {
+            const orderCard = document.createElement('div');
+            orderCard.className = 'order-card';
+            orderCard.innerHTML = `
+                <div class="order-header">
+                    <span>Order ID: <span class="order-id">${order.id}</span></span>
+                    <span class="order-status">${order.status || 'Processing'}</span>
+                </div>
+                <div class="order-summary">
+                    Placed on: ${formatDate(order.timestamp)}
+                </div>
+                <div class="order-summary">
+                    Items: ${order.items.map(item => `${item.name} (${item.quantity})`).join(', ')}
+                </div>
+                <div class="order-total">
+                    Total: ₹${order.total.toFixed(2)}
+                </div>
+            `;
+            ordersListContainer.appendChild(orderCard);
+        });
+    }
+
+    // Fetch and listen for real-time order updates
+    function fetchOrders(userId) {
+        db.collection('orders')
+          .where('userId', '==', userId)
+          .orderBy('timestamp', 'desc')
+          .onSnapshot(snapshot => {
+            const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderOrders(orders);
+          }, err => {
+            console.error("Error fetching orders:", err);
+            ordersListContainer.innerHTML = '<p>Could not load your orders. Please try again later.</p>';
+          });
+    }
+
+    // Auth Check and Initial Data Fetch
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        window.location.href = "auth.html";
+        return;
+      }
+      try {
+        const userDoc = await db.collection("users").doc(user.uid).get();
+        const name = userDoc.exists ? userDoc.data().name : "User";
+        document.getElementById("user-name").innerText = `Hi, ${name}`;
+        fetchOrders(user.uid);
+      } catch (e) {
+        console.error("Error fetching user:", e);
+      }
+    });
+  </script>
+</body>
+</html>
