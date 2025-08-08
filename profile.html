@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Profile - Banerjee Mart</title>
 
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
   
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
@@ -61,6 +60,36 @@
       margin: 0 auto;
       padding-bottom: 80px; /* Space for bottom nav */
       padding: 16px;
+    }
+    
+    /* Loading Bar */
+    .loading-bar {
+      width: 100%;
+      height: 4px;
+      background-color: var(--primary-container);
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 2000;
+      display: none; /* Hidden by default */
+    }
+
+    .loading-bar.visible {
+        display: block;
+    }
+
+    .loading-bar::before {
+      content: '';
+      position: absolute;
+      height: 100%;
+      background-color: var(--primary-color);
+      animation: indeterminate 2s infinite ease-out;
+    }
+    
+    @keyframes indeterminate {
+        0% { left: -100%; width: 100%; }
+        50% { left: 100%; width: 100%; }
+        100% { left: 100%; width: 100%; }
     }
 
     /* Header */
@@ -308,17 +337,18 @@
   </style>
 </head>
 <body>
+  <div id="loading-bar" class="loading-bar visible"></div>
 
   <div class="header">
     <div class="header-logo">Banerjee Mart</div>
-    <div id="header-user-name">Welcome</div>
+    <div id="header-user-name" style="visibility: hidden;">Welcome</div>
   </div>
 
-  <div class="container">
+  <div class="container" id="main-content" style="display: none;">
     <div class="profile-card">
         <div class="profile-header">
             <img src="https://via.placeholder.com/120?text=P" alt="Profile Picture" class="profile-picture" id="profile-pic">
-            <h2 class="user-name" id="user-display-name">Loading...</h2>
+            <h2 class="user-name" id="user-display-name"></h2>
         </div>
         
         <div class="profile-details">
@@ -330,11 +360,11 @@
                     </li>
                     <li>
                         <span class="material-symbols-rounded">call</span>
-                        <span id="user-phone">N/A</span>
+                        <span id="user-phone"></span>
                     </li>
                     <li>
                         <span class="material-symbols-rounded">location_on</span>
-                        <span id="user-address">N/A</span>
+                        <span id="user-address"></span>
                     </li>
                 </ul>
                 <button id="edit-profile-btn" class="edit-profile-btn">Edit Profile</button>
@@ -400,6 +430,10 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
     
+    const loadingBar = document.getElementById('loading-bar');
+    const mainContent = document.getElementById('main-content');
+    const headerUserNameEl = document.getElementById('header-user-name');
+
     const profileView = document.getElementById('profile-view');
     const profileEditForm = document.getElementById('profile-edit-form');
     const editProfileBtn = document.getElementById('edit-profile-btn');
@@ -412,7 +446,6 @@
     const emailAddressEl = document.getElementById('user-email-address');
     const phoneEl = document.getElementById('user-phone');
     const addressEl = document.getElementById('user-address');
-    const headerUserNameEl = document.getElementById('header-user-name');
 
     const nameInput = document.getElementById('name');
     const phoneInput = document.getElementById('phone');
@@ -468,6 +501,11 @@
         } catch (error) {
             console.error("Error fetching user data:", error);
             updateProfileUI({ name: 'User' });
+        } finally {
+            // Hide loading bar and show content after loading is complete
+            loadingBar.classList.remove('visible');
+            mainContent.style.display = 'block';
+            headerUserNameEl.style.visibility = 'visible';
         }
     });
 
