@@ -4,220 +4,222 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Banerjee Mart - Auth</title>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-storage.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #d9a7c7, #fffcdc);
       margin: 0;
       padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #f6d365, #fda085);
       display: flex;
-      align-items: center;
       justify-content: center;
-      height: 100vh;
+      align-items: center;
+      min-height: 100vh;
     }
-
     .container {
-      background: #fff;
-      padding: 20px 30px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 420px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     }
-
     .container h2 {
       text-align: center;
-      margin-bottom: 20px;
-      color: #444;
+      margin-bottom: 24px;
+      color: #333;
     }
-
     .form-group {
-      margin-bottom: 15px;
+      margin-bottom: 16px;
     }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 500;
-    }
-
     .form-group input,
-    .form-group textarea {
+    .form-group select {
       width: 100%;
       padding: 10px;
-      border: 1px solid #bbb;
-      border-radius: 6px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
     }
-
-    .form-group input[type="file"] {
-      padding: 5px;
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
     }
-
-    .btn {
+    button {
       width: 100%;
-      padding: 12px;
-      background: #e91e63;
-      border: none;
+      padding: 10px;
+      background-color: #ff7e5f;
       color: white;
+      border: none;
+      border-radius: 8px;
       font-size: 16px;
-      border-radius: 6px;
       cursor: pointer;
     }
-
-    .btn:hover {
-      background: #d81b60;
+    button:hover {
+      background-color: #eb5e3f;
     }
-
     .toggle {
-      margin-top: 10px;
       text-align: center;
-      color: #333;
-      cursor: pointer;
+      margin-top: 12px;
     }
-
-    .hidden {
-      display: none;
+    .toggle a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    .photo-preview {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2 id="formTitle">Login</h2>
-    <form id="authForm">
-      <div class="form-group" id="nameGroup" class="hidden">
-        <label>Full Name</label>
-        <input type="text" id="name" placeholder="Your full name" />
-      </div>
 
-      <div class="form-group" id="emailGroup" class="hidden">
-        <label>Email (optional)</label>
-        <input type="email" id="email" placeholder="Email address" />
-      </div>
-
-      <div class="form-group">
-        <label>Phone Number</label>
-        <input type="text" id="phone" placeholder="e.g. +91XXXXXXXXXX" required />
-      </div>
-
-      <div class="form-group" id="addressGroup" class="hidden">
-        <label>Address</label>
-        <textarea id="address" placeholder="Your address"></textarea>
-      </div>
-
-      <div class="form-group" id="photoGroup" class="hidden">
-        <label>Photo (optional)</label>
-        <input type="file" id="photo" accept="image/*" />
-      </div>
-
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="password" placeholder="Password" required />
-      </div>
-
-      <button class="btn" type="submit" id="submitBtn">Login</button>
-    </form>
-
-    <div class="toggle" onclick="toggleForm()">Don't have an account? Register</div>
-    <div class="toggle" onclick="forgotPassword()">Forgot Password?</div>
+<div class="container" id="auth-container">
+  <h2 id="form-title">Login</h2>
+  <div id="form-content">
+    <!-- Login Form -->
+    <div class="form-group">
+      <label for="login-phone"><i class="fas fa-phone"></i> Phone Number</label>
+      <input type="text" id="login-phone" placeholder="Enter phone number">
+    </div>
+    <div class="form-group">
+      <label for="login-password"><i class="fas fa-lock"></i> Password</label>
+      <input type="password" id="login-password" placeholder="Enter password">
+    </div>
+    <button onclick="login()">Login</button>
+    <div class="toggle">
+      <p><a href="#" onclick="showRegister()">Create Account</a> | <a href="#" onclick="showForgot()">Forgot Password?</a></p>
+    </div>
   </div>
+</div>
 
-  <script>
-    // Firebase Config
-    const firebaseConfig = {
-      apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
-      authDomain: "banerjee-mart.firebaseapp.com",
-      projectId: "banerjee-mart",
-      storageBucket: "banerjee-mart.appspot.com",
-      messagingSenderId: "183628570952",
-      appId: "1:183628570952:web:3028bb258001d004d9537d"
-    };
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
+    authDomain: "banerjee-mart.firebaseapp.com",
+    projectId: "banerjee-mart",
+    storageBucket: "banerjee-mart.appspot.com",
+    messagingSenderId: "183628570952",
+    appId: "1:183628570952:web:3028bb258001d004d9537d"
+  };
 
-    // Init Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    const storage = firebase.storage();
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const storage = firebase.storage();
 
-    const authForm = document.getElementById("authForm");
-    const nameGroup = document.getElementById("nameGroup");
-    const emailGroup = document.getElementById("emailGroup");
-    const addressGroup = document.getElementById("addressGroup");
-    const photoGroup = document.getElementById("photoGroup");
-    const submitBtn = document.getElementById("submitBtn");
-    const formTitle = document.getElementById("formTitle");
+  function showRegister() {
+    document.getElementById('form-title').innerText = 'Register';
+    document.getElementById('form-content').innerHTML = `
+      <div class="form-group">
+        <label for="reg-name"><i class="fas fa-user"></i> Full Name</label>
+        <input type="text" id="reg-name" placeholder="Enter full name" />
+      </div>
+      <div class="form-group">
+        <label for="reg-phone"><i class="fas fa-phone"></i> Phone Number</label>
+        <input type="text" id="reg-phone" placeholder="Enter phone number" />
+      </div>
+      <div class="form-group">
+        <label for="reg-email"><i class="fas fa-envelope"></i> Email Address (Optional)</label>
+        <input type="email" id="reg-email" placeholder="Enter email" />
+      </div>
+      <div class="form-group">
+        <label for="reg-password"><i class="fas fa-lock"></i> Password</label>
+        <input type="password" id="reg-password" placeholder="Create password" />
+      </div>
+      <div class="form-group">
+        <label for="reg-address"><i class="fas fa-map-marker-alt"></i> Address</label>
+        <select id="reg-address">
+          <option value=\"Pakurtala\">Pakurtala</option>
+          <option value=\"Rajuakhaki\">Rajuakhaki</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="reg-photo"><i class="fas fa-camera"></i> Photo (Optional)</label>
+        <input type="file" id="reg-photo" accept="image/*" />
+      </div>
+      <button onclick="register()">Register</button>
+      <div class=\"toggle\">
+        <p><a href=\"#\" onclick=\"location.reload()\">Back to Login</a></p>
+      </div>
+    `;
+  }
 
-    let isLogin = true;
+  function showForgot() {
+    document.getElementById('form-title').innerText = 'Reset Password';
+    document.getElementById('form-content').innerHTML = `
+      <div class="form-group">
+        <label for="reset-email"><i class="fas fa-envelope"></i> Enter your email</label>
+        <input type="email" id="reset-email" placeholder="Enter email for reset link" />
+      </div>
+      <button onclick="resetPassword()">Send Reset Link</button>
+      <div class="toggle">
+        <p><a href="#" onclick="location.reload()">Back to Login</a></p>
+      </div>
+    `;
+  }
 
-    function toggleForm() {
-      isLogin = !isLogin;
-      nameGroup.style.display = isLogin ? "none" : "block";
-      emailGroup.style.display = isLogin ? "none" : "block";
-      addressGroup.style.display = isLogin ? "none" : "block";
-      photoGroup.style.display = isLogin ? "none" : "block";
-      formTitle.textContent = isLogin ? "Login" : "Register";
-      submitBtn.textContent = isLogin ? "Login" : "Register";
-    }
+  async function register() {
+    const name = document.getElementById('reg-name').value;
+    const phone = document.getElementById('reg-phone').value;
+    const email = document.getElementById('reg-email').value;
+    const password = document.getElementById('reg-password').value;
+    const address = document.getElementById('reg-address').value;
+    const photo = document.getElementById('reg-photo').files[0];
 
-    authForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const name = document.getElementById("name").value;
-      const email = document.getElementById("email").value;
-      const phone = document.getElementById("phone").value;
-      const address = document.getElementById("address").value;
-      const password = document.getElementById("password").value;
-      const photo = document.getElementById("photo").files[0];
+    try {
+      const userCredential = await auth.createUserWithEmailAndPassword(email || phone + '@banerjeemart.com', password);
+      const uid = userCredential.user.uid;
 
-      if (isLogin) {
-        try {
-          const userCredential = await auth.signInWithEmailAndPassword(phone + "@banerjeemart.com", password);
-          alert("Login successful!");
-          window.location.href = "index.html";
-        } catch (err) {
-          alert(err.message);
-        }
-      } else {
-        try {
-          const userCredential = await auth.createUserWithEmailAndPassword(phone + "@banerjeemart.com", password);
-          const uid = userCredential.user.uid;
-
-          let photoURL = "";
-          if (photo) {
-            const storageRef = storage.ref().child("users/" + uid + "/" + photo.name);
-            await storageRef.put(photo);
-            photoURL = await storageRef.getDownloadURL();
-          }
-
-          await db.collection("users").doc(uid).set({
-            name,
-            phone,
-            email,
-            address,
-            photo: photoURL
-          });
-
-          alert("Registration successful!");
-          window.location.href = "index.html";
-        } catch (err) {
-          alert(err.message);
-        }
+      let photoURL = '';
+      if (photo) {
+        const snapshot = await storage.ref('users/' + uid + '/profile.jpg').put(photo);
+        photoURL = await snapshot.ref.getDownloadURL();
       }
-    });
 
-    function forgotPassword() {
-      const phone = prompt("Enter your phone number or email:");
-      if (!phone) return;
+      await db.collection('users').doc(uid).set({
+        name,
+        phone,
+        email,
+        address,
+        photoURL
+      });
 
-      const email = phone.includes("@") ? phone : phone + "@banerjeemart.com";
-
-      auth.sendPasswordResetEmail(email)
-        .then(() => alert("Password reset email sent!"))
-        .catch((err) => alert(err.message));
+      alert('Registration successful!');
+      window.location.href = 'index.html';
+    } catch (err) {
+      alert(err.message);
     }
-  </script>
+  }
+
+  async function login() {
+    const phone = document.getElementById('login-phone').value;
+    const password = document.getElementById('login-password').value;
+
+    try {
+      await auth.signInWithEmailAndPassword(phone + '@banerjeemart.com', password);
+      alert('Login successful!');
+      window.location.href = 'index.html';
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
+  function resetPassword() {
+    const email = document.getElementById('reset-email').value;
+    auth.sendPasswordResetEmail(email).then(() => {
+      alert('Password reset link sent!');
+    }).catch((error) => {
+      alert(error.message);
+    });
+  }
+</script>
 </body>
 </html>
