@@ -185,68 +185,75 @@
     #cat-health .material-symbols-outlined { color: var(--icon-color-health); }
 
     .product-list-grid {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
     }
 
     .product-item {
-        display: grid;
-        grid-template-columns: 120px 1fr; /* Image column and details column */
-        gap: 16px;
+        display: flex;
+        flex-direction: column;
         text-decoration: none;
         color: var(--text-on-surface);
         background: var(--surface-color);
         padding: 10px;
         border-radius: var(--border-radius);
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        align-items: center;
+        position: relative;
+    }
+
+    .product-image-wrapper {
+        width: 100%;
+        height: 150px;
+        position: relative;
     }
 
     .product-image-wrapper img {
         width: 100%;
-        height: 120px;
+        height: 100%;
         object-fit: cover;
         border-radius: var(--border-radius);
     }
-
+    
     .product-details {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
+      display: flex;
+      flex-direction: column;
+      padding: 8px 0;
+      gap: 4px;
     }
     
     .product-title {
       font-weight: 500;
-      font-size: 16px;
+      font-size: 14px;
       margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .product-price {
       font-weight: 700;
       color: green;
-      font-size: 18px;
+      font-size: 16px;
     }
     
-    /* New style for the calculated total price */
-    .product-total-price {
-        font-size: 14px;
+    .price-per-unit {
+        font-size: 12px;
         color: var(--text-muted);
     }
 
-
     .product-controls {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 8px;
+      flex-direction: column;
+      gap: 8px;
     }
     
     .quantity-controls {
       display: flex;
       align-items: center;
-      gap: 4px;
+      justify-content: center;
+      gap: 8px;
     }
     
     .quantity-controls button {
@@ -275,6 +282,7 @@
       font-weight: 600;
       cursor: pointer;
       display: flex;
+      justify-content: center;
       align-items: center;
       gap: 8px;
     }
@@ -470,17 +478,13 @@
       const productDetails = document.createElement('div');
       productDetails.className = 'product-details';
       
-      const pricePerItem = product.price; // Store the original price per item
-      const totalPriceElement = document.createElement('p');
-      totalPriceElement.className = 'product-total-price';
-      totalPriceElement.textContent = `Total: ₹${pricePerItem.toFixed(2)}`;
-
+      const pricePerItem = product.price;
+      
       productDetails.innerHTML = `
         <h4 class="product-title">${product.name}</h4>
         <p class="product-price">₹${pricePerItem}</p>
+        <p class="price-per-unit">₹${pricePerItem} per unit</p>
       `;
-
-      productDetails.appendChild(totalPriceElement);
 
       const productControls = document.createElement('div');
       productControls.className = 'product-controls';
@@ -488,48 +492,38 @@
       const quantityControls = document.createElement('div');
       quantityControls.className = 'quantity-controls';
       quantityControls.innerHTML = `
-        <button class="decrease-qty-btn" data-id="${product.id}">-</button>
-        <span class="item-quantity" data-id="${product.id}">1</span>
-        <button class="increase-qty-btn" data-id="${product.id}">+</button>
+        <button class="decrease-qty-btn">-</button>
+        <span class="item-quantity">1</span>
+        <button class="increase-qty-btn">+</button>
       `;
 
       const addToCartBtn = document.createElement('button');
       addToCartBtn.className = 'add-to-cart-btn';
       addToCartBtn.innerHTML = `<span class="material-symbols-outlined">add_shopping_cart</span> Add to Cart`;
-      addToCartBtn.dataset.id = product.id;
-
+      
       productControls.appendChild(quantityControls);
       productControls.appendChild(addToCartBtn);
-      productDetails.appendChild(productControls);
-      
       productItem.appendChild(productLink);
       productItem.appendChild(productDetails);
+      productItem.appendChild(productControls);
       
-      // Event listeners for quantity controls
       const qtySpan = productControls.querySelector('.item-quantity');
       
-      const updateTotalPrice = () => {
-          const qty = parseInt(qtySpan.textContent);
-          const newTotal = (pricePerItem * qty).toFixed(2);
-          totalPriceElement.textContent = `Total: ₹${newTotal}`;
-      };
-
       productControls.querySelector('.increase-qty-btn').addEventListener('click', () => {
           let qty = parseInt(qtySpan.textContent);
           qtySpan.textContent = qty + 1;
-          updateTotalPrice();
       });
 
       productControls.querySelector('.decrease-qty-btn').addEventListener('click', () => {
           let qty = parseInt(qtySpan.textContent);
           if (qty > 1) {
               qtySpan.textContent = qty - 1;
-              updateTotalPrice();
           }
       });
       
       // Add to cart functionality
-      addToCartBtn.addEventListener('click', async () => {
+      addToCartBtn.addEventListener('click', async (e) => {
+          e.preventDefault(); // Prevent navigating to product detail page
           if (!user) {
               alert("Please log in to add items to your cart.");
               window.location.href = 'auth.html';
@@ -553,10 +547,8 @@
           
           const itemIndex = cart.findIndex(item => item.id === product.id);
           if (itemIndex > -1) {
-              // Item exists, update quantity
               cart[itemIndex].quantity += quantity;
           } else {
-              // Add new item
               cart.push({
                   id: product.id,
                   name: product.name,
@@ -581,11 +573,13 @@
             sectionTitle.textContent = category ? category.charAt(0).toUpperCase() + category.slice(1) : 'Hot Deals';
         }
 
-        let query = db.collection('products').orderBy('name').limit(productsPerPage);
+        let query = db.collection('products').orderBy('name');
 
         if (currentCategory) {
             query = query.where('category', '==', currentCategory);
         }
+        
+        query = query.limit(productsPerPage);
 
         if (lastVisible) {
             query = query.startAfter(lastVisible);
@@ -637,11 +631,8 @@
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const category = e.currentTarget.dataset.category;
-            // Remove 'active' class from all category links
             document.querySelectorAll('.category-link').forEach(l => l.classList.remove('active'));
-            // Add 'active' class to the clicked link
             e.currentTarget.classList.add('active');
-            // Remove `?category=...` from URL to prevent issues with initial load
             window.history.pushState(null, '', `index.html`);
             fetchProducts(category);
         });
