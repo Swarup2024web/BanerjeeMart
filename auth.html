@@ -2,147 +2,224 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Banerjee Mart - Auth</title>
+  <title>Banerjee Mart - Login</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- FontAwesome -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    * {
+      box-sizing: border-box;
+      font-family: 'Roboto', sans-serif;
+    }
+
     body {
-      background: linear-gradient(to right, #f9d423, #ff4e50);
-      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #ffffff, #f3f4f6);
       display: flex;
-      flex-direction: column;
       align-items: center;
-      padding: 20px;
+      justify-content: center;
+      height: 100vh;
     }
-    h1 {
-      color: #fff;
+
+    .auth-container {
+      width: 100%;
+      max-width: 400px;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .auth-container h2 {
+      text-align: center;
       margin-bottom: 20px;
-      font-size: 2em;
+      color: #333;
     }
+
     .tabs {
       display: flex;
-      gap: 10px;
+      justify-content: space-between;
       margin-bottom: 20px;
     }
+
     .tabs button {
-      padding: 10px 20px;
+      flex: 1;
+      padding: 10px;
+      margin: 0 3px;
+      background: #e0e0e0;
       border: none;
-      background: #fff;
-      color: #ff4e50;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .tabs button.active {
+      background: #4CAF50;
+      color: #fff;
+    }
+
+    .form-group {
+      position: relative;
+      margin-bottom: 18px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 40px 12px 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .form-group i {
+      position: absolute;
+      right: 12px;
+      top: 12px;
+      color: #888;
+    }
+
+    button.submit-btn {
+      width: 100%;
+      padding: 12px;
+      background: #4CAF50;
+      color: #fff;
+      border: none;
       font-weight: bold;
       border-radius: 8px;
       cursor: pointer;
-      transition: 0.3s;
-    }
-    .tabs button.active {
-      background: #ff4e50;
-      color: #fff;
-    }
-    .form {
-      background: #ffffffcc;
-      padding: 20px;
-      width: 100%;
-      max-width: 400px;
-      border-radius: 12px;
-      box-shadow: 0 0 12px rgba(0,0,0,0.2);
-    }
-    .form input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-    }
-    .form button {
-      width: 100%;
-      background: #ff4e50;
-      color: white;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      font-size: 1em;
       margin-top: 10px;
-      cursor: pointer;
-      transition: 0.3s;
     }
-    .form button:hover {
-      background: #e64545;
-    }
-    .logout {
-      margin-top: 30px;
-      background: #1e90ff;
-    }
-    .form a {
-      color: #ff4e50;
-      text-decoration: none;
+
+    .forgot-link {
+      text-align: center;
+      margin-top: 12px;
       font-size: 0.9em;
+    }
+
+    .forgot-link a {
+      text-decoration: none;
+      color: #4CAF50;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
     }
   </style>
 </head>
 <body>
 
-  <h1>🛒 Banerjee Mart</h1>
+  <div class="auth-container">
+    <h2>🛒 Banerjee Mart</h2>
 
-  <div class="tabs">
-    <button class="active" onclick="showTab('login')">Login</button>
-    <button onclick="showTab('register')">Register</button>
-    <button onclick="showTab('forgot')">Forgot Password</button>
-  </div>
+    <div class="tabs">
+      <button id="loginTab" class="active" onclick="switchTab('login')">Login</button>
+      <button id="registerTab" onclick="switchTab('register')">Register</button>
+      <button id="forgotTab" onclick="switchTab('forgot')">Forgot</button>
+    </div>
 
-  <!-- Login Form -->
-  <div id="login" class="form">
-    <h2>Login</h2>
-    <input type="email" placeholder="Email" id="loginEmail">
-    <input type="password" placeholder="Password" id="loginPassword">
-    <button onclick="login()">Login</button>
-  </div>
+    <!-- Login Form -->
+    <div id="login" class="section active">
+      <div class="form-group">
+        <input type="email" placeholder="Email" id="loginEmail">
+        <i class="fas fa-envelope"></i>
+      </div>
+      <div class="form-group">
+        <input type="password" placeholder="Password" id="loginPassword">
+        <i class="fas fa-lock"></i>
+      </div>
+      <button class="submit-btn" onclick="login()">Login</button>
+      <div class="forgot-link">
+        <a href="javascript:void(0)" onclick="switchTab('forgot')">Forgot password?</a>
+      </div>
+    </div>
 
-  <!-- Register Form -->
-  <div id="register" class="form" style="display: none;">
-    <h2>Register</h2>
-    <input type="text" placeholder="Full Name" id="registerName">
-    <input type="email" placeholder="Email" id="registerEmail">
-    <input type="password" placeholder="Password" id="registerPassword">
-    <button onclick="register()">Register</button>
-  </div>
+    <!-- Register Form -->
+    <div id="register" class="section">
+      <div class="form-group">
+        <input type="text" placeholder="Full Name" id="registerName">
+        <i class="fas fa-user"></i>
+      </div>
+      <div class="form-group">
+        <input type="email" placeholder="Email" id="registerEmail">
+        <i class="fas fa-envelope"></i>
+      </div>
+      <div class="form-group">
+        <input type="password" placeholder="Password" id="registerPassword">
+        <i class="fas fa-lock"></i>
+      </div>
+      <button class="submit-btn" onclick="register()">Register</button>
+    </div>
 
-  <!-- Forgot Password Form -->
-  <div id="forgot" class="form" style="display: none;">
-    <h2>Reset Password</h2>
-    <input type="email" placeholder="Email" id="forgotEmail">
-    <button onclick="resetPassword()">Send Reset Link</button>
-  </div>
-
-  <!-- Logout -->
-  <div class="form logout">
-    <button onclick="logout()">Logout</button>
+    <!-- Forgot Password -->
+    <div id="forgot" class="section">
+      <div class="form-group">
+        <input type="email" placeholder="Enter your email" id="forgotEmail">
+        <i class="fas fa-envelope-open"></i>
+      </div>
+      <button class="submit-btn" onclick="resetPassword()">Send Reset Link</button>
+    </div>
   </div>
 
   <script>
-    function showTab(tab) {
+    function switchTab(tab) {
       const tabs = ['login', 'register', 'forgot'];
-      tabs.forEach(id => {
-        document.getElementById(id).style.display = id === tab ? 'block' : 'none';
+      tabs.forEach(t => {
+        document.getElementById(t).classList.remove('active');
+        document.getElementById(t + 'Tab').classList.remove('active');
       });
-      const buttons = document.querySelectorAll('.tabs button');
-      buttons.forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
+      document.getElementById(tab).classList.add('active');
+      document.getElementById(tab + 'Tab').classList.add('active');
     }
 
-    // Placeholder Firebase functions (can be replaced later)
+    // Firebase logic placeholders
     function login() {
-      alert("Login logic to be implemented.");
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      // TODO: Add real Firebase logic here
+      if (email && password) {
+        // Simulate successful login
+        alert("Login successful!");
+        window.location.href = "index.html";
+      } else {
+        alert("Please enter email and password.");
+      }
     }
+
     function register() {
-      alert("Register logic to be implemented.");
+      const name = document.getElementById("registerName").value;
+      const email = document.getElementById("registerEmail").value;
+      const password = document.getElementById("registerPassword").value;
+
+      // TODO: Add Firebase createUserWithEmailAndPassword
+      if (name && email && password) {
+        alert("Registration successful!");
+        switchTab('login');
+      } else {
+        alert("Fill in all fields.");
+      }
     }
+
     function resetPassword() {
-      alert("Password reset logic to be implemented.");
-    }
-    function logout() {
-      alert("Logout logic to be implemented.");
+      const email = document.getElementById("forgotEmail").value;
+
+      // TODO: Add Firebase sendPasswordResetEmail
+      if (email) {
+        alert("Password reset link sent.");
+        switchTab('login');
+      } else {
+        alert("Please enter your email.");
+      }
     }
   </script>
-
 </body>
-</html>
+          </html>
