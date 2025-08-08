@@ -7,202 +7,459 @@
   <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
   <style>
+    /* Base Styles */
+    :root {
+      --primary-color: #2874f0;
+      --secondary-color: #f8f8f8;
+      --card-background: #ffffff;
+      --text-color: #333;
+      --light-text-color: #555;
+      --border-color: #ddd;
+      --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.08);
+      --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --border-radius: 8px;
+    }
+
     * {
-      margin: 0; padding: 0; box-sizing: border-box;
-      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Arial, sans-serif;
     }
+
     body {
-      background: #f8f8f8;
+      background: var(--secondary-color);
+      line-height: 1.6;
+      color: var(--text-color);
     }
+
+    /* Header */
     header {
-      background-color: #2874f0;
+      background-color: var(--primary-color);
       color: white;
-      padding: 10px;
+      padding: 15px 20px;
+      box-shadow: var(--shadow-medium);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
-    header h1 {
-      font-size: 20px;
-    }
-    .search-bar {
-      display: flex;
-      margin-top: 10px;
-    }
-    .search-bar input {
-      flex: 1;
-      padding: 8px;
-      border: none;
-      border-radius: 4px;
-    }
-    .carousel {
-      width: 100%;
-      height: 160px;
-      background: url('https://via.placeholder.com/400x160') center/cover no-repeat;
-      margin: 10px 0;
-      border-radius: 6px;
-    }
-    .categories {
-      display: flex;
-      overflow-x: auto;
-      padding: 10px 0;
-      background: white;
-    }
-    .category {
-      flex: 0 0 auto;
-      width: 80px;
-      text-align: center;
-      margin: 0 5px;
-    }
-    .category img {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #ddd;
-    }
-    .section {
-      background: white;
-      padding: 10px;
-      margin: 10px 0;
-    }
-    .section h2 {
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
-    .products {
-      display: flex;
-      overflow-x: auto;
-    }
-    .product {
-      flex: 0 0 auto;
-      width: 120px;
-      margin-right: 10px;
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      padding: 5px;
-      text-align: center;
-    }
-    .product img {
-      width: 100%;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 4px;
-    }
-    .footer-nav {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      display: flex;
-      justify-content: space-around;
-      background: #fff;
-      border-top: 1px solid #ccc;
-      padding: 10px 0;
-    }
-    .footer-nav i {
-      font-size: 20px;
-      color: #555;
-    }
-    .spinner {
+
+   .user-info {
       display: flex;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
+      justify-content: space-between; /* Distribute items */
+      margin-bottom: 15px;
     }
-    #main-content {
-      display: none;
-    }
-    .user-info {
+
+   .user-info-left {
       display: flex;
       align-items: center;
-      padding: 10px;
+      flex-grow: 1; /* Allow it to take available space */
     }
-    .user-info img {
+
+   .user-info img {
       width: 40px;
       height: 40px;
       border-radius: 50%;
       object-fit: cover;
       margin-right: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.7);
     }
-    .logout {
-      margin-left: auto;
+
+   .user-info span {
+      font-weight: 600;
+      font-size: 1.1em;
+    }
+
+   .logout-btn {
       background: #f44336;
       color: white;
-      padding: 5px 10px;
+      padding: 8px 15px;
       border: none;
-      border-radius: 4px;
+      border-radius: var(--border-radius);
       cursor: pointer;
+      font-size: 0.9em;
+      transition: background-color 0.3s ease;
+    }
+
+   .logout-btn:hover {
+      background: #d32f2f;
+    }
+
+   .search-bar {
+      display: flex;
+      width: 100%;
+    }
+
+   .search-bar input {
+      flex: 1;
+      padding: 10px 15px;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 1em;
+      background-color: rgba(255, 255, 255, 0.9);
+      color: var(--text-color);
+    }
+
+   .search-bar input::placeholder {
+      color: var(--light-text-color);
+    }
+
+    /* Main Content Sections */
+    main {
+      padding-bottom: 70px; /* Space for fixed footer */
+    }
+
+   .section {
+      background: var(--card-background);
+      padding: 15px 20px;
+      margin: 10px 0;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-light);
+    }
+
+   .section h2 {
+      font-size: 1.2em;
+      margin-bottom: 15px;
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Carousel */
+   .carousel {
+      width: 100%;
+      height: 180px; /* Slightly taller for better impact */
+      background: url('https://via.placeholder.com/800x300/2874f0/ffffff?text=Awesome+Deals') center/cover no-repeat;
+      margin: 10px 0;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    /* Categories */
+   .categories-container {
+      background: var(--card-background);
+      padding: 15px 0;
+      margin: 10px 0;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-light);
+    }
+
+   .categories {
+      display: flex;
+      overflow-x: auto;
+      padding: 0 10px; /* Padding for scrollable content */
+      -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+      scrollbar-width: none; /* Hide scrollbar for Firefox */
+      -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
+    }
+
+   .categories::-webkit-scrollbar {
+      display: none; /* Hide scrollbar for Chrome, Safari, Opera */
+    }
+
+   .category {
+      flex: 0 0 auto;
+      width: 90px; /* Slightly wider categories */
+      text-align: center;
+      margin: 0 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+   .category:hover {
+      transform: translateY(-3px);
+    }
+
+   .category img {
+      width: 65px; /* Slightly larger category images */
+      height: 65px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--border-color);
+      margin-bottom: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+   .category p {
+      font-size: 0.9em;
+      color: var(--light-text-color);
+      white-space: nowrap; /* Prevent text wrapping */
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Products */
+   .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* Responsive grid */
+      gap: 15px; /* Gap between products */
+      padding: 0 5px; /* Small padding for grid */
+    }
+
+   .product-card {
+      background: var(--card-background);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 10px;
+      text-align: center;
+      box-shadow: var(--shadow-light);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+
+   .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-medium);
+    }
+
+   .product-card img {
+      width: 100%;
+      height: 100px; /* Consistent image height */
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+   .product-card h3 {
+      font-size: 1em;
+      margin-bottom: 5px;
+      color: var(--text-color);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+   .product-card p {
+      font-size: 0.95em;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+
+    /* Spinner */
+   .spinner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-size: 2.5em;
+      color: var(--primary-color);
+    }
+
+    /* Main Content Display */
+    #main-content {
+      display: none; /* Hidden by default, shown after auth */
+    }
+
+    /* Footer Navigation */
+   .footer-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      background: var(--card-background);
+      border-top: 1px solid var(--border-color);
+      padding: 12px 0;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+      z-index: 999;
+    }
+
+   .footer-nav.nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--light-text-color);
+      font-size: 0.8em;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+   .footer-nav.nav-item.active,
+   .footer-nav.nav-item:hover {
+      color: var(--primary-color);
+    }
+
+   .footer-nav.material-symbols-outlined {
+      font-size: 24px; /* Material Symbols default size */
+      margin-bottom: 4px;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 600px) {
+      header {
+        padding: 10px 15px;
+      }
+
+     .user-info {
+        margin-bottom: 10px;
+      }
+
+     .user-info img {
+        width: 35px;
+        height: 35px;
+      }
+
+     .user-info span {
+        font-size: 1em;
+      }
+
+     .logout-btn {
+        padding: 6px 12px;
+        font-size: 0.8em;
+      }
+
+     .search-bar input {
+        padding: 8px 12px;
+        font-size: 0.9em;
+      }
+
+     .section {
+        padding: 15px;
+        margin: 8px 0;
+      }
+
+     .section h2 {
+        font-size: 1.1em;
+        margin-bottom: 12px;
+      }
+
+     .carousel {
+        height: 150px;
+        font-size: 1.2em;
+      }
+
+     .categories-container {
+        padding: 10px 0;
+      }
+
+     .category {
+        width: 80px;
+        margin: 0 5px;
+      }
+
+     .category img {
+        width: 55px;
+        height: 55px;
+      }
+
+     .category p {
+        font-size: 0.8em;
+      }
+
+     .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 10px;
+      }
+
+     .product-card {
+        padding: 8px;
+      }
+
+     .product-card img {
+        height: 80px;
+      }
+
+     .product-card h3 {
+        font-size: 0.9em;
+      }
+
+     .product-card p {
+        font-size: 0.9em;
+      }
+
+     .footer-nav {
+        padding: 10px 0;
+      }
+
+     .footer-nav.material-symbols-outlined {
+        font-size: 22px;
+      }
+
+     .footer-nav.nav-item {
+        font-size: 0.75em;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Spinner -->
   <div class="spinner" id="loader">
-    <i class="fas fa-spinner fa-spin fa-2x"></i>
+    <span class="material-symbols-outlined">autorenew</span>
   </div>
 
-  <!-- Main App Content -->
   <div id="main-content">
     <header>
       <div class="user-info">
-        <img id="userPhoto" src="" alt="User" />
-        <span id="userName">Welcome</span>
-        <button class="logout" onclick="logout()">Logout</button>
+        <div class="user-info-left">
+          <img id="userPhoto" src="https://via.placeholder.com/40" alt="User Profile" />
+          <span id="userName">Welcome</span>
+        </div>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
       </div>
       <div class="search-bar">
-        <input type="text" placeholder="Search for products..." />
+        <input type="text" id="searchInput" placeholder="Search for products..." />
       </div>
     </header>
 
-    <div class="carousel"></div>
-
-    <div class="categories">
-      <div class="category"><img src="https://via.placeholder.com/60" /><p>Groceries</p></div>
-      <div class="category"><img src="https://via.placeholder.com/60" /><p>Foods</p></div>
-      <div class="category"><img src="https://via.placeholder.com/60" /><p>Stationery</p></div>
-      <div class="category"><img src="https://via.placeholder.com/60" /><p>Students</p></div>
-      <div class="category"><img src="https://via.placeholder.com/60" /><p>Health</p></div>
-    </div>
-
-    <div class="section">
-      <h2>Trending Products</h2>
-      <div class="products">
-        <div class="product">
-          <img src="https://via.placeholder.com/100" />
-          <p>Product 1</p>
-          <p>₹99</p>
-        </div>
-        <div class="product">
-          <img src="https://via.placeholder.com/100" />
-          <p>Product 2</p>
-          <p>₹199</p>
-        </div>
+    <main>
+      <div class="carousel">
+        Your Banner Here!
       </div>
-    </div>
 
-    <div class="section">
-      <h2>Deals of the Day</h2>
-      <div class="products">
-        <div class="product">
-          <img src="https://via.placeholder.com/100" />
-          <p>Deal 1</p>
-          <p>₹299</p>
-        </div>
-        <div class="product">
-          <img src="https://via.placeholder.com/100" />
-          <p>Deal 2</p>
-          <p>₹149</p>
-        </div>
+      <div class="categories-container section">
+        <h2><span class="material-symbols-outlined">category</span> Shop by Category</h2>
+        <div class="categories" id="categoriesContainer">
+          </div>
       </div>
-    </div>
 
-    <div class="footer-nav">
-      <i class="fas fa-home"></i>
-      <i class="fas fa-shopping-cart"></i>
-      <i class="fas fa-box"></i>
-      <i class="fas fa-user"></i>
-    </div>
+      <div class="section">
+        <h2><span class="material-symbols-outlined">trending_up</span> Trending Products</h2>
+        <div class="products-grid" id="trendingProductsGrid">
+          </div>
+      </div>
+
+      <div class="section">
+        <h2><span class="material-symbols-outlined">local_offer</span> Deals of the Day</h2>
+        <div class="products-grid" id="dealsProductsGrid">
+          </div>
+      </div>
+    </main>
+
+    <footer class="footer-nav">
+      <a href="#" class="nav-item active" data-nav="home">
+        <span class="material-symbols-outlined">home</span>
+        <span>Home</span>
+      </a>
+      <a href="#" class="nav-item" data-nav="cart">
+        <span class="material-symbols-outlined">shopping_cart</span>
+        <span>Cart</span>
+      </a>
+      <a href="#" class="nav-item" data-nav="orders">
+        <span class="material-symbols-outlined">inventory_2</span>
+        <span>Orders</span>
+      </a>
+      <a href="#" class="nav-item" data-nav="profile">
+        <span class="material-symbols-outlined">person</span>
+        <span>Profile</span>
+      </a>
+    </footer>
   </div>
 
   <script>
@@ -221,30 +478,161 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
+    // Cache DOM elements
     const loader = document.getElementById('loader');
     const mainContent = document.getElementById('main-content');
+    const userNameSpan = document.getElementById('userName');
+    const userPhotoImg = document.getElementById('userPhoto');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const searchInput = document.getElementById('searchInput');
+    const categoriesContainer = document.getElementById('categoriesContainer');
+    const trendingProductsGrid = document.getElementById('trendingProductsGrid');
+    const dealsProductsGrid = document.getElementById('dealsProductsGrid');
+    const footerNavItems = document.querySelectorAll('.footer-nav.nav-item');
 
+    // --- Firebase Authentication State Listener ---
     auth.onAuthStateChanged(async (user) => {
       if (user) {
+        // User is signed in, fetch user data
         try {
           const doc = await db.collection('users').doc(user.uid).get();
-          const data = doc.data();
-          document.getElementById('userName').innerText = `Hi, ${data.name}`;
-          document.getElementById('userPhoto').src = data.imageUrl || 'https://via.placeholder.com/40';
+          if (doc.exists) {
+            const data = doc.data();
+            userNameSpan.innerText = `Hi, ${data.name |
+
+| 'User'}`;
+            userPhotoImg.src = data.imageUrl |
+
+| 'https://via.placeholder.com/40';
+          } else {
+            console.warn("User data not found in Firestore for UID:", user.uid);
+            userNameSpan.innerText = `Hi, ${user.email |
+
+| 'User'}`; // Fallback to email
+            userPhotoImg.src = 'https://via.placeholder.com/40';
+          }
           loader.style.display = 'none';
           mainContent.style.display = 'block';
+          loadDynamicContent(); // Load categories and products after user is authenticated
         } catch (error) {
-          alert('Error loading user info');
-          auth.signOut();
+          console.error('Error loading user info:', error);
+          alert('Error loading user information. Please try again.');
+          auth.signOut(); // Sign out if there's an error fetching user data
         }
       } else {
+        // User is signed out, redirect to auth page
         window.location.href = 'auth.html';
       }
     });
 
-    function logout() {
-      auth.signOut();
+    // --- Logout Functionality ---
+    logoutBtn.addEventListener('click', async () => {
+      try {
+        await auth.signOut();
+        // Redirection handled by onAuthStateChanged
+      } catch (error) {
+        console.error('Error signing out:', error);
+        alert('Failed to log out. Please try again.');
+      }
+    });
+
+    // --- Dynamic Content Loading (Simulated/Firestore) ---
+
+    // Placeholder data for demonstration
+    const sampleCategories =;
+
+    const sampleProducts =;
+
+    async function loadDynamicContent() {
+      // Load Categories
+      renderCategories(sampleCategories); // Using sample data for now
+      // In a real app, you'd fetch from Firestore:
+      // const categoriesSnapshot = await db.collection('categories').get();
+      // const categoriesData = categoriesSnapshot.docs.map(doc => ({ id: doc.id,...doc.data() }));
+      // renderCategories(categoriesData);
+
+      // Load Trending Products
+      const trending = sampleProducts.filter(p => p.section === 'trending');
+      renderProducts(trendingProductsGrid, trending);
+      // In a real app:
+      // const trendingSnapshot = await db.collection('products').where('section', '==', 'trending').get();
+      // const trendingData = trendingSnapshot.docs.map(doc => ({ id: doc.id,...doc.data() }));
+      // renderProducts(trendingProductsGrid, trendingData);
+
+      // Load Deals of the Day
+      const deals = sampleProducts.filter(p => p.section === 'deals');
+      renderProducts(dealsProductsGrid, deals);
+      // In a real app:
+      // const dealsSnapshot = await db.collection('products').where('section', '==', 'deals').get();
+      // const dealsData = dealsSnapshot.docs.map(doc => ({ id: doc.id,...doc.data() }));
+      // renderProducts(dealsProductsGrid, dealsData);
     }
+
+    function renderCategories(categories) {
+      categoriesContainer.innerHTML = ''; // Clear existing
+      categories.forEach(category => {
+        const categoryDiv = document.createElement('div');
+        categoryDiv.classList.add('category');
+        categoryDiv.innerHTML = `
+          <img src="${category.imageUrl}" alt="${category.name}" />
+          <p>${category.name}</p>
+        `;
+        categoryDiv.addEventListener('click', () => {
+          alert(`Navigating to ${category.name} category!`);
+          // In a real app: window.location.href = `category.html?id=${category.id}`;
+        });
+        categoriesContainer.appendChild(categoryDiv);
+      });
+    }
+
+    function renderProducts(container, products) {
+      container.innerHTML = ''; // Clear existing
+      products.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.classList.add('product-card');
+        productCard.innerHTML = `
+          <img src="${product.imageUrl}" alt="${product.name}" />
+          <h3>${product.name}</h3>
+          <p>₹${product.price}</p>
+        `;
+        productCard.addEventListener('click', () => {
+          alert(`Viewing details for ${product.name} (ID: ${product.id})`);
+          // In a real app: window.location.href = `product.html?id=${product.id}`;
+        });
+        container.appendChild(productCard);
+      });
+    }
+
+    // --- Search Bar Functionality ---
+    searchInput.addEventListener('keypress', (event) => {
+      if (event.key === 'Enter') {
+        const query = searchInput.value.trim();
+        if (query) {
+          alert(`Searching for: "${query}"`);
+          // In a real app: Trigger a search function, redirect to search results page
+          // window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+        }
+      }
+    });
+
+    // --- Footer Navigation Functionality ---
+    footerNavItems.forEach(item => {
+      item.addEventListener('click', (event) => {
+        event.preventDefault(); // Prevent default link behavior
+        const targetNav = item.dataset.nav;
+
+        // Remove active class from all and add to clicked one
+        footerNavItems.forEach(nav => nav.classList.remove('active'));
+        item.classList.add('active');
+
+        alert(`Navigating to ${targetNav} section!`);
+        // In a real app, you'd change content or redirect:
+        // if (targetNav === 'home') { /* load home content */ }
+        // else if (targetNav === 'cart') { window.location.href = 'cart.html'; }
+        // etc.
+      });
+    });
+
   </script>
 </body>
-        </html>
+</html>
