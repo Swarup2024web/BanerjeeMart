@@ -4,190 +4,243 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Banerjee Mart - Auth</title>
-  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-storage.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-storage-compat.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
   <style>
     body {
-      font-family: sans-serif;
-      background: #f1f3f6;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #fbc2eb, #a6c1ee);
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 30px;
+      height: 100vh;
     }
+
     .container {
-      background: white;
-      padding: 25px;
-      border-radius: 8px;
       width: 100%;
       max-width: 420px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      background: white;
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
     }
+
     h2 {
       text-align: center;
       margin-bottom: 20px;
       color: #333;
     }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
     input, select {
       width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      margin-bottom: 15px;
+      padding: 10px;
       border: 1px solid #ccc;
-      border-radius: 5px;
+      border-radius: 6px;
+      margin-top: 6px;
     }
-    .photo-upload {
-      margin-bottom: 15px;
+
+    button {
+      width: 100%;
+      background: #007bff;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 12px;
     }
+
+    .toggle-link {
+      text-align: center;
+      margin-top: 14px;
+      color: #007bff;
+      cursor: pointer;
+    }
+
+    .form-section {
+      display: none;
+    }
+
+    .form-section.active {
+      display: block;
+    }
+
     .photo-preview {
       width: 80px;
       height: 80px;
-      object-fit: cover;
       border-radius: 50%;
-      display: block;
-      margin: 10px auto;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #4caf50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-    }
-    button:hover {
-      background: #45a049;
-    }
-    .message {
-      text-align: center;
-      color: red;
+      object-fit: cover;
       margin-top: 10px;
     }
-    .toggle-link {
+
+    .msg {
       text-align: center;
       margin-top: 10px;
-      cursor: pointer;
-      color: #007bff;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <h2 id="form-title">Login</h2>
 
-<div class="container" id="registerForm">
-  <h2><i class="fas fa-user-plus"></i> Register</h2>
-  <input type="text" id="regName" placeholder="Full Name" required>
-  <input type="text" id="regPhone" placeholder="Phone Number" required>
-  <input type="email" id="regEmail" placeholder="Email (optional)">
-  <select id="regAddress">
-    <option value="" disabled selected>Select Address</option>
-    <option value="Pakurtala">Pakurtala</option>
-    <option value="Rajuakhaki">Rajuakhaki</option>
-  </select>
-  <input type="file" id="regPhoto" accept="image/*" class="photo-upload">
-  <input type="password" id="regPassword" placeholder="Password" required>
-  <button onclick="register()">Register</button>
-  <div class="message" id="regMessage"></div>
-  <div class="toggle-link" onclick="showLogin()">Already have an account? Login</div>
-</div>
+    <div id="login-section" class="form-section active">
+      <div class="form-group">
+        <label>📞 Phone Number</label>
+        <input type="text" id="login-phone" placeholder="Enter phone number" />
+      </div>
+      <div class="form-group">
+        <label>🔑 Password</label>
+        <input type="password" id="login-password" placeholder="Enter password" />
+      </div>
+      <button onclick="login()">Login</button>
+      <div class="toggle-link" onclick="showSection('register')">New user? Register</div>
+      <div class="toggle-link" onclick="showSection('forgot')">Forgot password?</div>
+    </div>
 
-<div class="container" id="loginForm" style="display:none;">
-  <h2><i class="fas fa-sign-in-alt"></i> Login</h2>
-  <input type="text" id="loginPhone" placeholder="Phone Number">
-  <input type="password" id="loginPassword" placeholder="Password">
-  <button onclick="login()">Login</button>
-  <div class="message" id="loginMessage"></div>
-  <div class="toggle-link" onclick="showRegister()">Don't have an account? Register</div>
-</div>
+    <div id="register-section" class="form-section">
+      <div class="form-group">
+        <label>👤 Full Name</label>
+        <input type="text" id="reg-name" placeholder="Enter full name" />
+      </div>
+      <div class="form-group">
+        <label>📞 Phone Number</label>
+        <input type="text" id="reg-phone" placeholder="Enter phone number" />
+      </div>
+      <div class="form-group">
+        <label>✉️ Email (optional)</label>
+        <input type="email" id="reg-email" placeholder="Enter email (optional)" />
+      </div>
+      <div class="form-group">
+        <label>🏠 Address</label>
+        <select id="reg-address">
+          <option value="Pakurtala">Pakurtala</option>
+          <option value="Rajuakhaki">Rajuakhaki</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>🖼️ Profile Photo</label>
+        <input type="file" id="reg-photo" accept="image/*" />
+        <img id="photo-preview" class="photo-preview" />
+      </div>
+      <div class="form-group">
+        <label>🔑 Password</label>
+        <input type="password" id="reg-password" placeholder="Set a password" />
+      </div>
+      <button onclick="register()">Register</button>
+      <div class="toggle-link" onclick="showSection('login')">Back to login</div>
+    </div>
 
-<script>
-  // Firebase Config
-  const firebaseConfig = {
-    apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
-    authDomain: "banerjee-mart.firebaseapp.com",
-    projectId: "banerjee-mart",
-    storageBucket: "banerjee-mart.appspot.com",
-    messagingSenderId: "183628570952",
-    appId: "1:183628570952:web:3028bb258001d004d9537d"
-  };
+    <div id="forgot-section" class="form-section">
+      <div class="form-group">
+        <label>📧 Email Address</label>
+        <input type="email" id="forgot-email" placeholder="Enter registered email" />
+      </div>
+      <button onclick="resetPassword()">Send Reset Email</button>
+      <div class="toggle-link" onclick="showSection('login')">Back to login</div>
+    </div>
 
-  // Initialize Firebase
-  const app = firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
-  const storage = firebase.storage();
+    <div class="msg" id="msg"></div>
+  </div>
 
-  function showLogin() {
-    document.getElementById('registerForm').style.display = 'none';
-    document.getElementById('loginForm').style.display = 'block';
-  }
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
+      authDomain: "banerjee-mart.firebaseapp.com",
+      projectId: "banerjee-mart",
+      storageBucket: "banerjee-mart.appspot.com",
+      messagingSenderId: "183628570952",
+      appId: "1:183628570952:web:3028bb258001d004d9537d"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const storage = firebase.storage();
 
-  function showRegister() {
-    document.getElementById('registerForm').style.display = 'block';
-    document.getElementById('loginForm').style.display = 'none';
-  }
+    const msg = document.getElementById('msg');
+    const preview = document.getElementById('photo-preview');
 
-  async function register() {
-    const name = document.getElementById('regName').value;
-    const phone = document.getElementById('regPhone').value;
-    const email = document.getElementById('regEmail').value || '';
-    const address = document.getElementById('regAddress').value;
-    const password = document.getElementById('regPassword').value;
-    const photoFile = document.getElementById('regPhoto').files[0];
-    const regMessage = document.getElementById('regMessage');
-
-    if (!name || !phone || !password || !address) {
-      regMessage.textContent = 'Please fill all required fields.';
-      return;
-    }
-
-    try {
-      const userCredential = await auth.createUserWithEmailAndPassword(`${phone}@banerjeemart.com`, password);
-      const user = userCredential.user;
-
-      let photoURL = '';
-      if (photoFile) {
-        const storageRef = storage.ref().child(`users/${user.uid}/profile.jpg`);
-        await storageRef.put(photoFile);
-        photoURL = await storageRef.getDownloadURL();
+    document.getElementById('reg-photo').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        preview.src = URL.createObjectURL(file);
       }
+    });
 
-      await db.collection('users').doc(user.uid).set({
-        name,
-        phone,
-        email,
-        address,
-        imageUrl: photoURL
-      });
-
-      regMessage.style.color = 'green';
-      regMessage.textContent = 'Registration successful. Redirecting...';
-      setTimeout(() => window.location.href = 'index.html', 1500);
-    } catch (error) {
-      regMessage.style.color = 'red';
-      regMessage.textContent = error.message;
+    function showSection(section) {
+      document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+      document.getElementById(`${section}-section`).classList.add('active');
+      document.getElementById('form-title').innerText = section === 'login' ? 'Login' : section === 'register' ? 'Register' : 'Reset Password';
+      msg.textContent = '';
     }
-  }
 
-  async function login() {
-    const phone = document.getElementById('loginPhone').value;
-    const password = document.getElementById('loginPassword').value;
-    const loginMessage = document.getElementById('loginMessage');
+    async function register() {
+      const name = document.getElementById('reg-name').value;
+      const phone = document.getElementById('reg-phone').value;
+      const email = document.getElementById('reg-email').value;
+      const address = document.getElementById('reg-address').value;
+      const password = document.getElementById('reg-password').value;
+      const photoFile = document.getElementById('reg-photo').files[0];
 
-    try {
-      await auth.signInWithEmailAndPassword(`${phone}@banerjeemart.com`, password);
-      loginMessage.style.color = 'green';
-      loginMessage.textContent = 'Login successful. Redirecting...';
-      setTimeout(() => window.location.href = 'index.html', 1500);
-    } catch (error) {
-      loginMessage.style.color = 'red';
-      loginMessage.textContent = error.message;
+      const emailId = email || `${phone}@banerjeemart.com`;
+      try {
+        const userCredential = await auth.createUserWithEmailAndPassword(emailId, password);
+        const uid = userCredential.user.uid;
+
+        let imageUrl = '';
+        if (photoFile) {
+          const storageRef = storage.ref(`profile_photos/${uid}`);
+          await storageRef.put(photoFile);
+          imageUrl = await storageRef.getDownloadURL();
+        }
+
+        await db.collection('users').doc(uid).set({
+          name,
+          phone,
+          email: email || '',
+          address,
+          imageUrl
+        });
+
+        msg.textContent = 'Registration successful!';
+        setTimeout(() => window.location.href = 'index.html', 1500);
+      } catch (error) {
+        msg.textContent = error.message;
+      }
     }
-  }
-</script>
 
+    async function login() {
+      const phone = document.getElementById('login-phone').value;
+      const password = document.getElementById('login-password').value;
+      const email = `${phone}@banerjeemart.com`;
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+        msg.textContent = 'Login successful!';
+        setTimeout(() => window.location.href = 'index.html', 1500);
+      } catch (error) {
+        msg.textContent = error.message;
+      }
+    }
+
+    async function resetPassword() {
+      const email = document.getElementById('forgot-email').value;
+      try {
+        await auth.sendPasswordResetEmail(email);
+        msg.textContent = 'Reset email sent!';
+      } catch (error) {
+        msg.textContent = error.message;
+      }
+    }
+  </script>
 </body>
-</html>
+  </html>
