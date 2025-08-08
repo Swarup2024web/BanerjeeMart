@@ -1,227 +1,574 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Panel</title>
-  <script type="module" src="firebaseConfig.js"></script>
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banerjee Mart - Admin Panel</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f3f4f6;
-    }
+    <style>
+        :root {
+            --primary-color: #6750A4;
+            --on-primary: #FFFFFF;
+            --primary-container: #EADDFF;
+            --on-primary-container: #21005D;
+            
+            --secondary-color: #625B71;
+            --on-secondary: #FFFFFF;
+            --secondary-container: #E8DEF8;
+            --on-secondary-container: #1D192B;
+            
+            --success-color: #00875A;
+            --on-success: #FFFFFF;
+            --success-container: #C8F7DC;
+            --on-success-container: #002115;
+            
+            --error-color: #B3261E;
+            --on-error: #FFFFFF;
+            
+            --background-color: #FFFBFE;
+            --on-background: #1C1B1F;
+            --surface-color: #FFFBFE;
+            --on-surface: #1C1B1F;
+            --surface-variant: #E7E0EC;
+            --on-surface-variant: #49454F;
+            
+            --outline: #79747E;
+            --shadow: #000000;
+            --elevation-1: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+            
+            --border-radius-m: 12px;
+            --border-radius-l: 16px;
+            --border-radius-xl: 28px;
+            
+            --font-family: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
 
-    header {
-      background: #1e293b;
-      color: #fff;
-      padding: 1rem;
-      text-align: center;
-      font-size: 1.5rem;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+        body {
+            margin: 0;
+            font-family: var(--font-family);
+            background: var(--background-color);
+            color: var(--on-background);
+            line-height: 1.6;
+        }
 
-    .container {
-      padding: 20px;
-    }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
 
-    .form-container {
-      background: #ffffff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      max-width: 600px;
-      margin: auto;
-    }
+        @media (min-width: 900px) {
+            .container {
+                grid-template-columns: 1fr 2fr;
+            }
+        }
 
-    .form-container h2 {
-      text-align: center;
-      margin-bottom: 1rem;
-    }
+        .panel {
+            background: var(--surface-color);
+            border-radius: var(--border-radius-xl);
+            box-shadow: var(--elevation-1);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
 
-    .form-group {
-      margin-bottom: 15px;
-    }
+        .panel-header {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .section-header {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--on-surface);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
 
-    .form-group label {
-      display: block;
-      margin-bottom: 6px;
-    }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
 
-    .form-group input, .form-group select {
-      width: 100%;
-      padding: 10px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            font-weight: 500;
+            color: var(--on-surface-variant);
+            margin-bottom: 0.25rem;
+        }
 
-    .form-group button {
-      width: 100%;
-      padding: 12px;
-      background: #1e40af;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      font-size: 1rem;
-      cursor: pointer;
-    }
+        input, select, textarea {
+            padding: 0.75rem;
+            border: 1px solid var(--outline);
+            border-radius: var(--border-radius-m);
+            background: var(--surface-variant);
+            color: var(--on-surface-variant);
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
 
-    .form-group button:hover {
-      background: #1d4ed8;
-    }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px var(--primary-container);
+        }
 
-    .table-responsive {
-      overflow-x: auto;
-      margin-top: 2rem;
-    }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #fff;
-    }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 100px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--on-primary);
+        }
+        
+        .btn-primary:hover {
+            background-color: #7966B2;
+            transform: translateY(-2px);
+        }
 
-    table th, table td {
-      padding: 12px 15px;
-      border: 1px solid #e5e7eb;
-      text-align: left;
-    }
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--on-secondary);
+        }
 
-    table th {
-      background: #f1f5f9;
-    }
+        .btn-secondary:hover {
+            background-color: #726A7A;
+            transform: translateY(-2px);
+        }
 
-    @media (max-width: 600px) {
-      .form-container {
-        padding: 15px;
-      }
+        .btn-danger {
+            background-color: var(--error-color);
+            color: var(--on-error);
+        }
+        
+        .btn-danger:hover {
+            background-color: #D32F2F;
+            transform: translateY(-2px);
+        }
+        
+        .product-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
 
-      table th, table td {
-        padding: 8px;
-      }
-    }
-  </style>
+        .product-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: var(--surface-variant);
+            border-radius: var(--border-radius-m);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .product-list-item:hover {
+            background-color: var(--secondary-container);
+        }
+
+        .order-card {
+            background: var(--surface-variant);
+            padding: 1.5rem;
+            border-radius: var(--border-radius-l);
+            box-shadow: var(--elevation-1);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--outline);
+            padding-bottom: 1rem;
+        }
+        
+        .order-id {
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        .order-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .order-item-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .order-item-list li {
+            font-size: 0.9rem;
+            color: var(--on-surface-variant);
+        }
+        
+        .order-status-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .order-status {
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            color: var(--on-surface);
+            background: var(--surface-variant);
+        }
+
+        .status-processed {
+            background: var(--primary-container);
+            color: var(--on-primary-container);
+        }
+        .status-on-the-way {
+            background: var(--secondary-container);
+            color: var(--on-secondary-container);
+        }
+        .status-delivered {
+            background: var(--success-container);
+            color: var(--on-success-container);
+        }
+        .status-cancelled {
+            background: var(--error-container);
+            color: var(--on-error-container);
+        }
+        
+        select.status-changer {
+            width: auto;
+            min-width: 150px;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border: 1px solid var(--outline);
+            border-radius: 100px;
+            background: var(--surface-color);
+            cursor: pointer;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2349454f%22%20d%3D%22M287%20146.2c0%204.3-3.3%207.6-7.6%207.6H13.1c-4.3%200-7.6-3.3-7.6-7.6s3.3-7.6%207.6-7.6h266.3c4.3%200%207.6%203.3%207.6%207.6z%22%2F%3E%3Cpath%20fill%3D%22%2349454f%22%20d%3D%22M146.2%20287c4.3%200%207.6-3.3%207.6-7.6V13.1c0-4.3-3.3-7.6-7.6-7.6s-7.6%203.3-7.6%207.6v266.3c0%204.3%203.3%207.6%207.6%207.6z%22%2F%3E%3C%2Fsvg%3E');
+            background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 -960 960 960' width='24'><path fill='rgb(73, 69, 79)' d='M480-360 280-560h400L480-360Z'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 24px;
+        }
+
+    </style>
 </head>
 <body>
-  <header><i class="fas fa-tools"></i> ADMIN PANEL</header>
 
-  <div class="container">
-    <div class="form-container">
-      <h2><i class="fas fa-plus-circle"></i> Add Product</h2>
-      <div class="form-group">
-        <label>Product Name</label>
-        <input type="text" id="name" placeholder="Enter product name" required />
-      </div>
-      <div class="form-group">
-        <label>Category</label>
-        <input type="text" id="category" placeholder="e.g. electronics, food..." required />
-      </div>
-      <div class="form-group">
-        <label>Price (₹)</label>
-        <input type="number" id="price" placeholder="Enter price" required />
-      </div>
-      <div class="form-group">
-        <label>Image URL</label>
-        <input type="url" id="image" placeholder="Paste image URL here" />
-      </div>
-      <div class="form-group">
-        <button id="addBtn"><i class="fas fa-database"></i> Add to Firebase</button>
-      </div>
+    <div class="container">
+        
+        <div class="panel">
+            <h1 class="panel-header">Admin Panel</h1>
+            <h2 class="section-header">Product Management</h2>
+            
+            <form id="product-form">
+                <div class="form-group">
+                    <label for="product-name">Product Name</label>
+                    <input type="text" id="product-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-category">Category</label>
+                    <select id="product-category" required>
+                        <option value="">Select a category</option>
+                        <option value="groceries">Groceries</option>
+                        <option value="vegetables">Vegetables</option>
+                        <option value="food">Food</option>
+                        <option value="stationery">Stationery</option>
+                        <option value="health">Health</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="product-price">Price (₹)</label>
+                    <input type="number" id="product-price" required min="0">
+                </div>
+                <div class="form-group">
+                    <label for="product-image">Image URL</label>
+                    <input type="url" id="product-image" required>
+                </div>
+                
+                <div id="product-form-buttons">
+                    <button type="submit" class="btn btn-primary" id="add-product-btn">
+                        <span class="material-symbols-rounded">add</span>
+                        Add Product
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="update-product-btn" style="display:none;">
+                        <span class="material-symbols-rounded">edit</span>
+                        Update Product
+                    </button>
+                    <button type="button" class="btn btn-danger" id="delete-product-btn" style="display:none;">
+                        <span class="material-symbols-rounded">delete</span>
+                        Delete Product
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="cancel-edit-btn" style="display:none;">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+
+            <h2 class="section-header">Existing Products</h2>
+            <ul id="product-list" class="product-list">
+                </ul>
+        </div>
+        
+        <div class="panel">
+            <h2 class="section-header">Order Management</h2>
+            <div id="orders-container">
+                </div>
+        </div>
+
     </div>
 
-    <div class="table-responsive">
-      <table id="productTable">
-        <thead>
-          <tr>
-            <th><i class="fas fa-hashtag"></i> #</th>
-            <th><i class="fas fa-box-open"></i> Name</th>
-            <th><i class="fas fa-list"></i> Category</th>
-            <th><i class="fas fa-rupee-sign"></i> Price</th>
-            <th><i class="fas fa-image"></i> Image</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-      </table>
-    </div>
-  </div>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
+            authDomain: "banerjee-mart.firebaseapp.com",
+            projectId: "banerjee-mart",
+            storageBucket: "banerjee-mart.appspot.com",
+            messagingSenderId: "183628570952",
+            appId: "1:183628570952:web:3028bb258001d004d9537d"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    import { firebaseConfig } from './firebaseConfig.js';
+        const productForm = document.getElementById('product-form');
+        const productList = document.getElementById('product-list');
+        const ordersContainer = document.getElementById('orders-container');
+        
+        const addProductBtn = document.getElementById('add-product-btn');
+        const updateProductBtn = document.getElementById('update-product-btn');
+        const deleteProductBtn = document.getElementById('delete-product-btn');
+        const cancelEditBtn = document.getElementById('cancel-edit-btn');
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const productsRef = collection(db, "products");
+        let currentProductId = null;
 
-    const nameInput = document.getElementById("name");
-    const categoryInput = document.getElementById("category");
-    const priceInput = document.getElementById("price");
-    const imageInput = document.getElementById("image");
-    const addBtn = document.getElementById("addBtn");
-    const tableBody = document.getElementById("tableBody");
+        // Helper function to render products
+        function renderProducts(products) {
+            productList.innerHTML = '';
+            products.forEach(product => {
+                const li = document.createElement('li');
+                li.className = 'product-list-item';
+                li.innerHTML = `
+                    <span>${product.name} - ₹${product.price}</span>
+                    <button class="btn btn-secondary btn-edit-product" data-id="${product.id}">
+                        <span class="material-symbols-rounded">edit</span>
+                    </button>
+                `;
+                productList.appendChild(li);
+            });
+        }
+        
+        // Helper function to render orders
+        function renderOrders(orders) {
+            ordersContainer.innerHTML = '';
+            if (orders.length === 0) {
+                ordersContainer.innerHTML = '<p style="text-align:center; color:var(--on-surface-variant);">No new orders.</p>';
+                return;
+            }
 
-    async function addProduct() {
-      const name = nameInput.value.trim();
-      const category = categoryInput.value.trim();
-      const price = parseFloat(priceInput.value);
-      const image = imageInput.value.trim();
+            orders.forEach(order => {
+                const orderCard = document.createElement('div');
+                orderCard.className = 'order-card';
 
-      if (!name || !category || isNaN(price)) {
-        alert("Please fill all required fields.");
-        return;
-      }
+                const statusMap = {
+                    'Processed': 'status-processed',
+                    'On the Way': 'status-on-the-way',
+                    'Delivered': 'status-delivered',
+                    'Cancelled': 'status-cancelled'
+                };
+                
+                const statusClass = statusMap[order.status] || '';
 
-      try {
-        await addDoc(productsRef, {
-          name,
-          category,
-          price,
-          image,
-          timestamp: new Date()
+                const orderItemsHtml = order.items.map(item => `
+                    <li>${item.name} (x${item.quantity})</li>
+                `).join('');
+
+                orderCard.innerHTML = `
+                    <div class="order-header">
+                        <span class="order-id">Order ID: ${order.id.substring(0, 8)}</span>
+                        <div class="order-status-wrapper">
+                             <span class="order-status ${statusClass}">${order.status}</span>
+                             <select class="status-changer" data-order-id="${order.id}">
+                                 <option value="Processed" ${order.status === 'Processed' ? 'selected' : ''}>Processed</option>
+                                 <option value="On the Way" ${order.status === 'On the Way' ? 'selected' : ''}>On the Way</option>
+                                 <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                                 <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                             </select>
+                        </div>
+                    </div>
+                    <div class="order-details">
+                        <p><strong>User ID:</strong> ${order.userId}</p>
+                        <p><strong>Total:</strong> ₹${order.total.toFixed(2)}</p>
+                        <p><strong>Date:</strong> ${order.createdAt ? order.createdAt.toDate().toLocaleString() : 'N/A'}</p>
+                        <p><strong>Items:</strong></p>
+                        <ul class="order-item-list">${orderItemsHtml}</ul>
+                    </div>
+                `;
+                ordersContainer.appendChild(orderCard);
+            });
+
+            document.querySelectorAll('.status-changer').forEach(select => {
+                select.addEventListener('change', async (e) => {
+                    const orderId = e.target.dataset.orderId;
+                    const newStatus = e.target.value;
+                    try {
+                        await db.collection('user-orders').doc(orderId).update({ status: newStatus });
+                        alert(`Order ${orderId.substring(0, 8)} status updated to ${newStatus}.`);
+                    } catch (error) {
+                        console.error("Error updating order status:", error);
+                        alert("Failed to update order status. See console for details.");
+                    }
+                });
+            });
+        }
+        
+        // Product form submission
+        productForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const product = {
+                name: document.getElementById('product-name').value,
+                category: document.getElementById('product-category').value,
+                price: parseFloat(document.getElementById('product-price').value),
+                imageUrl: document.getElementById('product-image').value,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            if (currentProductId) {
+                // Update existing product
+                try {
+                    await db.collection('products').doc(currentProductId).update(product);
+                    alert('Product updated successfully!');
+                } catch (error) {
+                    console.error("Error updating product:", error);
+                    alert("Failed to update product.");
+                }
+            } else {
+                // Add new product
+                try {
+                    await db.collection('products').add(product);
+                    alert('Product added successfully!');
+                } catch (error) {
+                    console.error("Error adding product:", error);
+                    alert("Failed to add product.");
+                }
+            }
+            productForm.reset();
+            currentProductId = null;
+            updateFormButtons();
         });
 
-        nameInput.value = "";
-        categoryInput.value = "";
-        priceInput.value = "";
-        imageInput.value = "";
+        // Edit product functionality
+        productList.addEventListener('click', async (e) => {
+            if (e.target.classList.contains('btn-edit-product')) {
+                currentProductId = e.target.dataset.id;
+                try {
+                    const doc = await db.collection('products').doc(currentProductId).get();
+                    if (doc.exists) {
+                        const product = doc.data();
+                        document.getElementById('product-name').value = product.name;
+                        document.getElementById('product-category').value = product.category;
+                        document.getElementById('product-price').value = product.price;
+                        document.getElementById('product-image').value = product.imageUrl;
+                        updateFormButtons(true);
+                    }
+                } catch (error) {
+                    console.error("Error fetching product for edit:", error);
+                }
+            }
+        });
 
-        alert("Product added!");
-        fetchProducts();
-      } catch (error) {
-        console.error("Error adding product:", error);
-        alert("Error saving to Firebase.");
-      }
-    }
+        // Delete product functionality
+        deleteProductBtn.addEventListener('click', async () => {
+            if (currentProductId && confirm('Are you sure you want to delete this product?')) {
+                try {
+                    await db.collection('products').doc(currentProductId).delete();
+                    alert('Product deleted successfully!');
+                    productForm.reset();
+                    currentProductId = null;
+                    updateFormButtons();
+                } catch (error) {
+                    console.error("Error deleting product:", error);
+                    alert("Failed to delete product.");
+                }
+            }
+        });
 
-    async function fetchProducts() {
-      tableBody.innerHTML = "";
-      const snapshot = await getDocs(productsRef);
-      let count = 1;
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${count++}</td>
-          <td>${data.name}</td>
-          <td>${data.category}</td>
-          <td>₹${data.price}</td>
-          <td><img src="${data.image}" alt="Image" width="60" /></td>
-        `;
-        tableBody.appendChild(row);
-      });
-    }
+        // Cancel edit
+        cancelEditBtn.addEventListener('click', () => {
+            productForm.reset();
+            currentProductId = null;
+            updateFormButtons();
+        });
 
-    addBtn.addEventListener("click", addProduct);
-    fetchProducts();
-  </script>
+        function updateFormButtons(isEditing = false) {
+            addProductBtn.style.display = isEditing ? 'none' : 'block';
+            updateProductBtn.style.display = isEditing ? 'block' : 'none';
+            deleteProductBtn.style.display = isEditing ? 'block' : 'none';
+            cancelEditBtn.style.display = isEditing ? 'block' : 'none';
+        }
+        
+        // Listen to real-time updates for products
+        db.collection('products').orderBy('name').onSnapshot(snapshot => {
+            const products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderProducts(products);
+        }, err => {
+            console.error("Error fetching products:", err);
+            productList.innerHTML = '<p>Failed to load products.</p>';
+        });
+
+        // Listen to real-time updates for orders
+        db.collection('user-orders').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+            const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderOrders(orders);
+        }, err => {
+            console.error("Error fetching orders:", err);
+            ordersContainer.innerHTML = '<p>Failed to load orders.</p>';
+        });
+
+        updateFormButtons();
+    </script>
 </body>
-        </html>
+</html>
