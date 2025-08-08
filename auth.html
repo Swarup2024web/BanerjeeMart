@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Banerjee Mart - Auth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f0f0f0;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    .auth-container {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    input[type="email"], input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: none;
+      background-color: #1976d2;
+      color: white;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #1565c0;
+    }
+
+    .link {
+      color: #1976d2;
+      cursor: pointer;
+      text-align: center;
+      display: block;
+      margin-top: 10px;
+    }
+
+    .logout-btn {
+      margin-top: 20px;
+      background-color: #d32f2f;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .msg {
+      text-align: center;
+      margin-top: 10px;
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Banerjee Mart - Login / Register</h2>
+
+  <div class="auth-container">
+
+    <!-- Login Form -->
+    <div id="loginForm">
+      <input type="email" id="loginEmail" placeholder="Email">
+      <input type="password" id="loginPassword" placeholder="Password">
+      <button onclick="login()">Login</button>
+      <span class="link" onclick="showRegister()">Don't have an account? Register</span>
+      <span class="link" onclick="showForgot()">Forgot Password?</span>
+    </div>
+
+    <!-- Register Form -->
+    <div id="registerForm" class="hidden">
+      <input type="email" id="registerEmail" placeholder="Email">
+      <input type="password" id="registerPassword" placeholder="Password">
+      <button onclick="register()">Register</button>
+      <span class="link" onclick="showLogin()">Already have an account? Login</span>
+    </div>
+
+    <!-- Forgot Password Form -->
+    <div id="forgotForm" class="hidden">
+      <input type="email" id="forgotEmail" placeholder="Enter your email">
+      <button onclick="forgotPassword()">Send Reset Link</button>
+      <span class="link" onclick="showLogin()">Back to Login</span>
+    </div>
+
+    <!-- Logout Section -->
+    <div id="logoutSection" class="hidden">
+      <p class="msg">You are logged in!</p>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <p class="msg" id="message"></p>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+  <script>
+    // ✅ Replace this with your Firebase config
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    const message = document.getElementById("message");
+
+    function showLogin() {
+      document.getElementById("loginForm").classList.remove("hidden");
+      document.getElementById("registerForm").classList.add("hidden");
+      document.getElementById("forgotForm").classList.add("hidden");
+      document.getElementById("logoutSection").classList.add("hidden");
+      message.innerText = '';
+    }
+
+    function showRegister() {
+      document.getElementById("registerForm").classList.remove("hidden");
+      document.getElementById("loginForm").classList.add("hidden");
+      document.getElementById("forgotForm").classList.add("hidden");
+      message.innerText = '';
+    }
+
+    function showForgot() {
+      document.getElementById("forgotForm").classList.remove("hidden");
+      document.getElementById("loginForm").classList.add("hidden");
+      document.getElementById("registerForm").classList.add("hidden");
+      message.innerText = '';
+    }
+
+    function showLogout() {
+      document.getElementById("logoutSection").classList.remove("hidden");
+      document.getElementById("loginForm").classList.add("hidden");
+      document.getElementById("registerForm").classList.add("hidden");
+      document.getElementById("forgotForm").classList.add("hidden");
+      message.innerText = 'You are logged in!';
+    }
+
+    function register() {
+      const email = document.getElementById("registerEmail").value;
+      const password = document.getElementById("registerPassword").value;
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(() => {
+          message.innerText = "Registered successfully!";
+          showLogout();
+        })
+        .catch(error => {
+          message.innerText = error.message;
+          message.classList.add("error");
+        });
+    }
+
+    function login() {
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+          message.innerText = "Login successful!";
+          showLogout();
+        })
+        .catch(error => {
+          message.innerText = error.message;
+          message.classList.add("error");
+        });
+    }
+
+    function logout() {
+      auth.signOut().then(() => {
+        showLogin();
+        message.innerText = "Logged out successfully.";
+      });
+    }
+
+    function forgotPassword() {
+      const email = document.getElementById("forgotEmail").value;
+      auth.sendPasswordResetEmail(email)
+        .then(() => {
+          message.innerText = "Password reset link sent to your email.";
+        })
+        .catch(error => {
+          message.innerText = error.message;
+          message.classList.add("error");
+        });
+    }
+
+    // Auto-detect login state
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        showLogout();
+      } else {
+        showLogin();
+      }
+    });
+  </script>
+
+</body>
+</html>
