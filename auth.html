@@ -4,147 +4,130 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Banerjee Mart - Auth</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <style>
-    * { box-sizing: border-box; }
     body {
-      margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #f6d365, #fda085);
+      background: linear-gradient(to right, #d9a7c7, #fffcdc);
+      margin: 0;
+      padding: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       height: 100vh;
     }
-    .auth-container {
-      background: white;
+
+    .container {
+      background: #fff;
+      padding: 20px 30px;
       border-radius: 10px;
-      width: 95%;
-      max-width: 400px;
-      padding: 24px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 420px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
-    .tabs {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-    .tab-btn {
-      flex: 1;
-      padding: 10px;
-      cursor: pointer;
+
+    .container h2 {
       text-align: center;
-      background: #eee;
-      border: none;
-      font-weight: bold;
+      margin-bottom: 20px;
+      color: #444;
     }
-    .tab-btn.active {
-      background: #fda085;
-      color: white;
-    }
+
     .form-group {
       margin-bottom: 15px;
-      position: relative;
     }
-    .form-group input {
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group textarea {
       width: 100%;
-      padding: 10px 36px 10px 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    .form-group i {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #888;
-    }
-    button {
-      width: 100%;
-      background: #fda085;
-      color: white;
       padding: 10px;
+      border: 1px solid #bbb;
+      border-radius: 6px;
+    }
+
+    .form-group input[type="file"] {
+      padding: 5px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: #e91e63;
       border: none;
-      border-radius: 5px;
-      font-weight: bold;
+      color: white;
+      font-size: 16px;
+      border-radius: 6px;
       cursor: pointer;
     }
+
+    .btn:hover {
+      background: #d81b60;
+    }
+
+    .toggle {
+      margin-top: 10px;
+      text-align: center;
+      color: #333;
+      cursor: pointer;
+    }
+
     .hidden {
       display: none;
-    }
-    .msg {
-      text-align: center;
-      font-size: 14px;
-      color: red;
-      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="auth-container">
-    <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('login')">Login</button>
-      <button class="tab-btn" onclick="switchTab('register')">Register</button>
-      <button class="tab-btn" onclick="switchTab('forgot')">Forgot</button>
-    </div>
-
-    <div id="msg" class="msg"></div>
-
-    <form id="login-form">
-      <div class="form-group">
-        <input type="text" id="login-phone" placeholder="Phone Number" />
-        <i class="fas fa-phone"></i>
+  <div class="container">
+    <h2 id="formTitle">Login</h2>
+    <form id="authForm">
+      <div class="form-group" id="nameGroup" class="hidden">
+        <label>Full Name</label>
+        <input type="text" id="name" placeholder="Your full name" />
       </div>
-      <div class="form-group">
-        <input type="password" id="login-password" placeholder="Password" />
-        <i class="fas fa-lock"></i>
+
+      <div class="form-group" id="emailGroup" class="hidden">
+        <label>Email (optional)</label>
+        <input type="email" id="email" placeholder="Email address" />
       </div>
-      <button type="button" onclick="login()">Login</button>
+
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="text" id="phone" placeholder="e.g. +91XXXXXXXXXX" required />
+      </div>
+
+      <div class="form-group" id="addressGroup" class="hidden">
+        <label>Address</label>
+        <textarea id="address" placeholder="Your address"></textarea>
+      </div>
+
+      <div class="form-group" id="photoGroup" class="hidden">
+        <label>Photo (optional)</label>
+        <input type="file" id="photo" accept="image/*" />
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Password" required />
+      </div>
+
+      <button class="btn" type="submit" id="submitBtn">Login</button>
     </form>
 
-    <form id="register-form" class="hidden">
-      <div class="form-group">
-        <input type="text" id="reg-name" placeholder="Full Name" />
-        <i class="fas fa-user"></i>
-      </div>
-      <div class="form-group">
-        <input type="text" id="reg-phone" placeholder="Phone Number" />
-        <i class="fas fa-phone"></i>
-      </div>
-      <div class="form-group">
-        <input type="email" id="reg-email" placeholder="Email Address (Optional)" />
-        <i class="fas fa-envelope"></i>
-      </div>
-      <div class="form-group">
-        <input type="text" id="reg-address" placeholder="Address" />
-        <i class="fas fa-map-marker-alt"></i>
-      </div>
-      <div class="form-group">
-        <input type="url" id="reg-photo" placeholder="Photo URL (Optional)" />
-        <i class="fas fa-image"></i>
-      </div>
-      <div class="form-group">
-        <input type="password" id="reg-password" placeholder="Password" />
-        <i class="fas fa-lock"></i>
-      </div>
-      <button type="button" onclick="register()">Register</button>
-    </form>
-
-    <form id="forgot-form" class="hidden">
-      <div class="form-group">
-        <input type="text" id="forgot-contact" placeholder="Email or Phone" />
-        <i class="fas fa-envelope-open-text"></i>
-      </div>
-      <button type="button" onclick="forgotPassword()">Send Reset Link</button>
-    </form>
+    <div class="toggle" onclick="toggleForm()">Don't have an account? Register</div>
+    <div class="toggle" onclick="forgotPassword()">Forgot Password?</div>
   </div>
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js"></script>
-
   <script>
+    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
       authDomain: "banerjee-mart.firebaseapp.com",
@@ -154,67 +137,87 @@
       appId: "1:183628570952:web:3028bb258001d004d9537d"
     };
 
+    // Init Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
+    const storage = firebase.storage();
 
-    function switchTab(tab) {
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('form').forEach(f => f.classList.add('hidden'));
-      document.getElementById(tab + '-form').classList.remove('hidden');
-      event.target.classList.add('active');
-      document.getElementById('msg').textContent = '';
+    const authForm = document.getElementById("authForm");
+    const nameGroup = document.getElementById("nameGroup");
+    const emailGroup = document.getElementById("emailGroup");
+    const addressGroup = document.getElementById("addressGroup");
+    const photoGroup = document.getElementById("photoGroup");
+    const submitBtn = document.getElementById("submitBtn");
+    const formTitle = document.getElementById("formTitle");
+
+    let isLogin = true;
+
+    function toggleForm() {
+      isLogin = !isLogin;
+      nameGroup.style.display = isLogin ? "none" : "block";
+      emailGroup.style.display = isLogin ? "none" : "block";
+      addressGroup.style.display = isLogin ? "none" : "block";
+      photoGroup.style.display = isLogin ? "none" : "block";
+      formTitle.textContent = isLogin ? "Login" : "Register";
+      submitBtn.textContent = isLogin ? "Login" : "Register";
     }
 
-    function showMessage(msg) {
-      document.getElementById('msg').textContent = msg;
-    }
+    authForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const phone = document.getElementById("phone").value;
+      const address = document.getElementById("address").value;
+      const password = document.getElementById("password").value;
+      const photo = document.getElementById("photo").files[0];
 
-    async function login() {
-      const phone = document.getElementById('login-phone').value.trim();
-      const password = document.getElementById('login-password').value;
-      try {
-        const email = phone + '@banerjeemart.com';
-        await auth.signInWithEmailAndPassword(email, password);
-        window.location.href = 'index.html';
-      } catch (err) {
-        showMessage(err.message);
+      if (isLogin) {
+        try {
+          const userCredential = await auth.signInWithEmailAndPassword(phone + "@banerjeemart.com", password);
+          alert("Login successful!");
+          window.location.href = "index.html";
+        } catch (err) {
+          alert(err.message);
+        }
+      } else {
+        try {
+          const userCredential = await auth.createUserWithEmailAndPassword(phone + "@banerjeemart.com", password);
+          const uid = userCredential.user.uid;
+
+          let photoURL = "";
+          if (photo) {
+            const storageRef = storage.ref().child("users/" + uid + "/" + photo.name);
+            await storageRef.put(photo);
+            photoURL = await storageRef.getDownloadURL();
+          }
+
+          await db.collection("users").doc(uid).set({
+            name,
+            phone,
+            email,
+            address,
+            photo: photoURL
+          });
+
+          alert("Registration successful!");
+          window.location.href = "index.html";
+        } catch (err) {
+          alert(err.message);
+        }
       }
-    }
+    });
 
-    async function register() {
-      const name = document.getElementById('reg-name').value.trim();
-      const phone = document.getElementById('reg-phone').value.trim();
-      const email = document.getElementById('reg-email').value || phone + '@banerjeemart.com';
-      const address = document.getElementById('reg-address').value.trim();
-      const photoURL = document.getElementById('reg-photo').value.trim();
-      const password = document.getElementById('reg-password').value;
+    function forgotPassword() {
+      const phone = prompt("Enter your phone number or email:");
+      if (!phone) return;
 
-      try {
-        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-        const user = userCredential.user;
-        await user.updateProfile({ displayName: name, photoURL });
+      const email = phone.includes("@") ? phone : phone + "@banerjeemart.com";
 
-        await db.collection('users').doc(user.uid).set({
-          name, phone, email, address, photoURL
-        });
-
-        window.location.href = 'index.html';
-      } catch (err) {
-        showMessage(err.message);
-      }
-    }
-
-    async function forgotPassword() {
-      const contact = document.getElementById('forgot-contact').value.trim();
-      const email = contact.includes('@') ? contact : contact + '@banerjeemart.com';
-      try {
-        await auth.sendPasswordResetEmail(email);
-        showMessage('Reset link sent to your email.');
-      } catch (err) {
-        showMessage(err.message);
-      }
+      auth.sendPasswordResetEmail(email)
+        .then(() => alert("Password reset email sent!"))
+        .catch((err) => alert(err.message));
     }
   </script>
 </body>
-  </html>
+</html>
