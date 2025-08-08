@@ -178,56 +178,63 @@
     #cat-health .material-symbols-outlined { color: var(--icon-color-health); }
 
     .product-list-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 16px;
-      margin-top: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-top: 16px;
     }
 
     .product-item {
-      text-align: left;
-      text-decoration: none;
-      color: var(--text-on-surface);
-      background: var(--surface-color);
-      padding: 10px;
-      border-radius: var(--border-radius);
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-      position: relative; /* For the cart button positioning */
+        display: grid;
+        grid-template-columns: 120px 1fr; /* Image column and details column */
+        gap: 16px;
+        text-decoration: none;
+        color: var(--text-on-surface);
+        background: var(--surface-color);
+        padding: 10px;
+        border-radius: var(--border-radius);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        align-items: center;
     }
 
-    .product-item img {
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
-      border-radius: var(--border-radius);
+    .product-image-wrapper img {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+        border-radius: var(--border-radius);
+    }
+
+    .product-details {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
     }
     
     .product-title {
       font-weight: 500;
-      margin-top: 8px;
-      font-size: 14px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 16px;
+      margin: 0;
     }
 
     .product-price {
       font-weight: 700;
       color: green;
-      margin-top: 4px;
-      font-size: 16px;
+      font-size: 18px;
     }
 
     .product-controls {
-      margin-top: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-top: 8px;
     }
+    
     .quantity-controls {
       display: flex;
       align-items: center;
+      gap: 4px;
     }
+    
     .quantity-controls button {
       background: #f0f0f0;
       border: 1px solid var(--border-color);
@@ -237,6 +244,7 @@
       font-size: 16px;
       font-weight: bold;
     }
+    
     .item-quantity {
       width: 25px;
       text-align: center;
@@ -430,70 +438,73 @@
 
     // Helper function to create product HTML
     function createProductElement(product) {
-        const productItem = document.createElement('div');
-        productItem.className = 'product-item';
-        
-        // Product Link to detail page
-        const productLink = document.createElement('a');
-        productLink.href = `product-detail.html?id=${product.id}`;
-        
-        productLink.innerHTML = `
-            <img src="${product.imageUrl}" alt="${product.name}">
-            <div class="product-title">${product.name}</div>
-            <div class="product-price">₹${product.price}</div>
-        `;
+      const productItem = document.createElement('div');
+      productItem.className = 'product-item';
 
-        const productControls = document.createElement('div');
-        productControls.className = 'product-controls';
-        
-        const quantityControls = document.createElement('div');
-        quantityControls.className = 'quantity-controls';
-        quantityControls.innerHTML = `
-            <button class="decrease-qty-btn" data-id="${product.id}">-</button>
-            <span class="item-quantity" data-id="${product.id}">1</span>
-            <button class="increase-qty-btn" data-id="${product.id}">+</button>
-        `;
+      const productLink = document.createElement('a');
+      productLink.href = `product-detail.html?id=${product.id}`;
+      productLink.className = 'product-image-wrapper';
+      productLink.innerHTML = `<img src="${product.imageUrl}" alt="${product.name}">`;
 
-        const addToCartBtn = document.createElement('button');
-        addToCartBtn.className = 'add-to-cart-btn';
-        addToCartBtn.textContent = 'Add to Cart';
-        addToCartBtn.dataset.id = product.id;
+      const productDetails = document.createElement('div');
+      productDetails.className = 'product-details';
+      
+      productDetails.innerHTML = `
+        <h4 class="product-title">${product.name}</h4>
+        <p class="product-price">₹${product.price}</p>
+      `;
 
-        productControls.appendChild(quantityControls);
-        productControls.appendChild(addToCartBtn);
-        
-        // Append the link and controls to the product item container
-        productItem.appendChild(productLink);
-        productItem.appendChild(productControls);
+      const productControls = document.createElement('div');
+      productControls.className = 'product-controls';
+      
+      const quantityControls = document.createElement('div');
+      quantityControls.className = 'quantity-controls';
+      quantityControls.innerHTML = `
+        <button class="decrease-qty-btn" data-id="${product.id}">-</button>
+        <span class="item-quantity" data-id="${product.id}">1</span>
+        <button class="increase-qty-btn" data-id="${product.id}">+</button>
+      `;
 
-        // Event listeners for quantity controls
-        const qtySpan = productControls.querySelector('.item-quantity');
-        productControls.querySelector('.increase-qty-btn').addEventListener('click', () => {
-            let qty = parseInt(qtySpan.textContent);
-            qtySpan.textContent = qty + 1;
-        });
+      const addToCartBtn = document.createElement('button');
+      addToCartBtn.className = 'add-to-cart-btn';
+      addToCartBtn.textContent = 'Add to Cart';
+      addToCartBtn.dataset.id = product.id;
 
-        productControls.querySelector('.decrease-qty-btn').addEventListener('click', () => {
-            let qty = parseInt(qtySpan.textContent);
-            if (qty > 1) {
-                qtySpan.textContent = qty - 1;
-            }
-        });
-        
-        // Add to cart functionality
-        addToCartBtn.addEventListener('click', async () => {
-            if (!user) {
-                alert("Please log in to add items to your cart.");
-                window.location.href = 'auth.html';
-                return;
-            }
-            
-            const quantity = parseInt(qtySpan.textContent);
-            await addToCart(product, quantity);
-            alert(`${product.name} (${quantity}) added to cart!`);
-        });
+      productControls.appendChild(quantityControls);
+      productControls.appendChild(addToCartBtn);
+      productDetails.appendChild(productControls);
+      
+      productItem.appendChild(productLink);
+      productItem.appendChild(productDetails);
+      
+      // Event listeners for quantity controls
+      const qtySpan = productControls.querySelector('.item-quantity');
+      productControls.querySelector('.increase-qty-btn').addEventListener('click', () => {
+          let qty = parseInt(qtySpan.textContent);
+          qtySpan.textContent = qty + 1;
+      });
 
-        return productItem;
+      productControls.querySelector('.decrease-qty-btn').addEventListener('click', () => {
+          let qty = parseInt(qtySpan.textContent);
+          if (qty > 1) {
+              qtySpan.textContent = qty - 1;
+          }
+      });
+      
+      // Add to cart functionality
+      addToCartBtn.addEventListener('click', async () => {
+          if (!user) {
+              alert("Please log in to add items to your cart.");
+              window.location.href = 'auth.html';
+              return;
+          }
+          
+          const quantity = parseInt(qtySpan.textContent);
+          await addToCart(product, quantity);
+          alert(`${product.name} (${quantity}) added to cart!`);
+      });
+
+      return productItem;
     }
 
     // Function to add a product to the cart
