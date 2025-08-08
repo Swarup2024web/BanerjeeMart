@@ -34,7 +34,7 @@
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding-bottom: 70px; /* Space for the bottom navigation bar */
+      padding-bottom: 70px;
     }
 
     /* Header */
@@ -62,46 +62,127 @@
       padding: 16px;
       border-radius: var(--border-radius);
     }
+
+    .orders-container {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
     .order-card {
-      background: var(--surface-color);
-      padding: 16px;
-      border-radius: var(--border-radius);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      margin-bottom: 12px;
+        background: var(--background-color);
+        padding: 16px;
+        border-radius: var(--border-radius);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
+    
     .order-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 600;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 8px;
-      margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 8px;
+        margin-bottom: 12px;
     }
+
     .order-id {
-      font-size: 14px;
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .order-date {
+        font-size: 14px;
+        color: var(--text-muted);
+    }
+
+    .order-status {
+        font-weight: 700;
+        padding: 4px 8px;
+        border-radius: 4px;
+    }
+
+    .status-confirmed {
+        color: #4caf50; /* Green */
+        background-color: #e8f5e9;
+    }
+
+    .status-cancelled {
+        color: #f44336; /* Red */
+        background-color: #ffebee;
+    }
+    
+    .order-items-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 12px;
+        margin-bottom: 12px;
+    }
+
+    .order-item {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+    .item-name {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .item-name span {
+      font-size: 12px;
       color: var(--text-muted);
     }
-    .order-status {
-      font-size: 14px;
-      color: var(--primary-color);
-      font-weight: 700;
-    }
+
     .order-summary {
-      font-size: 14px;
-      margin-bottom: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
     }
-    .order-total {
-      font-weight: 700;
-      color: green;
-      font-size: 16px;
+    
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
     }
+
+    .total-price {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--primary-color);
+        border-top: 1px solid var(--border-color);
+        padding-top: 8px;
+        margin-top: 8px;
+    }
+    
+    .cancel-order-btn {
+        width: 100%;
+        padding: 10px;
+        margin-top: 12px;
+        background-color: #f44336;
+        color: white;
+        border: none;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        font-weight: 600;
+        transition: background-color 0.3s;
+    }
+    .cancel-order-btn:hover {
+        background-color: #d32f2f;
+    }
+    .cancel-order-btn:disabled {
+        background-color: #b0bec5;
+        cursor: not-allowed;
+    }
+
     .no-orders-message {
       text-align: center;
       padding: 50px 20px;
       color: var(--text-muted);
     }
-    
+
     /* Bottom Navigation */
     .bottom-nav {
       position: fixed;
@@ -142,7 +223,7 @@
         padding-bottom: 0;
       }
       .bottom-nav {
-        display: none; /* Hide bottom nav on desktop */
+        display: none;
       }
     }
   </style>
@@ -157,8 +238,8 @@
   <div class="container">
     <div class="section">
       <h3 class="section-header">Your Orders</h3>
-      <div id="orders-list">
-        <div class="no-orders-message" id="no-orders-msg" style="display: none;">You haven't placed any orders yet.</div>
+      <div id="orders-container" class="orders-container">
+        <div class="no-orders-message" id="no-orders-msg" style="display: none;">You have not placed any orders yet.</div>
       </div>
     </div>
   </div>
@@ -196,23 +277,19 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    const ordersListContainer = document.getElementById('orders-list');
+    const ordersContainer = document.getElementById('orders-container');
     const noOrdersMsg = document.getElementById('no-orders-msg');
+    let user;
 
-    // Helper function to format order date
+    // Helper function to format date
     function formatDate(timestamp) {
         if (!timestamp) return 'N/A';
         const date = timestamp.toDate();
-        return date.toLocaleDateString('en-IN', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
+        return date.toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
     }
 
-    // Function to render orders
     function renderOrders(orders) {
-        ordersListContainer.innerHTML = '';
+        ordersContainer.innerHTML = '';
         if (orders.length === 0) {
             noOrdersMsg.style.display = 'block';
             return;
@@ -223,50 +300,91 @@
         orders.forEach(order => {
             const orderCard = document.createElement('div');
             orderCard.className = 'order-card';
+
+            const statusClass = order.status === 'Confirmed' ? 'status-confirmed' : 'status-cancelled';
+
+            let itemsListHtml = '';
+            order.items.forEach(item => {
+                itemsListHtml += `
+                    <li class="order-item">
+                        <div class="item-name">${item.name} <span>(x${item.quantity})</span></div>
+                        <div class="item-price">₹${(item.price * item.quantity).toFixed(2)}</div>
+                    </li>
+                `;
+            });
+
             orderCard.innerHTML = `
                 <div class="order-header">
-                    <span>Order ID: <span class="order-id">${order.id}</span></span>
-                    <span class="order-status">${order.status || 'Processing'}</span>
+                    <div>
+                        <div class="order-id">Order ID: ${order.id.slice(0, 8)}</div>
+                        <div class="order-date">${formatDate(order.createdAt)}</div>
+                    </div>
+                    <div class="order-status ${statusClass}">${order.status}</div>
                 </div>
+                <ul class="order-items-list">
+                    ${itemsListHtml}
+                </ul>
                 <div class="order-summary">
-                    Placed on: ${formatDate(order.timestamp)}
+                    <div class="summary-item">
+                        <span>Subtotal</span>
+                        <span>₹${order.subtotal.toFixed(2)}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Delivery</span>
+                        <span>${order.deliveryCharge === 0 ? 'Free' : `₹${order.deliveryCharge.toFixed(2)}`}</span>
+                    </div>
+                    <div class="summary-item total-price">
+                        <span>Total</span>
+                        <span>₹${order.total.toFixed(2)}</span>
+                    </div>
                 </div>
-                <div class="order-summary">
-                    Items: ${order.items.map(item => `${item.name} (${item.quantity})`).join(', ')}
-                </div>
-                <div class="order-total">
-                    Total: ₹${order.total.toFixed(2)}
-                </div>
+                <button class="cancel-order-btn" data-order-id="${order.id}" ${order.status === 'Cancelled' ? 'disabled' : ''}>
+                    ${order.status === 'Cancelled' ? 'Cancelled' : 'Cancel Order'}
+                </button>
             `;
-            ordersListContainer.appendChild(orderCard);
+            ordersContainer.appendChild(orderCard);
+        });
+
+        ordersContainer.querySelectorAll('.cancel-order-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const orderId = e.currentTarget.dataset.orderId;
+                if (confirm('Are you sure you want to cancel this order?')) {
+                    try {
+                        await db.collection('user-orders').doc(orderId).update({ status: 'Cancelled' });
+                        alert('Order has been cancelled.');
+                    } catch (error) {
+                        console.error("Error cancelling order:", error);
+                        alert("An error occurred while cancelling the order.");
+                    }
+                }
+            });
         });
     }
 
-    // Fetch and listen for real-time order updates
-    function fetchOrders(userId) {
-        db.collection('orders')
+    function fetchUserOrders(userId) {
+        db.collection('user-orders')
           .where('userId', '==', userId)
-          .orderBy('timestamp', 'desc')
+          .orderBy('createdAt', 'desc')
           .onSnapshot(snapshot => {
             const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             renderOrders(orders);
           }, err => {
             console.error("Error fetching orders:", err);
-            ordersListContainer.innerHTML = '<p>Could not load your orders. Please try again later.</p>';
+            ordersContainer.innerHTML = '<p>Could not load your orders. Please try again later.</p>';
           });
     }
 
-    // Auth Check and Initial Data Fetch
-    auth.onAuthStateChanged(async (user) => {
-      if (!user) {
+    auth.onAuthStateChanged(async (currentUser) => {
+      if (!currentUser) {
         window.location.href = "auth.html";
         return;
       }
+      user = currentUser;
       try {
         const userDoc = await db.collection("users").doc(user.uid).get();
         const name = userDoc.exists ? userDoc.data().name : "User";
         document.getElementById("user-name").innerText = `Hi, ${name}`;
-        fetchOrders(user.uid);
+        fetchUserOrders(user.uid);
       } catch (e) {
         console.error("Error fetching user:", e);
       }
