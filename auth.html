@@ -2,212 +2,217 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Banerjee Mart - Auth</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Font Awesome CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
+      padding: 0;
+    }
+
+    body {
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #dce35b, #45b649);
+      background: linear-gradient(to right, #ffecd2, #fcb69f);
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
     }
 
     .auth-container {
       background: white;
-      width: 95%;
-      max-width: 400px;
-      padding: 30px;
+      padding: 25px 20px;
       border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-      text-align: center;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.2);
     }
 
     .auth-container h2 {
+      text-align: center;
       margin-bottom: 20px;
-      color: #2c3e50;
+      color: #333;
     }
 
     .input-group {
       position: relative;
-      margin: 12px 0;
+      margin-bottom: 15px;
     }
 
     .input-group i {
       position: absolute;
       top: 12px;
       left: 12px;
-      color: #666;
+      color: #999;
     }
 
     .input-group input {
       width: 100%;
-      padding: 12px 12px 12px 40px;
-      border: 1px solid #ccc;
+      padding: 10px 10px 10px 40px;
       border-radius: 8px;
-      outline: none;
-      transition: 0.3s;
+      border: 1px solid #ccc;
+      font-size: 14px;
     }
 
     .input-group input:focus {
-      border-color: #27ae60;
+      outline: none;
+      border-color: #f77f00;
     }
 
     button {
-      background-color: #27ae60;
-      color: white;
-      border: none;
-      padding: 12px;
       width: 100%;
+      padding: 12px;
+      background: #f77f00;
+      border: none;
+      color: white;
+      font-size: 15px;
       border-radius: 8px;
-      font-size: 16px;
-      margin-top: 15px;
       cursor: pointer;
+      margin-top: 10px;
     }
 
     button:hover {
-      background-color: #219150;
+      background: #e06c00;
     }
 
-    .toggle-link, .forgot-password {
-      margin-top: 15px;
+    .toggle-link {
+      text-align: center;
       font-size: 14px;
-      color: #555;
+      margin-top: 15px;
     }
 
-    .toggle-link a, .forgot-password a {
-      color: #2980b9;
+    .toggle-link a {
+      color: #f77f00;
+      text-decoration: none;
+      font-weight: bold;
       cursor: pointer;
-      text-decoration: underline;
+    }
+
+    #photo-preview {
+      max-width: 100px;
+      max-height: 100px;
+      margin: 10px auto;
+      display: none;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
     }
 
     .hidden {
       display: none;
     }
 
-    #photo-preview {
-      max-width: 90px;
-      height: 90px;
-      object-fit: cover;
-      border-radius: 50%;
-      margin: 10px auto;
-      display: none;
-      border: 2px solid #27ae60;
+    @media screen and (max-width: 400px) {
+      .auth-container {
+        margin: 10px;
+        padding: 20px 15px;
+      }
+
+      .input-group input {
+        font-size: 13px;
+      }
+
+      button {
+        font-size: 14px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="auth-container">
-    <h2>Welcome to Banerjee Mart</h2>
+<div class="auth-container">
 
-    <!-- Login Form -->
-    <form id="login-form">
-      <div class="input-group">
-        <i class="fa fa-phone"></i>
-        <input type="text" placeholder="Phone Number" required>
-      </div>
-      <div class="input-group">
-        <i class="fa fa-lock"></i>
-        <input type="password" placeholder="Password" required>
-      </div>
-      <button type="submit">Login</button>
-      <div class="forgot-password"><a onclick="showForm('forgot')">Forgot Password?</a></div>
-      <div class="toggle-link">Don't have an account? <a onclick="showForm('register')">Register</a></div>
-    </form>
+  <h2>Banerjee Mart</h2>
 
-    <!-- Register Form -->
-    <form id="register-form" class="hidden">
-      <div class="input-group">
-        <i class="fa fa-user"></i>
-        <input type="text" placeholder="Full Name" required>
-      </div>
-      <div class="input-group">
-        <i class="fa fa-phone"></i>
-        <input type="text" placeholder="Phone Number" required>
-      </div>
-      <div class="input-group">
-        <i class="fa fa-envelope"></i>
-        <input type="email" placeholder="Email Address (optional)">
-      </div>
-      <div class="input-group">
-        <i class="fa fa-location-dot"></i>
-        <input type="text" placeholder="Address" required>
-      </div>
-      <div class="input-group">
-        <i class="fa fa-lock"></i>
-        <input type="password" placeholder="Password" required>
-      </div>
+  <!-- Login Form -->
+  <form id="login-form">
+    <div class="input-group">
+      <i class="fa fa-phone"></i>
+      <input type="text" placeholder="Phone Number" required>
+    </div>
+    <div class="input-group">
+      <i class="fa fa-lock"></i>
+      <input type="password" placeholder="Password" required>
+    </div>
+    <button type="submit">Login</button>
+    <div class="toggle-link">
+      <a onclick="showForm('register')">Create Account</a> |
+      <a onclick="showForm('forgot')">Forgot Password?</a>
+    </div>
+  </form>
 
-      <div class="input-group">
-        <i class="fa fa-camera"></i>
-        <input type="file" accept="image/*" id="user-photo" onchange="previewPhoto()" style="padding-left: 40px;">
-      </div>
+  <!-- Register Form -->
+  <form id="register-form" class="hidden">
+    <div class="input-group">
+      <i class="fa fa-user"></i>
+      <input type="text" placeholder="Full Name" required>
+    </div>
+    <div class="input-group">
+      <i class="fa fa-phone"></i>
+      <input type="text" placeholder="Phone Number" required>
+    </div>
+    <div class="input-group">
+      <i class="fa fa-envelope"></i>
+      <input type="email" placeholder="Email Address (optional)">
+    </div>
+    <div class="input-group">
+      <i class="fa fa-location-dot"></i>
+      <input type="text" placeholder="Address" required>
+    </div>
+    <div class="input-group">
+      <i class="fa fa-lock"></i>
+      <input type="password" placeholder="Password" required>
+    </div>
+    <div class="input-group">
+      <i class="fa fa-camera"></i>
+      <input type="file" accept="image/*" id="user-photo" onchange="previewPhoto()" style="padding-left: 40px;">
+    </div>
+    <img id="photo-preview" alt="Photo Preview">
+    <button type="submit">Register</button>
+    <div class="toggle-link">Already have an account? <a onclick="showForm('login')">Login</a></div>
+  </form>
 
-      <img id="photo-preview" src="" alt="Preview" />
+  <!-- Forgot Password Form -->
+  <form id="forgot-form" class="hidden">
+    <div class="input-group">
+      <i class="fa fa-phone"></i>
+      <input type="text" placeholder="Phone Number" required>
+    </div>
+    <button type="submit">Reset Password</button>
+    <div class="toggle-link">Back to <a onclick="showForm('login')">Login</a></div>
+  </form>
 
-      <button type="submit">Register</button>
-      <div class="toggle-link">Already have an account? <a onclick="showForm('login')">Login</a></div>
-    </form>
+</div>
 
-    <!-- Forgot Password Form -->
-    <form id="forgot-form" class="hidden">
-      <div class="input-group">
-        <i class="fa fa-envelope"></i>
-        <input type="email" placeholder="Enter your email" required>
-      </div>
-      <button type="submit">Send Reset Link</button>
-      <div class="toggle-link"><a onclick="showForm('login')">Back to Login</a></div>
-    </form>
-  </div>
+<script>
+  function showForm(form) {
+    document.getElementById("login-form").classList.add("hidden");
+    document.getElementById("register-form").classList.add("hidden");
+    document.getElementById("forgot-form").classList.add("hidden");
+    document.getElementById(form + "-form").classList.remove("hidden");
+  }
 
-  <script>
-    function showForm(formId) {
-      document.getElementById("login-form").classList.add("hidden");
-      document.getElementById("register-form").classList.add("hidden");
-      document.getElementById("forgot-form").classList.add("hidden");
-      document.getElementById(formId + "-form").classList.remove("hidden");
+  function previewPhoto() {
+    const input = document.getElementById('user-photo');
+    const preview = document.getElementById('photo-preview');
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(input.files[0]);
     }
+  }
 
-    function previewPhoto() {
-      const input = document.getElementById('user-photo');
-      const preview = document.getElementById('photo-preview');
-      if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          preview.src = e.target.result;
-          preview.style.display = 'block';
-        };
-        reader.readAsDataURL(input.files[0]);
-      }
-    }
-
-    // Dummy success redirect on login
-    document.getElementById("login-form").addEventListener("submit", function (e) {
-      e.preventDefault();
-      // TODO: Replace with Firebase Auth logic
-      alert("Login successful!");
-      window.location.href = "index.html";
-    });
-
-    // Dummy register
-    document.getElementById("register-form").addEventListener("submit", function (e) {
-      e.preventDefault();
-      alert("Registration successful! Now login.");
-      showForm("login");
-    });
-
-    // Dummy forgot password
-    document.getElementById("forgot-form").addEventListener("submit", function (e) {
-      e.preventDefault();
-      alert("Password reset link sent to your email!");
-      showForm("login");
-    });
-  </script>
+  // Dummy login redirect
+  document.getElementById("login-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+    window.location.href = "index.html";
+  });
+</script>
 
 </body>
-          </html>
+</html>
