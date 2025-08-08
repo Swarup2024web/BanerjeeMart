@@ -15,6 +15,7 @@
     /* Material 3.0-inspired CSS variables and general styles */
     :root {
       --primary-color: #2874f0;
+      --secondary-color: #03dac6;
       --surface-color: #ffffff;
       --background-color: #f1f3f6;
       --text-on-primary: #ffffff;
@@ -34,8 +35,7 @@
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 16px;
-      padding-bottom: 70px; /* Space for the bottom navigation bar */
+      padding-bottom: 70px;
     }
 
     /* Header */
@@ -51,120 +51,92 @@
       top: 0;
       z-index: 1000;
     }
+    
     .header-logo {
       font-size: 20px;
       font-weight: 600;
     }
 
-    /* Profile Card */
+    /* Profile Card (Social Network Style) */
     .profile-card {
       background: var(--surface-color);
+      margin-top: 10px;
       padding: 24px;
       border-radius: var(--border-radius);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      margin-top: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      text-align: center;
     }
-    .profile-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
+
+    .profile-picture {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--primary-color);
+      box-shadow: 0 0 0 4px var(--background-color);
     }
-    .profile-title {
+
+    .user-name {
       font-size: 24px;
       font-weight: 600;
+      margin-top: 16px;
     }
-    .edit-btn, .save-btn, .cancel-btn, .logout-btn {
-      padding: 8px 16px;
-      border: none;
-      border-radius: 50px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s ease;
+
+    .user-email {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-top: 4px;
     }
-    .edit-btn, .save-btn {
-      background: var(--primary-color);
-      color: var(--text-on-primary);
-    }
-    .cancel-btn, .logout-btn {
-      background: var(--background-color);
+
+    .user-bio {
+      margin-top: 16px;
+      font-size: 14px;
       color: var(--text-on-surface);
-      margin-left: 8px;
-    }
-    .edit-btn:hover, .save-btn:hover {
-      background: #1e5bb8;
-    }
-    .cancel-btn:hover, .logout-btn:hover {
-      background: #e0e0e0;
-    }
-
-    /* Profile Info and Form */
-    .profile-info-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .profile-icon {
-      color: var(--primary-color);
-      font-size: 24px;
-      margin-right: 16px;
-    }
-    .profile-label {
-      font-weight: 600;
-      font-size: 14px;
-      color: var(--text-muted);
-      width: 100px;
-    }
-    .profile-value {
-      font-size: 16px;
-    }
-
-    .profile-form .profile-info-item {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    .profile-form label {
-      font-weight: 600;
-      font-size: 14px;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-    .profile-form input, .profile-form textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid var(--border-color);
-      border-radius: var(--border-radius);
-      box-sizing: border-box;
-      font-size: 16px;
-    }
-    .profile-form textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
-    .profile-form input:disabled {
-      background: var(--background-color);
-      color: var(--text-muted);
-    }
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 24px;
+      line-height: 1.5;
     }
     
-    .status-message {
-      text-align: center;
+    .edit-profile-btn {
+      background-color: var(--background-color);
+      color: var(--text-on-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 8px 16px;
       margin-top: 16px;
-      padding: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background-color 0.3s;
+    }
+
+    .edit-profile-btn:hover {
+      background-color: var(--border-color);
+    }
+
+    .section {
+      margin-top: 16px;
+      background: var(--surface-color);
+      padding: 16px;
       border-radius: var(--border-radius);
-      color: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-header {
+      font-size: 18px;
       font-weight: 600;
-      display: none;
+      margin-bottom: 16px;
     }
-    .status-message.success {
-      background: #4caf50;
-    }
-    .status-message.error {
-      background: #f44336;
+    
+    .logout-btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 16px;
+      background: #e53935;
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
     }
 
     /* Bottom Navigation */
@@ -197,7 +169,7 @@
     .nav-item-label {
       font-size: 12px;
     }
-
+    
     /* Media Queries for larger screens */
     @media (min-width: 600px) {
       .header {
@@ -221,67 +193,21 @@
 
   <div class="container">
     <div class="profile-card">
-      <div class="profile-header">
-        <h3 class="profile-title">My Profile</h3>
-        <div>
-          <button id="edit-profile-btn" class="edit-btn">Edit</button>
-          <button id="save-profile-btn" class="save-btn" style="display: none;">Save</button>
-          <button id="cancel-edit-btn" class="cancel-btn" style="display: none;">Cancel</button>
-          <button id="logout-btn" class="logout-btn">Logout</button>
-        </div>
-      </div>
-      
-      <div id="profile-view">
-        <div class="profile-info-item">
-          <span class="material-symbols-outlined profile-icon">person</span>
-          <div>
-            <div class="profile-label">Name</div>
-            <div id="profile-name" class="profile-value"></div>
-          </div>
-        </div>
-        <div class="profile-info-item">
-          <span class="material-symbols-outlined profile-icon">mail</span>
-          <div>
-            <div class="profile-label">Email</div>
-            <div id="profile-email" class="profile-value"></div>
-          </div>
-        </div>
-        <div class="profile-info-item">
-          <span class="material-symbols-outlined profile-icon">call</span>
-          <div>
-            <div class="profile-label">Phone</div>
-            <div id="profile-phone" class="profile-value"></div>
-          </div>
-        </div>
-        <div class="profile-info-item">
-          <span class="material-symbols-outlined profile-icon">home</span>
-          <div>
-            <div class="profile-label">Address</div>
-            <div id="profile-address" class="profile-value"></div>
-          </div>
-        </div>
-      </div>
-      
-      <form id="profile-form" class="profile-form" style="display: none;">
-        <div class="profile-info-item">
-          <label for="name-input">Name</label>
-          <input type="text" id="name-input" required>
-        </div>
-        <div class="profile-info-item">
-          <label for="email-input">Email Address</label>
-          <input type="email" id="email-input" disabled>
-        </div>
-        <div class="profile-info-item">
-          <label for="phone-input">Phone Number</label>
-          <input type="tel" id="phone-input" required>
-        </div>
-        <div class="profile-info-item">
-          <label for="address-input">Address</label>
-          <textarea id="address-input" required></textarea>
-        </div>
-      </form>
-      
-      <div id="status-message" class="status-message"></div>
+      <img src="https://via.placeholder.com/120?text=P" alt="Profile Picture" class="profile-picture" id="profile-pic">
+      <h2 class="user-name" id="user-display-name">Loading...</h2>
+      <p class="user-email" id="user-email-address"></p>
+      <p class="user-bio" id="user-bio-text">Welcome to your profile. You can add a bio here once we implement that feature!</p>
+      <button class="edit-profile-btn">Edit Profile</button>
+    </div>
+
+    <div class="section">
+      <h3 class="section-header">Your Activity</h3>
+      <p style="color: var(--text-muted);">No activity to show yet. Place an order to see your history!</p>
+    </div>
+
+    <div class="section">
+      <h3 class="section-header">Account Settings</h3>
+      <button id="logout-btn" class="logout-btn">Logout</button>
     </div>
   </div>
 
@@ -317,117 +243,47 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
-
-    const profileView = document.getElementById('profile-view');
-    const profileForm = document.getElementById('profile-form');
-    const editBtn = document.getElementById('edit-profile-btn');
-    const saveBtn = document.getElementById('save-profile-btn');
-    const cancelBtn = document.getElementById('cancel-edit-btn');
+    
+    const displayNameEl = document.getElementById('user-display-name');
+    const emailAddressEl = document.getElementById('user-email-address');
+    const headerUserNameEl = document.getElementById('user-name');
     const logoutBtn = document.getElementById('logout-btn');
-    const statusMessage = document.getElementById('status-message');
 
-    let user;
-    let userDocRef;
-    let userData = {};
+    // Auth state observer
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        // User is signed in.
+        headerUserNameEl.innerText = `Hi, ${user.displayName || "User"}`;
+        displayNameEl.innerText = user.displayName || "User";
+        emailAddressEl.innerText = user.email;
 
-    // Fetch user data from Firestore and populate the page
-    async function fetchUserProfile() {
-      if (!user) return;
-      try {
-        const doc = await userDocRef.get();
-        if (doc.exists) {
-          userData = doc.data();
-          populateProfileView(userData);
-          populateProfileForm(userData);
-          // Set header name
-          document.getElementById("user-name").innerText = `Hi, ${userData.name || 'User'}`;
-        } else {
-          console.log("No user data found in Firestore.");
+        // Fetch user data from Firestore
+        try {
+          const userDoc = await db.collection("users").doc(user.uid).get();
+          if (userDoc.exists) {
+            const userData = userDoc.data();
+            displayNameEl.innerText = userData.name;
+            headerUserNameEl.innerText = `Hi, ${userData.name}`;
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
         }
-      } catch (e) {
-        console.error("Error fetching user data:", e);
+
+      } else {
+        // User is signed out.
+        window.location.href = 'auth.html';
       }
-    }
+    });
 
-    // Populate the view-only mode
-    function populateProfileView(data) {
-      document.getElementById('profile-name').textContent = data.name || 'N/A';
-      document.getElementById('profile-email').textContent = user.email || 'N/A';
-      document.getElementById('profile-phone').textContent = data.phone || 'N/A';
-      document.getElementById('profile-address').textContent = data.address || 'N/A';
-    }
-
-    // Populate the form fields for editing
-    function populateProfileForm(data) {
-      document.getElementById('name-input').value = data.name || '';
-      document.getElementById('email-input').value = user.email || '';
-      document.getElementById('phone-input').value = data.phone || '';
-      document.getElementById('address-input').value = data.address || '';
-    }
-
-    // Toggle between view and edit modes
-    function toggleEditMode(isEditing) {
-      profileView.style.display = isEditing ? 'none' : 'block';
-      profileForm.style.display = isEditing ? 'block' : 'none';
-      editBtn.style.display = isEditing ? 'none' : 'block';
-      saveBtn.style.display = isEditing ? 'block' : 'none';
-      cancelBtn.style.display = isEditing ? 'block' : 'none';
-      logoutBtn.style.display = isEditing ? 'none' : 'block';
-    }
-
-    // Handle form submission
-    async function saveProfile(e) {
-      e.preventDefault();
+    // Logout functionality
+    logoutBtn.addEventListener('click', async () => {
       try {
-        const updatedData = {
-          name: document.getElementById('name-input').value,
-          phone: document.getElementById('phone-input').value,
-          address: document.getElementById('address-input').value
-        };
-        await userDocRef.update(updatedData);
-        userData = { ...userData, ...updatedData }; // Update local data
-        populateProfileView(userData);
-        toggleEditMode(false);
-        showStatusMessage('Profile updated successfully!', 'success');
-      } catch (e) {
-        console.error("Error updating profile:", e);
-        showStatusMessage('Failed to update profile. Please try again.', 'error');
+        await auth.signOut();
+        window.location.href = 'auth.html';
+      } catch (error) {
+        console.error("Error signing out:", error);
+        alert("An error occurred during logout. Please try again.");
       }
-    }
-
-    function showStatusMessage(message, type) {
-      statusMessage.textContent = message;
-      statusMessage.className = `status-message ${type}`;
-      statusMessage.style.display = 'block';
-      setTimeout(() => {
-        statusMessage.style.display = 'none';
-      }, 3000);
-    }
-
-    // Logout function
-    function logout() {
-      auth.signOut().then(() => {
-        window.location.href = "auth.html";
-      }).catch((error) => {
-        console.error("Logout failed:", error);
-      });
-    }
-
-    // Event Listeners
-    editBtn.addEventListener('click', () => toggleEditMode(true));
-    cancelBtn.addEventListener('click', () => toggleEditMode(false));
-    profileForm.addEventListener('submit', saveProfile);
-    logoutBtn.addEventListener('click', logout);
-
-    // Auth Check and Initial Data Fetch
-    auth.onAuthStateChanged(async (currentUser) => {
-      if (!currentUser) {
-        window.location.href = "auth.html";
-        return;
-      }
-      user = currentUser;
-      userDocRef = db.collection("users").doc(user.uid);
-      fetchUserProfile();
     });
   </script>
 </body>
