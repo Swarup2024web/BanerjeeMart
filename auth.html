@@ -2,25 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Banerjee Mart - Login</title>
+  <title>Banerjee Mart - Auth</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- FontAwesome -->
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Roboto', sans-serif;
-    }
-
     body {
       margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #ffffff, #f3f4f6);
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #dce35b, #45b649);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -28,198 +18,196 @@
     }
 
     .auth-container {
-      width: 100%;
+      background: white;
+      width: 95%;
       max-width: 400px;
-      background: #fff;
       padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      text-align: center;
     }
 
     .auth-container h2 {
-      text-align: center;
       margin-bottom: 20px;
-      color: #333;
+      color: #2c3e50;
     }
 
-    .tabs {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-
-    .tabs button {
-      flex: 1;
-      padding: 10px;
-      margin: 0 3px;
-      background: #e0e0e0;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .tabs button.active {
-      background: #4CAF50;
-      color: #fff;
-    }
-
-    .form-group {
+    .input-group {
       position: relative;
-      margin-bottom: 18px;
+      margin: 12px 0;
     }
 
-    .form-group input {
+    .input-group i {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      color: #666;
+    }
+
+    .input-group input {
       width: 100%;
-      padding: 12px 40px 12px 12px;
+      padding: 12px 12px 12px 40px;
       border: 1px solid #ccc;
       border-radius: 8px;
+      outline: none;
+      transition: 0.3s;
     }
 
-    .form-group i {
-      position: absolute;
-      right: 12px;
-      top: 12px;
-      color: #888;
+    .input-group input:focus {
+      border-color: #27ae60;
     }
 
-    button.submit-btn {
-      width: 100%;
-      padding: 12px;
-      background: #4CAF50;
-      color: #fff;
+    button {
+      background-color: #27ae60;
+      color: white;
       border: none;
-      font-weight: bold;
+      padding: 12px;
+      width: 100%;
       border-radius: 8px;
+      font-size: 16px;
+      margin-top: 15px;
       cursor: pointer;
-      margin-top: 10px;
     }
 
-    .forgot-link {
-      text-align: center;
-      margin-top: 12px;
-      font-size: 0.9em;
+    button:hover {
+      background-color: #219150;
     }
 
-    .forgot-link a {
-      text-decoration: none;
-      color: #4CAF50;
+    .toggle-link, .forgot-password {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #555;
     }
 
-    .section {
+    .toggle-link a, .forgot-password a {
+      color: #2980b9;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .hidden {
       display: none;
     }
 
-    .section.active {
-      display: block;
+    #photo-preview {
+      max-width: 90px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin: 10px auto;
+      display: none;
+      border: 2px solid #27ae60;
     }
   </style>
 </head>
 <body>
 
   <div class="auth-container">
-    <h2>🛒 Banerjee Mart</h2>
-
-    <div class="tabs">
-      <button id="loginTab" class="active" onclick="switchTab('login')">Login</button>
-      <button id="registerTab" onclick="switchTab('register')">Register</button>
-      <button id="forgotTab" onclick="switchTab('forgot')">Forgot</button>
-    </div>
+    <h2>Welcome to Banerjee Mart</h2>
 
     <!-- Login Form -->
-    <div id="login" class="section active">
-      <div class="form-group">
-        <input type="email" placeholder="Email" id="loginEmail">
-        <i class="fas fa-envelope"></i>
+    <form id="login-form">
+      <div class="input-group">
+        <i class="fa fa-phone"></i>
+        <input type="text" placeholder="Phone Number" required>
       </div>
-      <div class="form-group">
-        <input type="password" placeholder="Password" id="loginPassword">
-        <i class="fas fa-lock"></i>
+      <div class="input-group">
+        <i class="fa fa-lock"></i>
+        <input type="password" placeholder="Password" required>
       </div>
-      <button class="submit-btn" onclick="login()">Login</button>
-      <div class="forgot-link">
-        <a href="javascript:void(0)" onclick="switchTab('forgot')">Forgot password?</a>
-      </div>
-    </div>
+      <button type="submit">Login</button>
+      <div class="forgot-password"><a onclick="showForm('forgot')">Forgot Password?</a></div>
+      <div class="toggle-link">Don't have an account? <a onclick="showForm('register')">Register</a></div>
+    </form>
 
     <!-- Register Form -->
-    <div id="register" class="section">
-      <div class="form-group">
-        <input type="text" placeholder="Full Name" id="registerName">
-        <i class="fas fa-user"></i>
+    <form id="register-form" class="hidden">
+      <div class="input-group">
+        <i class="fa fa-user"></i>
+        <input type="text" placeholder="Full Name" required>
       </div>
-      <div class="form-group">
-        <input type="email" placeholder="Email" id="registerEmail">
-        <i class="fas fa-envelope"></i>
+      <div class="input-group">
+        <i class="fa fa-phone"></i>
+        <input type="text" placeholder="Phone Number" required>
       </div>
-      <div class="form-group">
-        <input type="password" placeholder="Password" id="registerPassword">
-        <i class="fas fa-lock"></i>
+      <div class="input-group">
+        <i class="fa fa-envelope"></i>
+        <input type="email" placeholder="Email Address (optional)">
       </div>
-      <button class="submit-btn" onclick="register()">Register</button>
-    </div>
+      <div class="input-group">
+        <i class="fa fa-location-dot"></i>
+        <input type="text" placeholder="Address" required>
+      </div>
+      <div class="input-group">
+        <i class="fa fa-lock"></i>
+        <input type="password" placeholder="Password" required>
+      </div>
 
-    <!-- Forgot Password -->
-    <div id="forgot" class="section">
-      <div class="form-group">
-        <input type="email" placeholder="Enter your email" id="forgotEmail">
-        <i class="fas fa-envelope-open"></i>
+      <div class="input-group">
+        <i class="fa fa-camera"></i>
+        <input type="file" accept="image/*" id="user-photo" onchange="previewPhoto()" style="padding-left: 40px;">
       </div>
-      <button class="submit-btn" onclick="resetPassword()">Send Reset Link</button>
-    </div>
+
+      <img id="photo-preview" src="" alt="Preview" />
+
+      <button type="submit">Register</button>
+      <div class="toggle-link">Already have an account? <a onclick="showForm('login')">Login</a></div>
+    </form>
+
+    <!-- Forgot Password Form -->
+    <form id="forgot-form" class="hidden">
+      <div class="input-group">
+        <i class="fa fa-envelope"></i>
+        <input type="email" placeholder="Enter your email" required>
+      </div>
+      <button type="submit">Send Reset Link</button>
+      <div class="toggle-link"><a onclick="showForm('login')">Back to Login</a></div>
+    </form>
   </div>
 
   <script>
-    function switchTab(tab) {
-      const tabs = ['login', 'register', 'forgot'];
-      tabs.forEach(t => {
-        document.getElementById(t).classList.remove('active');
-        document.getElementById(t + 'Tab').classList.remove('active');
-      });
-      document.getElementById(tab).classList.add('active');
-      document.getElementById(tab + 'Tab').classList.add('active');
+    function showForm(formId) {
+      document.getElementById("login-form").classList.add("hidden");
+      document.getElementById("register-form").classList.add("hidden");
+      document.getElementById("forgot-form").classList.add("hidden");
+      document.getElementById(formId + "-form").classList.remove("hidden");
     }
 
-    // Firebase logic placeholders
-    function login() {
-      const email = document.getElementById("loginEmail").value;
-      const password = document.getElementById("loginPassword").value;
-
-      // TODO: Add real Firebase logic here
-      if (email && password) {
-        // Simulate successful login
-        alert("Login successful!");
-        window.location.href = "index.html";
-      } else {
-        alert("Please enter email and password.");
+    function previewPhoto() {
+      const input = document.getElementById('user-photo');
+      const preview = document.getElementById('photo-preview');
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
       }
     }
 
-    function register() {
-      const name = document.getElementById("registerName").value;
-      const email = document.getElementById("registerEmail").value;
-      const password = document.getElementById("registerPassword").value;
+    // Dummy success redirect on login
+    document.getElementById("login-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      // TODO: Replace with Firebase Auth logic
+      alert("Login successful!");
+      window.location.href = "index.html";
+    });
 
-      // TODO: Add Firebase createUserWithEmailAndPassword
-      if (name && email && password) {
-        alert("Registration successful!");
-        switchTab('login');
-      } else {
-        alert("Fill in all fields.");
-      }
-    }
+    // Dummy register
+    document.getElementById("register-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      alert("Registration successful! Now login.");
+      showForm("login");
+    });
 
-    function resetPassword() {
-      const email = document.getElementById("forgotEmail").value;
-
-      // TODO: Add Firebase sendPasswordResetEmail
-      if (email) {
-        alert("Password reset link sent.");
-        switchTab('login');
-      } else {
-        alert("Please enter your email.");
-      }
-    }
+    // Dummy forgot password
+    document.getElementById("forgot-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      alert("Password reset link sent to your email!");
+      showForm("login");
+    });
   </script>
+
 </body>
           </html>
