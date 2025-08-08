@@ -238,7 +238,7 @@
           <span>Total</span>
           <span id="total-price">₹0.00</span>
         </div>
-        <button class="checkout-btn">Proceed to Checkout</button>
+        <button id="checkout-btn" class="checkout-btn">Proceed to Checkout</button>
       </div>
     </div>
   </div>
@@ -281,6 +281,7 @@
     const cartSummary = document.getElementById('cart-summary');
     const subtotalPriceEl = document.getElementById('subtotal-price');
     const totalPriceEl = document.getElementById('total-price');
+    const checkoutBtn = document.getElementById('checkout-btn');
     const deliveryPrice = 40; // Hardcoded delivery price for now
 
     let user;
@@ -315,6 +316,31 @@
         }
     }
 
+    // Function to handle the checkout process
+    async function checkoutHandler() {
+        if (!user) {
+            alert("Please log in to proceed to checkout.");
+            return;
+        }
+
+        const cartDoc = await userCartRef.get();
+        if (!cartDoc.exists || (cartDoc.data().items && cartDoc.data().items.length === 0)) {
+            alert("Your cart is empty. Add some items before checking out.");
+            return;
+        }
+
+        // --- Checkout logic will go here in the future ---
+        // For now, we'll just show an alert.
+        alert("Proceeding to checkout! (Functionality to be implemented)");
+
+        // Example of what would happen next:
+        // 1. Create a new order document in a 'orders' collection
+        // 2. Add the cart items, user info, and a timestamp to the order
+        // 3. Clear the user's cart in Firebase: await userCartRef.set({ items: [] });
+        // 4. Redirect the user to an order confirmation page
+        // --------------------------------------------------
+    }
+
     // Function to render cart items
     function renderCart(cartItems) {
         cartItemsContainer.innerHTML = '';
@@ -336,7 +362,7 @@
                 <img src="${item.imageUrl}" alt="${item.name}">
                 <div class="item-details">
                     <div class="item-title">${item.name}</div>
-                    <div class="item-price">₹${item.price}</div>
+                    <div class="item-price">₹${item.price.toFixed(2)}</div>
                     <div class="item-actions">
                         <div class="quantity-controls">
                             <button class="quantity-btn decrease-qty" data-id="${item.id}">-</button>
@@ -419,6 +445,9 @@
         console.error("Error fetching user:", e);
       }
     });
+    
+    // Add event listener for the checkout button
+    checkoutBtn.addEventListener('click', checkoutHandler);
   </script>
 </body>
 </html>
