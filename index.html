@@ -221,6 +221,13 @@
       color: green;
       font-size: 18px;
     }
+    
+    /* New style for the calculated total price */
+    .product-total-price {
+        font-size: 14px;
+        color: var(--text-muted);
+    }
+
 
     .product-controls {
       display: flex;
@@ -260,6 +267,13 @@
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .add-to-cart-btn .material-symbols-outlined {
+        font-size: 18px;
     }
     
     .load-more-btn {
@@ -449,10 +463,16 @@
       const productDetails = document.createElement('div');
       productDetails.className = 'product-details';
       
+      const totalPriceElement = document.createElement('p');
+      totalPriceElement.className = 'product-total-price';
+      totalPriceElement.textContent = `Total: ₹${product.price.toFixed(2)}`;
+
       productDetails.innerHTML = `
         <h4 class="product-title">${product.name}</h4>
         <p class="product-price">₹${product.price}</p>
       `;
+
+      productDetails.appendChild(totalPriceElement);
 
       const productControls = document.createElement('div');
       productControls.className = 'product-controls';
@@ -467,7 +487,7 @@
 
       const addToCartBtn = document.createElement('button');
       addToCartBtn.className = 'add-to-cart-btn';
-      addToCartBtn.textContent = 'Add to Cart';
+      addToCartBtn.innerHTML = `<span class="material-symbols-outlined">add_shopping_cart</span> Add to Cart`;
       addToCartBtn.dataset.id = product.id;
 
       productControls.appendChild(quantityControls);
@@ -479,15 +499,24 @@
       
       // Event listeners for quantity controls
       const qtySpan = productControls.querySelector('.item-quantity');
+      
+      const updateTotalPrice = () => {
+          const qty = parseInt(qtySpan.textContent);
+          const newTotal = (product.price * qty).toFixed(2);
+          totalPriceElement.textContent = `Total: ₹${newTotal}`;
+      };
+
       productControls.querySelector('.increase-qty-btn').addEventListener('click', () => {
           let qty = parseInt(qtySpan.textContent);
           qtySpan.textContent = qty + 1;
+          updateTotalPrice();
       });
 
       productControls.querySelector('.decrease-qty-btn').addEventListener('click', () => {
           let qty = parseInt(qtySpan.textContent);
           if (qty > 1) {
               qtySpan.textContent = qty - 1;
+              updateTotalPrice();
           }
       });
       
@@ -600,6 +629,10 @@
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const category = e.currentTarget.dataset.category;
+            // Remove 'active' class from all category links
+            document.querySelectorAll('.category-link').forEach(l => l.classList.remove('active'));
+            // Add 'active' class to the clicked link
+            e.currentTarget.classList.add('active');
             window.history.pushState(null, '', `?category=${category}`);
             fetchProducts(category);
         });
