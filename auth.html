@@ -4,11 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Banerjee Mart - Auth</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-storage-compat.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
     /* Base Styles */
     body {
@@ -46,7 +48,9 @@
     }
     
     label {
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       margin-bottom: 8px;
       font-weight: 600;
       color: #555;
@@ -132,11 +136,11 @@
 
     <div id="login-section" class="form-section active" data-section="login">
       <div class="form-group">
-        <label>📞 Phone Number</label>
+        <label><span class="material-symbols-outlined">phone</span> Phone Number</label>
         <input type="text" id="login-phone" placeholder="Enter phone number">
       </div>
       <div class="form-group">
-        <label>🔑 Password</label>
+        <label><span class="material-symbols-outlined">lock</span> Password</label>
         <input type="password" id="login-password" placeholder="Enter password">
       </div>
       <button id="login-btn">Login</button>
@@ -146,31 +150,31 @@
 
     <div id="register-section" class="form-section" data-section="register">
       <div class="form-group">
-        <label>👤 Full Name</label>
+        <label><span class="material-symbols-outlined">person</span> Full Name</label>
         <input type="text" id="reg-name" placeholder="Enter full name">
       </div>
       <div class="form-group">
-        <label>📞 Phone Number</label>
+        <label><span class="material-symbols-outlined">phone</span> Phone Number</label>
         <input type="text" id="reg-phone" placeholder="Enter phone number">
       </div>
       <div class="form-group">
-        <label>✉️ Email (optional)</label>
+        <label><span class="material-symbols-outlined">mail</span> Email (optional)</label>
         <input type="email" id="reg-email" placeholder="Enter email (optional)">
       </div>
       <div class="form-group">
-        <label>🏠 Address</label>
+        <label><span class="material-symbols-outlined">home</span> Address</label>
         <select id="reg-address">
           <option value="Pakurtala">Pakurtala</option>
           <option value="Rajuakhaki">Rajuakhaki</option>
         </select>
       </div>
       <div class="form-group">
-        <label>🖼️ Profile Photo</label>
+        <label><span class="material-symbols-outlined">add_a_photo</span> Profile Photo</label>
         <input type="file" id="reg-photo" accept="image/*">
         <img id="photo-preview" class="photo-preview" alt="Profile Preview">
       </div>
       <div class="form-group">
-        <label>🔑 Password</label>
+        <label><span class="material-symbols-outlined">lock</span> Password</label>
         <input type="password" id="reg-password" placeholder="Set a password">
       </div>
       <button id="register-btn">Register</button>
@@ -179,7 +183,7 @@
 
     <div id="forgot-section" class="form-section" data-section="forgot">
       <div class="form-group">
-        <label>📧 Email Address</label>
+        <label><span class="material-symbols-outlined">mail</span> Email Address</label>
         <input type="email" id="forgot-email" placeholder="Enter registered email">
       </div>
       <button id="reset-btn">Send Reset Email</button>
@@ -265,6 +269,38 @@
     }
 
     /**
+     * Maps Firebase error codes to user-friendly messages.
+     * @param {string} errorCode - The Firebase error code.
+     * @returns {string} - A friendly error message.
+     */
+    function getFriendlyErrorMessage(errorCode) {
+      switch (errorCode) {
+        case 'auth/email-already-in-use':
+          return 'This phone number is already registered. Please log in or use a different number.';
+        case 'auth/weak-password':
+          return 'Password must be at least 6 characters long.';
+        case 'auth/invalid-email':
+        case 'auth/user-not-found':
+          return 'Invalid credentials. Please check your phone number and password.';
+        case 'auth/wrong-password':
+          return 'Incorrect password. Please try again.';
+        default:
+          console.error('Unhandled Firebase error:', errorCode);
+          return 'An unexpected error occurred. Please try again.';
+      }
+    }
+
+    /**
+     * Displays a message to the user.
+     * @param {string} message - The message to display.
+     * @param {string} type - 'success' or 'error' to determine color.
+     */
+    function displayMessage(message, type) {
+      msg.textContent = message;
+      msg.style.color = type === 'success' ? '#28a745' : '#dc3545';
+    }
+
+    /**
      * Handles user registration.
      */
     async function handleRegister() {
@@ -276,7 +312,7 @@
       const photoFile = regPhoto.files[0];
 
       if (!name || !phone || !password) {
-        return displayMessage('Please fill out all required fields.', 'error');
+        return displayMessage('Please fill in your full name, phone number, and password.', 'error');
       }
 
       const emailId = email || `${phone}@banerjeemart.com`;
@@ -303,7 +339,7 @@
         displayMessage('Registration successful! Redirecting...', 'success');
         setTimeout(() => window.location.href = 'index.html', 1500);
       } catch (error) {
-        displayMessage(error.message, 'error');
+        displayMessage(getFriendlyErrorMessage(error.code) || 'Registration failed. Please try again.', 'error');
       }
     }
 
@@ -315,7 +351,7 @@
       const password = loginPassword.value;
 
       if (!phone || !password) {
-        return displayMessage('Please enter your phone number and password.', 'error');
+        return displayMessage('Please enter both your phone number and password.', 'error');
       }
 
       const email = `${phone}@banerjeemart.com`;
@@ -324,7 +360,7 @@
         displayMessage('Login successful! Redirecting...', 'success');
         setTimeout(() => window.location.href = 'index.html', 1500);
       } catch (error) {
-        displayMessage(error.message, 'error');
+        displayMessage(getFriendlyErrorMessage(error.code) || 'Login failed. Please check your credentials.', 'error');
       }
     }
 
@@ -335,25 +371,15 @@
       const email = forgotEmail.value;
 
       if (!email) {
-        return displayMessage('Please enter your email address.', 'error');
+        return displayMessage('Please enter the email address you registered with.', 'error');
       }
 
       try {
         await auth.sendPasswordResetEmail(email);
-        displayMessage('Password reset email sent!', 'success');
+        displayMessage('Password reset email sent! Check your inbox.', 'success');
       } catch (error) {
-        displayMessage(error.message, 'error');
+        displayMessage(getFriendlyErrorMessage(error.code) || 'Could not send reset email. Please try again.', 'error');
       }
-    }
-
-    /**
-     * Displays a message to the user.
-     * @param {string} message - The message to display.
-     * @param {string} type - 'success' or 'error' to determine color.
-     */
-    function displayMessage(message, type) {
-      msg.textContent = message;
-      msg.style.color = type === 'success' ? '#28a745' : '#dc3545';
     }
   </script>
 </body>
