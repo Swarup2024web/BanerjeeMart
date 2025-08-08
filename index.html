@@ -15,6 +15,7 @@
     /* Material 3.0-inspired CSS variables and general styles */
     :root {
       --primary-color: #2874f0;
+      --secondary-color: #03dac6;
       --surface-color: #ffffff;
       --background-color: #f1f3f6;
       --text-on-primary: #ffffff;
@@ -22,6 +23,11 @@
       --text-muted: #555555;
       --border-color: #e0e0e0;
       --border-radius: 8px;
+      --icon-color-grocery: #4caf50;
+      --icon-color-vegetables: #8bc34a;
+      --icon-color-food: #ff9800;
+      --icon-color-stationery: #00bcd4;
+      --icon-color-health: #e91e63;
     }
 
     body {
@@ -50,12 +56,12 @@
       top: 0;
       z-index: 1000;
     }
-
+    
     .header-logo {
       font-size: 20px;
       font-weight: 600;
     }
-
+    
     /* Search Bar */
     .search-container {
       padding: 10px 16px;
@@ -71,27 +77,50 @@
       font-size: 16px;
       box-sizing: border-box;
     }
-    
-    /* Carousel */
-    .carousel-container {
-      overflow-x: auto;
-      white-space: nowrap;
-      padding: 10px;
-      background: var(--surface-color);
-      margin-top: 10px;
-      -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-      scrollbar-width: none; /* Hide scrollbar for Firefox */
-    }
-    .carousel-container::-webkit-scrollbar {
-      display: none; /* Hide scrollbar for Chrome, Safari, Opera */
-    }
 
-    .carousel-item {
-      width: 90%;
-      max-width: 400px;
-      margin: 0 5px;
-      border-radius: var(--border-radius);
-      display: inline-block;
+    /* Banners Carousel */
+    .banner-wrapper {
+      position: relative;
+      overflow: hidden;
+      margin-top: 10px;
+      background: var(--surface-color);
+    }
+    .banner-container {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+    .banner-item {
+      min-width: 100%;
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+    .banner-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0 10px;
+      box-sizing: border-box;
+    }
+    .banner-nav-btn {
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    .banner-nav-btn:hover {
+      opacity: 1;
     }
 
     /* Sections */
@@ -99,6 +128,7 @@
       margin-top: 10px;
       background: var(--surface-color);
       padding: 16px;
+      border-radius: var(--border-radius);
     }
     
     .section-header {
@@ -123,35 +153,61 @@
       flex: 0 0 auto;
       text-align: center;
       width: 80px;
-    }
-
-    .flex-item img {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 1px solid var(--border-color);
-    }
-
-    .product-item {
-      flex: 0 0 auto;
-      width: 150px;
-      text-align: left;
       text-decoration: none;
       color: var(--text-on-surface);
     }
 
+    .category-icon-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: var(--background-color);
+      border: 1px solid var(--border-color);
+    }
+
+    .category-icon-wrapper .material-symbols-outlined {
+      font-size: 40px;
+    }
+    #cat-grocery .material-symbols-outlined { color: var(--icon-color-grocery); }
+    #cat-vegetables .material-symbols-outlined { color: var(--icon-color-vegetables); }
+    #cat-food .material-symbols-outlined { color: var(--icon-color-food); }
+    #cat-stationery .material-symbols-outlined { color: var(--icon-color-stationery); }
+    #cat-health .material-symbols-outlined { color: var(--icon-color-health); }
+
+    .product-list-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .product-item {
+      text-align: left;
+      text-decoration: none;
+      color: var(--text-on-surface);
+      background: var(--surface-color);
+      padding: 10px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
     .product-item img {
       width: 100%;
-      border-radius: var(--border-radius);
+      height: 150px;
       object-fit: cover;
+      border-radius: var(--border-radius);
     }
     
     .product-title {
       font-weight: 500;
       margin-top: 8px;
-      white-space: normal;
       font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .product-price {
@@ -159,6 +215,20 @@
       color: green;
       margin-top: 4px;
       font-size: 16px;
+    }
+
+    .load-more-btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 16px;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      display: block;
     }
 
     /* Bottom Navigation */
@@ -225,69 +295,56 @@
       <input type="text" placeholder="Search for products..." class="search-input">
     </div>
 
-    <div class="carousel-container">
-      <img src="https://via.placeholder.com/300x150?text=Offer+1" alt="Offer Banner" class="carousel-item">
-      <img src="https://via.placeholder.com/300x150?text=Deal+2" alt="Deal Banner" class="carousel-item">
-      <img src="https://via.placeholder.com/300x150?text=New+Launch" alt="New Launch Banner" class="carousel-item">
+    <div class="banner-wrapper">
+      <div id="banner-container" class="banner-container">
+        <img src="https://via.placeholder.com/600x150?text=Fast+Delivery+within+a+day" alt="Banner 1" class="banner-item">
+        <img src="https://via.placeholder.com/600x150?text=Delivered+only+to+Pakurtala+and+Rajuakhaki" alt="Banner 2" class="banner-item">
+        <img src="https://via.placeholder.com/600x150?text=Special+Offer" alt="Banner 3" class="banner-item">
+      </div>
+      <div class="banner-nav">
+        <button id="prev-banner" class="banner-nav-btn"><span class="material-symbols-outlined">chevron_left</span></button>
+        <button id="next-banner" class="banner-nav-btn"><span class="material-symbols-outlined">chevron_right</span></button>
+      </div>
     </div>
 
     <div class="section">
       <h3 class="section-header">Categories</h3>
       <div class="flex-container">
-        <a href="categories.html?category=grocery" class="flex-item">
-          <img src="https://via.placeholder.com/80?text=Grocery" alt="Grocery Category">
-          <div>Grocery</div>
+        <a href="#" class="flex-item category-link" data-category="groceries" id="cat-groceries">
+          <div class="category-icon-wrapper">
+            <span class="material-symbols-outlined">grocery</span>
+          </div>
+          <div>Groceries</div>
         </a>
-        <a href="categories.html?category=stationery" class="flex-item">
-          <img src="https://via.placeholder.com/80?text=Stationery" alt="Stationery Category">
-          <div>Stationery</div>
+        <a href="#" class="flex-item category-link" data-category="vegetables" id="cat-vegetables">
+          <div class="category-icon-wrapper">
+            <span class="material-symbols-outlined">eco</span>
+          </div>
+          <div>Vegetables</div>
         </a>
-        <a href="categories.html?category=health" class="flex-item">
-          <img src="https://via.placeholder.com/80?text=Health" alt="Health Category">
-          <div>Health</div>
-        </a>
-        <a href="categories.html?category=food" class="flex-item">
-          <img src="https://via.placeholder.com/80?text=Food" alt="Food Category">
+        <a href="#" class="flex-item category-link" data-category="food" id="cat-food">
+          <div class="category-icon-wrapper">
+            <span class="material-symbols-outlined">restaurant</span>
+          </div>
           <div>Food</div>
         </a>
-        <a href="categories.html?category=electronics" class="flex-item">
-          <img src="https://via.placeholder.com/80?text=Electronics" alt="Electronics Category">
-          <div>Electronics</div>
+        <a href="#" class="flex-item category-link" data-category="stationery" id="cat-stationery">
+          <div class="category-icon-wrapper">
+            <span class="material-symbols-outlined">edit_note</span>
+          </div>
+          <div>Stationery</div>
+        </a>
+        <a href="#" class="flex-item category-link" data-category="health" id="cat-health">
+          <div class="category-icon-wrapper">
+            <span class="material-symbols-outlined">health_and_safety</span>
+          </div>
+          <div>Health</div>
         </a>
         </div>
     </div>
 
-    <div class="section">
-      <h3 class="section-header">Hot Deals</h3>
-      <div class="flex-container">
-        <a href="product-detail.html?id=product1" class="product-item">
-          <img src="https://via.placeholder.com/150?text=Product+1" alt="Product 1">
-          <div class="product-title">Product 1 Name</div>
-          <div class="product-price">₹99</div>
-        </a>
-        <a href="product-detail.html?id=product2" class="product-item">
-          <img src="https://via.placeholder.com/150?text=Product+2" alt="Product 2">
-          <div class="product-title">Product 2 Name</div>
-          <div class="product-price">₹199</div>
-        </a>
-        </div>
-    </div>
-
-    <div class="section">
-      <h3 class="section-header">Trending Now</h3>
-      <div class="flex-container">
-        <a href="product-detail.html?id=trend1" class="product-item">
-          <img src="https://via.placeholder.com/150?text=Trend+1" alt="Trending Item">
-          <div class="product-title">Trending Item Name</div>
-          <div class="product-price">₹299</div>
-        </a>
-        <a href="product-detail.html?id=trend2" class="product-item">
-          <img src="https://via.placeholder.com/150?text=Trend+2" alt="Top Pick">
-          <div class="product-title">Top Pick Name</div>
-          <div class="product-price">₹149</div>
-        </a>
-        </div>
-    </div>
+    <div id="main-content">
+      </div>
   </div>
 
   <div class="bottom-nav">
@@ -323,7 +380,165 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // Auth Check
+    const mainContent = document.getElementById('main-content');
+    const productsPerPage = 8;
+    let lastVisible = null;
+
+    // Helper function to create product HTML
+    function createProductElement(product) {
+        const productLink = document.createElement('a');
+        productLink.href = `product-detail.html?id=${product.id}`;
+        productLink.className = 'product-item';
+
+        const productImage = document.createElement('img');
+        productImage.src = product.imageUrl || 'https://via.placeholder.com/150';
+        productImage.alt = product.name;
+
+        const productTitle = document.createElement('div');
+        productTitle.className = 'product-title';
+        productTitle.textContent = product.name;
+
+        const productPrice = document.createElement('div');
+        productPrice.className = 'product-price';
+        productPrice.textContent = `₹${product.price}`;
+
+        productLink.appendChild(productImage);
+        productLink.appendChild(productTitle);
+        productLink.appendChild(productPrice);
+
+        return productLink;
+    }
+
+    // Function to fetch and display products
+    async function fetchProducts(category = null, isInitialLoad = true) {
+        if (isInitialLoad) {
+            mainContent.innerHTML = ''; // Clear previous content
+            lastVisible = null;
+        }
+
+        let query = db.collection('products').limit(productsPerPage);
+
+        if (category) {
+            query = query.where('category', '==', category);
+        }
+
+        if (lastVisible) {
+            query = query.startAfter(lastVisible);
+        }
+
+        try {
+            const snapshot = await query.get();
+            lastVisible = snapshot.docs[snapshot.docs.length - 1];
+
+            const productGrid = document.createElement('div');
+            productGrid.className = 'product-list-grid';
+
+            snapshot.forEach(doc => {
+                const product = { id: doc.id, ...doc.data() };
+                productGrid.appendChild(createProductElement(product));
+            });
+
+            if (isInitialLoad) {
+                // If a category is chosen, display only products from that category
+                if (category) {
+                    const section = document.createElement('div');
+                    section.className = 'section';
+                    const header = document.createElement('h3');
+                    header.className = 'section-header';
+                    header.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+                    section.appendChild(header);
+                    section.appendChild(productGrid);
+                    mainContent.appendChild(section);
+                } else {
+                    // If no category is chosen, show all categories
+                    // This is a simplified approach, a real app would use a more complex query
+                    const section = document.createElement('div');
+                    section.className = 'section';
+                    const header = document.createElement('h3');
+                    header.className = 'section-header';
+                    header.textContent = "All Products";
+                    section.appendChild(header);
+                    section.appendChild(productGrid);
+                    mainContent.appendChild(section);
+                }
+            } else {
+                // For "Load More" functionality, just append to the grid
+                const existingGrid = mainContent.querySelector('.product-list-grid');
+                if (existingGrid) {
+                    snapshot.forEach(doc => {
+                        const product = { id: doc.id, ...doc.data() };
+                        existingGrid.appendChild(createProductElement(product));
+                    });
+                }
+            }
+
+            // Check if there are more items to load
+            if (snapshot.docs.length === productsPerPage) {
+                const loadMoreBtn = document.createElement('button');
+                loadMoreBtn.className = 'load-more-btn';
+                loadMoreBtn.textContent = 'Load More';
+                loadMoreBtn.onclick = () => fetchProducts(category, false);
+                mainContent.appendChild(loadMoreBtn);
+            }
+
+        } catch (e) {
+            console.error("Error fetching products:", e);
+            mainContent.innerHTML = '<p>Could not load products. Please try again later.</p>';
+        }
+    }
+
+    // Function to handle URL-based category selection
+    function handleUrlCategory() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const category = urlParams.get('category');
+        if (category) {
+            fetchProducts(category);
+        } else {
+            // Load all products initially
+            fetchProducts();
+        }
+    }
+
+    // Event listeners for categories
+    document.querySelectorAll('.category-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const category = e.currentTarget.dataset.category;
+            // Update URL to reflect the category choice
+            window.history.pushState(null, '', `?category=${category}`);
+            fetchProducts(category);
+        });
+    });
+
+    // Handle back/forward browser button
+    window.addEventListener('popstate', handleUrlCategory);
+    
+    // Banner Carousel logic
+    let bannerIndex = 0;
+    const bannerContainer = document.getElementById('banner-container');
+    const banners = document.querySelectorAll('.banner-item');
+
+    function updateBanner() {
+        bannerContainer.style.transform = `translateX(-${bannerIndex * 100}%)`;
+    }
+
+    document.getElementById('prev-banner').addEventListener('click', () => {
+        bannerIndex = (bannerIndex - 1 + banners.length) % banners.length;
+        updateBanner();
+    });
+
+    document.getElementById('next-banner').addEventListener('click', () => {
+        bannerIndex = (bannerIndex + 1) % banners.length;
+        updateBanner();
+    });
+
+    // Auto-advance banners
+    setInterval(() => {
+        document.getElementById('next-banner').click();
+    }, 5000);
+
+
+    // Auth Check and Initial Data Fetch
     auth.onAuthStateChanged(async (user) => {
       if (!user) {
         window.location.href = "auth.html";
@@ -337,6 +552,11 @@
         console.error("Error fetching user:", e);
       }
     });
+
+    // Initial page load
+    window.onload = () => {
+        handleUrlCategory();
+    };
   </script>
 </body>
 </html>
