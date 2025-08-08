@@ -2,155 +2,249 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Shop</title>
-  <link href="style.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Banerjee Mart</title>
+  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      background: #f8f8f8;
+    }
+    header {
+      background-color: #2874f0;
+      color: white;
+      padding: 10px;
+    }
+    header h1 {
+      font-size: 20px;
+    }
+    .search-bar {
+      display: flex;
+      margin-top: 10px;
+    }
+    .search-bar input {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 4px;
+    }
+    .carousel {
+      width: 100%;
+      height: 160px;
+      background: url('https://via.placeholder.com/400x160') center/cover no-repeat;
+      margin: 10px 0;
+      border-radius: 6px;
+    }
+    .categories {
+      display: flex;
+      overflow-x: auto;
+      padding: 10px 0;
+      background: white;
+    }
+    .category {
+      flex: 0 0 auto;
+      width: 80px;
+      text-align: center;
+      margin: 0 5px;
+    }
+    .category img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #ddd;
+    }
+    .section {
+      background: white;
+      padding: 10px;
+      margin: 10px 0;
+    }
+    .section h2 {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    .products {
+      display: flex;
+      overflow-x: auto;
+    }
+    .product {
+      flex: 0 0 auto;
+      width: 120px;
+      margin-right: 10px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 5px;
+      text-align: center;
+    }
+    .product img {
+      width: 100%;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+    .footer-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      background: #fff;
+      border-top: 1px solid #ccc;
+      padding: 10px 0;
+    }
+    .footer-nav i {
+      font-size: 20px;
+      color: #555;
+    }
+    .spinner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    #main-content {
+      display: none;
+    }
+    .user-info {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+    }
+    .user-info img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 10px;
+    }
+    .logout {
+      margin-left: auto;
+      background: #f44336;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="header">
-    <h1>My Shop</h1>
-    <div class="header-icons">
-      <span class="material-icons" id="search-icon">search</span>
-    </div>
-  </header>
 
-  <!-- Search Bar -->
-  <div id="search-bar" class="hidden">
-    <input type="text" id="search-input" placeholder="Search products..." />
+  <!-- Spinner -->
+  <div class="spinner" id="loader">
+    <i class="fas fa-spinner fa-spin fa-2x"></i>
   </div>
 
-  <!-- Banner -->
-  <div id="banner">
-    <h2>Big Sale Today!</h2>
-    <button id="shop-now-btn">Shop Now</button>
+  <!-- Main App Content -->
+  <div id="main-content">
+    <header>
+      <div class="user-info">
+        <img id="userPhoto" src="" alt="User" />
+        <span id="userName">Welcome</span>
+        <button class="logout" onclick="logout()">Logout</button>
+      </div>
+      <div class="search-bar">
+        <input type="text" placeholder="Search for products..." />
+      </div>
+    </header>
+
+    <div class="carousel"></div>
+
+    <div class="categories">
+      <div class="category"><img src="https://via.placeholder.com/60" /><p>Groceries</p></div>
+      <div class="category"><img src="https://via.placeholder.com/60" /><p>Foods</p></div>
+      <div class="category"><img src="https://via.placeholder.com/60" /><p>Stationery</p></div>
+      <div class="category"><img src="https://via.placeholder.com/60" /><p>Students</p></div>
+      <div class="category"><img src="https://via.placeholder.com/60" /><p>Health</p></div>
+    </div>
+
+    <div class="section">
+      <h2>Trending Products</h2>
+      <div class="products">
+        <div class="product">
+          <img src="https://via.placeholder.com/100" />
+          <p>Product 1</p>
+          <p>₹99</p>
+        </div>
+        <div class="product">
+          <img src="https://via.placeholder.com/100" />
+          <p>Product 2</p>
+          <p>₹199</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Deals of the Day</h2>
+      <div class="products">
+        <div class="product">
+          <img src="https://via.placeholder.com/100" />
+          <p>Deal 1</p>
+          <p>₹299</p>
+        </div>
+        <div class="product">
+          <img src="https://via.placeholder.com/100" />
+          <p>Deal 2</p>
+          <p>₹149</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-nav">
+      <i class="fas fa-home"></i>
+      <i class="fas fa-shopping-cart"></i>
+      <i class="fas fa-box"></i>
+      <i class="fas fa-user"></i>
+    </div>
   </div>
-
-  <!-- Categories -->
-  <section id="categories">
-    <h2>Categories</h2>
-    <div class="category-list">
-      <button class="category-btn" data-category="all">All</button>
-      <button class="category-btn" data-category="electronics">Electronics</button>
-      <button class="category-btn" data-category="fashion">Fashion</button>
-      <button class="category-btn" data-category="grocery">Grocery</button>
-    </div>
-  </section>
-
-  <!-- Navigation Links -->
-  <nav class="quick-links">
-    <button onclick="location.href='index.html'">Best Deals</button>
-    <button onclick="location.href='orders.html'">My Orders</button>
-    <button onclick="location.href='profile.html'">Profile</button>
-  </nav>
-
-  <!-- Featured Products -->
-  <section id="featured-products">
-    <div class="section-header">
-      <h2>Featured Products</h2>
-      <button onclick="location.href='products.html'" class="view-all-btn">View All <span class="material-icons">chevron_right</span></button>
-    </div>
-    <div class="product-list" id="featured-list">
-      <!-- Products will be injected here -->
-    </div>
-  </section>
-
-  <!-- Bottom Navigation -->
-  <footer class="bottom-nav">
-    <a href="index.html"><span class="material-icons">home</span><br/>Home</a>
-    <a href="new.html"><span class="material-icons">fiber_new</span><br/>New</a>
-    <a href="categories.html"><span class="material-icons">category</span><br/>Categories</a>
-    <a href="cart.html"><span class="material-icons">shopping_cart</span><br/>Cart</a>
-    <a href="orders.html"><span class="material-icons">assignment</span><br/>Orders</a>
-  </footer>
 
   <script>
-    // Firebase Config
+    // Firebase config
     const firebaseConfig = {
-      // your config here
+      apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
+      authDomain: "banerjee-mart.firebaseapp.com",
+      projectId: "banerjee-mart",
+      storageBucket: "banerjee-mart.appspot.com",
+      messagingSenderId: "183628570952",
+      appId: "1:183628570952:web:3028bb258001d004d9537d"
     };
-    const app = firebase.initializeApp(firebaseConfig);
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // Toggle Search Bar
-    document.getElementById("search-icon").addEventListener("click", () => {
-      const searchBar = document.getElementById("search-bar");
-      searchBar.classList.toggle("hidden");
-    });
+    const loader = document.getElementById('loader');
+    const mainContent = document.getElementById('main-content');
 
-    // Close Banner
-    document.getElementById("shop-now-btn").addEventListener("click", () => {
-      document.getElementById("banner").style.display = "none";
-    });
-
-    // Load Featured Products
-    async function loadFeaturedProducts() {
-      const list = document.getElementById("featured-list");
-      list.innerHTML = "";
-      const querySnapshot = await db.collection("products").where("featured", "==", true).get();
-      querySnapshot.forEach((doc) => {
-        const product = doc.data();
-        const div = document.createElement("div");
-        div.classList.add("product-card");
-        div.innerHTML = `
-          <img src="${product.image}" alt="${product.name}" />
-          <h3>${product.name}</h3>
-          <p>₹${product.price}</p>
-        `;
-        list.appendChild(div);
-      });
-    }
-
-    // Filter Products by Category
-    document.querySelectorAll(".category-btn").forEach(btn => {
-      btn.addEventListener("click", async () => {
-        const category = btn.getAttribute("data-category");
-        const list = document.getElementById("featured-list");
-        list.innerHTML = "";
-
-        let query;
-        if (category === "all") {
-          query = db.collection("products").where("featured", "==", true);
-        } else {
-          query = db.collection("products").where("featured", "==", true).where("category", "==", category);
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        try {
+          const doc = await db.collection('users').doc(user.uid).get();
+          const data = doc.data();
+          document.getElementById('userName').innerText = `Hi, ${data.name}`;
+          document.getElementById('userPhoto').src = data.imageUrl || 'https://via.placeholder.com/40';
+          loader.style.display = 'none';
+          mainContent.style.display = 'block';
+        } catch (error) {
+          alert('Error loading user info');
+          auth.signOut();
         }
-
-        const snapshot = await query.get();
-        snapshot.forEach(doc => {
-          const product = doc.data();
-          const div = document.createElement("div");
-          div.classList.add("product-card");
-          div.innerHTML = `
-            <img src="${product.image}" alt="${product.name}" />
-            <h3>${product.name}</h3>
-            <p>₹${product.price}</p>
-          `;
-          list.appendChild(div);
-        });
-      });
+      } else {
+        window.location.href = 'auth.html';
+      }
     });
 
-    // Initial Load
-    loadFeaturedProducts();
+    function logout() {
+      auth.signOut();
+    }
   </script>
-
-  <style>
-    body { font-family: sans-serif; margin: 0; padding: 0; }
-    .header { display: flex; justify-content: space-between; padding: 10px; background: #2196f3; color: white; }
-    .header-icons span { cursor: pointer; }
-    #search-bar { display: flex; padding: 10px; background: #f1f1f1; }
-    #search-bar.hidden { display: none; }
-    #banner { padding: 20px; background: #ffe082; text-align: center; }
-    .category-list button, .quick-links button, .view-all-btn { margin: 5px; padding: 5px 10px; }
-    .product-card { border: 1px solid #ccc; padding: 10px; margin: 10px; text-align: center; }
-    .product-card img { width: 100px; height: 100px; object-fit: cover; }
-    .section-header { display: flex; justify-content: space-between; align-items: center; padding: 10px; }
-    .bottom-nav { display: flex; justify-content: space-around; background: #eee; padding: 10px 0; position: fixed; width: 100%; bottom: 0; }
-    .bottom-nav a { text-align: center; color: black; text-decoration: none; font-size: 12px; }
-    .bottom-nav span { font-size: 24px; }
-  </style>
 </body>
-  </html>
+        </html>
