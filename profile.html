@@ -6,6 +6,7 @@
   <title>User Profile - Banerjee Mart</title>
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
@@ -61,59 +62,48 @@
       padding-bottom: 80px; /* Space for bottom nav */
       padding: 16px;
     }
-    
-    /* Skeleton Loading */
-    .skeleton-loading {
-      filter: blur(8px); /* Apply blur effect */
-      transition: filter 0.5s ease-in-out;
-    }
-    
-    .loading-animation {
-      animation: pulse 1.5s infinite ease-in-out;
-      background-color: var(--surface-variant);
-      border-radius: var(--border-radius-m);
-      display: inline-block;
-    }
 
-    @keyframes pulse {
-      0% {
-        opacity: 0.8;
-      }
-      50% {
-        opacity: 0.5;
-      }
-      100% {
-        opacity: 0.8;
-      }
-    }
-    
-    .loading-bar {
-      height: 4px;
-      width: 100%;
-      background-color: var(--primary-container);
+    /* Loading Overlay */
+    .loading-overlay {
       position: fixed;
       top: 0;
       left: 0;
-      z-index: 2000;
-      display: none;
-    }
-    
-    .loading-bar.visible {
-        display: block;
-    }
-
-    .loading-bar::before {
-      content: '';
-      position: absolute;
+      width: 100%;
       height: 100%;
-      background-color: var(--primary-color);
-      animation: indeterminate 2s infinite ease-out;
+      background-color: var(--surface-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      z-index: 2000;
+      transition: opacity 0.3s ease-in-out;
     }
 
-    @keyframes indeterminate {
-        0% { left: -100%; width: 100%; }
-        50% { left: 100%; width: 100%; }
-        100% { left: 100%; width: 100%; }
+    .loading-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loading-cart {
+      width: 80px;
+      height: 80px;
+      position: relative;
+    }
+
+    .loading-cart .material-symbols-rounded {
+      font-size: 80px;
+      color: var(--primary-color);
+      animation: bounce 1.5s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-20px);
+        }
     }
 
     /* Header */
@@ -166,8 +156,9 @@
     }
     
     .user-name {
-      font-size: 28px;
-      font-weight: 600;
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 700;
       margin: 0;
     }
 
@@ -245,7 +236,7 @@
       font-size: 16px;
       font-weight: 600;
       gap: 8px;
-      transition: background-color 0.3s;
+      transition: background-color 0.3s, color 0.3s, border-color 0.3s;
     }
     
     .logout-btn:hover {
@@ -256,6 +247,8 @@
     
     .logout-btn .material-symbols-rounded {
         font-size: 20px;
+        color: var(--error-color);
+        transition: color 0.3s;
     }
     
     .logout-btn:hover .material-symbols-rounded {
@@ -361,23 +354,29 @@
   </style>
 </head>
 <body>
+  
+  <div id="loading-overlay" class="loading-overlay">
+    <div class="loading-cart">
+        <span class="material-symbols-rounded">shopping_cart</span>
+    </div>
+  </div>
 
   <div class="header">
     <div class="header-logo">Banerjee Mart</div>
     <div id="header-user-name">Welcome</div>
   </div>
 
-  <div class="container" id="main-content">
+  <div class="container" id="main-content" style="display: none;">
     <div class="profile-card">
         <div class="profile-header">
-            <img src="https://via.placeholder.com/120?text=P" alt="Profile Picture" class="profile-picture skeleton-loading-image" id="profile-pic">
+            <img src="https://via.placeholder.com/120?text=P" alt="Profile Picture" class="profile-picture" id="profile-pic">
             <h2 class="user-name" id="user-display-name"></h2>
         </div>
         
         <div class="profile-details">
             <div id="profile-view">
                 <ul class="user-details-list">
-                    <li>
+                    <li id="email-list-item">
                         <span class="material-symbols-rounded">mail</span>
                         <span id="user-email-address"></span>
                     </li>
@@ -453,8 +452,10 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
     
+    const loadingOverlay = document.getElementById('loading-overlay');
     const mainContent = document.getElementById('main-content');
     const headerUserNameEl = document.getElementById('header-user-name');
+    const emailListItem = document.getElementById('email-list-item');
 
     const profileView = document.getElementById('profile-view');
     const profileEditForm = document.getElementById('profile-edit-form');
@@ -478,66 +479,21 @@
 
     const GITHUB_ASSETS_BASE_URL = "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/";
 
-    const applySkeletonLoading = () => {
-        mainContent.classList.add('skeleton-loading');
-        
-        // Apply loading animation classes to specific elements
-        headerUserNameEl.classList.add('loading-animation');
-        headerUserNameEl.style.width = '100px';
-        headerUserNameEl.style.height = '24px';
-        
-        profilePic.classList.add('loading-animation');
-        displayNameEl.classList.add('loading-animation');
-        displayNameEl.style.width = '150px';
-        displayNameEl.style.height = '32px';
-        
-        emailAddressEl.classList.add('loading-animation');
-        emailAddressEl.style.width = '200px';
-        
-        phoneEl.classList.add('loading-animation');
-        phoneEl.style.width = '120px';
-        
-        addressEl.classList.add('loading-animation');
-        addressEl.style.width = '250px';
-        
-        editProfileBtn.classList.add('loading-animation');
-        editProfileBtn.style.width = '120px';
-        editProfileBtn.style.height = '40px';
-    };
-
-    const removeSkeletonLoading = () => {
-        mainContent.classList.remove('skeleton-loading');
-        
-        // Remove loading animation classes and reset styles
-        headerUserNameEl.classList.remove('loading-animation');
-        headerUserNameEl.style.width = '';
-        headerUserNameEl.style.height = '';
-
-        profilePic.classList.remove('loading-animation');
-        displayNameEl.classList.remove('loading-animation');
-        displayNameEl.style.width = '';
-        displayNameEl.style.height = '';
-
-        emailAddressEl.classList.remove('loading-animation');
-        emailAddressEl.style.width = '';
-
-        phoneEl.classList.remove('loading-animation');
-        phoneEl.style.width = '';
-
-        addressEl.classList.remove('loading-animation');
-        addressEl.style.width = '';
-        
-        editProfileBtn.classList.remove('loading-animation');
-        editProfileBtn.style.width = '';
-        editProfileBtn.style.height = '';
-    };
-
     const updateProfileUI = (userData) => {
         displayNameEl.innerText = userData.name || "User";
-        emailAddressEl.innerText = currentUser.email || "N/A";
+        headerUserNameEl.innerText = `Hi, ${userData.name || "User"}`;
+        
+        const email = currentUser.email;
+        // Check if the email is a generated Firebase placeholder
+        if (email && !email.includes('@banerjeemart.com')) {
+            emailAddressEl.innerText = email;
+            emailListItem.style.display = 'flex'; // Show the email item
+        } else {
+            emailListItem.style.display = 'none'; // Hide the email item
+        }
+
         phoneEl.innerText = userData.phone || "N/A";
         addressEl.innerText = userData.address || "N/A";
-        headerUserNameEl.innerText = `Hi, ${userData.name || "User"}`;
         
         if (userData.imageUrl) {
             profilePic.src = GITHUB_ASSETS_BASE_URL + userData.imageUrl;
@@ -557,9 +513,6 @@
         profileView.style.display = isEditing ? 'none' : 'block';
         profileEditForm.style.display = isEditing ? 'block' : 'none';
     };
-    
-    // Apply skeleton loading initially
-    applySkeletonLoading();
 
     // Auth state observer
     auth.onAuthStateChanged(async (user) => {
@@ -581,8 +534,9 @@
             console.error("Error fetching user data:", error);
             updateProfileUI({ name: 'User' });
         } finally {
-            // Remove skeleton loading after content is loaded
-            removeSkeletonLoading();
+            // Hide loading overlay and show main content
+            loadingOverlay.classList.add('hidden');
+            mainContent.style.display = 'block';
         }
     });
 
