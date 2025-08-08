@@ -23,7 +23,7 @@
       --text-muted: #555555;
       --border-color: #e0e0e0;
       --border-radius: 8px;
-      --icon-color-grocery: #4caf50;
+      --icon-color-groceries: #4caf50;
       --icon-color-vegetables: #8bc34a;
       --icon-color-food: #ff9800;
       --icon-color-stationery: #00bcd4;
@@ -171,7 +171,7 @@
     .category-icon-wrapper .material-symbols-outlined {
       font-size: 40px;
     }
-    #cat-grocery .material-symbols-outlined { color: var(--icon-color-grocery); }
+    #cat-groceries .material-symbols-outlined { color: var(--icon-color-groceries); }
     #cat-vegetables .material-symbols-outlined { color: var(--icon-color-vegetables); }
     #cat-food .material-symbols-outlined { color: var(--icon-color-food); }
     #cat-stationery .material-symbols-outlined { color: var(--icon-color-stationery); }
@@ -192,6 +192,7 @@
       padding: 10px;
       border-radius: var(--border-radius);
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      position: relative; /* For the cart button positioning */
     }
 
     .product-item img {
@@ -217,6 +218,42 @@
       font-size: 16px;
     }
 
+    .product-controls {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+    }
+    .quantity-controls button {
+      background: #f0f0f0;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .item-quantity {
+      width: 25px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .add-to-cart-btn {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
     .load-more-btn {
       width: 100%;
       padding: 12px;
@@ -246,22 +283,18 @@
       box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
       z-index: 1000;
     }
-
     .nav-item {
       text-align: center;
       color: var(--text-muted);
       text-decoration: none;
       transition: color 0.3s ease;
     }
-    
     .nav-item.active {
       color: var(--primary-color);
     }
-
     .nav-item .material-symbols-outlined {
       font-size: 24px;
     }
-
     .nav-item-label {
       font-size: 12px;
     }
@@ -340,11 +373,17 @@
           </div>
           <div>Health</div>
         </a>
-        </div>
+      </div>
     </div>
 
     <div id="main-content">
+      <div id="products-section" class="section">
+        <h3 id="section-title" class="section-header">Hot Deals</h3>
+        <div id="product-list-grid" class="product-list-grid">
+          </div>
+        <button id="load-more-btn" class="load-more-btn" style="display:none;">Load More</button>
       </div>
+    </div>
   </div>
 
   <div class="bottom-nav">
@@ -380,46 +419,121 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    const mainContent = document.getElementById('main-content');
+    const productGrid = document.getElementById('product-list-grid');
+    const sectionTitle = document.getElementById('section-title');
+    const loadMoreBtn = document.getElementById('load-more-btn');
     const productsPerPage = 8;
     let lastVisible = null;
+    let currentCategory = null;
+    let user = null;
+    let userCartRef = null;
 
     // Helper function to create product HTML
     function createProductElement(product) {
         const productLink = document.createElement('a');
         productLink.href = `product-detail.html?id=${product.id}`;
         productLink.className = 'product-item';
+        
+        productLink.innerHTML = `
+            <img src="${product.imageUrl}" alt="${product.name}">
+            <div class="product-title">${product.name}</div>
+            <div class="product-price">₹${product.price}</div>
+        `;
 
-        const productImage = document.createElement('img');
-        productImage.src = product.imageUrl || 'https://via.placeholder.com/150';
-        productImage.alt = product.name;
+        const productControls = document.createElement('div');
+        productControls.className = 'product-controls';
+        
+        const quantityControls = document.createElement('div');
+        quantityControls.className = 'quantity-controls';
+        quantityControls.innerHTML = `
+            <button class="decrease-qty-btn" data-id="${product.id}">-</button>
+            <span class="item-quantity" data-id="${product.id}">1</span>
+            <button class="increase-qty-btn" data-id="${product.id}">+</button>
+        `;
 
-        const productTitle = document.createElement('div');
-        productTitle.className = 'product-title';
-        productTitle.textContent = product.name;
+        const addToCartBtn = document.createElement('button');
+        addToCartBtn.className = 'add-to-cart-btn';
+        addToCartBtn.textContent = 'Add to Cart';
+        addToCartBtn.dataset.id = product.id;
 
-        const productPrice = document.createElement('div');
-        productPrice.className = 'product-price';
-        productPrice.textContent = `₹${product.price}`;
+        productControls.appendChild(quantityControls);
+        productControls.appendChild(addToCartBtn);
+        productLink.appendChild(productControls);
+        
+        // Prevent default link behavior for the controls
+        productControls.addEventListener('click', (e) => e.preventDefault());
 
-        productLink.appendChild(productImage);
-        productLink.appendChild(productTitle);
-        productLink.appendChild(productPrice);
+        // Event listeners for quantity controls
+        const qtySpan = productControls.querySelector('.item-quantity');
+        productControls.querySelector('.increase-qty-btn').addEventListener('click', () => {
+            let qty = parseInt(qtySpan.textContent);
+            qtySpan.textContent = qty + 1;
+        });
+
+        productControls.querySelector('.decrease-qty-btn').addEventListener('click', () => {
+            let qty = parseInt(qtySpan.textContent);
+            if (qty > 1) {
+                qtySpan.textContent = qty - 1;
+            }
+        });
+        
+        // Add to cart functionality
+        addToCartBtn.addEventListener('click', async () => {
+            if (!user) {
+                alert("Please log in to add items to your cart.");
+                window.location.href = 'auth.html';
+                return;
+            }
+            
+            const quantity = parseInt(qtySpan.textContent);
+            await addToCart(product, quantity);
+            alert(`${product.name} (${quantity}) added to cart!`);
+        });
 
         return productLink;
     }
 
+    // Function to add a product to the cart
+    async function addToCart(product, quantity) {
+      if (!userCartRef) return;
+      try {
+          const cartDoc = await userCartRef.get();
+          let cart = cartDoc.exists ? cartDoc.data().items || [] : [];
+          
+          const itemIndex = cart.findIndex(item => item.id === product.id);
+          if (itemIndex > -1) {
+              // Item exists, update quantity
+              cart[itemIndex].quantity += quantity;
+          } else {
+              // Add new item
+              cart.push({
+                  id: product.id,
+                  name: product.name,
+                  price: product.price,
+                  imageUrl: product.imageUrl,
+                  quantity: quantity
+              });
+          }
+          await userCartRef.set({ items: cart });
+      } catch (e) {
+          console.error("Error adding to cart:", e);
+      }
+    }
+
+
     // Function to fetch and display products
     async function fetchProducts(category = null, isInitialLoad = true) {
         if (isInitialLoad) {
-            mainContent.innerHTML = ''; // Clear previous content
+            productGrid.innerHTML = '';
             lastVisible = null;
+            currentCategory = category;
+            sectionTitle.textContent = category ? category.charAt(0).toUpperCase() + category.slice(1) : 'Hot Deals';
         }
 
-        let query = db.collection('products').limit(productsPerPage);
+        let query = db.collection('products').orderBy('name').limit(productsPerPage);
 
-        if (category) {
-            query = query.where('category', '==', category);
+        if (currentCategory) {
+            query = query.where('category', '==', currentCategory);
         }
 
         if (lastVisible) {
@@ -430,72 +544,19 @@
             const snapshot = await query.get();
             lastVisible = snapshot.docs[snapshot.docs.length - 1];
 
-            const productGrid = document.createElement('div');
-            productGrid.className = 'product-list-grid';
-
             snapshot.forEach(doc => {
                 const product = { id: doc.id, ...doc.data() };
                 productGrid.appendChild(createProductElement(product));
             });
 
-            if (isInitialLoad) {
-                // If a category is chosen, display only products from that category
-                if (category) {
-                    const section = document.createElement('div');
-                    section.className = 'section';
-                    const header = document.createElement('h3');
-                    header.className = 'section-header';
-                    header.textContent = category.charAt(0).toUpperCase() + category.slice(1);
-                    section.appendChild(header);
-                    section.appendChild(productGrid);
-                    mainContent.appendChild(section);
-                } else {
-                    // If no category is chosen, show all categories
-                    // This is a simplified approach, a real app would use a more complex query
-                    const section = document.createElement('div');
-                    section.className = 'section';
-                    const header = document.createElement('h3');
-                    header.className = 'section-header';
-                    header.textContent = "All Products";
-                    section.appendChild(header);
-                    section.appendChild(productGrid);
-                    mainContent.appendChild(section);
-                }
-            } else {
-                // For "Load More" functionality, just append to the grid
-                const existingGrid = mainContent.querySelector('.product-list-grid');
-                if (existingGrid) {
-                    snapshot.forEach(doc => {
-                        const product = { id: doc.id, ...doc.data() };
-                        existingGrid.appendChild(createProductElement(product));
-                    });
-                }
-            }
-
-            // Check if there are more items to load
             if (snapshot.docs.length === productsPerPage) {
-                const loadMoreBtn = document.createElement('button');
-                loadMoreBtn.className = 'load-more-btn';
-                loadMoreBtn.textContent = 'Load More';
-                loadMoreBtn.onclick = () => fetchProducts(category, false);
-                mainContent.appendChild(loadMoreBtn);
+                loadMoreBtn.style.display = 'block';
+            } else {
+                loadMoreBtn.style.display = 'none';
             }
 
         } catch (e) {
             console.error("Error fetching products:", e);
-            mainContent.innerHTML = '<p>Could not load products. Please try again later.</p>';
-        }
-    }
-
-    // Function to handle URL-based category selection
-    function handleUrlCategory() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const category = urlParams.get('category');
-        if (category) {
-            fetchProducts(category);
-        } else {
-            // Load all products initially
-            fetchProducts();
         }
     }
 
@@ -504,46 +565,23 @@
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const category = e.currentTarget.dataset.category;
-            // Update URL to reflect the category choice
             window.history.pushState(null, '', `?category=${category}`);
             fetchProducts(category);
         });
     });
 
-    // Handle back/forward browser button
-    window.addEventListener('popstate', handleUrlCategory);
+    loadMoreBtn.addEventListener('click', () => {
+      fetchProducts(currentCategory, false);
+    });
     
-    // Banner Carousel logic
-    let bannerIndex = 0;
-    const bannerContainer = document.getElementById('banner-container');
-    const banners = document.querySelectorAll('.banner-item');
-
-    function updateBanner() {
-        bannerContainer.style.transform = `translateX(-${bannerIndex * 100}%)`;
-    }
-
-    document.getElementById('prev-banner').addEventListener('click', () => {
-        bannerIndex = (bannerIndex - 1 + banners.length) % banners.length;
-        updateBanner();
-    });
-
-    document.getElementById('next-banner').addEventListener('click', () => {
-        bannerIndex = (bannerIndex + 1) % banners.length;
-        updateBanner();
-    });
-
-    // Auto-advance banners
-    setInterval(() => {
-        document.getElementById('next-banner').click();
-    }, 5000);
-
-
     // Auth Check and Initial Data Fetch
-    auth.onAuthStateChanged(async (user) => {
-      if (!user) {
+    auth.onAuthStateChanged(async (currentUser) => {
+      if (!currentUser) {
         window.location.href = "auth.html";
         return;
       }
+      user = currentUser;
+      userCartRef = db.collection('carts').doc(user.uid);
       try {
         const userDoc = await db.collection("users").doc(user.uid).get();
         const name = userDoc.exists ? userDoc.data().name : "User";
@@ -551,12 +589,11 @@
       } catch (e) {
         console.error("Error fetching user:", e);
       }
+      
+      const urlParams = new URLSearchParams(window.location.search);
+      const category = urlParams.get('category');
+      fetchProducts(category);
     });
-
-    // Initial page load
-    window.onload = () => {
-        handleUrlCategory();
-    };
   </script>
 </body>
 </html>
