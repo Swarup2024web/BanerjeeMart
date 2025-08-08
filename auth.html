@@ -2,40 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Banerjee Mart - Login/Register</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"></script>
+  <title>Banerjee Mart - Login / Register</title>
+  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-storage-compat.js"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <style>
-    * { box-sizing: border-box; }
     body {
       font-family: Arial, sans-serif;
-      background: #f0f4f8;
+      background: #f2f2f2;
       margin: 0;
       padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
     }
 
     .container {
-      width: 100%;
-      max-width: 450px;
+      max-width: 400px;
+      margin: 30px auto;
       background: #fff;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
     h2 {
       text-align: center;
-      margin-bottom: 1rem;
       color: #333;
     }
 
@@ -47,195 +38,238 @@
     .input-group i {
       position: absolute;
       top: 12px;
-      left: 12px;
-      color: #888;
+      left: 10px;
+      color: #666;
     }
 
     .input-group input {
       width: 100%;
-      padding: 10px 10px 10px 35px;
+      padding: 10px 10px 10px 30px;
       border: 1px solid #ccc;
-      border-radius: 8px;
+      border-radius: 6px;
+      box-sizing: border-box;
     }
 
-    input[type="file"] {
+    .input-group input[type="file"] {
       padding-left: 0;
     }
 
     button {
       width: 100%;
       padding: 10px;
-      background-color: #0066cc;
+      background: #007bff;
       color: white;
       border: none;
-      border-radius: 8px;
-      margin-top: 10px;
+      border-radius: 6px;
       cursor: pointer;
+      font-size: 16px;
     }
 
     button:hover {
-      background-color: #0052a3;
+      background: #0056b3;
     }
 
-    .toggle-btn {
-      background: none;
-      border: none;
-      color: #0066cc;
+    .toggle {
       text-align: center;
-      width: 100%;
       margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .toggle span {
+      color: #007bff;
       cursor: pointer;
     }
 
-    #message {
-      color: red;
-      text-align: center;
-      margin-top: 10px;
+    .hidden {
+      display: none;
     }
 
-    img#preview {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      object-fit: cover;
-      display: none;
+    .message {
+      text-align: center;
+      color: red;
+      margin: 10px 0;
+    }
+
+    #photoPreview {
+      display: block;
       margin: 10px auto;
+      max-width: 80px;
+      border-radius: 50%;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2 id="formTitle">Login</h2>
 
-    <img id="preview" />
+<div class="container">
+  <h2 id="formTitle">Login</h2>
 
-    <div class="input-group" id="nameGroup" style="display: none;">
-      <i class="fas fa-user"></i>
-      <input type="text" id="name" placeholder="Full Name">
+  <div class="message" id="message"></div>
+
+  <!-- Login Form -->
+  <form id="loginForm">
+    <div class="input-group">
+      <i class="fas fa-phone-alt"></i>
+      <input type="text" placeholder="Phone Number" id="loginPhone" required>
     </div>
-
-    <div class="input-group" id="phoneGroup" style="display: none;">
-      <i class="fas fa-phone"></i>
-      <input type="tel" id="phone" placeholder="Phone Number">
-    </div>
-
-    <div class="input-group" id="emailGroup">
-      <i class="fas fa-envelope"></i>
-      <input type="email" id="email" placeholder="Email Address">
-    </div>
-
-    <div class="input-group" id="addressGroup" style="display: none;">
-      <i class="fas fa-map-marker-alt"></i>
-      <input type="text" id="address" placeholder="Address">
-    </div>
-
-    <div class="input-group" id="photoGroup" style="display: none;">
-      <i class="fas fa-image"></i>
-      <input type="file" id="photo" accept="image/*">
-    </div>
-
     <div class="input-group">
       <i class="fas fa-lock"></i>
-      <input type="password" id="password" placeholder="Password">
+      <input type="password" placeholder="Password" id="loginPassword" required>
     </div>
+    <button type="submit">Login</button>
+  </form>
 
-    <button onclick="handleAction()">Login</button>
-    <button class="toggle-btn" onclick="toggleForm()">Don't have an account? Register</button>
-    <button class="toggle-btn" onclick="resetPassword()">Forgot Password?</button>
+  <!-- Register Form -->
+  <form id="registerForm" class="hidden">
+    <div class="input-group">
+      <i class="fas fa-user"></i>
+      <input type="text" placeholder="Full Name" id="regName" required>
+    </div>
+    <div class="input-group">
+      <i class="fas fa-phone-alt"></i>
+      <input type="text" placeholder="Phone Number" id="regPhone" required>
+    </div>
+    <div class="input-group">
+      <i class="fas fa-envelope"></i>
+      <input type="email" placeholder="Email Address (optional)" id="regEmail">
+    </div>
+    <div class="input-group">
+      <i class="fas fa-home"></i>
+      <input type="text" placeholder="Address" id="regAddress" required>
+    </div>
+    <div class="input-group">
+      <i class="fas fa-lock"></i>
+      <input type="password" placeholder="Password" id="regPassword" required>
+    </div>
+    <div class="input-group">
+      <input type="file" id="regPhoto" accept="image/*">
+    </div>
+    <img id="photoPreview" src="" class="hidden">
+    <button type="submit">Register</button>
+  </form>
 
-    <div id="message"></div>
+  <!-- Forgot Password Form -->
+  <form id="forgotForm" class="hidden">
+    <div class="input-group">
+      <i class="fas fa-envelope"></i>
+      <input type="email" placeholder="Email Address" id="forgotEmail" required>
+    </div>
+    <button type="submit">Send Reset Link</button>
+  </form>
+
+  <div class="toggle">
+    <span onclick="showForm('login')">Login</span> |
+    <span onclick="showForm('register')">Register</span> |
+    <span onclick="showForm('forgot')">Forgot Password</span>
   </div>
+</div>
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
-      authDomain: "banerjee-mart.firebaseapp.com",
-      projectId: "banerjee-mart",
-      storageBucket: "banerjee-mart.appspot.com",
-      messagingSenderId: "183628570952",
-      appId: "1:183628570952:web:3028bb258001d004d9537d"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    const storage = firebase.storage();
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
+    authDomain: "banerjee-mart.firebaseapp.com",
+    projectId: "banerjee-mart",
+    storageBucket: "banerjee-mart.appspot.com",
+    messagingSenderId: "183628570952",
+    appId: "1:183628570952:web:3028bb258001d004d9537d"
+  };
 
-    let isLogin = true;
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const storage = firebase.storage();
 
-    function toggleForm() {
-      isLogin = !isLogin;
-      document.getElementById("formTitle").innerText = isLogin ? "Login" : "Register";
-      document.querySelector("button").innerText = isLogin ? "Login" : "Register";
-      document.getElementById("nameGroup").style.display = isLogin ? "none" : "block";
-      document.getElementById("phoneGroup").style.display = isLogin ? "none" : "block";
-      document.getElementById("addressGroup").style.display = isLogin ? "none" : "block";
-      document.getElementById("photoGroup").style.display = isLogin ? "none" : "block";
-      document.getElementById("preview").style.display = "none";
+  const message = document.getElementById("message");
+
+  function showForm(form) {
+    document.getElementById("loginForm").classList.add("hidden");
+    document.getElementById("registerForm").classList.add("hidden");
+    document.getElementById("forgotForm").classList.add("hidden");
+
+    document.getElementById("formTitle").textContent = form.charAt(0).toUpperCase() + form.slice(1);
+
+    if (form === "login") document.getElementById("loginForm").classList.remove("hidden");
+    if (form === "register") document.getElementById("registerForm").classList.remove("hidden");
+    if (form === "forgot") document.getElementById("forgotForm").classList.remove("hidden");
+
+    message.textContent = "";
+  }
+
+  // Preview photo
+  document.getElementById("regPhoto").addEventListener("change", function (e) {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const img = document.getElementById("photoPreview");
+        img.src = event.target.result;
+        img.classList.remove("hidden");
+      };
+      reader.readAsDataURL(file);
     }
+  });
 
-    document.getElementById("photo").addEventListener("change", function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          document.getElementById("preview").src = reader.result;
-          document.getElementById("preview").style.display = "block";
-        };
-        reader.readAsDataURL(file);
+  // Register
+  document.getElementById("registerForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById("regName").value;
+    const phone = document.getElementById("regPhone").value;
+    const email = document.getElementById("regEmail").value || `${phone}@banerjeemart.com`;
+    const address = document.getElementById("regAddress").value;
+    const password = document.getElementById("regPassword").value;
+    const photoFile = document.getElementById("regPhoto").files[0];
+
+    try {
+      const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+      const uid = userCredential.user.uid;
+      let photoURL = "";
+
+      if (photoFile) {
+        const storageRef = storage.ref().child("users/" + uid + "/photo.jpg");
+        await storageRef.put(photoFile);
+        photoURL = await storageRef.getDownloadURL();
       }
-    });
 
-    async function handleAction() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+      await db.collection("users").doc(uid).set({
+        name, phone, email, address, photoURL
+      });
 
-      if (isLogin) {
-        // Login
-        try {
-          await auth.signInWithEmailAndPassword(email, password);
-          window.location.href = "index.html";
-        } catch (err) {
-          showMessage(err.message);
-        }
-      } else {
-        // Register
-        const name = document.getElementById("name").value;
-        const phone = document.getElementById("phone").value;
-        const address = document.getElementById("address").value;
-        const photoFile = document.getElementById("photo").files[0];
-
-        try {
-          const userCred = await auth.createUserWithEmailAndPassword(email, password);
-          let photoUrl = "";
-
-          if (photoFile) {
-            const ref = storage.ref(`users/${userCred.user.uid}/photo.jpg`);
-            await ref.put(photoFile);
-            photoUrl = await ref.getDownloadURL();
-          }
-
-          await db.collection("users").doc(userCred.user.uid).set({
-            name, phone, address, email, photoUrl
-          });
-
-          window.location.href = "index.html";
-        } catch (err) {
-          showMessage(err.message);
-        }
-      }
+      message.textContent = "Registered successfully!";
+      showForm("login");
+    } catch (error) {
+      message.textContent = error.message;
     }
+  });
 
-    function resetPassword() {
-      const email = document.getElementById("email").value;
-      if (!email) return showMessage("Enter your email first.");
-      auth.sendPasswordResetEmail(email)
-        .then(() => showMessage("Reset email sent."))
-        .catch(err => showMessage(err.message));
-    }
+  // Login
+  document.getElementById("loginForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
 
-    function showMessage(msg) {
-      document.getElementById("message").innerText = msg;
+    const phone = document.getElementById("loginPhone").value;
+    const password = document.getElementById("loginPassword").value;
+    const email = `${phone}@banerjeemart.com`;
+
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      window.location.href = "index.html";
+    } catch (error) {
+      message.textContent = error.message;
     }
-  </script>
+  });
+
+  // Forgot Password
+  document.getElementById("forgotForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const email = document.getElementById("forgotEmail").value;
+    try {
+      await auth.sendPasswordResetEmail(email);
+      message.textContent = "Reset link sent. Check your inbox.";
+    } catch (error) {
+      message.textContent = error.message;
+    }
+  });
+
+</script>
 </body>
-</html>
+      </html>
