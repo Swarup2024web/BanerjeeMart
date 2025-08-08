@@ -2,217 +2,269 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Banerjee Mart - Auth</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <title>Banerjee Mart | Auth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- FontAwesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
-
     body {
+      margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #ffecd2, #fcb69f);
+      background: linear-gradient(to right, #f5f5f5, #e3f2fd);
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
     }
-
-    .auth-container {
+    .container {
       background: white;
-      padding: 25px 20px;
-      border-radius: 15px;
+      padding: 2rem;
+      border-radius: 10px;
       width: 100%;
-      max-width: 380px;
-      box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+      max-width: 400px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
     }
-
-    .auth-container h2 {
+    h2 {
       text-align: center;
-      margin-bottom: 20px;
-      color: #333;
+      margin-bottom: 1rem;
+      color: #2196F3;
     }
-
-    .input-group {
+    .tabs {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 1rem;
+    }
+    .tabs button {
+      background: none;
+      border: none;
+      font-weight: bold;
+      color: #555;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      transition: 0.3s;
+    }
+    .tabs button.active {
+      color: #2196F3;
+      border-bottom: 2px solid #2196F3;
+    }
+    form {
+      display: none;
+      flex-direction: column;
+    }
+    form.active {
+      display: flex;
+    }
+    input, textarea {
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      width: 100%;
+    }
+    input:focus {
+      outline: none;
+      border-color: #2196F3;
+    }
+    .form-group {
       position: relative;
-      margin-bottom: 15px;
     }
-
-    .input-group i {
+    .form-group i {
       position: absolute;
-      top: 12px;
-      left: 12px;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
       color: #999;
     }
-
-    .input-group input {
-      width: 100%;
-      padding: 10px 10px 10px 40px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 14px;
+    .form-group input,
+    .form-group textarea {
+      padding-left: 2.5rem;
     }
-
-    .input-group input:focus {
-      outline: none;
-      border-color: #f77f00;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #f77f00;
-      border: none;
+    button.submit-btn {
+      background: #2196F3;
       color: white;
-      font-size: 15px;
-      border-radius: 8px;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 6px;
       cursor: pointer;
-      margin-top: 10px;
-    }
-
-    button:hover {
-      background: #e06c00;
-    }
-
-    .toggle-link {
-      text-align: center;
-      font-size: 14px;
-      margin-top: 15px;
-    }
-
-    .toggle-link a {
-      color: #f77f00;
-      text-decoration: none;
       font-weight: bold;
-      cursor: pointer;
     }
-
-    #photo-preview {
-      max-width: 100px;
-      max-height: 100px;
-      margin: 10px auto;
-      display: none;
+    .form-group img {
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       object-fit: cover;
-      display: block;
+      margin-bottom: 1rem;
     }
-
-    .hidden {
-      display: none;
+    .message {
+      text-align: center;
+      color: red;
+      margin-bottom: 1rem;
     }
-
-    @media screen and (max-width: 400px) {
-      .auth-container {
-        margin: 10px;
-        padding: 20px 15px;
-      }
-
-      .input-group input {
-        font-size: 13px;
-      }
-
-      button {
-        font-size: 14px;
+    @media(max-width: 420px) {
+      .container {
+        margin: 1rem;
+        padding: 1.5rem;
       }
     }
   </style>
 </head>
 <body>
 
-<div class="auth-container">
-
+<div class="container">
   <h2>Banerjee Mart</h2>
 
-  <!-- Login Form -->
-  <form id="login-form">
-    <div class="input-group">
-      <i class="fa fa-phone"></i>
-      <input type="text" placeholder="Phone Number" required>
-    </div>
-    <div class="input-group">
-      <i class="fa fa-lock"></i>
-      <input type="password" placeholder="Password" required>
-    </div>
-    <button type="submit">Login</button>
-    <div class="toggle-link">
-      <a onclick="showForm('register')">Create Account</a> |
-      <a onclick="showForm('forgot')">Forgot Password?</a>
-    </div>
-  </form>
+  <div class="tabs">
+    <button id="loginTab" class="active">Login</button>
+    <button id="registerTab">Register</button>
+    <button id="forgotTab">Forgot</button>
+  </div>
 
-  <!-- Register Form -->
-  <form id="register-form" class="hidden">
-    <div class="input-group">
-      <i class="fa fa-user"></i>
-      <input type="text" placeholder="Full Name" required>
+  <div id="loginForm" class="form active">
+    <div class="form-group">
+      <i class="fas fa-phone"></i>
+      <input type="text" id="loginPhone" placeholder="Phone Number">
     </div>
-    <div class="input-group">
-      <i class="fa fa-phone"></i>
-      <input type="text" placeholder="Phone Number" required>
+    <div class="form-group">
+      <i class="fas fa-lock"></i>
+      <input type="password" id="loginPassword" placeholder="Password">
     </div>
-    <div class="input-group">
-      <i class="fa fa-envelope"></i>
-      <input type="email" placeholder="Email Address (optional)">
-    </div>
-    <div class="input-group">
-      <i class="fa fa-location-dot"></i>
-      <input type="text" placeholder="Address" required>
-    </div>
-    <div class="input-group">
-      <i class="fa fa-lock"></i>
-      <input type="password" placeholder="Password" required>
-    </div>
-    <div class="input-group">
-      <i class="fa fa-camera"></i>
-      <input type="file" accept="image/*" id="user-photo" onchange="previewPhoto()" style="padding-left: 40px;">
-    </div>
-    <img id="photo-preview" alt="Photo Preview">
-    <button type="submit">Register</button>
-    <div class="toggle-link">Already have an account? <a onclick="showForm('login')">Login</a></div>
-  </form>
+    <div class="message" id="loginMessage"></div>
+    <button class="submit-btn" onclick="loginUser()">Login</button>
+  </div>
 
-  <!-- Forgot Password Form -->
-  <form id="forgot-form" class="hidden">
-    <div class="input-group">
-      <i class="fa fa-phone"></i>
-      <input type="text" placeholder="Phone Number" required>
+  <div id="registerForm" class="form">
+    <div class="form-group">
+      <i class="fas fa-user"></i>
+      <input type="text" id="regName" placeholder="Full Name">
     </div>
-    <button type="submit">Reset Password</button>
-    <div class="toggle-link">Back to <a onclick="showForm('login')">Login</a></div>
-  </form>
+    <div class="form-group">
+      <i class="fas fa-phone"></i>
+      <input type="text" id="regPhone" placeholder="Phone Number">
+    </div>
+    <div class="form-group">
+      <i class="fas fa-envelope"></i>
+      <input type="email" id="regEmail" placeholder="Email (optional)">
+    </div>
+    <div class="form-group">
+      <i class="fas fa-map-marker-alt"></i>
+      <textarea id="regAddress" placeholder="Address"></textarea>
+    </div>
+    <div class="form-group">
+      <i class="fas fa-lock"></i>
+      <input type="password" id="regPassword" placeholder="Password">
+    </div>
+    <div class="form-group">
+      <input type="file" id="regPhoto" accept="image/*" onchange="previewPhoto(event)">
+      <img id="photoPreview" src="#" alt="Preview" style="display:none;" />
+    </div>
+    <div class="message" id="registerMessage"></div>
+    <button class="submit-btn" onclick="registerUser()">Register</button>
+  </div>
 
+  <div id="forgotForm" class="form">
+    <div class="form-group">
+      <i class="fas fa-envelope"></i>
+      <input type="email" id="forgotEmail" placeholder="Enter your email">
+    </div>
+    <div class="message" id="forgotMessage"></div>
+    <button class="submit-btn" onclick="forgotPassword()">Send Reset Email</button>
+  </div>
 </div>
 
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-storage-compat.js"></script>
+
 <script>
-  function showForm(form) {
-    document.getElementById("login-form").classList.add("hidden");
-    document.getElementById("register-form").classList.add("hidden");
-    document.getElementById("forgot-form").classList.add("hidden");
-    document.getElementById(form + "-form").classList.remove("hidden");
-  }
-
-  function previewPhoto() {
-    const input = document.getElementById('user-photo');
-    const preview = document.getElementById('photo-preview');
-    if (input.files && input.files[0]) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        preview.src = e.target.result;
-        preview.style.display = 'block';
-      };
-      reader.readAsDataURL(input.files[0]);
-    }
-  }
-
-  // Dummy login redirect
-  document.getElementById("login-form").addEventListener("submit", function(e) {
-    e.preventDefault();
-    window.location.href = "index.html";
-  });
+  // Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
+    authDomain: "banerjee-mart.firebaseapp.com",
+    projectId: "banerjee-mart",
+    storageBucket: "banerjee-mart.firebasestorage.app",
+    messagingSenderId: "183628570952",
+    appId: "1:183628570952:web:3028bb258001d004d9537d"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const storage = firebase.storage();
 </script>
 
+<script>
+  // Tab Switching
+  const loginTab = document.getElementById('loginTab');
+  const registerTab = document.getElementById('registerTab');
+  const forgotTab = document.getElementById('forgotTab');
+  const forms = {
+    loginForm: document.getElementById('loginForm'),
+    registerForm: document.getElementById('registerForm'),
+    forgotForm: document.getElementById('forgotForm')
+  };
+
+  loginTab.onclick = () => switchForm('loginForm', loginTab);
+  registerTab.onclick = () => switchForm('registerForm', registerTab);
+  forgotTab.onclick = () => switchForm('forgotForm', forgotTab);
+
+  function switchForm(formId, tabButton) {
+    Object.values(forms).forEach(f => f.classList.remove('active'));
+    document.getElementById(formId).classList.add('active');
+
+    [loginTab, registerTab, forgotTab].forEach(btn => btn.classList.remove('active'));
+    tabButton.classList.add('active');
+  }
+
+  // Image Preview
+  function previewPhoto(event) {
+    const reader = new FileReader();
+    reader.onload = function () {
+      const preview = document.getElementById('photoPreview');
+      preview.src = reader.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(event.target.files[0]);
+  }
+
+  // Placeholder auth actions (you can add Firebase auth here)
+  function loginUser() {
+    const phone = document.getElementById('loginPhone').value;
+    const pass = document.getElementById('loginPassword').value;
+    document.getElementById('loginMessage').textContent = "Logging in...";
+
+    // Replace this with actual Firebase login logic
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 1000);
+  }
+
+  function registerUser() {
+    const name = document.getElementById('regName').value;
+    const phone = document.getElementById('regPhone').value;
+    const email = document.getElementById('regEmail').value;
+    const address = document.getElementById('regAddress').value;
+    const password = document.getElementById('regPassword').value;
+    document.getElementById('registerMessage').textContent = "Registering...";
+
+    // Replace this with Firebase registration logic
+    setTimeout(() => {
+      document.getElementById('registerMessage').textContent = "Registered! Please login.";
+      switchForm('loginForm', loginTab);
+    }, 1000);
+  }
+
+  function forgotPassword() {
+    const email = document.getElementById('forgotEmail').value;
+    document.getElementById('forgotMessage').textContent = "Sending reset link...";
+    // Replace with Firebase sendPasswordResetEmail
+    setTimeout(() => {
+      document.getElementById('forgotMessage').textContent = "Check your email.";
+    }, 1000);
+  }
+</script>
 </body>
 </html>
