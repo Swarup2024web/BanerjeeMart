@@ -1,119 +1,623 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Website</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banerjee Mart</title>
 
-        header {
-            background-color: #333;
-            color: white;
-            padding: 1em 0;
-            text-align: center;
-        }
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 
-        nav a {
-            color: white;
-            margin: 0 1em;
-            text-decoration: none;
-        }
+  <style>
+    /* Material 3.0-inspired CSS variables and general styles */
+    :root {
+      --primary-color: #2874f0;
+      --secondary-color: #03dac6;
+      --surface-color: #ffffff;
+      --background-color: #f1f3f6;
+      --text-on-primary: #ffffff;
+      --text-on-surface: #1f1f1f;
+      --text-muted: #555555;
+      --border-color: #e0e0e0;
+      --border-radius: 8px;
+      --icon-color-groceries: #4caf50;
+      --icon-color-vegetables: #8bc34a;
+      --icon-color-food: #ff9800;
+      --icon-color-stationery: #00bcd4;
+      --icon-color-health: #e91e63;
+    }
 
-        .container {
-            width: 80%;
-            margin: auto;
-            overflow: hidden;
-            padding: 2em 0;
-        }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+      background: var(--background-color);
+      color: var(--text-on-surface);
+    }
 
-        .product-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2em;
-        }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-bottom: 70px; /* Space for the bottom navigation bar */
+    }
 
-        .product-card {
-            background: white;
-            padding: 1em;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            text-align: center;
-        }
+    /* Header */
+    .header {
+      background: var(--primary-color);
+      padding: 12px 16px;
+      color: var(--text-on-primary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    
+    .header-logo {
+      font-size: 20px;
+      font-weight: 600;
+    }
+    
+    /* Search Bar */
+    .search-container {
+      padding: 10px 16px;
+      background: var(--surface-color);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
 
-        .product-card img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
-        }
+    .search-input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      font-size: 16px;
+      box-sizing: border-box;
+    }
 
-        .product-card h3 {
-            margin: 0.5em 0;
-        }
+    /* Banners Carousel */
+    .banner-wrapper {
+      position: relative;
+      overflow: hidden;
+      margin-top: 10px;
+      background: var(--surface-color);
+    }
+    .banner-container {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+    .banner-item {
+      min-width: 100%;
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+    .banner-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0 10px;
+      box-sizing: border-box;
+    }
+    .banner-nav-btn {
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    .banner-nav-btn:hover {
+      opacity: 1;
+    }
 
-        .product-card .price {
-            font-size: 1.2em;
-            color: #555;
-            font-weight: bold;
-        }
+    /* Sections */
+    .section {
+      margin-top: 10px;
+      background: var(--surface-color);
+      padding: 16px;
+      border-radius: var(--border-radius);
+    }
+    
+    .section-header {
+      margin: 0 0 16px 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
 
-        .product-card button {
-            background-color: #333;
-            color: white;
-            border: none;
-            padding: 0.5em 1em;
-            margin-top: 1em;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-    </style>
+    /* Categories & Products */
+    .flex-container {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .flex-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .flex-item {
+      flex: 0 0 auto;
+      text-align: center;
+      width: 80px;
+      text-decoration: none;
+      color: var(--text-on-surface);
+    }
+
+    .category-icon-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: var(--background-color);
+      border: 1px solid var(--border-color);
+    }
+
+    .category-icon-wrapper .material-symbols-outlined {
+      font-size: 40px;
+    }
+    #cat-groceries .material-symbols-outlined { color: var(--icon-color-groceries); }
+    #cat-vegetables .material-symbols-outlined { color: var(--icon-color-vegetables); }
+    #cat-food .material-symbols-outlined { color: var(--icon-color-food); }
+    #cat-stationery .material-symbols-outlined { color: var(--icon-color-stationery); }
+    #cat-health .material-symbols-outlined { color: var(--icon-color-health); }
+
+    .product-list-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .product-item {
+      text-align: left;
+      text-decoration: none;
+      color: var(--text-on-surface);
+      background: var(--surface-color);
+      padding: 10px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      position: relative; /* For the cart button positioning */
+    }
+
+    .product-item img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: var(--border-radius);
+    }
+    
+    .product-title {
+      font-weight: 500;
+      margin-top: 8px;
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .product-price {
+      font-weight: 700;
+      color: green;
+      margin-top: 4px;
+      font-size: 16px;
+    }
+
+    .product-controls {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+    }
+    .quantity-controls button {
+      background: #f0f0f0;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .item-quantity {
+      width: 25px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .add-to-cart-btn {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    .load-more-btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 16px;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      display: block;
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: var(--surface-color);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+    .nav-item {
+      text-align: center;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .nav-item.active {
+      color: var(--primary-color);
+    }
+    .nav-item .material-symbols-outlined {
+      font-size: 24px;
+    }
+    .nav-item-label {
+      font-size: 12px;
+    }
+
+    /* Media Queries for larger screens */
+    @media (min-width: 600px) {
+      .header {
+        padding: 15px 30px;
+      }
+      .search-container {
+        padding: 15px 30px;
+      }
+      .container {
+        padding-bottom: 0;
+      }
+      .bottom-nav {
+        display: none; /* Hide bottom nav on desktop */
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <header>
-        <h1>Welcome to My Website</h1>
-        <nav>
-            <a href="#">Home</a>
-            <a href="#">Products</a>
-            <a href="#">About</a>
-            <a href="#">Contact</a>
-        </nav>
-    </header>
+  <div class="header">
+    <div class="header-logo">Banerjee Mart</div>
+    <div id="user-name">Welcome</div>
+  </div>
 
-    <div class="container">
-        <h2>Our Products</h2>
-        <div class="product-list">
-            <div class="product-card">
-                <img src="https://via.placeholder.com/250" alt="Product 1">
-                <h3>Product Name 1</h3>
-                <p class="price">$19.99</p>
-                <p>A short description of the product.</p>
-                <button>Add to Cart</button>
-            </div>
-
-            <div class="product-card">
-                <img src="https://via.placeholder.com/250" alt="Product 2">
-                <h3>Product Name 2</h3>
-                <p class="price">$29.99</p>
-                <p>A short description of the product.</p>
-                <button>Add to Cart</button>
-            </div>
-
-            <div class="product-card">
-                <img src="https://via.placeholder.com/250" alt="Product 3">
-                <h3>Product Name 3</h3>
-                <p class="price">$39.99</p>
-                <p>A short description of the product.</p>
-                <button>Add to Cart</button>
-            </div>
-
-            </div>
+  <div class="container">
+    <div class="search-container">
+      <input type="text" placeholder="Search for products..." class="search-input">
     </div>
 
+    <div class="banner-wrapper">
+      <div id="banner-container" class="banner-container">
+        <img src="https://via.placeholder.com/600x150?text=Fast+Delivery+within+a+day" alt="Banner 1" class="banner-item">
+        <img src="https://via.placeholder.com/600x150?text=Delivered+only+to+Pakurtala+and+Rajuakhaki" alt="Banner 2" class="banner-item">
+        <img src="https://via.placeholder.com/600x150?text=Special+Offer" alt="Banner 3" class="banner-item">
+      </div>
+      <div class="banner-nav">
+        <button id="prev-banner" class="banner-nav-btn"><span class="material-symbols-outlined">chevron_left</span></button>
+        <button id="next-banner" class="banner-nav-btn"><span class="material-symbols-outlined">chevron_right</span></button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-header">Categories</h3>
+      <div class="flex-container">
+        <a href="#" class="flex-item category-link" data-category="groceries" id="cat-groceries">
+          <div class="category-icon-wrapper">
+            <span class="material-symbols-outlined">grocery</span>
+          </div>
+          <div>Groceries</div>
+        </a>
+        <a href="#" class="flex-item category-link" data-category="vegetables" id="cat-vegetables">
+          <div class="category-icon-wrapper">
+            <span class="material-symbols-outlined">eco</span>
+          </div>
+          <div>Vegetables</div>
+        </a>
+        <a href="#" class="flex-item category-link" data-category="food" id="cat-food">
+          <div class="category-icon-wrapper">
+            <span class="material-symbols-outlined">restaurant</span>
+          </div>
+          <div>Food</div>
+        </a>
+        <a href="#" class="flex-item category-link" data-category="stationery" id="cat-stationery">
+          <div class="category-icon-wrapper">
+            <span class="material-symbols-outlined">edit_note</span>
+          </div>
+          <div>Stationery</div>
+        </a>
+        <a href="#" class="flex-item category-link" data-category="health" id="cat-health">
+          <div class="category-icon-wrapper">
+            <span class="material-symbols-outlined">health_and_safety</span>
+          </div>
+          <div>Health</div>
+        </a>
+      </div>
+    </div>
+
+    <div id="main-content">
+      <div id="products-section" class="section">
+        <h3 id="section-title" class="section-header">Hot Deals</h3>
+        <div id="product-list-grid" class="product-list-grid">
+          </div>
+        <button id="load-more-btn" class="load-more-btn" style="display:none;">Load More</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="index.html" class="nav-item active">
+      <span class="material-symbols-outlined">home</span>
+      <div class="nav-item-label">Home</div>
+    </a>
+    <a href="orders.html" class="nav-item">
+      <span class="material-symbols-outlined">package_2</span>
+      <div class="nav-item-label">Orders</div>
+    </a>
+    <a href="cart.html" class="nav-item">
+      <span class="material-symbols-outlined">shopping_cart</span>
+      <div class="nav-item-label">Cart</div>
+    </a>
+    <a href="profile.html" class="nav-item">
+      <span class="material-symbols-outlined">person</span>
+      <div class="nav-item-label">Profile</div>
+    </a>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
+      authDomain: "banerjee-mart.firebaseapp.com",
+      projectId: "banerjee-mart",
+      storageBucket: "banerjee-mart.appspot.com",
+      messagingSenderId: "183628570952",
+      appId: "1:183628570952:web:3028bb258001d004d9537d"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const productGrid = document.getElementById('product-list-grid');
+    const sectionTitle = document.getElementById('section-title');
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    const productsPerPage = 8;
+    let lastVisible = null;
+    let currentCategory = null;
+    let user = null;
+    let userCartRef = null;
+
+    // Helper function to create product HTML
+    function createProductElement(product) {
+        const productItem = document.createElement('div');
+        productItem.className = 'product-item';
+        
+        // Product Link to detail page
+        const productLink = document.createElement('a');
+        productLink.href = `product-detail.html?id=${product.id}`;
+        
+        productLink.innerHTML = `
+            <img src="${product.imageUrl}" alt="${product.name}">
+            <div class="product-title">${product.name}</div>
+            <div class="product-price">₹${product.price}</div>
+        `;
+
+        const productControls = document.createElement('div');
+        productControls.className = 'product-controls';
+        
+        const quantityControls = document.createElement('div');
+        quantityControls.className = 'quantity-controls';
+        quantityControls.innerHTML = `
+            <button class="decrease-qty-btn" data-id="${product.id}">-</button>
+            <span class="item-quantity" data-id="${product.id}">1</span>
+            <button class="increase-qty-btn" data-id="${product.id}">+</button>
+        `;
+
+        const addToCartBtn = document.createElement('button');
+        addToCartBtn.className = 'add-to-cart-btn';
+        addToCartBtn.textContent = 'Add to Cart';
+        addToCartBtn.dataset.id = product.id;
+
+        productControls.appendChild(quantityControls);
+        productControls.appendChild(addToCartBtn);
+        
+        // Append the link and controls to the product item container
+        productItem.appendChild(productLink);
+        productItem.appendChild(productControls);
+
+        // Event listeners for quantity controls
+        const qtySpan = productControls.querySelector('.item-quantity');
+        productControls.querySelector('.increase-qty-btn').addEventListener('click', () => {
+            let qty = parseInt(qtySpan.textContent);
+            qtySpan.textContent = qty + 1;
+        });
+
+        productControls.querySelector('.decrease-qty-btn').addEventListener('click', () => {
+            let qty = parseInt(qtySpan.textContent);
+            if (qty > 1) {
+                qtySpan.textContent = qty - 1;
+            }
+        });
+        
+        // Add to cart functionality
+        addToCartBtn.addEventListener('click', async () => {
+            if (!user) {
+                alert("Please log in to add items to your cart.");
+                window.location.href = 'auth.html';
+                return;
+            }
+            
+            const quantity = parseInt(qtySpan.textContent);
+            await addToCart(product, quantity);
+            alert(`${product.name} (${quantity}) added to cart!`);
+        });
+
+        return productItem;
+    }
+
+    // Function to add a product to the cart
+    async function addToCart(product, quantity) {
+      if (!userCartRef) return;
+      try {
+          const cartDoc = await userCartRef.get();
+          let cart = cartDoc.exists ? cartDoc.data().items || [] : [];
+          
+          const itemIndex = cart.findIndex(item => item.id === product.id);
+          if (itemIndex > -1) {
+              // Item exists, update quantity
+              cart[itemIndex].quantity += quantity;
+          } else {
+              // Add new item
+              cart.push({
+                  id: product.id,
+                  name: product.name,
+                  price: product.price,
+                  imageUrl: product.imageUrl,
+                  quantity: quantity
+              });
+          }
+          await userCartRef.set({ items: cart });
+      } catch (e) {
+          console.error("Error adding to cart:", e);
+      }
+    }
+
+
+    // Function to fetch and display products
+    async function fetchProducts(category = null, isInitialLoad = true) {
+        if (isInitialLoad) {
+            productGrid.innerHTML = '';
+            lastVisible = null;
+            currentCategory = category;
+            sectionTitle.textContent = category ? category.charAt(0).toUpperCase() + category.slice(1) : 'Hot Deals';
+        }
+
+        let query = db.collection('products').orderBy('name').limit(productsPerPage);
+
+        if (currentCategory) {
+            query = query.where('category', '==', currentCategory);
+        }
+
+        if (lastVisible) {
+            query = query.startAfter(lastVisible);
+        }
+
+        try {
+            const snapshot = await query.get();
+            lastVisible = snapshot.docs[snapshot.docs.length - 1];
+
+            snapshot.forEach(doc => {
+                const product = { id: doc.id, ...doc.data() };
+                productGrid.appendChild(createProductElement(product));
+            });
+
+            if (snapshot.docs.length === productsPerPage) {
+                loadMoreBtn.style.display = 'block';
+            } else {
+                loadMoreBtn.style.display = 'none';
+            }
+
+        } catch (e) {
+            console.error("Error fetching products:", e);
+        }
+    }
+    
+    // Banner Carousel Logic
+    const bannerContainer = document.getElementById('banner-container');
+    const prevBannerBtn = document.getElementById('prev-banner');
+    const nextBannerBtn = document.getElementById('next-banner');
+    const bannerItems = document.querySelectorAll('.banner-item');
+    let currentBanner = 0;
+
+    function updateBanner() {
+        bannerContainer.style.transform = `translateX(${-currentBanner * 100}%)`;
+    }
+
+    nextBannerBtn.addEventListener('click', () => {
+        currentBanner = (currentBanner + 1) % bannerItems.length;
+        updateBanner();
+    });
+
+    prevBannerBtn.addEventListener('click', () => {
+        currentBanner = (currentBanner - 1 + bannerItems.length) % bannerItems.length;
+        updateBanner();
+    });
+
+    // Event listeners for categories
+    document.querySelectorAll('.category-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const category = e.currentTarget.dataset.category;
+            window.history.pushState(null, '', `?category=${category}`);
+            fetchProducts(category);
+        });
+    });
+
+    loadMoreBtn.addEventListener('click', () => {
+      fetchProducts(currentCategory, false);
+    });
+    
+    // Auth Check and Initial Data Fetch
+    auth.onAuthStateChanged(async (currentUser) => {
+      if (!currentUser) {
+        window.location.href = "auth.html";
+        return;
+      }
+      user = currentUser;
+      userCartRef = db.collection('carts').doc(user.uid);
+      try {
+        const userDoc = await db.collection("users").doc(user.uid).get();
+        const name = userDoc.exists ? userDoc.data().name : "User";
+        document.getElementById("user-name").innerText = `Hi, ${name}`;
+      } catch (e) {
+        console.error("Error fetching user:", e);
+      }
+      
+      const urlParams = new URLSearchParams(window.location.search);
+      const category = urlParams.get('category');
+      fetchProducts(category);
+    });
+  </script>
 </body>
 </html>
