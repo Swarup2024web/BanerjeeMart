@@ -36,6 +36,7 @@
       max-width: 1200px;
       margin: 0 auto;
       padding-bottom: 70px;
+      padding: 16px;
     }
 
     /* Header */
@@ -57,7 +58,7 @@
       font-weight: 600;
     }
 
-    /* Profile Card (Social Network Style) */
+    /* Profile Card */
     .profile-card {
       background: var(--surface-color);
       margin-top: 10px;
@@ -82,20 +83,33 @@
       margin-top: 16px;
     }
 
-    .user-email {
-      font-size: 16px;
-      color: var(--text-muted);
-      margin-top: 4px;
+    .user-details-list {
+        list-style: none;
+        padding: 0;
+        margin-top: 20px;
+        text-align: left;
     }
 
-    .user-bio {
-      margin-top: 16px;
-      font-size: 14px;
-      color: var(--text-on-surface);
-      line-height: 1.5;
+    .user-details-list li {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        font-size: 16px;
+        color: var(--text-on-surface);
+    }
+
+    .user-details-list .material-symbols-outlined {
+        margin-right: 12px;
+        color: var(--primary-color);
     }
     
-    .edit-profile-btn {
+    .user-details-list .detail-label {
+        font-weight: 600;
+        min-width: 80px;
+        color: var(--text-muted);
+    }
+
+    .edit-profile-btn, .save-profile-btn, .cancel-edit-btn {
       background-color: var(--background-color);
       color: var(--text-on-surface);
       border: 1px solid var(--border-color);
@@ -108,8 +122,19 @@
       transition: background-color 0.3s;
     }
 
-    .edit-profile-btn:hover {
+    .edit-profile-btn:hover, .cancel-edit-btn:hover {
       background-color: var(--border-color);
+    }
+
+    .save-profile-btn {
+        background-color: var(--primary-color);
+        color: var(--text-on-primary);
+        border: none;
+        margin-left: 8px;
+    }
+
+    .save-profile-btn:hover {
+        background-color: #1a56b6;
     }
 
     .section {
@@ -137,6 +162,29 @@
       cursor: pointer;
       font-size: 16px;
       font-weight: 600;
+    }
+
+    /* Edit Form Styles */
+    .edit-form-container {
+        display: none;
+        text-align: left;
+    }
+
+    .edit-form-container label {
+        display: block;
+        font-size: 14px;
+        color: var(--text-muted);
+        margin-bottom: 4px;
+        margin-top: 12px;
+    }
+
+    .edit-form-container input {
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        font-size: 16px;
     }
 
     /* Bottom Navigation */
@@ -179,7 +227,16 @@
         padding-bottom: 0;
       }
       .bottom-nav {
-        display: none; /* Hide bottom nav on desktop */
+        display: none;
+      }
+      .profile-card {
+        text-align: left;
+        display: flex;
+        align-items: center;
+        gap: 24px;
+      }
+      .profile-details {
+        flex-grow: 1;
       }
     }
   </style>
@@ -188,21 +245,52 @@
 
   <div class="header">
     <div class="header-logo">Banerjee Mart</div>
-    <div id="user-name">Welcome</div>
+    <div id="header-user-name">Welcome</div>
   </div>
 
   <div class="container">
     <div class="profile-card">
-      <img src="https://via.placeholder.com/120?text=P" alt="Profile Picture" class="profile-picture" id="profile-pic">
-      <h2 class="user-name" id="user-display-name">Loading...</h2>
-      <p class="user-email" id="user-email-address"></p>
-      <p class="user-bio" id="user-bio-text">Welcome to your profile. You can add a bio here once we implement that feature!</p>
-      <button class="edit-profile-btn">Edit Profile</button>
-    </div>
+        <img src="https://via.placeholder.com/120?text=P" alt="Profile Picture" class="profile-picture" id="profile-pic">
+        
+        <div class="profile-details">
+            <div id="profile-view">
+                <h2 class="user-name" id="user-display-name">Loading...</h2>
+                <ul class="user-details-list">
+                    <li>
+                        <span class="material-symbols-outlined">email</span>
+                        <span id="user-email-address"></span>
+                    </li>
+                    <li>
+                        <span class="material-symbols-outlined">call</span>
+                        <span id="user-phone">N/A</span>
+                    </li>
+                    <li>
+                        <span class="material-symbols-outlined">location_on</span>
+                        <span id="user-address">N/A</span>
+                    </li>
+                </ul>
+                <button id="edit-profile-btn" class="edit-profile-btn">Edit Profile</button>
+            </div>
 
-    <div class="section">
-      <h3 class="section-header">Your Activity</h3>
-      <p style="color: var(--text-muted);">No activity to show yet. Place an order to see your history!</p>
+            <div id="profile-edit-form" class="edit-form-container">
+                <form id="user-profile-form">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" name="phone">
+
+                    <label for="address">Address</label>
+                    <input type="text" id="address" name="address">
+
+                    <label for="imageUrl">Profile Image (filename from assets folder)</label>
+                    <input type="text" id="imageUrl" name="imageUrl">
+
+                    <button type="button" id="save-profile-btn" class="save-profile-btn">Save</button>
+                    <button type="button" id="cancel-edit-btn" class="cancel-edit-btn">Cancel</button>
+                </form>
+            </div>
+        </div>
     </div>
 
     <div class="section">
@@ -244,38 +332,107 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
     
+    const profileView = document.getElementById('profile-view');
+    const profileEditForm = document.getElementById('profile-edit-form');
+    const editProfileBtn = document.getElementById('edit-profile-btn');
+    const cancelEditBtn = document.getElementById('cancel-edit-btn');
+    const saveProfileBtn = document.getElementById('save-profile-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    const profilePic = document.getElementById('profile-pic');
     const displayNameEl = document.getElementById('user-display-name');
     const emailAddressEl = document.getElementById('user-email-address');
-    const headerUserNameEl = document.getElementById('user-name');
-    const logoutBtn = document.getElementById('logout-btn');
+    const phoneEl = document.getElementById('user-phone');
+    const addressEl = document.getElementById('user-address');
+    const headerUserNameEl = document.getElementById('header-user-name');
+
+    const nameInput = document.getElementById('name');
+    const phoneInput = document.getElementById('phone');
+    const addressInput = document.getElementById('address');
+    const imageUrlInput = document.getElementById('imageUrl');
+    
+    let currentUser;
+
+    const GITHUB_ASSETS_BASE_URL = "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/";
+
+    const updateProfileUI = (userData) => {
+        displayNameEl.innerText = userData.name || "User";
+        emailAddressEl.innerText = currentUser.email || "N/A";
+        phoneEl.innerText = userData.phone || "N/A";
+        addressEl.innerText = userData.address || "N/A";
+        headerUserNameEl.innerText = `Hi, ${userData.name || "User"}`;
+        
+        if (userData.imageUrl) {
+            profilePic.src = GITHUB_ASSETS_BASE_URL + userData.imageUrl;
+        } else {
+            profilePic.src = "https://via.placeholder.com/120?text=P";
+        }
+    };
+    
+    const fillEditForm = (userData) => {
+        nameInput.value = userData.name || '';
+        phoneInput.value = userData.phone || '';
+        addressInput.value = userData.address || '';
+        imageUrlInput.value = userData.imageUrl || '';
+    };
+
+    const toggleEditMode = (isEditing) => {
+        profileView.style.display = isEditing ? 'none' : 'block';
+        profileEditForm.style.display = isEditing ? 'block' : 'none';
+    };
 
     // Auth state observer
     auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        // User is signed in.
-        headerUserNameEl.innerText = `Hi, ${user.displayName || "User"}`;
-        displayNameEl.innerText = user.displayName || "User";
-        emailAddressEl.innerText = user.email;
-
-        // Fetch user data from Firestore
-        try {
-          const userDoc = await db.collection("users").doc(user.uid).get();
-          if (userDoc.exists) {
-            const userData = userDoc.data();
-            displayNameEl.innerText = userData.name;
-            headerUserNameEl.innerText = `Hi, ${userData.name}`;
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
+        if (!user) {
+            window.location.href = 'auth.html';
+            return;
         }
+        
+        currentUser = user;
+        
+        try {
+            const userDoc = await db.collection("users").doc(currentUser.uid).get();
+            let userData = userDoc.exists ? userDoc.data() : { name: 'User' };
+            
+            updateProfileUI(userData);
+            fillEditForm(userData);
 
-      } else {
-        // User is signed out.
-        window.location.href = 'auth.html';
-      }
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+            updateProfileUI({ name: 'User' });
+        }
     });
 
-    // Logout functionality
+    // Event listeners
+    editProfileBtn.addEventListener('click', () => {
+        toggleEditMode(true);
+    });
+
+    cancelEditBtn.addEventListener('click', () => {
+        toggleEditMode(false);
+    });
+    
+    saveProfileBtn.addEventListener('click', async () => {
+        if (!currentUser) return;
+        
+        const updatedData = {
+            name: nameInput.value,
+            phone: phoneInput.value,
+            address: addressInput.value,
+            imageUrl: imageUrlInput.value
+        };
+        
+        try {
+            await db.collection("users").doc(currentUser.uid).update(updatedData);
+            alert('Profile updated successfully!');
+            updateProfileUI(updatedData);
+            toggleEditMode(false);
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            alert("An error occurred while saving your profile. Please try again.");
+        }
+    });
+
     logoutBtn.addEventListener('click', async () => {
       try {
         await auth.signOut();
