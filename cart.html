@@ -232,13 +232,13 @@
         </div>
         <div class="summary-item">
           <span>Delivery</span>
-          <span id="delivery-price">₹40.00</span>
+          <span id="delivery-price">₹0.00</span>
         </div>
         <div class="summary-total">
           <span>Total</span>
           <span id="total-price">₹0.00</span>
         </div>
-        <button id="checkout-btn" class="checkout-btn">Proceed to Checkout</button>
+        <button id="checkout-btn" class="checkout-btn">Confirm Order</button>
       </div>
     </div>
   </div>
@@ -280,9 +280,14 @@
     const emptyCartMsg = document.getElementById('empty-cart-msg');
     const cartSummary = document.getElementById('cart-summary');
     const subtotalPriceEl = document.getElementById('subtotal-price');
+    const deliveryPriceEl = document.getElementById('delivery-price');
     const totalPriceEl = document.getElementById('total-price');
     const checkoutBtn = document.getElementById('checkout-btn');
-    const deliveryPrice = 40; // Hardcoded delivery price for now
+
+    const GITHUB_ASSETS_BASE_URL = "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/";
+
+    const FREE_DELIVERY_THRESHOLD = 200;
+    const DELIVERY_CHARGE = 5;
 
     let user;
     let userCartRef;
@@ -319,26 +324,19 @@
     // Function to handle the checkout process
     async function checkoutHandler() {
         if (!user) {
-            alert("Please log in to proceed to checkout.");
+            alert("Please log in to confirm your order.");
             return;
         }
 
         const cartDoc = await userCartRef.get();
         if (!cartDoc.exists || (cartDoc.data().items && cartDoc.data().items.length === 0)) {
-            alert("Your cart is empty. Add some items before checking out.");
+            alert("Your cart is empty. Add some items before confirming your order.");
             return;
         }
 
         // --- Checkout logic will go here in the future ---
         // For now, we'll just show an alert.
-        alert("Proceeding to checkout! (Functionality to be implemented)");
-
-        // Example of what would happen next:
-        // 1. Create a new order document in a 'orders' collection
-        // 2. Add the cart items, user info, and a timestamp to the order
-        // 3. Clear the user's cart in Firebase: await userCartRef.set({ items: [] });
-        // 4. Redirect the user to an order confirmation page
-        // --------------------------------------------------
+        alert("Confirming your order! (Functionality to be implemented)");
     }
 
     // Function to render cart items
@@ -358,8 +356,12 @@
         cartItems.forEach(item => {
             const itemElement = document.createElement('div');
             itemElement.className = 'cart-item';
+            
+            // Build the image URL from the assets folder
+            const imageUrl = GITHUB_ASSETS_BASE_URL + item.imageUrl;
+
             itemElement.innerHTML = `
-                <img src="${item.imageUrl}" alt="${item.name}">
+                <img src="${imageUrl}" alt="${item.name}">
                 <div class="item-details">
                     <div class="item-title">${item.name}</div>
                     <div class="item-price">₹${item.price.toFixed(2)}</div>
@@ -379,8 +381,12 @@
             subtotal += item.price * item.quantity;
         });
 
+        const calculatedDelivery = subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_CHARGE;
+        const total = subtotal + calculatedDelivery;
+
         subtotalPriceEl.textContent = `₹${subtotal.toFixed(2)}`;
-        totalPriceEl.textContent = `₹${(subtotal + deliveryPrice).toFixed(2)}`;
+        deliveryPriceEl.textContent = calculatedDelivery === 0 ? "Free" : `₹${calculatedDelivery.toFixed(2)}`;
+        totalPriceEl.textContent = `₹${total.toFixed(2)}`;
 
         // Add event listeners for quantity buttons
         cartItemsContainer.querySelectorAll('.increase-qty').forEach(btn => {
