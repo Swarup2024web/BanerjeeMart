@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Your Orders - Banerjee Mart</title>
 
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
@@ -14,34 +15,104 @@
   <style>
     /* Material 3.0-inspired CSS variables and general styles */
     :root {
-      --primary-color: #2874f0;
-      --surface-color: #ffffff;
-      --background-color: #f1f3f6;
-      --text-on-primary: #ffffff;
-      --text-on-surface: #1f1f1f;
-      --text-muted: #555555;
-      --border-color: #e0e0e0;
-      --border-radius: 8px;
+      --primary-color: #6750A4;
+      --on-primary: #FFFFFF;
+      --primary-container: #EADDFF;
+      --on-primary-container: #21005D;
+      
+      --secondary-color: #625B71;
+      --on-secondary: #FFFFFF;
+      --secondary-container: #E8DEF8;
+      --on-secondary-container: #1D192B;
+      
+      --tertiary-color: #7D5260;
+      --on-tertiary: #FFFFFF;
+      
+      --error-color: #B3261E;
+      --on-error: #FFFFFF;
+      --error-container: #F9DEDC;
+      --on-error-container: #410E0B;
+      
+      --background-color: #FFFBFE;
+      --on-background: #1C1B1F;
+      --surface-color: #FFFBFE;
+      --on-surface: #1C1B1F;
+      --surface-variant: #E7E0EC;
+      --on-surface-variant: #49454F;
+      
+      --outline: #79747E;
+      --shadow: #000000;
+      --elevation-1: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      
+      --border-radius-m: 12px;
+      --border-radius-l: 16px;
+      --border-radius-xl: 28px;
+
+      --font-family: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     }
 
     body {
       margin: 0;
-      font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+      font-family: var(--font-family);
       background: var(--background-color);
-      color: var(--text-on-surface);
+      color: var(--on-background);
     }
 
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding-bottom: 70px;
+      padding-bottom: 80px; /* Space for bottom nav */
+      padding: 16px;
+    }
+
+    /* Loading Overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--surface-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      z-index: 2000;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .loading-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loading-cart {
+      width: 80px;
+      height: 80px;
+      position: relative;
+    }
+
+    .loading-cart .material-symbols-rounded {
+      font-size: 80px;
+      color: var(--primary-color);
+      animation: bounce 1.5s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-20px);
+        }
     }
 
     /* Header */
     .header {
       background: var(--primary-color);
-      padding: 12px 16px;
-      color: var(--text-on-primary);
+      padding: 16px;
+      color: var(--on-primary);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -51,136 +122,151 @@
       z-index: 1000;
     }
     .header-logo {
-      font-size: 20px;
-      font-weight: 600;
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    #user-name {
+      font-size: 16px;
+      font-weight: 500;
     }
 
     /* Main Content */
     .section {
-      margin-top: 10px;
+      margin-top: 24px;
       background: var(--surface-color);
-      padding: 16px;
-      border-radius: var(--border-radius);
+      padding: 24px;
+      border-radius: var(--border-radius-xl);
+      box-shadow: var(--elevation-1);
     }
-
+    .section-header {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: var(--on-surface);
+    }
     .orders-container {
         display: flex;
         flex-direction: column;
         gap: 16px;
     }
-
     .order-card {
-        background: var(--background-color);
-        padding: 16px;
-        border-radius: var(--border-radius);
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        background: var(--surface-variant);
+        padding: 20px;
+        border-radius: var(--border-radius-l);
+        box-shadow: var(--elevation-1);
+        transition: transform 0.2s, box-shadow 0.2s;
     }
-    
+    .order-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
     .order-header {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid var(--border-color);
-        padding-bottom: 8px;
-        margin-bottom: 12px;
+        align-items: flex-start;
+        border-bottom: 1px solid var(--outline);
+        padding-bottom: 12px;
+        margin-bottom: 16px;
+        gap: 16px;
     }
-
+    .order-header > div {
+        flex-shrink: 1;
+    }
     .order-id {
         font-weight: 600;
-        font-size: 16px;
+        font-size: 18px;
+        color: var(--on-surface);
     }
-
     .order-date {
         font-size: 14px;
-        color: var(--text-muted);
+        color: var(--on-surface-variant);
+        margin-top: 4px;
     }
-
     .order-status {
-        font-weight: 700;
-        padding: 4px 8px;
-        border-radius: 4px;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: 100px; /* Pill shape */
+        white-space: nowrap;
     }
-
     .status-confirmed {
-        color: #4caf50; /* Green */
-        background-color: #e8f5e9;
+        color: var(--on-primary-container);
+        background-color: var(--primary-container);
     }
-
     .status-cancelled {
-        color: #f44336; /* Red */
-        background-color: #ffebee;
+        color: var(--on-error-container);
+        background-color: var(--error-container);
     }
-    
     .order-items-list {
         list-style: none;
         padding: 0;
         margin: 0;
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--outline);
         padding-bottom: 12px;
         margin-bottom: 12px;
     }
-
     .order-item {
         display: flex;
         justify-content: space-between;
         font-size: 14px;
-        margin-bottom: 4px;
+        margin-bottom: 8px;
     }
     .item-name {
       display: flex;
       gap: 8px;
       align-items: center;
+      color: var(--on-surface-variant);
     }
     .item-name span {
       font-size: 12px;
-      color: var(--text-muted);
+      font-weight: 500;
     }
-
     .order-summary {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: 8px;
     }
-    
     .summary-item {
         display: flex;
         justify-content: space-between;
         font-size: 14px;
+        color: var(--on-surface-variant);
     }
-
     .total-price {
-        font-size: 16px;
+        font-size: 18px;
         font-weight: 700;
         color: var(--primary-color);
-        border-top: 1px solid var(--border-color);
-        padding-top: 8px;
-        margin-top: 8px;
+        border-top: 1px solid var(--outline);
+        padding-top: 12px;
+        margin-top: 12px;
     }
-    
     .cancel-order-btn {
         width: 100%;
-        padding: 10px;
-        margin-top: 12px;
-        background-color: #f44336;
-        color: white;
+        padding: 12px;
+        margin-top: 20px;
+        background-color: var(--error-color);
+        color: var(--on-error);
         border: none;
-        border-radius: var(--border-radius);
+        border-radius: 100px;
         cursor: pointer;
         font-weight: 600;
         transition: background-color 0.3s;
+        box-shadow: var(--elevation-1);
     }
     .cancel-order-btn:hover {
         background-color: #d32f2f;
     }
     .cancel-order-btn:disabled {
-        background-color: #b0bec5;
+        background-color: var(--surface-variant);
+        color: var(--on-surface-variant);
         cursor: not-allowed;
     }
 
     .no-orders-message {
       text-align: center;
       padding: 50px 20px;
-      color: var(--text-muted);
+      color: var(--on-surface-variant);
+      font-size: 16px;
     }
 
     /* Bottom Navigation */
@@ -189,26 +275,33 @@
       bottom: 0;
       left: 0;
       right: 0;
-      height: 60px;
+      height: 70px;
       background: var(--surface-color);
-      border-top: 1px solid var(--border-color);
+      border-top: 1px solid var(--surface-variant);
       display: flex;
       justify-content: space-around;
       align-items: center;
-      box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
       z-index: 1000;
     }
     .nav-item {
       text-align: center;
-      color: var(--text-muted);
+      color: var(--on-surface-variant);
       text-decoration: none;
-      transition: color 0.3s ease;
+      transition: color 0.3s ease, transform 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
     }
     .nav-item.active {
       color: var(--primary-color);
+      font-weight: 500;
     }
-    .nav-item .material-symbols-outlined {
+    .nav-item .material-symbols-rounded {
       font-size: 24px;
+      margin-bottom: 4px;
     }
     .nav-item-label {
       font-size: 12px;
@@ -217,10 +310,10 @@
     /* Media Queries for larger screens */
     @media (min-width: 600px) {
       .header {
-        padding: 15px 30px;
+        padding: 20px 32px;
       }
       .container {
-        padding-bottom: 0;
+        padding-bottom: 24px;
       }
       .bottom-nav {
         display: none;
@@ -230,12 +323,18 @@
 </head>
 <body>
 
+  <div id="loading-overlay" class="loading-overlay">
+    <div class="loading-cart">
+        <span class="material-symbols-rounded">shopping_cart</span>
+    </div>
+  </div>
+
   <div class="header">
     <div class="header-logo">Banerjee Mart</div>
     <div id="user-name">Welcome</div>
   </div>
 
-  <div class="container">
+  <div class="container" id="main-content" style="display: none;">
     <div class="section">
       <h3 class="section-header">Your Orders</h3>
       <div id="orders-container" class="orders-container">
@@ -246,19 +345,19 @@
 
   <div class="bottom-nav">
     <a href="index.html" class="nav-item">
-      <span class="material-symbols-outlined">home</span>
+      <span class="material-symbols-rounded">home</span>
       <div class="nav-item-label">Home</div>
     </a>
     <a href="orders.html" class="nav-item active">
-      <span class="material-symbols-outlined">package_2</span>
+      <span class="material-symbols-rounded">package_2</span>
       <div class="nav-item-label">Orders</div>
     </a>
     <a href="cart.html" class="nav-item">
-      <span class="material-symbols-outlined">shopping_cart</span>
+      <span class="material-symbols-rounded">shopping_cart</span>
       <div class="nav-item-label">Cart</div>
     </a>
     <a href="profile.html" class="nav-item">
-      <span class="material-symbols-outlined">person</span>
+      <span class="material-symbols-rounded">person</span>
       <div class="nav-item-label">Profile</div>
     </a>
   </div>
@@ -277,6 +376,8 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const mainContent = document.getElementById('main-content');
     const ordersContainer = document.getElementById('orders-container');
     const noOrdersMsg = document.getElementById('no-orders-msg');
     let user;
@@ -302,6 +403,7 @@
             orderCard.className = 'order-card';
 
             const statusClass = order.status === 'Confirmed' ? 'status-confirmed' : 'status-cancelled';
+            const isCancellable = order.status === 'Confirmed';
 
             let itemsListHtml = '';
             order.items.forEach(item => {
@@ -338,8 +440,8 @@
                         <span>₹${order.total.toFixed(2)}</span>
                     </div>
                 </div>
-                <button class="cancel-order-btn" data-order-id="${order.id}" ${order.status === 'Cancelled' ? 'disabled' : ''}>
-                    ${order.status === 'Cancelled' ? 'Cancelled' : 'Cancel Order'}
+                <button class="cancel-order-btn" data-order-id="${order.id}" ${!isCancellable ? 'disabled' : ''}>
+                    ${!isCancellable ? 'Cancelled' : 'Cancel Order'}
                 </button>
             `;
             ordersContainer.appendChild(orderCard);
@@ -350,11 +452,18 @@
                 const orderId = e.currentTarget.dataset.orderId;
                 if (confirm('Are you sure you want to cancel this order?')) {
                     try {
+                        // Optimistically update the UI
+                        e.currentTarget.disabled = true;
+                        e.currentTarget.textContent = 'Cancelling...';
+                        
                         await db.collection('user-orders').doc(orderId).update({ status: 'Cancelled' });
                         alert('Order has been cancelled.');
                     } catch (error) {
                         console.error("Error cancelling order:", error);
                         alert("An error occurred while cancelling the order.");
+                        // Re-enable button if something went wrong
+                        e.currentTarget.disabled = false;
+                        e.currentTarget.textContent = 'Cancel Order';
                     }
                 }
             });
@@ -387,6 +496,10 @@
         fetchUserOrders(user.uid);
       } catch (e) {
         console.error("Error fetching user:", e);
+      } finally {
+        // Hide loading overlay and show main content
+        loadingOverlay.classList.add('hidden');
+        mainContent.style.display = 'block';
       }
     });
   </script>
