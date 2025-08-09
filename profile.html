@@ -145,6 +145,13 @@
       flex-direction: column;
       align-items: center;
       gap: 16px;
+      position: relative;
+    }
+    
+    .profile-picture-container {
+        position: relative;
+        width: 120px;
+        height: 120px;
     }
 
     .profile-picture {
@@ -155,6 +162,28 @@
       border: 4px solid var(--primary-color);
     }
     
+    .edit-image-btn {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: var(--primary-color);
+        color: var(--on-primary);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--elevation-1);
+        cursor: pointer;
+        border: 2px solid var(--surface-color);
+        transition: background-color 0.3s;
+    }
+    
+    .edit-image-btn:hover {
+        background: #7966B2;
+    }
+
     .user-name {
       font-family: 'Playfair Display', serif;
       font-size: 32px;
@@ -190,11 +219,17 @@
     }
 
     /* Buttons */
+    .action-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        margin-top: 24px;
+    }
+
     .edit-profile-btn, .save-profile-btn, .cancel-edit-btn {
       border: none;
       border-radius: 100px; /* Pill shape */
       padding: 10px 24px;
-      margin-top: 24px;
       cursor: pointer;
       font-size: 16px;
       font-weight: 500;
@@ -202,23 +237,33 @@
       box-shadow: var(--elevation-1);
     }
     
-    .edit-profile-btn, .cancel-edit-btn {
+    .edit-profile-btn {
         background-color: var(--surface-variant);
         color: var(--on-surface-variant);
     }
 
-    .edit-profile-btn:hover, .cancel-edit-btn:hover {
+    .edit-profile-btn:hover {
       background-color: #E7E0EC;
     }
 
     .save-profile-btn {
         background-color: var(--primary-color);
         color: var(--on-primary);
-        margin-left: 8px;
     }
 
     .save-profile-btn:hover {
         background-color: #7966B2;
+    }
+
+    .cancel-edit-btn {
+        background: none;
+        color: var(--on-surface-variant);
+        box-shadow: none;
+        border: 1px solid var(--outline);
+    }
+    
+    .cancel-edit-btn:hover {
+        background: var(--surface-variant);
     }
     
     .logout-btn {
@@ -343,12 +388,15 @@
         gap: 32px;
       }
       .profile-header {
-          flex-direction: row;
+          flex-direction: column;
           align-items: center;
           gap: 24px;
       }
       .profile-details {
         flex-grow: 1;
+      }
+      .action-buttons {
+          justify-content: flex-start;
       }
     }
   </style>
@@ -369,7 +417,12 @@
   <div class="container" id="main-content" style="display: none;">
     <div class="profile-card">
         <div class="profile-header">
-            <img src="https://via.placeholder.com/120?text=P" alt="Profile Picture" class="profile-picture" id="profile-pic">
+            <div class="profile-picture-container">
+                <img src="https://via.placeholder.com/120?text=P" alt="Profile Picture" class="profile-picture" id="profile-pic">
+                <div class="edit-image-btn" id="edit-image-btn" style="display: none;">
+                    <span class="material-symbols-rounded">edit</span>
+                </div>
+            </div>
             <h2 class="user-name" id="user-display-name"></h2>
         </div>
         
@@ -389,7 +442,9 @@
                         <span id="user-address"></span>
                     </li>
                 </ul>
-                <button id="edit-profile-btn" class="edit-profile-btn">Edit Profile</button>
+                <div class="action-buttons">
+                    <button id="edit-profile-btn" class="edit-profile-btn">Edit Profile</button>
+                </div>
             </div>
 
             <div id="profile-edit-form" class="edit-form-container">
@@ -403,11 +458,13 @@
                     <label for="address">Address</label>
                     <input type="text" id="address" name="address">
 
-                    <label for="imageUrl">Profile Image (filename from assets folder)</label>
-                    <input type="text" id="imageUrl" name="imageUrl">
-
-                    <button type="button" id="save-profile-btn" class="save-profile-btn">Save</button>
-                    <button type="button" id="cancel-edit-btn" class="cancel-edit-btn">Cancel</button>
+                    <label for="imageUrl">Profile Image URL</label>
+                    <input type="text" id="imageUrl" name="imageUrl" placeholder="e.g., assets/my-image.jpg">
+                    
+                    <div class="action-buttons">
+                        <button type="button" id="cancel-edit-btn" class="cancel-edit-btn">Cancel</button>
+                        <button type="button" id="save-profile-btn" class="save-profile-btn">Save</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -460,6 +517,7 @@
     const profileView = document.getElementById('profile-view');
     const profileEditForm = document.getElementById('profile-edit-form');
     const editProfileBtn = document.getElementById('edit-profile-btn');
+    const editImageBtn = document.getElementById('edit-image-btn');
     const cancelEditBtn = document.getElementById('cancel-edit-btn');
     const saveProfileBtn = document.getElementById('save-profile-btn');
     const logoutBtn = document.getElementById('logout-btn');
@@ -512,6 +570,7 @@
     const toggleEditMode = (isEditing) => {
         profileView.style.display = isEditing ? 'none' : 'block';
         profileEditForm.style.display = isEditing ? 'block' : 'none';
+        editImageBtn.style.display = isEditing ? 'flex' : 'none';
     };
 
     // Auth state observer
@@ -547,6 +606,10 @@
 
     cancelEditBtn.addEventListener('click', () => {
         toggleEditMode(false);
+    });
+
+    editImageBtn.addEventListener('click', () => {
+        imageUrlInput.focus();
     });
     
     saveProfileBtn.addEventListener('click', async () => {
