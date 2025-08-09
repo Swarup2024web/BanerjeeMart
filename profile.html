@@ -13,8 +13,11 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 
   <style>
-    /* Material 3.0-inspired CSS variables and general styles */
+    /* * Redesigned to integrate Morphism (Glassmorphism + Neumorphism) with Material 3.0 principles.
+     * New CSS variables for soft shadows, translucency, and glow effects.
+     */
     :root {
+      /* Material 3.0 Base Palette */
       --primary-color: #6750A4;
       --on-primary: #FFFFFF;
       --primary-container: #EADDFF;
@@ -31,20 +34,31 @@
       --error-color: #B3261E;
       --on-error: #FFFFFF;
       
-      --background-color: #FFFBFE;
+      --background-color: #f0ebf8; /* Softer, off-white background for neumorphism */
       --on-background: #1C1B1F;
-      --surface-color: #FFFBFE;
+      --surface-color: rgba(255, 251, 254, 0.8); /* Slightly translucent for glassmorphism */
       --on-surface: #1C1B1F;
       --surface-variant: #E7E0EC;
       --on-surface-variant: #49454F;
       
       --outline: #79747E;
-      --shadow: #000000;
-      --elevation-1: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
       
-      --border-radius-m: 12px;
-      --border-radius-l: 16px;
-      --border-radius-xl: 28px;
+      /* Morphism-specific Variables */
+      --shadow-light: rgba(255, 255, 255, 0.7); /* Lighter shadow for the "pop-out" effect */
+      --shadow-dark: rgba(0, 0, 0, 0.15); /* Darker shadow for depth */
+      --shadow-inset-light: rgba(255, 255, 255, 0.5); /* Inset light shadow */
+      --shadow-inset-dark: rgba(0, 0, 0, 0.1); /* Inset dark shadow */
+      --neumorphic-shadow: 
+        10px 10px 20px var(--shadow-dark),
+        -10px -10px 20px var(--shadow-light);
+
+      --neumorphic-inset-shadow: 
+        inset 5px 5px 10px var(--shadow-inset-dark),
+        inset -5px -5px 10px var(--shadow-inset-light);
+        
+      --border-radius-m: 16px;
+      --border-radius-l: 24px;
+      --border-radius-xl: 32px;
 
       --font-family: 'Roboto', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     }
@@ -63,14 +77,14 @@
       padding: 16px;
     }
 
-    /* Loading Overlay */
+    /* Loading Overlay - New morphism-inspired design */
     .loading-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: var(--surface-color);
+      background-color: var(--background-color);
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -86,13 +100,19 @@
     }
 
     .loading-cart {
-      width: 80px;
-      height: 80px;
+      width: 100px;
+      height: 100px;
       position: relative;
+      border-radius: 50%;
+      background: var(--surface-color);
+      box-shadow: var(--neumorphic-shadow);
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .loading-cart .material-symbols-rounded {
-      font-size: 80px;
+      font-size: 60px;
       color: var(--primary-color);
       animation: bounce 1.5s ease-in-out infinite;
     }
@@ -102,26 +122,28 @@
             transform: translateY(0);
         }
         50% {
-            transform: translateY(-20px);
+            transform: translateY(-15px);
         }
     }
 
-    /* Header */
+    /* Header - Glassmorphic effect */
     .header {
-      background: var(--primary-color);
+      background: rgba(103, 80, 164, 0.8); /* Primary color with transparency */
+      backdrop-filter: blur(8px);
       padding: 16px;
       color: var(--on-primary);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 10px var(--shadow-dark);
       position: sticky;
       top: 0;
       z-index: 1000;
     }
     
     .header-logo {
-      font-size: 22px;
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
       font-weight: 700;
     }
 
@@ -130,14 +152,15 @@
         font-weight: 500;
     }
 
-    /* Profile Card */
+    /* Profile Card - Morphism effect */
     .profile-card {
       background: var(--surface-color);
       margin-top: 24px;
       padding: 24px;
       border-radius: var(--border-radius-xl);
-      box-shadow: var(--elevation-1);
+      box-shadow: var(--neumorphic-shadow);
       text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle light border for glassmorphism */
     }
     
     .profile-header {
@@ -152,14 +175,20 @@
         position: relative;
         width: 120px;
         height: 120px;
+        border-radius: 50%;
+        background: var(--surface-color);
+        box-shadow: var(--neumorphic-inset-shadow);
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .profile-picture {
-      width: 120px;
-      height: 120px;
+      width: 110px;
+      height: 110px;
       border-radius: 50%;
       object-fit: cover;
-      border: 4px solid var(--primary-color);
+      border: 4px solid var(--primary-container);
     }
     
     .edit-image-btn {
@@ -174,14 +203,15 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: var(--elevation-1);
+        box-shadow: var(--neumorphic-shadow);
         cursor: pointer;
-        border: 2px solid var(--surface-color);
-        transition: background-color 0.3s;
+        border: 2px solid var(--background-color);
+        transition: all 0.2s ease;
     }
     
     .edit-image-btn:hover {
-        background: #7966B2;
+        transform: scale(1.05);
+        box-shadow: 0 0 15px var(--primary-color);
     }
 
     .user-name {
@@ -205,6 +235,11 @@
         font-size: 16px;
         color: var(--on-surface-variant);
         gap: 16px;
+        padding: 12px;
+        border-radius: var(--border-radius-m);
+        background: rgba(255, 255, 255, 0.1); /* Subtle glassmorphic list item */
+        box-shadow: inset 2px 2px 5px var(--shadow-inset-dark),
+                    inset -2px -2px 5px var(--shadow-inset-light);
     }
 
     .user-details-list .material-symbols-rounded {
@@ -218,23 +253,24 @@
         color: var(--on-surface);
     }
 
-    /* Buttons */
+    /* Buttons - Morphism-style */
     .action-buttons {
         display: flex;
         justify-content: center;
         gap: 16px;
         margin-top: 24px;
     }
-
-    .edit-profile-btn, .save-profile-btn, .cancel-edit-btn {
+    
+    .edit-profile-btn, .save-profile-btn, .cancel-edit-btn, .logout-btn {
       border: none;
-      border-radius: 100px; /* Pill shape */
-      padding: 10px 24px;
+      border-radius: 100px;
+      padding: 12px 24px;
       cursor: pointer;
       font-size: 16px;
       font-weight: 500;
-      transition: background-color 0.3s, box-shadow 0.3s;
-      box-shadow: var(--elevation-1);
+      transition: all 0.2s ease;
+      box-shadow: var(--neumorphic-shadow);
+      transform: translateZ(0); /* Hardware acceleration */
     }
     
     .edit-profile-btn {
@@ -243,7 +279,11 @@
     }
 
     .edit-profile-btn:hover {
-      background-color: #E7E0EC;
+      box-shadow: 
+        8px 8px 16px var(--shadow-dark),
+        -8px -8px 16px var(--shadow-light),
+        inset 2px 2px 5px var(--shadow-inset-dark); /* Subtle press effect */
+      transform: translateY(2px);
     }
 
     .save-profile-btn {
@@ -252,18 +292,22 @@
     }
 
     .save-profile-btn:hover {
-        background-color: #7966B2;
+        box-shadow: 
+          8px 8px 16px var(--shadow-dark),
+          -8px -8px 16px var(--shadow-light),
+          inset 2px 2px 5px rgba(255,255,255,0.2);
+        transform: translateY(2px);
     }
-
+    
     .cancel-edit-btn {
-        background: none;
+        background: var(--surface-color);
         color: var(--on-surface-variant);
-        box-shadow: none;
-        border: 1px solid var(--outline);
+        box-shadow: var(--neumorphic-shadow);
     }
     
     .cancel-edit-btn:hover {
-        background: var(--surface-variant);
+        box-shadow: var(--neumorphic-inset-shadow); /* Inset shadow for a "pressed" look */
+        transform: translateY(2px);
     }
     
     .logout-btn {
@@ -273,21 +317,21 @@
       width: 100%;
       padding: 12px;
       margin-top: 24px;
-      background: none;
+      background: var(--background-color);
       color: var(--error-color);
-      border: 1px solid var(--outline);
+      box-shadow: var(--neumorphic-shadow);
       border-radius: 100px;
       cursor: pointer;
       font-size: 16px;
       font-weight: 600;
       gap: 8px;
-      transition: background-color 0.3s, color 0.3s, border-color 0.3s;
     }
     
     .logout-btn:hover {
-        background: var(--error-color);
+        box-shadow: var(--neumorphic-inset-shadow);
+        transform: translateY(2px);
         color: var(--on-error);
-        border-color: var(--error-color);
+        background: var(--error-color);
     }
     
     .logout-btn .material-symbols-rounded {
@@ -316,51 +360,63 @@
         font-weight: 500;
     }
 
+    /* Input fields - Inset neumorphism */
     .edit-form-container input {
         width: 100%;
         padding: 12px;
         box-sizing: border-box;
-        border: 1px solid var(--outline);
+        border: none;
         border-radius: var(--border-radius-m);
         font-size: 16px;
         color: var(--on-surface);
-        background: transparent;
+        background: var(--background-color);
+        box-shadow: var(--neumorphic-inset-shadow);
+        transition: all 0.2s ease;
     }
     
     .edit-form-container input:focus {
-        outline: 2px solid var(--primary-color);
-        border-color: var(--primary-color);
+        outline: none;
+        box-shadow: 
+            inset 2px 2px 5px var(--shadow-inset-dark),
+            inset -2px -2px 5px var(--shadow-inset-light),
+            0 0 0 2px var(--primary-color); /* Primary color glow on focus */
     }
 
-    /* Bottom Navigation */
+    /* Bottom Navigation - Glassmorphic effect */
     .bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
       height: 70px;
-      background: var(--surface-color);
-      border-top: 1px solid var(--surface-variant);
+      background: rgba(255, 251, 254, 0.8); /* Semi-transparent surface color */
+      backdrop-filter: blur(10px); /* Glassmorphic blur */
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 -4px 10px var(--shadow-dark);
       display: flex;
       justify-content: space-around;
       align-items: center;
-      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
       z-index: 1000;
     }
     .nav-item {
       text-align: center;
       color: var(--on-surface-variant);
       text-decoration: none;
-      transition: color 0.3s ease, transform 0.2s ease;
+      transition: all 0.3s ease;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 8px;
+      border-radius: var(--border-radius-xl);
     }
     .nav-item.active {
       color: var(--primary-color);
       font-weight: 500;
+      background: var(--primary-container);
+      box-shadow: 
+        inset 2px 2px 5px var(--shadow-dark),
+        inset -2px -2px 5px var(--shadow-light); /* Inset for the active item */
     }
     .nav-item .material-symbols-rounded {
       font-size: 24px;
@@ -497,151 +553,4 @@
 
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
-      authDomain: "banerjee-mart.firebaseapp.com",
-      projectId: "banerjee-mart",
-      storageBucket: "banerjee-mart.appspot.com",
-      messagingSenderId: "183628570952",
-      appId: "1:183628570952:web:3028bb258001d004d9537d"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    
-    const loadingOverlay = document.getElementById('loading-overlay');
-    const mainContent = document.getElementById('main-content');
-    const headerUserNameEl = document.getElementById('header-user-name');
-    const emailListItem = document.getElementById('email-list-item');
-
-    const profileView = document.getElementById('profile-view');
-    const profileEditForm = document.getElementById('profile-edit-form');
-    const editProfileBtn = document.getElementById('edit-profile-btn');
-    const editImageBtn = document.getElementById('edit-image-btn');
-    const cancelEditBtn = document.getElementById('cancel-edit-btn');
-    const saveProfileBtn = document.getElementById('save-profile-btn');
-    const logoutBtn = document.getElementById('logout-btn');
-
-    const profilePic = document.getElementById('profile-pic');
-    const displayNameEl = document.getElementById('user-display-name');
-    const emailAddressEl = document.getElementById('user-email-address');
-    const phoneEl = document.getElementById('user-phone');
-    const addressEl = document.getElementById('user-address');
-
-    const nameInput = document.getElementById('name');
-    const phoneInput = document.getElementById('phone');
-    const addressInput = document.getElementById('address');
-    const imageUrlInput = document.getElementById('imageUrl');
-    
-    let currentUser;
-
-    const GITHUB_ASSETS_BASE_URL = "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/";
-
-    const updateProfileUI = (userData) => {
-        displayNameEl.innerText = userData.name || "User";
-        headerUserNameEl.innerText = `Hi, ${userData.name || "User"}`;
-        
-        const email = currentUser.email;
-        // Check if the email is a generated Firebase placeholder
-        if (email && !email.includes('@banerjeemart.com')) {
-            emailAddressEl.innerText = email;
-            emailListItem.style.display = 'flex'; // Show the email item
-        } else {
-            emailListItem.style.display = 'none'; // Hide the email item
-        }
-
-        phoneEl.innerText = userData.phone || "N/A";
-        addressEl.innerText = userData.address || "N/A";
-        
-        if (userData.imageUrl) {
-            profilePic.src = GITHUB_ASSETS_BASE_URL + userData.imageUrl;
-        } else {
-            profilePic.src = "https://via.placeholder.com/120?text=P";
-        }
-    };
-    
-    const fillEditForm = (userData) => {
-        nameInput.value = userData.name || '';
-        phoneInput.value = userData.phone || '';
-        addressInput.value = userData.address || '';
-        imageUrlInput.value = userData.imageUrl || '';
-    };
-
-    const toggleEditMode = (isEditing) => {
-        profileView.style.display = isEditing ? 'none' : 'block';
-        profileEditForm.style.display = isEditing ? 'block' : 'none';
-        editImageBtn.style.display = isEditing ? 'flex' : 'none';
-    };
-
-    // Auth state observer
-    auth.onAuthStateChanged(async (user) => {
-        if (!user) {
-            window.location.href = 'auth.html';
-            return;
-        }
-        
-        currentUser = user;
-        
-        try {
-            const userDoc = await db.collection("users").doc(currentUser.uid).get();
-            let userData = userDoc.exists ? userDoc.data() : { name: 'User' };
-            
-            updateProfileUI(userData);
-            fillEditForm(userData);
-
-        } catch (error) {
-            console.error("Error fetching user data:", error);
-            updateProfileUI({ name: 'User' });
-        } finally {
-            // Hide loading overlay and show main content
-            loadingOverlay.classList.add('hidden');
-            mainContent.style.display = 'block';
-        }
-    });
-
-    // Event listeners
-    editProfileBtn.addEventListener('click', () => {
-        toggleEditMode(true);
-    });
-
-    cancelEditBtn.addEventListener('click', () => {
-        toggleEditMode(false);
-    });
-
-    editImageBtn.addEventListener('click', () => {
-        imageUrlInput.focus();
-    });
-    
-    saveProfileBtn.addEventListener('click', async () => {
-        if (!currentUser) return;
-        
-        const updatedData = {
-            name: nameInput.value,
-            phone: phoneInput.value,
-            address: addressInput.value,
-            imageUrl: imageUrlInput.value
-        };
-        
-        try {
-            await db.collection("users").doc(currentUser.uid).update(updatedData);
-            alert('Profile updated successfully!');
-            updateProfileUI(updatedData);
-            toggleEditMode(false);
-        } catch (error) {
-            console.error("Error updating profile:", error);
-            alert("An error occurred while saving your profile. Please try again.");
-        }
-    });
-
-    logoutBtn.addEventListener('click', async () => {
-      try {
-        await auth.signOut();
-        window.location.href = 'auth.html';
-      } catch (error) {
-        console.error("Error signing out:", error);
-        alert("An error occurred during logout. Please try again.");
-      }
-    });
-  </script>
-</body>
-</html>
+      apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTf
