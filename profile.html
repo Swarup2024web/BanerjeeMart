@@ -77,7 +77,7 @@
       padding: 16px;
     }
 
-    /* Loading Overlay - New morphism-inspired design */
+    /* Loading Overlay - New, simpler loader */
     .loading-overlay {
       position: fixed;
       top: 0;
@@ -98,32 +98,25 @@
       opacity: 0;
       pointer-events: none;
     }
-
-    .loading-cart {
-      width: 100px;
-      height: 100px;
-      position: relative;
-      border-radius: 50%;
-      background: var(--surface-color);
-      box-shadow: var(--neumorphic-shadow);
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    
+    .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid var(--surface-variant);
+        border-top-color: var(--primary-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
     }
-
-    .loading-cart .material-symbols-rounded {
-      font-size: 60px;
-      color: var(--primary-color);
-      animation: bounce 1.5s ease-in-out infinite;
+    
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
     }
-
-    @keyframes bounce {
-        0%, 100% {
-            transform: translateY(0);
-        }
-        50% {
-            transform: translateY(-15px);
-        }
+    
+    .loading-text {
+        font-size: 16px;
+        color: var(--on-surface-variant);
     }
 
     /* Header - Glassmorphic effect */
@@ -460,9 +453,8 @@
 <body>
   
   <div id="loading-overlay" class="loading-overlay">
-    <div class="loading-cart">
-        <span class="material-symbols-rounded">shopping_cart</span>
-    </div>
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Loading...</div>
   </div>
 
   <div class="header">
@@ -553,4 +545,151 @@
 
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTf
+      apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
+      authDomain: "banerjee-mart.firebaseapp.com",
+      projectId: "banerjee-mart",
+      storageBucket: "banerjee-mart.appspot.com",
+      messagingSenderId: "183628570952",
+      appId: "1:183628570952:web:3028bb258001d004d9537d"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const mainContent = document.getElementById('main-content');
+    const headerUserNameEl = document.getElementById('header-user-name');
+    const emailListItem = document.getElementById('email-list-item');
+
+    const profileView = document.getElementById('profile-view');
+    const profileEditForm = document.getElementById('profile-edit-form');
+    const editProfileBtn = document.getElementById('edit-profile-btn');
+    const editImageBtn = document.getElementById('edit-image-btn');
+    const cancelEditBtn = document.getElementById('cancel-edit-btn');
+    const saveProfileBtn = document.getElementById('save-profile-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    const profilePic = document.getElementById('profile-pic');
+    const displayNameEl = document.getElementById('user-display-name');
+    const emailAddressEl = document.getElementById('user-email-address');
+    const phoneEl = document.getElementById('user-phone');
+    const addressEl = document.getElementById('user-address');
+
+    const nameInput = document.getElementById('name');
+    const phoneInput = document.getElementById('phone');
+    const addressInput = document.getElementById('address');
+    const imageUrlInput = document.getElementById('imageUrl');
+    
+    let currentUser;
+
+    const GITHUB_ASSETS_BASE_URL = "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/";
+
+    const updateProfileUI = (userData) => {
+        displayNameEl.innerText = userData.name || "User";
+        headerUserNameEl.innerText = `Hi, ${userData.name || "User"}`;
+        
+        const email = currentUser.email;
+        // Check if the email is a generated Firebase placeholder
+        if (email && !email.includes('@banerjeemart.com')) {
+            emailAddressEl.innerText = email;
+            emailListItem.style.display = 'flex'; // Show the email item
+        } else {
+            emailListItem.style.display = 'none'; // Hide the email item
+        }
+
+        phoneEl.innerText = userData.phone || "N/A";
+        addressEl.innerText = userData.address || "N/A";
+        
+        if (userData.imageUrl) {
+            profilePic.src = GITHUB_ASSETS_BASE_URL + userData.imageUrl;
+        } else {
+            profilePic.src = "https://via.placeholder.com/120?text=P";
+        }
+    };
+    
+    const fillEditForm = (userData) => {
+        nameInput.value = userData.name || '';
+        phoneInput.value = userData.phone || '';
+        addressInput.value = userData.address || '';
+        imageUrlInput.value = userData.imageUrl || '';
+    };
+
+    const toggleEditMode = (isEditing) => {
+        profileView.style.display = isEditing ? 'none' : 'block';
+        profileEditForm.style.display = isEditing ? 'block' : 'none';
+        editImageBtn.style.display = isEditing ? 'flex' : 'none';
+    };
+
+    // Auth state observer
+    auth.onAuthStateChanged(async (user) => {
+        if (!user) {
+            window.location.href = 'auth.html';
+            return;
+        }
+        
+        currentUser = user;
+        
+        try {
+            const userDoc = await db.collection("users").doc(currentUser.uid).get();
+            let userData = userDoc.exists ? userDoc.data() : { name: 'User' };
+            
+            updateProfileUI(userData);
+            fillEditForm(userData);
+
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+            updateProfileUI({ name: 'User' });
+        } finally {
+            // Hide loading overlay and show main content
+            loadingOverlay.classList.add('hidden');
+            mainContent.style.display = 'block';
+        }
+    });
+
+    // Event listeners
+    editProfileBtn.addEventListener('click', () => {
+        toggleEditMode(true);
+    });
+
+    cancelEditBtn.addEventListener('click', () => {
+        toggleEditMode(false);
+    });
+
+    editImageBtn.addEventListener('click', () => {
+        imageUrlInput.focus();
+    });
+    
+    saveProfileBtn.addEventListener('click', async () => {
+        if (!currentUser) return;
+        
+        const updatedData = {
+            name: nameInput.value,
+            phone: phoneInput.value,
+            address: addressInput.value,
+            imageUrl: imageUrlInput.value
+        };
+        
+        try {
+            await db.collection("users").doc(currentUser.uid).update(updatedData);
+            alert('Profile updated successfully!');
+            updateProfileUI(updatedData);
+            toggleEditMode(false);
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            alert("An error occurred while saving your profile. Please try again.");
+        }
+    });
+
+    logoutBtn.addEventListener('click', async () => {
+      try {
+        await auth.signOut();
+        window.location.href = 'auth.html';
+      } catch (error) {
+        console.error("Error signing out:", error);
+        alert("An error occurred during logout. Please try again.");
+      }
+    });
+  </script>
+</body>
+</html>
