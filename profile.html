@@ -3,464 +3,105 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Profile - Banerjee Mart</title>
-
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  
-  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
-
+  <title>Banerjee Mart - Profile</title>
   <style>
-    :root {
-      --primary-color: #007BFF;
-      --on-primary: #FFFFFF;
-      --secondary-color: #6C757D;
-      --on-secondary: #FFFFFF;
-      --background-color: #f8f9fa;
-      --surface-color: #FFFFFF;
-      --on-surface: #212529;
-      --border-color: #dee2e6;
-      --error-color: #dc3545;
-      --on-error: #FFFFFF;
-    }
-
     body {
       margin: 0;
-      font-family: 'Roboto', sans-serif;
-      background-color: var(--background-color);
-      color: var(--on-surface);
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
     }
-
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 16px;
-      padding-bottom: 80px;
-    }
-
-    /* Loading Overlay & Skeleton Screen */
-    .loading-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: var(--background-color);
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      padding-top: 80px;
-      gap: 24px;
-      z-index: 2000;
-      transition: opacity 0.3s ease-in-out;
-    }
-    .loading-overlay.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .skeleton-card {
-      background: var(--surface-color);
-      padding: 24px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      width: 90%;
-      max-width: 600px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      animation: pulse 1.5s infinite;
-    }
-    .skeleton-avatar {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      background: var(--border-color);
-    }
-    .skeleton-text {
-      height: 16px;
-      background: var(--border-color);
-      border-radius: 4px;
-      width: 80%;
-    }
-    .skeleton-text.large {
-      height: 24px;
-      width: 60%;
-      margin-bottom: 16px;
-    }
-    .skeleton-list {
-      list-style: none;
-      padding: 0;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-top: 24px;
-    }
-    .skeleton-list-item {
-      height: 16px;
-      background: var(--border-color);
-      border-radius: 4px;
-      width: 90%;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    /* Header */
-    .header {
-      background-color: var(--primary-color);
-      color: var(--on-primary);
-      padding: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    .header-logo {
-      font-weight: 700;
-      font-size: 24px;
-    }
-    #header-user-name {
-      font-size: 16px;
-      font-weight: 500;
-    }
-
-    /* Profile Card */
-    .profile-card {
-      background-color: var(--surface-color);
-      margin-top: 24px;
-      padding: 24px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-    .profile-header {
+    header {
+      background: #2874f0;
+      color: white;
+      padding: 15px;
       text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      position: relative;
+      font-size: 18px;
+      font-weight: bold;
     }
-    .profile-picture-container {
-      position: relative;
-      width: 120px;
-      height: 120px;
+    .profile-container {
+      max-width: 500px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
     }
-    .profile-picture {
-      width: 120px;
-      height: 120px;
+    .profile-pic {
+      display: block;
+      margin: auto;
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
       object-fit: cover;
-      border: 3px solid var(--primary-color);
+      border: 2px solid #ccc;
     }
-    .edit-image-btn {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      background: var(--primary-color);
-      color: var(--on-primary);
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      border: 2px solid var(--surface-color);
-      transition: background-color 0.3s;
+    .input-group {
+      margin-top: 15px;
     }
-    .edit-image-btn:hover {
-      background-color: #0056b3;
-    }
-    .user-name {
-      font-size: 28px;
-      font-weight: 700;
-      margin: 0;
-    }
-
-    /* User Details */
-    .profile-details {
-      margin-top: 24px;
-    }
-    .user-details-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .user-details-list li {
-      display: flex;
-      align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border-color);
-    }
-    .user-details-list li:last-child {
-      border-bottom: none;
-    }
-    .user-details-list .material-symbols-rounded {
-      font-size: 24px;
-      color: var(--primary-color);
-      margin-right: 16px;
-    }
-    .user-details-list .detail-label {
-      font-weight: 500;
-      min-width: 80px;
-      color: var(--secondary-color);
-    }
-    .user-details-list .detail-value {
-      font-weight: 400;
-      color: var(--on-surface);
-    }
-
-    /* Edit Form */
-    .edit-form-container {
-      display: none;
-    }
-    .edit-form-container label {
+    label {
       display: block;
-      font-size: 14px;
-      font-weight: 500;
-      margin-top: 16px;
-      margin-bottom: 4px;
-      color: var(--secondary-color);
+      margin-bottom: 5px;
+      font-weight: bold;
     }
-    .edit-form-container input {
+    input {
       width: 100%;
       padding: 10px;
-      box-sizing: border-box;
-      border: 1px solid var(--border-color);
-      border-radius: 4px;
-      font-size: 16px;
-      font-family: 'Roboto', sans-serif;
-      transition: border-color 0.3s;
+      border: 1px solid #ccc;
+      border-radius: 5px;
     }
-    .edit-form-container input:focus {
-      outline: none;
-      border-color: var(--primary-color);
-    }
-
-    /* Buttons */
-    .action-buttons {
-      display: flex;
-      justify-content: flex-end;
-      gap: 12px;
-      margin-top: 24px;
-    }
-    .btn {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 4px;
-      font-size: 16px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background-color 0.3s, color 0.3s;
-    }
-    .btn-primary {
-      background-color: var(--primary-color);
-      color: var(--on-primary);
-    }
-    .btn-primary:hover {
-      background-color: #0056b3;
-    }
-    .btn-secondary {
-      background-color: var(--secondary-color);
-      color: var(--on-secondary);
-    }
-    .btn-secondary:hover {
-      background-color: #5a6268;
-    }
-    .btn-outline {
-      background-color: transparent;
-      color: var(--primary-color);
-      border: 1px solid var(--primary-color);
-    }
-    .btn-outline:hover {
-      background-color: #e9f5ff;
-    }
-    .btn-error {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+    button {
+      margin-top: 15px;
       width: 100%;
-      background-color: var(--error-color);
-      color: var(--on-error);
-      margin-top: 24px;
+      padding: 10px;
+      background: #2874f0;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
     }
-    .btn-error:hover {
-      background-color: #c82333;
+    button:hover {
+      background: #1a5fc3;
     }
-
-    /* Bottom Navigation */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 60px;
-      background-color: var(--surface-color);
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
-      z-index: 1000;
+    .logout {
+      background: #ff4b4b;
     }
-    .nav-item {
-      text-align: center;
-      color: var(--secondary-color);
-      text-decoration: none;
-      transition: color 0.3s;
-      padding: 8px;
-    }
-    .nav-item.active {
-      color: var(--primary-color);
-    }
-    .nav-item .material-symbols-rounded {
-      font-size: 24px;
-      margin-bottom: 2px;
-    }
-    .nav-item-label {
-      font-size: 12px;
-      font-weight: 500;
-    }
-
-    /* Media Queries */
-    @media (min-width: 600px) {
-      .profile-card {
-        display: flex;
-        align-items: flex-start;
-        gap: 32px;
-        padding: 32px;
-      }
-      .profile-header {
-        flex: 0 0 150px;
-      }
-      .profile-details {
-        flex-grow: 1;
-        margin-top: 0;
-      }
-      .user-details-list li {
-        padding: 12px 0;
-      }
-      .action-buttons {
-        justify-content: flex-start;
-      }
-      .bottom-nav {
-        display: none;
-      }
+    .logout:hover {
+      background: #d43f3f;
     }
   </style>
 </head>
 <body>
-  
-  <div id="loading-overlay" class="loading-overlay">
-    <div class="skeleton-card">
-      <div class="skeleton-avatar"></div>
-      <div class="skeleton-text large"></div>
-      <ul class="skeleton-list">
-        <li class="skeleton-list-item"></li>
-        <li class="skeleton-list-item"></li>
-        <li class="skeleton-list-item"></li>
-      </ul>
+
+  <header>My Profile</header>
+
+  <div class="profile-container">
+    <img src="https://via.placeholder.com/100" id="profile-pic" class="profile-pic" alt="Profile Picture">
+    
+    <div class="input-group">
+      <label>Name</label>
+      <input type="text" id="name">
     </div>
-  </div>
-
-  <div class="header">
-    <div class="header-logo">Banerjee Mart</div>
-    <div id="header-user-name">Welcome</div>
-  </div>
-
-  <div class="container" id="main-content" style="display: none;">
-    <div class="profile-card">
-      <div class="profile-header">
-        <div class="profile-picture-container">
-          <img src="https://via.placeholder.com/120?text=P" alt="Profile Picture" class="profile-picture" id="profile-pic">
-          <div class="edit-image-btn" id="edit-image-btn" style="display: none;">
-            <span class="material-symbols-rounded">edit</span>
-          </div>
-        </div>
-        <h2 class="user-name" id="user-display-name"></h2>
-      </div>
-      
-      <div class="profile-details">
-        <div id="profile-view">
-          <ul class="user-details-list">
-            <li id="email-list-item">
-              <span class="material-symbols-rounded">mail</span>
-              <div class="detail-value" id="user-email-address"></div>
-            </li>
-            <li>
-              <span class="material-symbols-rounded">call</span>
-              <div class="detail-value" id="user-phone"></div>
-            </li>
-            <li>
-              <span class="material-symbols-rounded">location_on</span>
-              <div class="detail-value" id="user-address"></div>
-            </li>
-          </ul>
-          <div class="action-buttons">
-            <button id="edit-profile-btn" class="btn btn-primary">Edit Profile</button>
-          </div>
-        </div>
-
-        <div id="profile-edit-form" class="edit-form-container">
-          <form id="user-profile-form">
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" required>
-
-            <label for="phone">Phone</label>
-            <input type="tel" id="phone" name="phone">
-
-            <label for="address">Address</label>
-            <input type="text" id="address" name="address">
-
-            <label for="imageUrl">Profile Image URL</label>
-            <input type="text" id="imageUrl" name="imageUrl" placeholder="e.g., assets/my-image.jpg">
-            
-            <div class="action-buttons">
-              <button type="button" id="cancel-edit-btn" class="btn btn-secondary">Cancel</button>
-              <button type="button" id="save-profile-btn" class="btn btn-primary">Save</button>
-            </div>
-          </form>
-        </div>
-      </div>
+    <div class="input-group">
+      <label>Email</label>
+      <input type="email" id="email" disabled>
+    </div>
+    <div class="input-group">
+      <label>Phone</label>
+      <input type="text" id="phone">
+    </div>
+    <div class="input-group">
+      <label>Address</label>
+      <input type="text" id="address">
     </div>
     
-    <button id="logout-btn" class="btn btn-error">
-      <span class="material-symbols-rounded">logout</span>
-      Logout
-    </button>
+    <button onclick="updateProfile()">Save Changes</button>
+    <button class="logout" onclick="logout()">Logout</button>
   </div>
 
-  <div class="bottom-nav">
-    <a href="index.html" class="nav-item">
-      <span class="material-symbols-rounded">home</span>
-      <div class="nav-item-label">Home</div>
-    </a>
-    <a href="orders.html" class="nav-item">
-      <span class="material-symbols-rounded">package_2</span>
-      <div class="nav-item-label">Orders</div>
-    </a>
-    <a href="cart.html" class="nav-item">
-      <span class="material-symbols-rounded">shopping_cart</span>
-      <div class="nav-item-label">Cart</div>
-    </a>
-    <a href="profile.html" class="nav-item active">
-      <span class="material-symbols-rounded">person</span>
-      <div class="nav-item-label">Profile</div>
-    </a>
-  </div>
-
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
@@ -471,143 +112,49 @@
       appId: "1:183628570952:web:3028bb258001d004d9537d"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
-    
-    const loadingOverlay = document.getElementById('loading-overlay');
-    const mainContent = document.getElementById('main-content');
-    const headerUserNameEl = document.getElementById('header-user-name');
-    const emailListItem = document.getElementById('email-list-item');
 
-    const profileView = document.getElementById('profile-view');
-    const profileEditForm = document.getElementById('profile-edit-form');
-    const editProfileBtn = document.getElementById('edit-profile-btn');
-    const editImageBtn = document.getElementById('edit-image-btn');
-    const cancelEditBtn = document.getElementById('cancel-edit-btn');
-    const saveProfileBtn = document.getElementById('save-profile-btn');
-    const logoutBtn = document.getElementById('logout-btn');
-
-    const profilePic = document.getElementById('profile-pic');
-    const displayNameEl = document.getElementById('user-display-name');
-    const emailAddressEl = document.getElementById('user-email-address');
-    const phoneEl = document.getElementById('user-phone');
-    const addressEl = document.getElementById('user-address');
-
-    const nameInput = document.getElementById('name');
-    const phoneInput = document.getElementById('phone');
-    const addressInput = document.getElementById('address');
-    const imageUrlInput = document.getElementById('imageUrl');
-    
-    let currentUser;
-
-    const GITHUB_ASSETS_BASE_URL = "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/";
-
-    const updateProfileUI = (userData) => {
-        displayNameEl.innerText = userData.name || "User";
-        headerUserNameEl.innerText = `Hi, ${userData.name || "User"}`;
-        
-        const email = currentUser.email;
-        // Check if the email is a generated Firebase placeholder
-        if (email && !email.includes('@banerjeemart.com')) {
-            emailAddressEl.innerText = email;
-            emailListItem.style.display = 'flex'; // Show the email item
-        } else {
-            emailListItem.style.display = 'none'; // Hide the email item
-        }
-
-        phoneEl.innerText = userData.phone || "N/A";
-        addressEl.innerText = userData.address || "N/A";
-        
-        if (userData.imageUrl) {
-            profilePic.src = GITHUB_ASSETS_BASE_URL + userData.imageUrl;
-        } else {
-            profilePic.src = "https://via.placeholder.com/120?text=P";
-        }
-    };
-    
-    const fillEditForm = (userData) => {
-        nameInput.value = userData.name || '';
-        phoneInput.value = userData.phone || '';
-        addressInput.value = userData.address || '';
-        imageUrlInput.value = userData.imageUrl || '';
-    };
-
-    const toggleEditMode = (isEditing) => {
-        profileView.style.display = isEditing ? 'none' : 'block';
-        profileEditForm.style.display = isEditing ? 'block' : 'none';
-        editImageBtn.style.display = isEditing ? 'flex' : 'none';
-    };
-
-    // Auth state observer
-    auth.onAuthStateChanged(async (user) => {
-        if (!user) {
-            window.location.href = 'auth.html';
-            return;
-        }
-        
-        currentUser = user;
-        
-        try {
-            const userDoc = await db.collection("users").doc(currentUser.uid).get();
-            let userData = userDoc.exists ? userDoc.data() : { name: 'User' };
-            
-            updateProfileUI(userData);
-            fillEditForm(userData);
-
-        } catch (error) {
-            console.error("Error fetching user data:", error);
-            updateProfileUI({ name: 'User' });
-        } finally {
-            // Hide loading overlay and show main content
-            loadingOverlay.classList.add('hidden');
-            mainContent.style.display = 'block';
-        }
-    });
-
-    // Event listeners
-    editProfileBtn.addEventListener('click', () => {
-        toggleEditMode(true);
-    });
-
-    cancelEditBtn.addEventListener('click', () => {
-        toggleEditMode(false);
-    });
-
-    editImageBtn.addEventListener('click', () => {
-        imageUrlInput.focus();
-    });
-    
-    saveProfileBtn.addEventListener('click', async () => {
-        if (!currentUser) return;
-        
-        const updatedData = {
-            name: nameInput.value,
-            phone: phoneInput.value,
-            address: addressInput.value,
-            imageUrl: imageUrlInput.value
-        };
-        
-        try {
-            await db.collection("users").doc(currentUser.uid).update(updatedData);
-            alert('Profile updated successfully!');
-            updateProfileUI(updatedData);
-            toggleEditMode(false);
-        } catch (error) {
-            console.error("Error updating profile:", error);
-            alert("An error occurred while saving your profile. Please try again.");
-        }
-    });
-
-    logoutBtn.addEventListener('click', async () => {
-      try {
-        await auth.signOut();
-        window.location.href = 'auth.html';
-      } catch (error) {
-        console.error("Error signing out:", error);
-        alert("An error occurred during logout. Please try again.");
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        db.collection("users").doc(user.uid).get().then(doc => {
+          if (doc.exists) {
+            const data = doc.data();
+            document.getElementById("name").value = data.name || "";
+            document.getElementById("email").value = user.email || "";
+            document.getElementById("phone").value = data.phone || "";
+            document.getElementById("address").value = data.address || "";
+            if (data.imageUrl) {
+              document.getElementById("profile-pic").src = data.imageUrl;
+            }
+          }
+        });
+      } else {
+        window.location.href = "auth.html";
       }
     });
+
+    function updateProfile() {
+      const user = auth.currentUser;
+      if (user) {
+        db.collection("users").doc(user.uid).set({
+          name: document.getElementById("name").value,
+          phone: document.getElementById("phone").value,
+          address: document.getElementById("address").value,
+          imageUrl: document.getElementById("profile-pic").src
+        }, { merge: true }).then(() => {
+          alert("Profile updated!");
+        });
+      }
+    }
+
+    function logout() {
+      auth.signOut().then(() => {
+        window.location.href = "auth.html";
+      });
+    }
   </script>
+
 </body>
 </html>
