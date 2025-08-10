@@ -432,11 +432,12 @@
 
         try {
             const cartRef = db.collection("carts").doc(currentUser.uid);
+            
             cartRef.onSnapshot(async (doc) => {
                 const cartData = doc.data();
                 const items = cartData ? cartData.items : [];
-
-                cartContainer.innerHTML = ''; // Clear previous items
+                
+                cartContainer.innerHTML = '';
                 let subtotal = 0;
 
                 if (!items || items.length === 0) {
@@ -447,10 +448,19 @@
 
                 emptyCartMessage.style.display = 'none';
 
-                for (const item of items) {
-                    const productDoc = await db.collection("products").doc(item.productId).get();
-                    if (productDoc.exists) {
-                        const product = productDoc.data();
+                const productPromises = items.map(item => db.collection("products").doc(item.productId).get());
+                const productDocs = await Promise.all(productPromises);
+                
+                const products = {};
+                productDocs.forEach(doc => {
+                    if (doc.exists) {
+                        products[doc.id] = doc.data();
+                    }
+                });
+                
+                items.forEach(item => {
+                    const product = products[item.productId];
+                    if (product) {
                         const itemTotal = product.price * item.quantity;
                         subtotal += itemTotal;
 
@@ -471,7 +481,7 @@
                         `;
                         cartContainer.appendChild(cartItemEl);
                     }
-                }
+                });
                 
                 const deliveryCharge = subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_CHARGE;
                 const totalPrice = subtotal + deliveryCharge;
@@ -504,7 +514,7 @@
             if (itemIndex > -1) {
                 items[itemIndex].quantity += change;
                 if (items[itemIndex].quantity <= 0) {
-                    items.splice(itemIndex, 1); // Remove item if quantity is 0 or less
+                    items.splice(itemIndex, 1);
                 }
                 transaction.update(cartRef, { items: items });
             }
@@ -512,7 +522,7 @@
     };
 
     const removeItem = async (productId) => {
-        await updateQuantity(productId, -1000); // A large number to ensure removal
+        await updateQuantity(productId, -1000);
     };
     
     const checkoutHandler = async () => {
@@ -530,14 +540,36 @@
         }
 
         try {
-            const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+            // Fetch product data again to calculate correct totals
+            const productPromises = cartItems.map(item => db.collection("products").doc(item.productId).get());
+            const productDocs = await Promise.all(productPromises);
+            
+            let subtotal = 0;
+            const orderItems = [];
+
+            productDocs.forEach((doc, index) => {
+                if (doc.exists) {
+                    const product = doc.data();
+                    const cartItem = cartItems[index];
+                    const itemTotal = product.price * cartItem.quantity;
+                    subtotal += itemTotal;
+                    orderItems.push({
+                        productId: cartItem.productId,
+                        name: product.name,
+                        price: product.price,
+                        quantity: cartItem.quantity,
+                        imageUrl: product.imageUrl
+                    });
+                }
+            });
+
             const deliveryCharge = subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_CHARGE;
             const total = subtotal + deliveryCharge;
 
             const orderRef = db.collection('orders').doc();
             await orderRef.set({
                 userId: currentUser.uid,
-                items: cartItems,
+                items: orderItems,
                 subtotal: subtotal,
                 deliveryCharge: deliveryCharge,
                 total: total,
@@ -545,7 +577,6 @@
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
 
-            // Clear the user's cart
             await db.collection("carts").doc(currentUser.uid).set({ items: [] });
             
             alert(`Order confirmed! Your Order ID is ${orderRef.id}.`);
