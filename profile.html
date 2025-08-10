@@ -13,7 +13,8 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 
   <style>
-    /* * Redesigned to integrate Morphism (Glassmorphism + Neumorphism) with Material 3.0 principles.
+    /*
+     * Redesigned to integrate Morphism (Glassmorphism + Neumorphism) with Material 3.0 principles.
      * New CSS variables for soft shadows, translucency, and glow effects.
      */
     :root {
@@ -77,7 +78,7 @@
       padding: 16px;
     }
 
-    /* Loading Overlay - New, simpler loader */
+    /* Loading Overlay - Skeleton Screen */
     .loading-overlay {
       position: fixed;
       top: 0;
@@ -87,11 +88,12 @@
       background-color: var(--background-color);
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
       gap: 24px;
       z-index: 2000;
       transition: opacity 0.3s ease-in-out;
+      padding-top: 80px;
     }
 
     .loading-overlay.hidden {
@@ -99,24 +101,58 @@
       pointer-events: none;
     }
     
-    .loading-spinner {
-        width: 50px;
-        height: 50px;
-        border: 5px solid var(--surface-variant);
-        border-top-color: var(--primary-color);
+    .skeleton-card {
+        background: var(--surface-color);
+        padding: 24px;
+        border-radius: var(--border-radius-xl);
+        box-shadow: var(--neumorphic-shadow);
+        width: 90%;
+        max-width: 600px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        animation: pulse 1.5s infinite;
+    }
+
+    .skeleton-avatar {
+        width: 120px;
+        height: 120px;
         border-radius: 50%;
-        animation: spin 1s linear infinite;
+        background: var(--surface-variant);
     }
-    
-    @keyframes spin {
-        to {
-            transform: rotate(360deg);
-        }
+
+    .skeleton-text {
+        height: 16px;
+        background: var(--surface-variant);
+        border-radius: 4px;
+        width: 80%;
     }
-    
-    .loading-text {
-        font-size: 16px;
-        color: var(--on-surface-variant);
+    .skeleton-text.large {
+        height: 24px;
+        width: 60%;
+        margin-bottom: 16px;
+    }
+
+    .skeleton-list {
+        list-style: none;
+        padding: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-top: 24px;
+    }
+    .skeleton-list-item {
+        height: 16px;
+        background: var(--surface-variant);
+        border-radius: 4px;
+        width: 90%;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
     }
 
     /* Header - Glassmorphic effect */
@@ -453,8 +489,15 @@
 <body>
   
   <div id="loading-overlay" class="loading-overlay">
-    <div class="loading-spinner"></div>
-    <div class="loading-text">Loading...</div>
+    <div class="skeleton-card">
+        <div class="skeleton-avatar"></div>
+        <div class="skeleton-text large"></div>
+        <ul class="skeleton-list">
+            <li class="skeleton-list-item"></li>
+            <li class="skeleton-list-item"></li>
+            <li class="skeleton-list-item"></li>
+        </ul>
+    </div>
   </div>
 
   <div class="header">
@@ -553,143 +596,4 @@
       appId: "1:183628570952:web:3028bb258001d004d9537d"
     };
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    
-    const loadingOverlay = document.getElementById('loading-overlay');
-    const mainContent = document.getElementById('main-content');
-    const headerUserNameEl = document.getElementById('header-user-name');
-    const emailListItem = document.getElementById('email-list-item');
-
-    const profileView = document.getElementById('profile-view');
-    const profileEditForm = document.getElementById('profile-edit-form');
-    const editProfileBtn = document.getElementById('edit-profile-btn');
-    const editImageBtn = document.getElementById('edit-image-btn');
-    const cancelEditBtn = document.getElementById('cancel-edit-btn');
-    const saveProfileBtn = document.getElementById('save-profile-btn');
-    const logoutBtn = document.getElementById('logout-btn');
-
-    const profilePic = document.getElementById('profile-pic');
-    const displayNameEl = document.getElementById('user-display-name');
-    const emailAddressEl = document.getElementById('user-email-address');
-    const phoneEl = document.getElementById('user-phone');
-    const addressEl = document.getElementById('user-address');
-
-    const nameInput = document.getElementById('name');
-    const phoneInput = document.getElementById('phone');
-    const addressInput = document.getElementById('address');
-    const imageUrlInput = document.getElementById('imageUrl');
-    
-    let currentUser;
-
-    const GITHUB_ASSETS_BASE_URL = "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/";
-
-    const updateProfileUI = (userData) => {
-        displayNameEl.innerText = userData.name || "User";
-        headerUserNameEl.innerText = `Hi, ${userData.name || "User"}`;
-        
-        const email = currentUser.email;
-        // Check if the email is a generated Firebase placeholder
-        if (email && !email.includes('@banerjeemart.com')) {
-            emailAddressEl.innerText = email;
-            emailListItem.style.display = 'flex'; // Show the email item
-        } else {
-            emailListItem.style.display = 'none'; // Hide the email item
-        }
-
-        phoneEl.innerText = userData.phone || "N/A";
-        addressEl.innerText = userData.address || "N/A";
-        
-        if (userData.imageUrl) {
-            profilePic.src = GITHUB_ASSETS_BASE_URL + userData.imageUrl;
-        } else {
-            profilePic.src = "https://via.placeholder.com/120?text=P";
-        }
-    };
-    
-    const fillEditForm = (userData) => {
-        nameInput.value = userData.name || '';
-        phoneInput.value = userData.phone || '';
-        addressInput.value = userData.address || '';
-        imageUrlInput.value = userData.imageUrl || '';
-    };
-
-    const toggleEditMode = (isEditing) => {
-        profileView.style.display = isEditing ? 'none' : 'block';
-        profileEditForm.style.display = isEditing ? 'block' : 'none';
-        editImageBtn.style.display = isEditing ? 'flex' : 'none';
-    };
-
-    // Auth state observer
-    auth.onAuthStateChanged(async (user) => {
-        if (!user) {
-            window.location.href = 'auth.html';
-            return;
-        }
-        
-        currentUser = user;
-        
-        try {
-            const userDoc = await db.collection("users").doc(currentUser.uid).get();
-            let userData = userDoc.exists ? userDoc.data() : { name: 'User' };
-            
-            updateProfileUI(userData);
-            fillEditForm(userData);
-
-        } catch (error) {
-            console.error("Error fetching user data:", error);
-            updateProfileUI({ name: 'User' });
-        } finally {
-            // Hide loading overlay and show main content
-            loadingOverlay.classList.add('hidden');
-            mainContent.style.display = 'block';
-        }
-    });
-
-    // Event listeners
-    editProfileBtn.addEventListener('click', () => {
-        toggleEditMode(true);
-    });
-
-    cancelEditBtn.addEventListener('click', () => {
-        toggleEditMode(false);
-    });
-
-    editImageBtn.addEventListener('click', () => {
-        imageUrlInput.focus();
-    });
-    
-    saveProfileBtn.addEventListener('click', async () => {
-        if (!currentUser) return;
-        
-        const updatedData = {
-            name: nameInput.value,
-            phone: phoneInput.value,
-            address: addressInput.value,
-            imageUrl: imageUrlInput.value
-        };
-        
-        try {
-            await db.collection("users").doc(currentUser.uid).update(updatedData);
-            alert('Profile updated successfully!');
-            updateProfileUI(updatedData);
-            toggleEditMode(false);
-        } catch (error) {
-            console.error("Error updating profile:", error);
-            alert("An error occurred while saving your profile. Please try again.");
-        }
-    });
-
-    logoutBtn.addEventListener('click', async () => {
-      try {
-        await auth.signOut();
-        window.location.href = 'auth.html';
-      } catch (error) {
-        console.error("Error signing out:", error);
-        alert("An error occurred during logout. Please try again.");
-      }
-    });
-  </script>
-</body>
-</html>
+    firebase.
