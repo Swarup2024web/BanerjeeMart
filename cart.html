@@ -6,7 +6,7 @@
   <title>Your Cart - Banerjee Mart</title>
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
@@ -468,29 +468,27 @@
     let userCartRef;
 
     async function updateCartItem(productId, newQuantity) {
-        if (!userCartRef) return;
-        const cartDoc = await userCartRef.get();
-        if (cartDoc.exists) {
-            let cart = cartDoc.data().items || [];
-            const itemIndex = cart.findIndex(item => item.id === productId);
-            if (itemIndex > -1) {
-                if (newQuantity > 0) {
-                    cart[itemIndex].quantity = newQuantity;
-                } else {
-                    cart.splice(itemIndex, 1);
-                }
-            }
-            await userCartRef.set({ items: cart });
-        }
-    }
+        if (!userCartRef || !user) return;
+        
+        try {
+            await db.runTransaction(async (transaction) => {
+                const cartDoc = await transaction.get(userCartRef);
+                if (!cartDoc.exists) return;
 
-    async function removeItemFromCart(productId) {
-        if (!userCartRef) return;
-        const cartDoc = await userCartRef.get();
-        if (cartDoc.exists) {
-            let cart = cartDoc.data().items || [];
-            const newCart = cart.filter(item => item.id !== productId);
-            await userCartRef.set({ items: newCart });
+                let items = cartDoc.data().items || [];
+                const itemIndex = items.findIndex(item => item.id === productId);
+
+                if (itemIndex > -1) {
+                    if (newQuantity > 0) {
+                        items[itemIndex].quantity = newQuantity;
+                    } else {
+                        items.splice(itemIndex, 1);
+                    }
+                    transaction.update(userCartRef, { items: items });
+                }
+            });
+        } catch (error) {
+            console.error("Transaction failed: ", error);
         }
     }
 
@@ -513,7 +511,7 @@
             const deliveryCharge = subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_CHARGE;
             const total = subtotal + deliveryCharge;
 
-            const orderRef = db.collection('user-orders').doc();
+            const orderRef = db.collection('orders').doc(); // Changed collection name to 'orders' for clarity
             await orderRef.set({
                 userId: user.uid,
                 items: cartItems,
@@ -555,14 +553,15 @@
             
             const imageUrl = GITHUB_ASSETS_BASE_URL + item.imageUrl;
 
+            const itemTotalPrice = (item.price * item.quantity).toFixed(2);
             itemElement.innerHTML = `
                 <img src="${imageUrl}" alt="${item.name}">
                 <div class="item-details">
                     <div class="item-title">${item.name}</div>
-                    <div class="item-price" data-price="${item.price}">₹${(item.price * item.quantity).toFixed(2)}</div>
+                    <div class="item-price">₹${itemTotalPrice}</div>
                     <div class="item-actions">
                         <div class="quantity-controls">
-                            <button class="quantity-btn decrease-qty" data-id="${item.id}">-</button>
+                            <button class="quantity-btn decrease-qty" data-id="${item.id}" ${item.quantity <= 1 ? 'disabled' : ''}>-</button>
                             <span class="item-quantity">${item.quantity}</span>
                             <button class="quantity-btn increase-qty" data-id="${item.id}">+</button>
                         </div>
@@ -583,27 +582,27 @@
         deliveryPriceEl.textContent = calculatedDelivery === 0 ? "Free" : `₹${calculatedDelivery.toFixed(2)}`;
         totalPriceEl.textContent = `₹${total.toFixed(2)}`;
 
+        // Attach event listeners after rendering
         cartItemsContainer.querySelectorAll('.increase-qty').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const productId = e.currentTarget.dataset.id;
+            btn.addEventListener('click', () => {
+                const productId = btn.dataset.id;
                 const item = cartItems.find(i => i.id === productId);
                 if (item) updateCartItem(productId, item.quantity + 1);
             });
         });
 
         cartItemsContainer.querySelectorAll('.decrease-qty').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const productId = e.currentTarget.dataset.id;
+            btn.addEventListener('click', () => {
+                const productId = btn.dataset.id;
                 const item = cartItems.find(i => i.id === productId);
-                if (item && item.quantity > 1) updateCartItem(productId, item.quantity - 1);
-                else if (item && item.quantity === 1) removeItemFromCart(productId);
+                if (item && item.quantity > 0) updateCartItem(productId, item.quantity - 1);
             });
         });
         
         cartItemsContainer.querySelectorAll('.remove-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const productId = e.currentTarget.dataset.id;
-                removeItemFromCart(productId);
+            btn.addEventListener('click', () => {
+                const productId = btn.dataset.id;
+                updateCartItem(productId, 0); // Set quantity to 0 to remove
             });
         });
     }
@@ -619,7 +618,7 @@
             }
         }, err => {
             console.error("Error fetching cart:", err);
-            cartItemsContainer.innerHTML = '<p>Could not load your cart. Please try again later.</p>';
+            cartItemsContainer.innerHTML = '<p class="empty-cart-message">Could not load your cart. Please try again later.</p>';
         });
     }
 
