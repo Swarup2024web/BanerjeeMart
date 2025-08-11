@@ -1,386 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Banerjee Mart - Auth</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-  
-  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-storage-compat.js"></script>
-
-  <style>
-    /* Base Styles */
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #fbc2eb, #a6c1ee);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-    
-    /* Container */
-    .container {
-      width: 100%;
-      max-width: 420px;
-      background: white;
-      border-radius: 12px;
-      padding: 30px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      box-sizing: border-box;
-    }
-    
-    h2 {
-      text-align: center;
-      margin-bottom: 25px;
-      color: #333;
-      font-size: 24px;
-    }
-    
-    /* Form Elements */
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
-    label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: #555;
-    }
-    
-    input, select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      box-sizing: border-box;
-      transition: border-color 0.3s;
-    }
-    
-    input:focus, select:focus {
-      outline: none;
-      border-color: #007bff;
-    }
-    
-    button {
-      width: 100%;
-      background: #007bff;
-      color: white;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 15px;
-      transition: background-color 0.3s;
-    }
-    
-    button:hover {
-      background: #0056b3;
-    }
-    
-    .toggle-link {
-      text-align: center;
-      margin-top: 18px;
-      color: #007bff;
-      cursor: pointer;
-      font-weight: 500;
-      transition: color 0.3s;
-    }
-    
-    .toggle-link:hover {
-      color: #0056b3;
-    }
-    
-    /* Form Sections and Messages */
-    .form-section {
-      display: none;
-    }
-    
-    .form-section.active {
-      display: block;
-    }
-    
-    .photo-preview {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-top: 10px;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      border: 2px solid #ddd;
-    }
-    
-    .msg {
-      text-align: center;
-      margin-top: 15px;
-      font-weight: bold;
-      color: #dc3545;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B Mart - Sign in</title>
+    <style>
+        body { font-family: 'Amazon Ember', Arial, sans-serif; background-color: #fff; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 100vh; }
+        .logo-container { padding: 20px 0; }
+        .logo-container img { width: 100px; }
+        .auth-container { width: 90%; max-width: 350px; padding: 20px 26px; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
+        h1 { font-size: 28px; font-weight: 400; margin-top: 0; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: bold; font-size: 13px; margin-bottom: 5px; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 3px; box-sizing: border-box; font-size: 14px; }
+        .form-group input:focus { outline: none; border-color: #e77600; box-shadow: 0 0 5px rgba(225,125,0,0.5); }
+        .btn-submit { background-color: #ff9900; border: 1px solid #ff8f00; color: #111; width: 100%; padding: 10px; border-radius: 3px; cursor: pointer; font-size: 14px; font-weight: bold; margin-top: 10px; }
+        .btn-submit:hover { background-color: #f79900; }
+        .forgot-password-link { display: block; text-align: right; margin-top: 10px; font-size: 13px; color: #0066c0; text-decoration: none; }
+        .forgot-password-link:hover { text-decoration: underline; }
+        .divider { display: flex; align-items: center; text-align: center; color: #767676; margin: 20px 0; font-size: 12px; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #ddd; }
+        .divider:not(:empty)::before { margin-right: .25em; }
+        .divider:not(:empty)::after { margin-left: .25em; }
+        .create-account-button { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 3px; background-color: #e7e9ec; font-size: 14px; cursor: pointer; text-decoration: none; display: block; text-align: center; color: #111; }
+        .create-account-button:hover { background-color: #d8dbdf; }
+        .back-to-login { display: block; text-align: center; margin-top: 20px; font-size: 13px; color: #0066c0; text-decoration: none; }
+        .back-to-login:hover { text-decoration: underline; }
+        .footer { margin-top: 50px; font-size: 12px; color: #555; text-align: center; }
+        .footer a { color: #0066c0; text-decoration: none; margin: 0 5px; }
+        .footer a:hover { text-decoration: underline; }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h2 id="form-title">Login</h2>
-    <div class="msg" id="msg"></div>
 
-    <div id="login-section" class="form-section active" data-section="login">
-      <div class="form-group">
-        <label><span class="material-symbols-outlined">phone</span> Phone Number</label>
-        <input type="text" id="login-phone" placeholder="Enter phone number">
-      </div>
-      <div class="form-group">
-        <label><span class="material-symbols-outlined">lock</span> Password</label>
-        <input type="password" id="login-password" placeholder="Enter password">
-      </div>
-      <button id="login-btn">Login</button>
-      <div class="toggle-link" data-target="register">New user? Register</div>
-      <div class="toggle-link" data-target="forgot">Forgot password?</div>
+    <div class="logo-container">
+        <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/b-mart-logo.png" alt="B Mart Logo">
     </div>
 
-    <div id="register-section" class="form-section" data-section="register">
-      <div class="form-group">
-        <label><span class="material-symbols-outlined">person</span> Full Name</label>
-        <input type="text" id="reg-name" placeholder="Enter full name">
-      </div>
-      <div class="form-group">
-        <label><span class="material-symbols-outlined">phone</span> Phone Number</label>
-        <input type="text" id="reg-phone" placeholder="Enter phone number">
-      </div>
-      <div class="form-group">
-        <label><span class="material-symbols-outlined">mail</span> Email (optional)</label>
-        <input type="email" id="reg-email" placeholder="Enter email (optional)">
-      </div>
-      <div class="form-group">
-        <label><span class="material-symbols-outlined">home</span> Address</label>
-        <select id="reg-address">
-          <option value="Pakurtala">Pakurtala</option>
-          <option value="Rajuakhaki">Rajuakhaki</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label><span class="material-symbols-outlined">add_a_photo</span> Profile Photo</label>
-        <input type="file" id="reg-photo" accept="image/*">
-        <img id="photo-preview" class="photo-preview" alt="Profile Preview">
-      </div>
-      <div class="form-group">
-        <label><span class="material-symbols-outlined">lock</span> Password</label>
-        <input type="password" id="reg-password" placeholder="Set a password">
-      </div>
-      <button id="register-btn">Register</button>
-      <div class="toggle-link" data-target="login">Back to login</div>
+    <div class="auth-container" id="login-form-container">
+        <form id="login-form">
+            <h1>Sign in</h1>
+            <div class="form-group">
+                <label for="login-email">Email or mobile phone number</label>
+                <input type="email" id="login-email" required>
+            </div>
+            <div class="form-group">
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" required>
+            </div>
+            <button type="submit" class="btn-submit">Continue</button>
+            <a href="#" class="forgot-password-link" onclick="showForm('forgot-password-form-container')">Forgot your password?</a>
+        </form>
     </div>
 
-    <div id="forgot-section" class="form-section" data-section="forgot">
-      <div class="form-group">
-        <label><span class="material-symbols-outlined">mail</span> Email Address</label>
-        <input type="email" id="forgot-email" placeholder="Enter registered email">
-      </div>
-      <button id="reset-btn">Send Reset Email</button>
-      <div class="toggle-link" data-target="login">Back to login</div>
+    <div class="auth-container" id="registration-form-container" style="display: none;">
+        <form id="registration-form">
+            <h1>Create account</h1>
+            <div class="form-group">
+                <label for="register-name">Your name</label>
+                <input type="text" id="register-name" required>
+            </div>
+            <div class="form-group">
+                <label for="register-email">Email or mobile phone number</label>
+                <input type="email" id="register-email" required>
+            </div>
+            <div class="form-group">
+                <label for="register-password">Password</label>
+                <input type="password" id="register-password" placeholder="At least 6 characters" required>
+            </div>
+            <button type="submit" class="btn-submit">Create your B Mart account</button>
+        </form>
+        <a href="#" class="back-to-login" onclick="showForm('login-form-container')">Back to Sign in</a>
     </div>
-  </div>
 
-  <script>
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
-      authDomain: "banerjee-mart.firebaseapp.com",
-      projectId: "banerjee-mart",
-      storageBucket: "banerjee-mart.appspot.com",
-      messagingSenderId: "183628570952",
-      appId: "1:183628570952:web:3028bb258001d004d9537d"
-    };
+    <div class="auth-container" id="forgot-password-form-container" style="display: none;">
+        <form id="forgot-password-form">
+            <h1>Password assistance</h1>
+            <p style="font-size: 14px; margin-bottom: 20px;">Enter the email address or mobile phone number associated with your B Mart account.</p>
+            <div class="form-group">
+                <label for="forgot-email">Email or mobile phone number</label>
+                <input type="email" id="forgot-email" required>
+            </div>
+            <button type="submit" class="btn-submit">Continue</button>
+        </form>
+        <a href="#" class="back-to-login" onclick="showForm('login-form-container')">Back to Sign in</a>
+    </div>
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    const storage = firebase.storage();
+    <div class="auth-container" style="margin-top: 20px; text-align: center; padding: 20px 0; border: none; box-shadow: none;">
+        <div class="divider">New to B Mart?</div>
+        <a href="#" class="create-account-button" onclick="showForm('registration-form-container')">Create your B Mart account</a>
+    </div>
 
-    // Cache DOM elements
-    const formTitle = document.getElementById('form-title');
-    const msg = document.getElementById('msg');
-    const sections = document.querySelectorAll('.form-section');
-    const toggleLinks = document.querySelectorAll('.toggle-link');
+    <div class="footer">
+        <div>
+            <a href="#">Conditions of Use</a>
+            <a href="#">Privacy Notice</a>
+            <a href="#">Help</a>
+        </div>
+        <div style="margin-top: 10px;">
+            &copy; 2024-2025, B Mart.com
+        </div>
+    </div>
 
-    // Registration form elements
-    const regName = document.getElementById('reg-name');
-    const regPhone = document.getElementById('reg-phone');
-    const regEmail = document.getElementById('reg-email');
-    const regAddress = document.getElementById('reg-address');
-    const regPhoto = document.getElementById('reg-photo');
-    const regPassword = document.getElementById('reg-password');
-    const photoPreview = document.getElementById('photo-preview');
-    const registerBtn = document.getElementById('register-btn');
-
-    // Login form elements
-    const loginPhone = document.getElementById('login-phone');
-    const loginPassword = document.getElementById('login-password');
-    const loginBtn = document.getElementById('login-btn');
-
-    // Forgot password form elements
-    const forgotEmail = document.getElementById('forgot-email');
-    const resetBtn = document.getElementById('reset-btn');
-
-    // Event Listeners
-    document.addEventListener('DOMContentLoaded', () => showSection('login'));
-    regPhoto.addEventListener('change', handlePhotoPreview);
-    registerBtn.addEventListener('click', handleRegister);
-    loginBtn.addEventListener('click', handleLogin);
-    resetBtn.addEventListener('click', handleResetPassword);
-
-    toggleLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
-        const target = e.target.dataset.target;
-        showSection(target);
-      });
-    });
-
-    /**
-     * Toggles the active form section and updates the title.
-     * @param {string} sectionName - The name of the section to show ('login', 'register', 'forgot').
-     */
-    function showSection(sectionName) {
-      sections.forEach(s => s.classList.remove('active'));
-      document.querySelector(`[data-section="${sectionName}"]`).classList.add('active');
-      formTitle.textContent = sectionName.charAt(0).toUpperCase() + sectionName.slice(1);
-      msg.textContent = '';
-    }
-
-    /**
-     * Displays a preview of the selected profile photo.
-     */
-    function handlePhotoPreview() {
-      const file = this.files[0];
-      if (file) {
-        photoPreview.src = URL.createObjectURL(file);
-      }
-    }
-
-    /**
-     * Maps Firebase error codes to user-friendly messages.
-     * @param {string} errorCode - The Firebase error code.
-     * @returns {string} - A friendly error message.
-     */
-    function getFriendlyErrorMessage(errorCode) {
-      switch (errorCode) {
-        case 'auth/email-already-in-use':
-          return 'This phone number is already registered. Please log in or use a different number.';
-        case 'auth/weak-password':
-          return 'Password must be at least 6 characters long.';
-        case 'auth/invalid-email':
-        case 'auth/user-not-found':
-          return 'Invalid credentials. Please check your phone number and password.';
-        case 'auth/wrong-password':
-          return 'Incorrect password. Please try again.';
-        default:
-          console.error('Unhandled Firebase error:', errorCode);
-          return 'An unexpected error occurred. Please try again.';
-      }
-    }
-
-    /**
-     * Displays a message to the user.
-     * @param {string} message - The message to display.
-     * @param {string} type - 'success' or 'error' to determine color.
-     */
-    function displayMessage(message, type) {
-      msg.textContent = message;
-      msg.style.color = type === 'success' ? '#28a745' : '#dc3545';
-    }
-
-    /**
-     * Handles user registration.
-     */
-    async function handleRegister() {
-      const name = regName.value;
-      const phone = regPhone.value;
-      const email = regEmail.value;
-      const address = regAddress.value;
-      const password = regPassword.value;
-      const photoFile = regPhoto.files[0];
-
-      if (!name || !phone || !password) {
-        return displayMessage('Please fill in your full name, phone number, and password.', 'error');
-      }
-
-      const emailId = email || `${phone}@banerjeemart.com`;
-      try {
-        const userCredential = await auth.createUserWithEmailAndPassword(emailId, password);
-        const uid = userCredential.user.uid;
-
-        let imageUrl = '';
-        if (photoFile) {
-          const storageRef = storage.ref(`profile_photos/${uid}`);
-          await storageRef.put(photoFile);
-          imageUrl = await storageRef.getDownloadURL();
+    <script>
+        // This is the JavaScript for switching between forms.
+        // The actual authentication logic for Firebase would go here.
+        function showForm(formId) {
+            document.getElementById('login-form-container').style.display = 'none';
+            document.getElementById('registration-form-container').style.display = 'none';
+            document.getElementById('forgot-password-form-container').style.display = 'none';
+            document.getElementById(formId).style.display = 'block';
         }
 
-        await db.collection('users').doc(uid).set({
-          name,
-          phone,
-          email: email || '',
-          address,
-          imageUrl,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        displayMessage('Registration successful! Redirecting...', 'success');
-        setTimeout(() => window.location.href = 'index.html', 1500);
-      } catch (error) {
-        displayMessage(getFriendlyErrorMessage(error.code) || 'Registration failed. Please try again.', 'error');
-      }
-    }
-
-    /**
-     * Handles user login.
-     */
-    async function handleLogin() {
-      const phone = loginPhone.value;
-      const password = loginPassword.value;
-
-      if (!phone || !password) {
-        return displayMessage('Please enter both your phone number and password.', 'error');
-      }
-
-      const email = `${phone}@banerjeemart.com`;
-      try {
-        await auth.signInWithEmailAndPassword(email, password);
-        displayMessage('Login successful! Redirecting...', 'success');
-        setTimeout(() => window.location.href = 'index.html', 1500);
-      } catch (error) {
-        displayMessage(getFriendlyErrorMessage(error.code) || 'Login failed. Please check your credentials.', 'error');
-      }
-    }
-
-    /**
-     * Sends a password reset email.
-     */
-    async function handleResetPassword() {
-      const email = forgotEmail.value;
-
-      if (!email) {
-        return displayMessage('Please enter the email address you registered with.', 'error');
-      }
-
-      try {
-        await auth.sendPasswordResetEmail(email);
-        displayMessage('Password reset email sent! Check your inbox.', 'success');
-      } catch (error) {
-        displayMessage(getFriendlyErrorMessage(error.code) || 'Could not send reset email. Please try again.', 'error');
-      }
-    }
-  </script>
+        // You will add your Firebase SDK initialization and authentication functions here.
+        // For example:
+        //
+        // import { initializeApp } from "firebase/app";
+        // import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged } from "firebase/auth";
+        //
+        // const firebaseConfig = {
+        //   apiKey: "YOUR_API_KEY",
+        //   ...
+        // };
+        // const app = initializeApp(firebaseConfig);
+        // const auth = getAuth(app);
+        //
+        // document.getElementById('login-form').addEventListener('submit', (e) => {
+        //   e.preventDefault();
+        //   const email = document.getElementById('login-email').value;
+        //   const password = document.getElementById('login-password').value;
+        //   signInWithEmailAndPassword(auth, email, password)
+        //     .then((userCredential) => {
+        //       // Signed in successfully, redirect to the main page or admin page
+        //       window.location.href = 'index.html'; // or admin.html
+        //     })
+        //     .catch((error) => {
+        //       // Handle errors here
+        //       alert(error.message);
+        //     });
+        // });
+        //
+        // Similar event listeners for registration and forgot password forms.
+        // The `onAuthStateChanged` function will be crucial for the redirect logic on all your pages.
+    </script>
 </body>
 </html>
