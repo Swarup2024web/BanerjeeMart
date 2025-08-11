@@ -1,160 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Banerjee Mart - Profile</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
-    }
-    header {
-      background: #2874f0;
-      color: white;
-      padding: 15px;
-      text-align: center;
-      font-size: 18px;
-      font-weight: bold;
-    }
-    .profile-container {
-      max-width: 500px;
-      margin: 20px auto;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
-    }
-    .profile-pic {
-      display: block;
-      margin: auto;
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #ccc;
-    }
-    .input-group {
-      margin-top: 15px;
-    }
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    button {
-      margin-top: 15px;
-      width: 100%;
-      padding: 10px;
-      background: #2874f0;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-    }
-    button:hover {
-      background: #1a5fc3;
-    }
-    .logout {
-      background: #ff4b4b;
-    }
-    .logout:hover {
-      background: #d43f3f;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B Mart - Your Profile</title>
+    <style>
+        body { font-family: 'Amazon Ember', Arial, sans-serif; margin: 0; padding: 0; background-color: #eaeded; color: #111; }
+        .header { background-color: #232f3e; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; }
+        .header-logo { color: #fff; font-size: 24px; font-weight: bold; }
+        .header-logo a { text-decoration: none; color: #fff; }
+        .header-search { flex-grow: 1; margin: 0 20px; }
+        .header-search input { width: 100%; padding: 8px 12px; border-radius: 4px; border: none; }
+        .header-nav a { color: #fff; text-decoration: none; margin-left: 20px; font-size: 14px; }
+        .profile-container { max-width: 1200px; margin: 20px auto; padding: 20px; }
+        .profile-container h1 { font-size: 28px; font-weight: 400; margin: 0 0 20px 0; }
+        .profile-welcome { font-size: 24px; font-weight: 400; margin-bottom: 20px; }
+        .profile-cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .profile-card { background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
+        .profile-card:hover { transform: translateY(-5px); }
+        .profile-card h2 { font-size: 18px; font-weight: 500; margin-top: 0; }
+        .profile-card-icon { width: 40px; height: 40px; margin-bottom: 15px; }
+        .profile-card-content { font-size: 14px; color: #555; }
+        .profile-card-content a { color: #0066c0; text-decoration: none; }
+        .profile-card-content a:hover { text-decoration: underline; }
+
+        /* Modal for editing profile details */
+        .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); }
+        .modal-content { background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 500px; border-radius: 8px; }
+        .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
+        .close-btn:hover, .close-btn:focus { color: #000; text-decoration: none; cursor: pointer; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: bold; font-size: 13px; margin-bottom: 5px; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 3px; box-sizing: border-box; font-size: 14px; }
+        .btn-submit { background-color: #ff9900; border: 1px solid #ff8f00; color: #111; width: 100%; padding: 10px; border-radius: 3px; cursor: pointer; font-size: 14px; font-weight: bold; margin-top: 10px; }
+        .btn-submit:hover { background-color: #f79900; }
+    </style>
 </head>
 <body>
 
-  <header>My Profile</header>
-
-  <div class="profile-container">
-    <img src="https://via.placeholder.com/100" id="profile-pic" class="profile-pic" alt="Profile Picture">
-    
-    <div class="input-group">
-      <label>Name</label>
-      <input type="text" id="name">
+    <div class="header">
+        <div class="header-logo"><a href="#">B Mart</a></div>
+        <div class="header-search">
+            <input type="text" placeholder="Search B Mart">
+        </div>
+        <div class="header-nav">
+            <a href="#">Account</a>
+            <a href="#">Orders</a>
+            <a href="#">Cart</a>
+        </div>
     </div>
-    <div class="input-group">
-      <label>Email</label>
-      <input type="email" id="email" disabled>
-    </div>
-    <div class="input-group">
-      <label>Phone</label>
-      <input type="text" id="phone">
-    </div>
-    <div class="input-group">
-      <label>Address</label>
-      <input type="text" id="address">
-    </div>
-    
-    <button onclick="updateProfile()">Save Changes</button>
-    <button class="logout" onclick="logout()">Logout</button>
-  </div>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
-      authDomain: "banerjee-mart.firebaseapp.com",
-      projectId: "banerjee-mart",
-      storageBucket: "banerjee-mart.appspot.com",
-      messagingSenderId: "183628570952",
-      appId: "1:183628570952:web:3028bb258001d004d9537d"
-    };
+    <div class="profile-container">
+        <h1 id="welcome-message">Hello, User!</h1>
 
-    const app = firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+        <div class="profile-cards-grid">
+            
+            <div class="profile-card" onclick="location.href='#'">
+                <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/account_icon.png" alt="Your Account" class="profile-card-icon">
+                <h2>Your Account</h2>
+                <div class="profile-card-content">
+                    Manage your profile, login details, and preferences.
+                </div>
+            </div>
 
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        db.collection("users").doc(user.uid).get().then(doc => {
-          if (doc.exists) {
-            const data = doc.data();
-            document.getElementById("name").value = data.name || "";
-            document.getElementById("email").value = user.email || "";
-            document.getElementById("phone").value = data.phone || "";
-            document.getElementById("address").value = data.address || "";
-            if (data.imageUrl) {
-              document.getElementById("profile-pic").src = data.imageUrl;
+            <div class="profile-card" onclick="location.href='orders.html'">
+                <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/orders_icon.png" alt="Your Orders" class="profile-card-icon">
+                <h2>Your Orders</h2>
+                <div class="profile-card-content">
+                    Track, return, or buy things again.
+                </div>
+            </div>
+            
+            <div class="profile-card" onclick="showModal('addresses')">
+                <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/address_icon.png" alt="Your Addresses" class="profile-card-icon">
+                <h2>Your Addresses</h2>
+                <div class="profile-card-content">
+                    Edit shipping and billing addresses for your orders.
+                </div>
+            </div>
+
+            <div class="profile-card" onclick="showModal('payment')">
+                <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/payment_icon.png" alt="Payment Options" class="profile-card-icon">
+                <h2>Payment Options</h2>
+                <div class="profile-card-content">
+                    Manage your credit/debit card and other payment methods.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="addressesModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('addressesModal')">&times;</span>
+            <h2>Manage Your Addresses</h2>
+            <form id="address-form">
+                <div class="form-group">
+                    <label for="full-name">Full Name</label>
+                    <input type="text" id="full-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="street-address">Street Address</label>
+                    <input type="text" id="street-address" required>
+                </div>
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <input type="text" id="city" required>
+                </div>
+                <button type="submit" class="btn-submit">Save Address</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // This is a placeholder for the actual JavaScript logic.
+        // You will need to add the code to:
+        // 1. Initialize Firebase and check for user authentication. Redirect to auth.html if not logged in.
+        // 2. Fetch the current user's data from Firebase (e.g., their name).
+        // 3. Update the welcome message: `document.getElementById('welcome-message').textContent = 'Hello, ' + user.displayName + '!';`
+        // 4. Implement functions to show and hide the modals.
+        // 5. When a modal is opened, fetch the relevant user data (e.g., addresses) and populate the form fields.
+        // 6. Add event listeners to the modal forms to handle updates to the user's information in your Firebase database.
+        
+        function showModal(modalType) {
+            if (modalType === 'addresses') {
+                document.getElementById('addressesModal').style.display = 'block';
             }
-          }
-        });
-      } else {
-        window.location.href = "auth.html";
-      }
-    });
+            // You would add more `else if` statements for other modals like payment options.
+        }
 
-    function updateProfile() {
-      const user = auth.currentUser;
-      if (user) {
-        db.collection("users").doc(user.uid).set({
-          name: document.getElementById("name").value,
-          phone: document.getElementById("phone").value,
-          address: document.getElementById("address").value,
-          imageUrl: document.getElementById("profile-pic").src
-        }, { merge: true }).then(() => {
-          alert("Profile updated!");
-        });
-      }
-    }
-
-    function logout() {
-      auth.signOut().then(() => {
-        window.location.href = "auth.html";
-      });
-    }
-  </script>
-
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+    </script>
 </body>
 </html>
