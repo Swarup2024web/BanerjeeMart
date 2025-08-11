@@ -5,28 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Banerjee Mart Admin Panel</title>
   <style>
-    /* Reset and base */
+    /* Global Reset and Variables */
     *, *::before, *::after {
       box-sizing: border-box;
     }
+    :root {
+      --primary-color: #232f3e;
+      --secondary-color: #febd69;
+      --accent-color: #f7a600;
+      --text-color-dark: #111;
+      --text-color-light: #fff;
+      --bg-color-main: #eaeded;
+      --bg-color-card: #fff;
+      --border-color: #ddd;
+      --shadow: 0 2px 5px rgba(0,0,0,0.1);
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
     body {
-      margin: 0; 
-      font-family: Arial, sans-serif;
-      background-color: #fff;
-      color: #111;
+      margin: 0;
+      font-family: var(--font-family);
+      background-color: var(--bg-color-main);
+      color: var(--text-color-dark);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
+
+    /* Header */
     header {
-      background-color: #232f3e;
-      color: white;
+      background-color: var(--primary-color);
+      color: var(--text-color-light);
       font-size: 1.8rem;
       font-weight: 700;
       padding: 20px 32px;
       user-select: none;
       box-shadow: 0 3px 6px rgb(0 0 0 / 0.25);
     }
+
+    /* Main Content and Layout */
     main {
       flex-grow: 1;
       max-width: 1280px;
@@ -34,30 +51,43 @@
       padding: 0 20px 40px;
       width: 100%;
     }
+    
+    .dashboard-grid {
+      display: grid;
+      gap: 24px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 900px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr 2fr;
+      }
+    }
+
+    /* Section Titles */
     h2 {
       margin-top: 0;
       font-weight: 700;
       font-size: 1.6rem;
-      border-bottom: 3px solid #febd69;
+      color: var(--primary-color);
       padding-bottom: 8px;
-      color: #232f3e;
+      border-bottom: 3px solid var(--secondary-color);
       user-select: none;
     }
-    /* Form styling */
+    
+    /* Form Styling */
     form {
-      background-color: #fff;
-      border: 1px solid #ddd;
+      background-color: var(--bg-color-card);
+      border: 1px solid var(--border-color);
       padding: 24px 30px;
-      border-radius: 8px;
-      max-width: 480px;
-      box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+      border-radius: var(--border-radius, 8px);
+      box-shadow: var(--shadow);
       margin-bottom: 36px;
     }
     label {
       display: block;
       margin-top: 18px;
       font-weight: 600;
-      color: #232f3e;
+      color: var(--primary-color);
       user-select: none;
     }
     input[type="text"],
@@ -68,26 +98,28 @@
       padding: 10px 14px;
       margin-top: 6px;
       font-size: 1rem;
-      border: 1.8px solid #ddd;
+      border: 1.8px solid var(--border-color);
       border-radius: 6px;
-      transition: border-color 0.25s ease;
-      font-family: Arial, sans-serif;
-      color: #111;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      font-family: var(--font-family);
+      color: var(--text-color-dark);
     }
     input[type="text"]:focus,
     input[type="number"]:focus,
     select:focus,
     textarea:focus {
       outline: none;
-      border-color: #febd69;
-      box-shadow: 0 0 10px rgb(254 189 105 / 0.5);
+      border-color: var(--secondary-color);
+      box-shadow: 0 0 5px var(--secondary-color);
     }
     textarea {
       resize: vertical;
       min-height: 80px;
     }
+
+    /* Buttons */
     button {
-      background-color: #febd69;
+      background-color: var(--secondary-color);
       border: none;
       font-weight: 700;
       font-size: 1.1rem;
@@ -96,12 +128,12 @@
       border-radius: 6px;
       cursor: pointer;
       user-select: none;
-      color: #111;
+      color: var(--text-color-dark);
       transition: background-color 0.3s ease;
       width: 100%;
     }
     button:hover {
-      background-color: #f7a600;
+      background-color: var(--accent-color);
     }
     button.cancel {
       background-color: #ddd;
@@ -112,27 +144,36 @@
     button.cancel:hover {
       background-color: #bbb;
     }
-    /* Table styling */
+
+    /* Table Styling */
+    .table-container {
+      overflow-x: auto;
+      background-color: var(--bg-color-card);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
     table {
       width: 100%;
-      border-collapse: separate;
-      border-spacing: 0 12px;
+      border-collapse: collapse;
       font-size: 1rem;
     }
     thead th {
-      background-color: #232f3e;
-      color: #febd69;
+      background-color: var(--primary-color);
+      color: var(--secondary-color);
       font-weight: 700;
       text-align: left;
       padding: 12px 16px;
       user-select: none;
-      border-radius: 8px 8px 0 0;
     }
+    thead th:first-child { border-radius: 8px 0 0 0; }
+    thead th:last-child { border-radius: 0 8px 0 0; }
     tbody tr {
-      background-color: #fff;
-      box-shadow: 0 3px 6px rgb(0 0 0 / 0.1);
+      background-color: var(--bg-color-card);
+      border-bottom: 1px solid var(--border-color);
       transition: background-color 0.2s ease;
-      border-radius: 0 0 8px 8px;
+    }
+    tbody tr:last-child {
+      border-bottom: none;
     }
     tbody tr:hover {
       background-color: #fef4d4;
@@ -140,7 +181,7 @@
     tbody td {
       padding: 14px 16px;
       vertical-align: middle;
-      color: #232f3e;
+      color: var(--primary-color);
     }
     tbody td img {
       max-width: 80px;
@@ -149,10 +190,12 @@
       border-radius: 6px;
       box-shadow: 0 0 5px rgb(0 0 0 / 0.05);
     }
+    
+    /* Action Buttons and Status Select */
     button.edit-btn {
-      background-color: #febd69;
+      background-color: var(--secondary-color);
       border: none;
-      color: #232f3e;
+      color: var(--primary-color);
       font-weight: 700;
       padding: 6px 14px;
       border-radius: 5px;
@@ -161,7 +204,7 @@
       transition: background-color 0.3s ease;
     }
     button.edit-btn:hover {
-      background-color: #f7a600;
+      background-color: var(--accent-color);
     }
     select.order-status {
       padding: 6px 12px;
@@ -169,15 +212,16 @@
       border: 1.5px solid #ccc;
       font-size: 0.95rem;
       font-weight: 600;
-      color: #232f3e;
+      color: var(--primary-color);
       cursor: pointer;
-      transition: border-color 0.3s ease;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
     select.order-status:hover {
-      border-color: #febd69;
-      box-shadow: 0 0 8px rgb(254 189 105 / 0.4);
+      border-color: var(--secondary-color);
+      box-shadow: 0 0 8px rgba(254, 189, 105, 0.4);
     }
-    /* Responsive */
+
+    /* Responsive adjustments */
     @media (max-width: 720px) {
       main {
         padding: 0 12px 32px;
@@ -185,12 +229,15 @@
       form {
         max-width: 100%;
       }
+      table {
+        font-size: 0.9rem;
+      }
       tbody td img {
         max-width: 60px;
         max-height: 38px;
       }
       thead th, tbody td {
-        padding: 10px 8px;
+        padding: 10px;
       }
     }
   </style>
@@ -200,79 +247,83 @@
 <header>Banerjee Mart Admin Panel</header>
 
 <main>
-  <section aria-label="Add or edit product form">
-    <h2 id="formTitle">Add Product</h2>
-    <form id="productForm" novalidate>
-      <label for="name">Product Name</label>
-      <input id="name" name="name" type="text" autocomplete="off" required />
+  <div class="dashboard-grid">
+    <section aria-label="Add or edit product form">
+      <h2 id="formTitle">Add Product</h2>
+      <form id="productForm" novalidate>
+        <label for="name">Product Name</label>
+        <input id="name" name="name" type="text" autocomplete="off" required />
 
-      <label for="price">Price (₹)</label>
-      <input id="price" name="price" type="number" min="0" step="0.01" required />
+        <label for="price">Price (₹)</label>
+        <input id="price" name="price" type="number" min="0" step="0.01" required />
 
-      <label for="category">Category</label>
-      <select id="category" name="category" required>
-        <option value="" disabled selected>Select Category</option>
-        <option value="Groceries">Groceries</option>
-        <option value="Foods">Foods</option>
-        <option value="Stationery">Stationery</option>
-        <option value="Health">Health</option>
-      </select>
+        <label for="category">Category</label>
+        <select id="category" name="category" required>
+          <option value="" disabled selected>Select Category</option>
+          <option value="Groceries">Groceries</option>
+          <option value="Foods">Foods</option>
+          <option value="Stationery">Stationery</option>
+          <option value="Health">Health</option>
+        </select>
 
-      <label for="imageFileName">Image File Name (e.g., productname.png)</label>
-      <input id="imageFileName" name="imageFileName" type="text" autocomplete="off" placeholder="e.g., rice.png" required />
+        <label for="imageFileName">Image File Name (e.g., productname.png)</label>
+        <input id="imageFileName" name="imageFileName" type="text" autocomplete="off" placeholder="e.g., rice.png" required />
 
-      <label for="description">Description</label>
-      <textarea id="description" name="description" placeholder="Optional"></textarea>
+        <label for="description">Description</label>
+        <textarea id="description" name="description" placeholder="Optional"></textarea>
 
-      <label for="deal">Deal of the Day?</label>
-      <select id="deal" name="deal">
-        <option value="" selected>No</option>
-        <option value="Deal of the Day">Yes</option>
-      </select>
+        <label for="deal">Deal of the Day?</label>
+        <select id="deal" name="deal">
+          <option value="" selected>No</option>
+          <option value="Deal of the Day">Yes</option>
+        </select>
 
-      <label for="trending">Trending?</label>
-      <select id="trending" name="trending" required>
-        <option value="false" selected>No</option>
-        <option value="true">Yes</option>
-      </select>
+        <label for="trending">Trending?</label>
+        <select id="trending" name="trending" required>
+          <option value="false" selected>No</option>
+          <option value="true">Yes</option>
+        </select>
 
-      <button type="submit" id="submitBtn" aria-label="Add product">Add Product</button>
-      <button type="button" id="cancelBtn" class="cancel" style="display:none;">Cancel Edit</button>
-    </form>
-  </section>
+        <button type="submit" id="submitBtn" aria-label="Add product">Add Product</button>
+        <button type="button" id="cancelBtn" class="cancel" style="display:none;">Cancel Edit</button>
+      </form>
+    </section>
 
-  <section aria-label="Product list">
-    <h2>Product List</h2>
-    <table aria-describedby="productTableDesc">
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Price</th>
-          <th scope="col">Category</th>
-          <th scope="col">Image</th>
-          <th scope="col" style="width: 110px;">Actions</th>
-        </tr>
-      </thead>
-      <tbody id="productTable"></tbody>
-    </table>
-    <p id="productTableDesc" class="sr-only">List of products added in the store.</p>
-  </section>
+    <section aria-label="Product list and orders">
+      <h2 style="margin-top: 0;">Product List</h2>
+      <div class="table-container">
+        <table aria-describedby="productTableDesc">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Price</th>
+              <th scope="col">Category</th>
+              <th scope="col">Image</th>
+              <th scope="col" style="width: 110px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="productTable"></tbody>
+        </table>
+        <p id="productTableDesc" class="sr-only">List of products added in the store.</p>
+      </div>
 
-  <section aria-label="Orders list" style="margin-top: 40px;">
-    <h2>Orders</h2>
-    <table aria-describedby="orderTableDesc">
-      <thead>
-        <tr>
-          <th scope="col">Order ID</th>
-          <th scope="col">Customer</th>
-          <th scope="col">Items</th>
-          <th scope="col" style="width: 140px;">Status</th>
-        </tr>
-      </thead>
-      <tbody id="orderTable"></tbody>
-    </table>
-    <p id="orderTableDesc" class="sr-only">List of customer orders and their statuses.</p>
-  </section>
+      <h2 style="margin-top: 40px;">Orders</h2>
+      <div class="table-container">
+        <table aria-describedby="orderTableDesc">
+          <thead>
+            <tr>
+              <th scope="col">Order ID</th>
+              <th scope="col">Customer</th>
+              <th scope="col">Items</th>
+              <th scope="col" style="width: 140px;">Status</th>
+            </tr>
+          </thead>
+          <tbody id="orderTable"></tbody>
+        </table>
+        <p id="orderTableDesc" class="sr-only">List of customer orders and their statuses.</p>
+      </div>
+    </section>
+  </div>
 </main>
 
 <script type="module">
@@ -331,7 +382,7 @@
       category,
       imageUrl,
       description,
-      deal,
+      deal: deal === "Deal of the Day" ? true : false,
       trending,
       createdAt: editingProductId ? undefined : new Date()
     };
@@ -339,7 +390,6 @@
     try {
       if (editingProductId) {
         const productRef = doc(db, "products", editingProductId);
-        // Remove createdAt to preserve original creation date
         delete productData.createdAt;
         await updateDoc(productRef, productData);
         alert("Product updated successfully!");
@@ -367,10 +417,11 @@
   }
 
   async function loadProducts() {
-    productTable.innerHTML = "";
+    productTable.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#666;">Loading products...</td></tr>`;
     try {
       const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
       const querySnapshot = await getDocs(q);
+      productTable.innerHTML = "";
       if (querySnapshot.empty) {
         productTable.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#666;">No products found.</td></tr>`;
         return;
@@ -393,7 +444,7 @@
         });
       });
     } catch (error) {
-      productTable.innerHTML = `<tr><td colspan="5" style="color:red;">Error loading products: ${error.message}</td></tr>`;
+      productTable.innerHTML = `<tr><td colspan="5" style="color:red; text-align:center;">Error loading products: ${error.message}</td></tr>`;
     }
   }
 
@@ -418,7 +469,7 @@
       const urlParts = p.imageUrl?.split("/") || [];
       productForm.imageFileName.value = urlParts.length ? decodeURIComponent(urlParts[urlParts.length - 1]) : "";
       productForm.description.value = p.description || "";
-      productForm.deal.value = p.deal || "";
+      productForm.deal.value = p.deal === true ? "Deal of the Day" : "";
       productForm.trending.value = p.trending ? "true" : "false";
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
@@ -427,9 +478,10 @@
   }
 
   async function loadOrders() {
-    orderTable.innerHTML = "";
+    orderTable.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#666;">Loading orders...</td></tr>`;
     try {
       const querySnapshot = await getDocs(collection(db, "orders"));
+      orderTable.innerHTML = "";
       if (querySnapshot.empty) {
         orderTable.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#666;">No orders found.</td></tr>`;
         return;
@@ -466,14 +518,16 @@
         });
       });
     } catch (error) {
-      orderTable.innerHTML = `<tr><td colspan="4" style="color:red;">Error loading orders: ${error.message}</td></tr>`;
+      orderTable.innerHTML = `<tr><td colspan="4" style="color:red; text-align:center;">Error loading orders: ${error.message}</td></tr>`;
     }
   }
 
   // Initial load
-  loadProducts();
-  loadOrders();
+  document.addEventListener('DOMContentLoaded', () => {
+    loadProducts();
+    loadOrders();
+  });
 </script>
 
 </body>
-                                               </html>
+</html>
