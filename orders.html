@@ -1,146 +1,353 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B Mart - Your Orders</title>
-    <style>
-        body { font-family: 'Amazon Ember', Arial, sans-serif; margin: 0; padding: 0; background-color: #eaeded; color: #111; }
-        .header { background-color: #232f3e; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; }
-        .header-logo { color: #fff; font-size: 24px; font-weight: bold; }
-        .header-logo a { text-decoration: none; color: #fff; }
-        .header-search { flex-grow: 1; margin: 0 20px; }
-        .header-search input { width: 100%; padding: 8px 12px; border-radius: 4px; border: none; }
-        .header-nav a { color: #fff; text-decoration: none; margin-left: 20px; font-size: 14px; }
-        .orders-container { max-width: 1200px; margin: 20px auto; padding: 20px; }
-        .orders-container h1 { font-size: 28px; font-weight: 400; margin: 0 0 20px 0; }
-        .order-card { background-color: #fff; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .order-header { background-color: #f0f2f2; padding: 15px 20px; border-bottom: 1px solid #ddd; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; font-size: 14px; }
-        .order-header-detail { margin-right: 20px; margin-bottom: 10px; }
-        .order-header-detail div:first-child { color: #555; }
-        .order-header-detail div:last-child { font-weight: bold; }
-        .order-item-list { padding: 20px; }
-        .order-item { display: flex; flex-wrap: wrap; align-items: center; margin-bottom: 15px; }
-        .order-item-image { width: 100px; height: 100px; object-fit: contain; margin-right: 20px; }
-        .order-item-details { flex-grow: 1; }
-        .order-item-details h2 { font-size: 16px; margin: 0 0 5px 0; font-weight: 500; }
-        .order-item-details .price { font-weight: bold; }
-        .order-item-details .status { margin-top: 5px; font-size: 14px; font-weight: bold; color: #007600; }
-        .order-actions { margin-left: auto; display: flex; flex-direction: column; }
-        .btn { background-color: #ffd814; border: 1px solid #fcd200; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; text-align: center; text-decoration: none; color: #111; margin-bottom: 5px; }
-        .btn:hover { background-color: #f7ca00; }
-        @media (max-width: 768px) {
-            .header { flex-direction: column; }
-            .header-search { display: none; }
-            .order-header { flex-direction: column; align-items: flex-start; }
-            .order-header-detail { margin-right: 0; }
-            .order-item { flex-direction: column; align-items: flex-start; }
-            .order-item-image { width: 100%; height: auto; margin-right: 0; margin-bottom: 10px; }
-            .order-actions { margin-left: 0; margin-top: 10px; width: 100%; }
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Banerjee Mart - Orders</title>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+/>
+<style>
+  /* Reset & base */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f5f5;
+    color: #222;
+    padding-bottom: 60px; /* for bottom nav */
+  }
+
+  /* Header */
+  header {
+    background: #2874f0;
+    color: white;
+    padding: 12px 16px 8px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    text-align: center;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.15);
+  }
+  header h1 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: 1.2px;
+  }
+
+  /* Search bar row below header */
+  #search-row {
+    background: #2874f0;
+    padding: 8px 16px 12px;
+    position: sticky;
+    top: 56px;
+    z-index: 999;
+  }
+  #search-row input[type="search"] {
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 30px;
+    border: none;
+    font-size: 16px;
+    outline: none;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.1);
+  }
+
+  /* Main container */
+  main {
+    max-width: 960px;
+    margin: 16px auto 100px;
+    padding: 0 12px;
+  }
+
+  /* Section titles */
+  h2.section-title {
+    font-weight: 700;
+    font-size: 22px;
+    margin-bottom: 12px;
+    color: #2874f0;
+    border-bottom: 2px solid #2874f0;
+    padding-bottom: 6px;
+  }
+
+  /* Current Order Section */
+  #current-order {
+    background: white;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
+  }
+  #current-order .order-status {
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+  #current-order .order-details {
+    font-size: 15px;
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+  #current-order button.cancel-btn {
+    background: #c62828;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  #current-order button.cancel-btn:disabled {
+    background: #a2a2a2;
+    cursor: not-allowed;
+  }
+  #current-order button.cancel-btn:hover:not(:disabled) {
+    background: #9b2222;
+  }
+
+  /* Past orders list */
+  #past-orders {
+    background: white;
+    border-radius: 10px;
+    padding: 16px 20px;
+    box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
+  }
+  #past-orders ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  #past-orders li {
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+  }
+  #past-orders li:last-child {
+    border-bottom: none;
+  }
+  #past-orders .order-item-name {
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+  #past-orders .order-item-date {
+    font-size: 13px;
+    color: #777;
+  }
+  #past-orders .order-item-status {
+    font-weight: 600;
+    color: #2e7d32;
+    font-size: 14px;
+  }
+
+  /* Bottom Navigation */
+  nav.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    background: white;
+    box-shadow: 0 -1px 8px rgb(0 0 0 / 0.1);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1100;
+  }
+  nav.bottom-nav a {
+    flex-grow: 1;
+    text-align: center;
+    color: #555;
+    font-size: 12px;
+    text-decoration: none;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 0 4px;
+    transition: color 0.3s;
+  }
+  nav.bottom-nav a i {
+    font-size: 20px;
+  }
+  nav.bottom-nav a.active,
+  nav.bottom-nav a:hover {
+    color: #2874f0;
+  }
+</style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="header-logo"><a href="#">B Mart</a></div>
-        <div class="header-search">
-            <input type="text" placeholder="Search B Mart">
-        </div>
-        <div class="header-nav">
-            <a href="#">Account</a>
-            <a href="#">Orders</a>
-            <a href="#">Logout</a>
-        </div>
-    </div>
+<header>
+  <h1>Banerjee Mart</h1>
+</header>
+<div id="search-row">
+  <input type="search" id="search-orders" placeholder="Search orders..." aria-label="Search orders" />
+</div>
 
-    <div class="orders-container">
-        <h1>Your Orders</h1>
-        <div id="order-history">
-            <div class="order-card">
-                <div class="order-header">
-                    <div class="order-header-detail">
-                        <div>ORDER PLACED</div>
-                        <div>January 1, 2025</div>
-                    </div>
-                    <div class="order-header-detail">
-                        <div>TOTAL</div>
-                        <div>$15.50</div>
-                    </div>
-                    <div class="order-header-detail">
-                        <div>ORDER #</div>
-                        <div>183-5847621-1234567</div>
-                    </div>
-                </div>
-                <div class="order-item-list">
-                    <div class="order-item">
-                        <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/milk.png" alt="Milk" class="order-item-image">
-                        <div class="order-item-details">
-                            <h2>Milk</h2>
-                            <div class="status" style="color: #007600;">Delivered on Jan 3, 2025</div>
-                            <div class="price">Quantity: 2 | $3.50 each</div>
-                        </div>
-                        <div class="order-actions">
-                            <a href="#" class="btn">View Order Details</a>
-                            <a href="#" class="btn">Write a product review</a>
-                        </div>
-                    </div>
-                    <div class="order-item">
-                        <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/pen.png" alt="Pen" class="order-item-image">
-                        <div class="order-item-details">
-                            <h2>Pen</h2>
-                            <div class="status" style="color: #007600;">Delivered on Jan 3, 2025</div>
-                            <div class="price">Quantity: 1 | $1.50 each</div>
-                        </div>
-                        <div class="order-actions">
-                            <a href="#" class="btn">View Order Details</a>
-                            <a href="#" class="btn">Write a product review</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="order-card">
-                <div class="order-header">
-                    <div class="order-header-detail">
-                        <div>ORDER PLACED</div>
-                        <div>February 2, 2025</div>
-                    </div>
-                    <div class="order-header-detail">
-                        <div>TOTAL</div>
-                        <div>$20.00</div>
-                    </div>
-                    <div class="order-header-detail">
-                        <div>ORDER #</div>
-                        <div>183-7890123-8765432</div>
-                    </div>
-                </div>
-                <div class="order-item-list">
-                    <div class="order-item">
-                        <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/pizza.png" alt="Pizza" class="order-item-image">
-                        <div class="order-item-details">
-                            <h2>Pizza</h2>
-                            <div class="status" style="color: #b12704;">Estimated delivery: Feb 5, 2025</div>
-                            <div class="price">Quantity: 1 | $20.00 each</div>
-                        </div>
-                        <div class="order-actions">
-                            <a href="#" class="btn">Track Package</a>
-                            <a href="#" class="btn">Cancel Order</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            </div>
+<main>
+  <section id="current-order-section">
+    <h2 class="section-title">Current Order Status</h2>
+    <div id="current-order">
+      <!-- Filled by JS -->
     </div>
+  </section>
 
-    <script>
-        // This is a placeholder for the actual JavaScript logic.
-        // You will need to add the code to:
-        // 1. Initialize Firebase and check for user authentication. Redirect to auth.html if not logged in.
-        // 2. Fetch the user's order history from Firebase Firestore or Realtime Database.
-        // 3. Loop through the fetched orders and dynamically generate the HTML for each `order-card`.
-        // 4. For each order, loop through its items and generate the HTML for each `order-item`.
-        // 5. Populate the order details (date, total, order #) and item details (image, name, price, status) with the data from your database.
-        // 6. Conditionally display the action buttons (e.g., "Track Package" for active orders, "Write a review" for delivered orders).
-    </script>
+  <section id="past-orders-section">
+    <h2 class="section-title">Past Orders</h2>
+    <div id="past-orders">
+      <ul id="past-orders-list">
+        <!-- Filled by JS -->
+      </ul>
+    </div>
+  </section>
+</main>
+
+<!-- Bottom Navigation -->
+<nav class="bottom-nav">
+  <a href="index.html" data-nav="home" title="Home">
+    <i class="fas fa-home"></i>
+    <span>Home</span>
+  </a>
+  <a href="orders.html" data-nav="orders" title="Orders" class="active">
+    <i class="fas fa-box"></i>
+    <span>Orders</span>
+  </a>
+  <a href="profile.html" data-nav="profile" title="Profile">
+    <i class="fas fa-user"></i>
+    <span>Profile</span>
+  </a>
+</nav>
+
+<script>
+  // Simulated data for demo:
+  let currentOrder = {
+    id: "ORD123456",
+    items: [
+      { name: "Organic Rice", qty: 2, price: 450 },
+      { name: "Shampoo", qty: 1, price: 200 },
+    ],
+    status: "Processing", // other statuses: "Shipped", "Delivered", "Cancelled"
+    orderDate: "2025-08-10",
+  };
+
+  let pastOrders = [
+    {
+      id: "ORD123455",
+      items: [
+        { name: "Notebook", qty: 3, price: 40 },
+        { name: "Apple Juice", qty: 1, price: 120 },
+      ],
+      status: "Delivered",
+      orderDate: "2025-07-30",
+    },
+    {
+      id: "ORD123454",
+      items: [
+        { name: "Soap Bar", qty: 2, price: 35 },
+      ],
+      status: "Cancelled",
+      orderDate: "2025-07-20",
+    },
+  ];
+
+  const currentOrderDiv = document.getElementById("current-order");
+  const pastOrdersList = document.getElementById("past-orders-list");
+  const searchInput = document.getElementById("search-orders");
+
+  function renderCurrentOrder() {
+    if (!currentOrder || currentOrder.status === "Delivered" || currentOrder.status === "Cancelled") {
+      currentOrderDiv.innerHTML = "<em>No current active orders.</em>";
+      return;
+    }
+    const totalPrice = currentOrder.items.reduce((acc, item) => acc + item.price * item.qty, 0);
+
+    const itemsHtml = currentOrder.items.map(i =>
+      `<div>${i.name} × ${i.qty} = ₹${(i.price * i.qty).toFixed(2)}</div>`
+    ).join("");
+
+    currentOrderDiv.innerHTML = `
+      <div class="order-status">Order #${currentOrder.id} - <span style="color: #2874f0;">${currentOrder.status}</span></div>
+      <div class="order-details">${itemsHtml}</div>
+      <div class="order-details"><strong>Total: ₹${totalPrice.toFixed(2)}</strong></div>
+      <button class="cancel-btn" id="cancel-order-btn" ${currentOrder.status !== "Processing" ? "disabled" : ""}>Cancel Order</button>
+    `;
+
+    const cancelBtn = document.getElementById("cancel-order-btn");
+    if (cancelBtn) {
+      cancelBtn.addEventListener("click", () => {
+        if (confirm("Are you sure you want to cancel this order?")) {
+          currentOrder.status = "Cancelled";
+          renderCurrentOrder();
+          alert("Order cancelled.");
+        }
+      });
+    }
+  }
+
+  function renderPastOrders(filterText = "") {
+    pastOrdersList.innerHTML = "";
+    let filteredOrders = pastOrders;
+
+    if (filterText.trim()) {
+      filteredOrders = pastOrders.filter(order => {
+        return order.items.some(item => item.name.toLowerCase().includes(filterText.toLowerCase()))
+          || order.id.toLowerCase().includes(filterText.toLowerCase())
+          || order.status.toLowerCase().includes(filterText.toLowerCase());
+      });
+    }
+
+    if (filteredOrders.length === 0) {
+      pastOrdersList.innerHTML = "<li><em>No past orders found.</em></li>";
+      return;
+    }
+
+    filteredOrders.forEach(order => {
+      const itemsSummary = order.items.map(i => `${i.name} ×${i.qty}`).join(", ");
+      const date = new Date(order.orderDate).toLocaleDateString();
+      const statusColor = order.status === "Delivered" ? "#2e7d32" : (order.status === "Cancelled" ? "#c62828" : "#2874f0");
+
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <div class="order-item-name">Order #${order.id}</div>
+        <div>${itemsSummary}</div>
+        <div class="order-item-date">${date}</div>
+        <div class="order-item-status" style="color:${statusColor};">${order.status}</div>
+      `;
+      pastOrdersList.appendChild(li);
+    });
+  }
+
+  // Search filter on past orders
+  searchInput.addEventListener("input", (e) => {
+    renderPastOrders(e.target.value);
+  });
+
+  // Bottom nav active highlight
+  function setActiveNav() {
+    const navLinks = document.querySelectorAll("nav.bottom-nav a");
+    const path = window.location.pathname.split("/").pop().toLowerCase();
+    navLinks.forEach((link) => {
+      const href = link.getAttribute("href").toLowerCase();
+      if (href === path || (href === "index.html" && (path === "" || path === "index.html"))) {
+        link.classList.add("active");
+      } else {
+        link.classList.remove("active");
+      }
+    });
+  }
+
+  window.onload = () => {
+    renderCurrentOrder();
+    renderPastOrders();
+    setActiveNav();
+  };
+</script>
+
 </body>
 </html>
