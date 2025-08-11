@@ -1,122 +1,431 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B Mart - Shopping Cart</title>
-    <style>
-        body { font-family: 'Amazon Ember', Arial, sans-serif; margin: 0; padding: 0; background-color: #eaeded; color: #111; }
-        .header { background-color: #232f3e; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; }
-        .header-logo { color: #fff; font-size: 24px; font-weight: bold; }
-        .header-logo a { text-decoration: none; color: #fff; }
-        .header-search { flex-grow: 1; margin: 0 20px; }
-        .header-search input { width: 100%; padding: 8px 12px; border-radius: 4px; border: none; }
-        .header-nav a { color: #fff; text-decoration: none; margin-left: 20px; font-size: 14px; }
-        .cart-container { display: flex; flex-wrap: wrap; max-width: 1200px; margin: 20px auto; padding: 20px; }
-        .cart-items-section { flex: 3; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-right: 20px; }
-        .cart-items-section h1 { font-size: 28px; font-weight: 400; margin-top: 0; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
-        .cart-item { display: flex; align-items: center; border-bottom: 1px solid #ddd; padding: 20px 0; }
-        .cart-item:last-child { border-bottom: none; }
-        .cart-item-image { width: 150px; height: 150px; object-fit: contain; margin-right: 20px; }
-        .cart-item-details { flex-grow: 1; }
-        .cart-item-details h2 { font-size: 18px; margin: 0 0 10px 0; }
-        .cart-item-details .price { font-size: 16px; font-weight: bold; color: #b12704; margin-bottom: 10px; }
-        .cart-item-details .stock { color: #007600; font-size: 14px; }
-        .cart-item-actions { display: flex; align-items: center; margin-top: 10px; }
-        .cart-item-actions select { padding: 5px; border-radius: 4px; border: 1px solid #ccc; margin-right: 10px; }
-        .cart-item-actions button { background: none; border: none; color: #007600; cursor: pointer; font-size: 14px; margin-left: 10px; }
-        .cart-item-actions button:hover { text-decoration: underline; }
-        .cart-summary-section { flex: 1; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .cart-summary-section h2 { font-size: 20px; font-weight: 400; margin-top: 0; }
-        .subtotal { font-size: 18px; margin: 15px 0; }
-        .subtotal span { font-weight: bold; }
-        .checkout-btn { background-color: #ffd814; border: 1px solid #fcd200; width: 100%; padding: 10px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; text-align: center; text-decoration: none; color: #111; }
-        .checkout-btn:hover { background-color: #f7ca00; }
-        @media (max-width: 768px) {
-            .cart-container { flex-direction: column; }
-            .cart-items-section { margin-right: 0; margin-bottom: 20px; }
-            .header-search { display: none; }
-            .cart-item { flex-direction: column; align-items: flex-start; }
-            .cart-item-image { width: 100%; height: auto; margin-right: 0; margin-bottom: 10px; }
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Banerjee Mart - Cart</title>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+/>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f5f5;
+    color: #222;
+    padding-bottom: 60px; /* space for bottom nav */
+  }
+
+  /* Header */
+  header {
+    background: #2874f0;
+    color: white;
+    padding: 12px 16px 12px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    text-align: center;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.15);
+  }
+  header h1 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: 1.2px;
+  }
+
+  /* Cart container */
+  #cart-container {
+    max-width: 960px;
+    margin: 20px auto 100px;
+    padding: 0 12px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgb(0 0 0 / 0.1);
+    min-height: 200px;
+  }
+
+  /* Cart item */
+  .cart-item {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding: 14px 0;
+  }
+  .cart-item:last-child {
+    border-bottom: none;
+  }
+  .cart-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border-radius: 8px;
+    margin-right: 16px;
+  }
+  .item-details {
+    flex-grow: 1;
+  }
+  .item-name {
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 6px;
+    color: #222;
+  }
+  .item-price {
+    font-weight: 700;
+    font-size: 16px;
+    color: #2874f0;
+    margin-bottom: 8px;
+  }
+
+  /* Qty controls */
+  .qty-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .qty-controls button {
+    background: #2874f0;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 18px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.3s;
+    line-height: 1;
+  }
+  .qty-controls button:hover {
+    background: #1e59d9;
+  }
+  .qty-controls span {
+    min-width: 26px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 16px;
+  }
+
+  /* Total and checkout */
+  #summary {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid #eee;
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    color: #222;
+  }
+  #delivery-charge {
+    font-weight: 600;
+    font-size: 15px;
+    color: #555;
+    margin-top: 4px;
+  }
+
+  #checkout-btn {
+    display: block;
+    margin: 28px auto 40px;
+    background: #ff6f00;
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 0;
+    width: 90%;
+    max-width: 400px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  #checkout-btn:hover {
+    background: #e65c00;
+  }
+
+  /* Empty cart message */
+  #empty-msg {
+    text-align: center;
+    padding: 50px 0;
+    color: #777;
+    font-size: 18px;
+  }
+
+  /* Order confirmation popup overlay */
+  #order-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1200;
+  }
+  #order-popup .popup-content {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    padding: 24px 20px 32px;
+    box-shadow: 0 6px 20px rgb(0 0 0 / 0.2);
+    text-align: center;
+    position: relative;
+  }
+  #order-popup .popup-content h2 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    color: #2874f0;
+    font-weight: 700;
+  }
+  #order-popup .popup-content p {
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: #444;
+  }
+  #order-popup .popup-content button.close-btn {
+    background: #2874f0;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  #order-popup .popup-content button.close-btn:hover {
+    background: #1e59d9;
+  }
+</style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="header-logo"><a href="#">B Mart</a></div>
-        <div class="header-search">
-            <input type="text" placeholder="Search B Mart">
-        </div>
-        <div class="header-nav">
-            <a href="#">Account</a>
-            <a href="#">Orders</a>
-            <a href="#">Logout</a>
-        </div>
-    </div>
+<header>
+  <h1>Banerjee Mart</h1>
+</header>
 
-    <div class="cart-container">
-        
-        <div class="cart-items-section">
-            <h1>Shopping Cart</h1>
-            <div id="cart-item-list">
-                <div class="cart-item">
-                    <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/milk.png" alt="Milk" class="cart-item-image">
-                    <div class="cart-item-details">
-                        <h2>Milk</h2>
-                        <div class="price">$3.50</div>
-                        <div class="stock">In Stock</div>
-                        <div class="cart-item-actions">
-                            <label for="qty-milk">Qty:</label>
-                            <select id="qty-milk">
-                                <option value="1">1</option>
-                                <option value="2" selected>2</option>
-                                <option value="3">3</option>
-                            </select>
-                            <button class="remove-item-btn">Delete</button>
-                            <span class="price" style="margin-left: auto;">$7.00</span>
-                        </div>
-                    </div>
-                </div>
+<div id="cart-container">
+  <!-- Cart items dynamically inserted here -->
+</div>
 
-                <div class="cart-item">
-                    <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/pen.png" alt="Pen" class="cart-item-image">
-                    <div class="cart-item-details">
-                        <h2>Pen</h2>
-                        <div class="price">$1.50</div>
-                        <div class="stock">In Stock</div>
-                        <div class="cart-item-actions">
-                            <label for="qty-pen">Qty:</label>
-                            <select id="qty-pen">
-                                <option value="1" selected>1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                            <button class="remove-item-btn">Delete</button>
-                            <span class="price" style="margin-left: auto;">$1.50</span>
-                        </div>
-                    </div>
-                </div>
-                </div>
+<button id="checkout-btn" aria-label="Checkout">Proceed to Checkout</button>
+
+<!-- Order confirmation popup -->
+<div id="order-popup" role="dialog" aria-modal="true" aria-labelledby="order-title" aria-describedby="order-desc">
+  <div class="popup-content">
+    <h2 id="order-title">Order Confirmed!</h2>
+    <p id="order-desc"></p>
+    <button class="close-btn" aria-label="Close confirmation popup">Close</button>
+  </div>
+</div>
+
+<!-- Bottom Navigation -->
+<nav class="bottom-nav">
+  <a href="index.html" data-nav="home" title="Home">
+    <i class="fas fa-home"></i>
+    <span>Home</span>
+  </a>
+  <a href="cart.html" data-nav="cart" title="Cart" class="active">
+    <i class="fas fa-shopping-cart"></i>
+    <span>Cart</span>
+  </a>
+  <a href="profile.html" data-nav="profile" title="Profile">
+    <i class="fas fa-user"></i>
+    <span>Profile</span>
+  </a>
+</nav>
+
+<script>
+  // Simulated cart data from index.html example (would usually come from localStorage or server)
+  const products = [
+    { id: 1, name: "Organic Rice", category: "Groceries", price: 450, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/rice.png" },
+    { id: 2, name: "Apple Juice", category: "Foods", price: 120, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/apple-juice.png" },
+    { id: 3, name: "Shampoo", category: "Personal Care", price: 200, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/shampoo.png" },
+    { id: 4, name: "Notebook", category: "Stationery", price: 40, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/notebook.png" },
+    { id: 5, name: "Cooking Oil", category: "Groceries", price: 150, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/oil.png" },
+    { id: 6, name: "Chocolate Cake", category: "Foods", price: 350, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/cake.png" },
+    { id: 7, name: "Soap Bar", category: "Personal Care", price: 35, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/soap.png" },
+    { id: 8, name: "Pen Set", category: "Stationery", price: 70, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/pen.png" },
+  ];
+
+  // Cart state: productId -> quantity
+  // For demo, prefilled with some quantities (can be empty initially)
+  let cart = {
+    1: 2,
+    3: 1,
+    4: 3,
+  };
+
+  const cartContainer = document.getElementById("cart-container");
+  const checkoutBtn = document.getElementById("checkout-btn");
+  const orderPopup = document.getElementById("order-popup");
+  const orderDesc = document.getElementById("order-desc");
+  const closePopupBtn = orderPopup.querySelector(".close-btn");
+
+  // Render cart items or empty message
+  function renderCart() {
+    cartContainer.innerHTML = "";
+    const cartItems = Object.entries(cart).filter(([id, qty]) => qty > 0);
+    if (cartItems.length === 0) {
+      cartContainer.innerHTML = '<div id="empty-msg">Your cart is empty.</div>';
+      checkoutBtn.style.display = "none";
+      return;
+    }
+    checkoutBtn.style.display = "block";
+
+    // For each cart item
+    cartItems.forEach(([id, qty]) => {
+      const product = products.find((p) => p.id == id);
+      if (!product) return;
+      const itemDiv = document.createElement("div");
+      itemDiv.className = "cart-item";
+      itemDiv.innerHTML = `
+        <img src="${product.image}" alt="${product.name}" />
+        <div class="item-details">
+          <div class="item-name">${product.name}</div>
+          <div class="item-price">₹${(product.price * qty).toFixed(2)}</div>
+          <div class="qty-controls" aria-label="Quantity controls for ${product.name}">
+            <button class="dec" aria-label="Decrease quantity of ${product.name}">-</button>
+            <span class="qty">${qty}</span>
+            <button class="inc" aria-label="Increase quantity of ${product.name}">+</button>
+          </div>
         </div>
+      `;
 
-        <div class="cart-summary-section">
-            <h2>Subtotal (<span id="item-count">2</span> items): <span class="subtotal-price">$8.50</span></h2>
-            <a href="#" class="checkout-btn">Proceed to checkout</a>
+      // Attach qty controls
+      const decBtn = itemDiv.querySelector(".dec");
+      const incBtn = itemDiv.querySelector(".inc");
+      const qtySpan = itemDiv.querySelector(".qty");
+      const priceDiv = itemDiv.querySelector(".item-price");
+
+      decBtn.addEventListener("click", () => {
+        if (cart[id] > 1) {
+          cart[id]--;
+        } else {
+          // Confirm remove
+          if (confirm(`Remove ${product.name} from cart?`)) {
+            delete cart[id];
+          }
+        }
+        renderCart();
+        updateTotal();
+      });
+      incBtn.addEventListener("click", () => {
+        cart[id]++;
+        renderCart();
+        updateTotal();
+      });
+
+      cartContainer.appendChild(itemDiv);
+    });
+
+    updateTotal();
+  }
+
+  // Calculate total, delivery charge, and display below cart items
+  function updateTotal() {
+    // Remove old summary if exists
+    const oldSummary = document.getElementById("summary");
+    if (oldSummary) oldSummary.remove();
+
+    // Sum all products price*qty
+    let total = 0;
+    for (const [id, qty] of Object.entries(cart)) {
+      const prod = products.find((p) => p.id == id);
+      if (prod) total += prod.price * qty;
+    }
+
+    // Delivery charge logic
+    const deliveryCharge = total >= 199 ? 0 : (total === 0 ? 0 : 5);
+
+    // Create summary div
+    const summary = document.createElement("div");
+    summary.id = "summary";
+    summary.innerHTML = `
+      <div>
+        Total: ₹${total.toFixed(2)}
+        <div id="delivery-charge" style="font-weight: normal; font-size: 14px; color: ${deliveryCharge === 0 ? '#2e7d32' : '#c62828'};">
+          Delivery: ${deliveryCharge === 0 ? 'Free' : `₹${deliveryCharge.toFixed(2)}`}
         </div>
-    </div>
+      </div>
+      <div><strong>Grand Total: ₹${(total + deliveryCharge).toFixed(2)}</strong></div>
+    `;
 
-    <script>
-        // This is a placeholder for the actual JavaScript logic.
-        // You will need to add the code to:
-        // 1. Initialize Firebase and check for user authentication. Redirect to auth.html if not logged in.
-        // 2. Fetch the user's cart data from Firebase Firestore or Realtime Database.
-        // 3. Dynamically generate the cart items in the `cart-item-list` div.
-        // 4. Implement event listeners for the quantity dropdowns to update item prices and the overall subtotal.
-        // 5. Implement event listeners for the "Delete" buttons to remove items from the cart in the database and on the page.
-        // 6. Update the `item-count` and `subtotal-price` elements whenever the cart changes.
-        // 7. Handle the "Proceed to checkout" button click, which would likely redirect the user to a checkout page.
-        // 8. The image URL generation should be handled by your script, prepending the base URL to the product filename.
-    </script>
+    cartContainer.appendChild(summary);
+  }
+
+  // Checkout button click - show popup with order summary
+  checkoutBtn.addEventListener("click", () => {
+    // Calculate totals again
+    let total = 0;
+    for (const [id, qty] of Object.entries(cart)) {
+      const prod = products.find((p) => p.id == id);
+      if (prod) total += prod.price * qty;
+    }
+    const deliveryCharge = total >= 199 ? 0 : (total === 0 ? 0 : 5);
+    const grandTotal = total + deliveryCharge;
+
+    if (grandTotal === 0) {
+      alert("Your cart is empty.");
+      return;
+    }
+
+    // Build order summary text
+    let summaryText = "Your order:\n\n";
+    for (const [id, qty] of Object.entries(cart)) {
+      const prod = products.find((p) => p.id == id);
+      if (prod) {
+        summaryText += `${prod.name} × ${qty} = ₹${(prod.price * qty).toFixed(2)}\n`;
+      }
+    }
+    summaryText += `\nSubtotal: ₹${total.toFixed(2)}\n`;
+    summaryText += deliveryCharge === 0 ? "Delivery: Free\n" : `Delivery: ₹${deliveryCharge.toFixed(2)}\n`;
+    summaryText += `Grand Total: ₹${grandTotal.toFixed(2)}\n\nThank you for shopping with Banerjee Mart!`;
+
+    // Show popup
+    orderDesc.textContent = summaryText;
+    orderPopup.style.display = "flex";
+  });
+
+  // Close popup
+  closePopupBtn.addEventListener("click", () => {
+    orderPopup.style.display = "none";
+  });
+
+  // Close popup on outside click
+  orderPopup.addEventListener("click", (e) => {
+    if (e.target === orderPopup) {
+      orderPopup.style.display = "none";
+    }
+  });
+
+  // Bottom navigation active class
+  function setActiveNav() {
+    const navLinks = document.querySelectorAll("nav.bottom-nav a");
+    const path = window.location.pathname.split("/").pop().toLowerCase();
+    navLinks.forEach((link) => {
+      const href = link.getAttribute("href").toLowerCase();
+      if (href === path || (href === "index.html" && (path === "" || path === "index.html"))) {
+        link.classList.add("active");
+      } else {
+        link.classList.remove("active");
+      }
+    });
+  }
+
+  window.onload = () => {
+    renderCart();
+    setActiveNav();
+  };
+</script>
+
 </body>
-</html>
+      </html>
