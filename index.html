@@ -4,61 +4,85 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Banerjee Mart</title>
+<!-- FontAwesome CDN for icons -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+/>
 <style>
-  /* Reset */
   * {
     box-sizing: border-box;
   }
   body {
-    margin: 0; font-family: Arial, sans-serif; background: #f5f5f5; color: #222;
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f5f5;
+    color: #222;
+    padding-bottom: 60px; /* space for bottom nav */
   }
 
   /* Header */
   header {
     background: #2874f0;
     color: white;
-    padding: 10px 16px 6px;
+    padding: 12px 16px 12px;
     position: sticky;
     top: 0;
     z-index: 1000;
+    text-align: center;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.15);
   }
   header h1 {
     margin: 0;
     font-weight: 700;
-    font-size: 24px;
+    font-size: 28px;
+    letter-spacing: 1.2px;
   }
   header .search-bar {
-    margin-top: 8px;
+    margin-top: 10px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
   }
   header input[type="search"] {
     width: 100%;
-    padding: 10px 12px;
+    padding: 12px 20px;
     font-size: 16px;
-    border-radius: 4px;
+    border-radius: 30px;
     border: none;
     outline: none;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.15);
+    transition: box-shadow 0.3s;
+  }
+  header input[type="search"]:focus {
+    box-shadow: 0 3px 12px rgb(40 116 240 / 0.6);
   }
 
   /* Banners Section */
   #banners {
-    margin-top: 12px;
+    margin-top: 14px;
     overflow: hidden;
     position: relative;
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
   }
-
   #banners img {
     width: 100%;
     display: block;
-    border-radius: 6px;
+    border-radius: 8px;
   }
 
   /* Categories horizontal scroll */
   #categories {
-    margin: 16px 0;
-    padding-left: 10px;
+    margin: 20px 0 18px;
+    padding-left: 12px;
     display: flex;
-    gap: 12px;
+    gap: 14px;
     overflow-x: auto;
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
   }
   #categories::-webkit-scrollbar {
     height: 6px;
@@ -69,60 +93,79 @@
   }
   .category-item {
     flex: 0 0 auto;
-    padding: 8px 16px;
+    padding: 10px 22px;
     background: white;
-    border-radius: 20px;
-    box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+    border-radius: 25px;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.08);
     cursor: pointer;
     user-select: none;
     font-weight: 600;
     white-space: nowrap;
     color: #555;
-    transition: background 0.3s, color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+  }
+  .category-item i {
+    font-size: 18px;
+    color: #2874f0;
   }
   .category-item.active {
     background: #2874f0;
+    color: white;
+    box-shadow: 0 4px 12px rgb(40 116 240 / 0.6);
+  }
+  .category-item.active i {
     color: white;
   }
 
   /* Products grid */
   #products {
-    padding: 0 10px 30px;
+    padding: 0 12px 40px;
     display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(180px,1fr));
-    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .product-card {
     background: white;
-    border-radius: 6px;
-    box-shadow: 0 1px 4px rgb(0 0 0 / 0.1);
-    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.12);
+    padding: 14px;
     display: flex;
     flex-direction: column;
+    transition: box-shadow 0.3s;
+  }
+  .product-card:hover {
+    box-shadow: 0 6px 16px rgb(0 0 0 / 0.18);
   }
   .product-card img {
     width: 100%;
-    height: 130px;
+    height: 140px;
     object-fit: contain;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
   .product-name {
-    font-size: 15px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 6px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 8px;
     flex-grow: 1;
   }
   .price-qty {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
   .price {
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 18px;
+    font-weight: 800;
     color: #2874f0;
   }
   .qty-controls {
@@ -134,26 +177,31 @@
     background: #2874f0;
     color: white;
     border: none;
-    border-radius: 3px;
-    font-size: 16px;
-    width: 28px;
-    height: 28px;
+    border-radius: 4px;
+    font-size: 18px;
+    width: 32px;
+    height: 32px;
     cursor: pointer;
     user-select: none;
+    transition: background 0.3s;
+  }
+  .qty-controls button:hover {
+    background: #1e59d9;
   }
   .qty-controls span {
-    min-width: 20px;
+    min-width: 24px;
     text-align: center;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 16px;
   }
   .add-cart-btn {
     background: #ff6f00;
     color: white;
     border: none;
-    border-radius: 4px;
-    padding: 8px 0;
+    border-radius: 6px;
+    padding: 10px 0;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 15px;
     cursor: pointer;
     transition: background 0.3s;
   }
@@ -161,13 +209,53 @@
     background: #e65c00;
   }
 
+  /* Bottom Navigation */
+  nav.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    background: white;
+    box-shadow: 0 -1px 8px rgb(0 0 0 / 0.1);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1100;
+  }
+  nav.bottom-nav a {
+    flex-grow: 1;
+    text-align: center;
+    color: #555;
+    font-size: 12px;
+    text-decoration: none;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 0 4px;
+    transition: color 0.3s;
+  }
+  nav.bottom-nav a i {
+    font-size: 20px;
+  }
+  nav.bottom-nav a.active,
+  nav.bottom-nav a:hover {
+    color: #2874f0;
+  }
+
   /* Responsive */
   @media (max-width: 480px) {
     header h1 {
-      font-size: 20px;
+      font-size: 22px;
     }
     .product-card img {
       height: 110px;
+    }
+    .category-item {
+      font-size: 14px;
+      padding: 8px 16px;
     }
   }
 </style>
@@ -183,37 +271,54 @@
 
 <!-- Banners Section -->
 <section id="banners">
-  <!-- banners.html content will be loaded here -->
+  <!-- banners.html content loaded here -->
 </section>
 
 <!-- Categories Section -->
 <section id="categories">
-  <!-- Categories added dynamically -->
+  <!-- Categories loaded dynamically -->
 </section>
 
 <!-- Products Section -->
 <section id="products">
-  <!-- Product cards added dynamically -->
+  <!-- Products loaded dynamically -->
 </section>
 
+<!-- Bottom Navigation -->
+<nav class="bottom-nav">
+  <a href="#" class="active" data-nav="home" title="Home">
+    <i class="fas fa-home"></i>
+    <span>Home</span>
+  </a>
+  <a href="#" data-nav="cart" title="Cart">
+    <i class="fas fa-shopping-cart"></i>
+    <span>Cart</span>
+  </a>
+  <a href="#" data-nav="profile" title="Profile">
+    <i class="fas fa-user"></i>
+    <span>Profile</span>
+  </a>
+</nav>
+
 <script>
-  // Sample Data for categories and products
+  // Sample categories with FontAwesome icons
   const categories = [
-    "Groceries",
-    "Foods",
-    "Personal Care",
-    "Stationery"
+    { name: "Groceries", icon: "fa-apple-whole" },
+    { name: "Foods", icon: "fa-bowl-food" },
+    { name: "Personal Care", icon: "fa-soap" },
+    { name: "Stationery", icon: "fa-pen" }
   ];
 
+  // Sample products data
   const products = [
-    { id:1, name: "Organic Rice", category: "Groceries", price: 450, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/rice.png" },
-    { id:2, name: "Apple Juice", category: "Foods", price: 120, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/apple-juice.png" },
-    { id:3, name: "Shampoo", category: "Personal Care", price: 200, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/shampoo.png" },
-    { id:4, name: "Notebook", category: "Stationery", price: 40, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/notebook.png" },
-    { id:5, name: "Cooking Oil", category: "Groceries", price: 150, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/oil.png" },
-    { id:6, name: "Chocolate Cake", category: "Foods", price: 350, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/cake.png" },
-    { id:7, name: "Soap Bar", category: "Personal Care", price: 35, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/soap.png" },
-    { id:8, name: "Pen Set", category: "Stationery", price: 70, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/pen.png" },
+    { id: 1, name: "Organic Rice", category: "Groceries", price: 450, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/rice.png" },
+    { id: 2, name: "Apple Juice", category: "Foods", price: 120, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/apple-juice.png" },
+    { id: 3, name: "Shampoo", category: "Personal Care", price: 200, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/shampoo.png" },
+    { id: 4, name: "Notebook", category: "Stationery", price: 40, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/notebook.png" },
+    { id: 5, name: "Cooking Oil", category: "Groceries", price: 150, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/oil.png" },
+    { id: 6, name: "Chocolate Cake", category: "Foods", price: 350, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/cake.png" },
+    { id: 7, name: "Soap Bar", category: "Personal Care", price: 35, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/soap.png" },
+    { id: 8, name: "Pen Set", category: "Stationery", price: 70, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/pen.png" },
   ];
 
   // Cart state (id -> quantity)
@@ -222,28 +327,31 @@
   // Load banners.html content inside #banners section using fetch
   async function loadBanners() {
     try {
-      const response = await fetch('banners.html');
-      if(!response.ok) throw new Error("Failed to load banners.");
+      const response = await fetch("banners.html");
+      if (!response.ok) throw new Error("Failed to load banners.");
       const html = await response.text();
-      document.getElementById('banners').innerHTML = html;
-    } catch(e) {
-      document.getElementById('banners').innerHTML = "<p style='padding:16px; color:#777'>Failed to load banners.</p>";
+      document.getElementById("banners").innerHTML = html;
+    } catch (e) {
+      document.getElementById("banners").innerHTML =
+        "<p style='padding:16px; color:#777'>Failed to load banners.</p>";
     }
   }
 
-  // Render categories horizontally
+  // Render categories horizontally with icons
   function renderCategories() {
-    const catContainer = document.getElementById('categories');
+    const catContainer = document.getElementById("categories");
     catContainer.innerHTML = "";
     categories.forEach((cat, idx) => {
-      const div = document.createElement('div');
-      div.className = 'category-item' + (idx === 0 ? ' active' : '');
-      div.textContent = cat;
-      div.dataset.category = cat;
-      div.addEventListener('click', () => {
-        document.querySelectorAll('.category-item').forEach(c => c.classList.remove('active'));
-        div.classList.add('active');
-        filterAndRenderProducts(cat, document.getElementById('searchInput').value.trim());
+      const div = document.createElement("div");
+      div.className = "category-item" + (idx === 0 ? " active" : "");
+      div.dataset.category = cat.name;
+      div.innerHTML = `<i class="fas ${cat.icon}"></i><span>${cat.name}</span>`;
+      div.addEventListener("click", () => {
+        document.querySelectorAll(".category-item").forEach((c) =>
+          c.classList.remove("active")
+        );
+        div.classList.add("active");
+        filterAndRenderProducts(cat.name, document.getElementById("searchInput").value.trim());
       });
       catContainer.appendChild(div);
     });
@@ -251,78 +359,93 @@
 
   // Render products filtered by category and search term
   function filterAndRenderProducts(category, searchTerm) {
-    const prodContainer = document.getElementById('products');
+    const prodContainer = document.getElementById("products");
     prodContainer.innerHTML = "";
-    const filtered = products.filter(p => 
-      (category === "All" || p.category === category) &&
-      (p.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    const filtered = products.filter(
+      (p) =>
+        (category === "All" || p.category === category) &&
+        p.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    if(filtered.length === 0){
-      prodContainer.innerHTML = "<p style='padding: 20px; color:#777; grid-column: 1/-1; text-align:center;'>No products found.</p>";
+    if (filtered.length === 0) {
+      prodContainer.innerHTML =
+        "<p style='padding: 20px; color:#777; grid-column: 1/-1; text-align:center;'>No products found.</p>";
       return;
     }
-    filtered.forEach(product => {
+    filtered.forEach((product) => {
       const qty = cart[product.id] || 1;
-      const card = document.createElement('div');
-      card.className = 'product-card';
+      const card = document.createElement("div");
+      card.className = "product-card";
       card.innerHTML = `
         <img src="${product.image}" alt="${product.name}" />
         <div class="product-name">${product.name}</div>
         <div class="price-qty">
           <div class="price">₹${(product.price * qty).toFixed(2)}</div>
           <div class="qty-controls">
-            <button class="dec">-</button>
+            <button class="dec" aria-label="Decrease quantity">-</button>
             <span class="qty">${qty}</span>
-            <button class="inc">+</button>
+            <button class="inc" aria-label="Increase quantity">+</button>
           </div>
         </div>
-        <button class="add-cart-btn">Add to Cart</button>
+        <button class="add-cart-btn" aria-label="Add to cart">Add to Cart</button>
       `;
 
       // Quantity controls
-      const decBtn = card.querySelector('.dec');
-      const incBtn = card.querySelector('.inc');
-      const qtySpan = card.querySelector('.qty');
-      const priceDiv = card.querySelector('.price');
+      const decBtn = card.querySelector(".dec");
+      const incBtn = card.querySelector(".inc");
+      const qtySpan = card.querySelector(".qty");
+      const priceDiv = card.querySelector(".price");
 
-      decBtn.addEventListener('click', () => {
-        if(cart[product.id] > 1) {
+      decBtn.addEventListener("click", () => {
+        if (cart[product.id] > 1) {
           cart[product.id]--;
           qtySpan.textContent = cart[product.id];
           priceDiv.textContent = `₹${(product.price * cart[product.id]).toFixed(2)}`;
         }
       });
-      incBtn.addEventListener('click', () => {
+      incBtn.addEventListener("click", () => {
         cart[product.id]++;
         qtySpan.textContent = cart[product.id];
         priceDiv.textContent = `₹${(product.price * cart[product.id]).toFixed(2)}`;
       });
 
       // Add to cart button
-      const addCartBtn = card.querySelector('.add-cart-btn');
-      addCartBtn.addEventListener('click', () => {
+      const addCartBtn = card.querySelector(".add-cart-btn");
+      addCartBtn.addEventListener("click", () => {
         alert(`Added ${cart[product.id]} x ${product.name} to cart.`);
-        // Here you can extend to actually save cart in localStorage or backend
+        // Extend cart logic here as needed
       });
 
       prodContainer.appendChild(card);
     });
   }
 
-  // On search input
-  document.getElementById('searchInput').addEventListener('input', e => {
-    const selectedCategoryDiv = document.querySelector('.category-item.active');
+  // Bottom navigation interaction (simulate active page switching)
+  const navLinks = document.querySelectorAll("nav.bottom-nav a");
+  navLinks.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      navLinks.forEach((l) => l.classList.remove("active"));
+      link.classList.add("active");
+      // You can extend to navigate or show different pages
+      alert(`Navigate to ${link.dataset.nav} page (not implemented)`);
+    });
+  });
+
+  // Search input event
+  document.getElementById("searchInput").addEventListener("input", (e) => {
+    const selectedCategoryDiv = document.querySelector(".category-item.active");
     const category = selectedCategoryDiv ? selectedCategoryDiv.dataset.category : "All";
     filterAndRenderProducts(category, e.target.value.trim());
   });
 
-  // Initialize
+  // Initialize cart quantities with 1
+  products.forEach((p) => (cart[p.id] = 1));
+
+  // On load
   window.onload = () => {
     loadBanners();
     renderCategories();
-    // Initialize cart quantities with 1
-    products.forEach(p => cart[p.id] = 1);
-    filterAndRenderProducts(categories[0], "");
+    filterAndRenderProducts(categories[0].name, "");
   };
 </script>
 
