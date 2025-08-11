@@ -5,102 +5,213 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Banerjee Mart - Admin Panel</title>
   <style>
+    /* Reset & base */
+    * {
+      box-sizing: border-box;
+    }
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
-      background: #f1f3f6;
+      background: #f9fafb;
+      color: #222;
+      line-height: 1.5;
     }
     header {
-      background: #2874f0;
+      background-color: #2874f0;
       color: white;
-      padding: 15px 20px;
-      font-size: 20px;
-      font-weight: bold;
+      padding: 18px 24px;
+      font-size: 24px;
+      font-weight: 600;
+      box-shadow: 0 2px 6px rgb(40 116 240 / 0.3);
+      user-select: none;
     }
     main {
-      padding: 20px;
-      max-width: 1100px;
-      margin: auto;
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 0 16px 32px;
     }
     .card {
-      background: #fff;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
+      background: white;
+      border-radius: 10px;
+      padding: 24px 28px;
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+      margin-bottom: 32px;
+      transition: box-shadow 0.3s ease;
     }
-    .card h2 {
+    .card:hover {
+      box-shadow: 0 4px 14px rgb(0 0 0 / 0.15);
+    }
+    h2 {
       margin-top: 0;
-      font-size: 18px;
-      color: #333;
+      font-weight: 700;
+      font-size: 22px;
+      color: #222;
+      border-bottom: 2px solid #2874f0;
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+      user-select: none;
     }
     label {
       display: block;
-      margin-top: 12px;
-      font-weight: bold;
-      color: #555;
+      font-weight: 600;
+      margin-top: 16px;
+      margin-bottom: 6px;
+      color: #444;
+      user-select: none;
     }
-    input, select, textarea {
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
       width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 14px;
+      padding: 10px 14px;
+      font-size: 15px;
+      border: 1.8px solid #ccc;
+      border-radius: 8px;
+      transition: border-color 0.2s ease;
+      font-family: inherit;
+      color: #222;
+    }
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #2874f0;
+      box-shadow: 0 0 8px rgb(40 116 240 / 0.3);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 72px;
     }
     button {
-      margin-top: 15px;
-      padding: 10px 16px;
-      background: #fb641b;
-      color: white;
+      margin-top: 24px;
+      background-color: #fb641b;
       border: none;
+      color: white;
+      font-weight: 700;
+      font-size: 17px;
+      padding: 14px 28px;
+      border-radius: 8px;
       cursor: pointer;
-      border-radius: 4px;
-      font-size: 14px;
+      user-select: none;
+      transition: background-color 0.25s ease;
     }
     button:hover {
-      background: #d35400;
+      background-color: #d35400;
+    }
+    button.cancel {
+      background: #777;
+      margin-left: 10px;
+    }
+    button.cancel:hover {
+      background: #555;
     }
     table {
       width: 100%;
-      border-collapse: collapse;
-      background: white;
-      border-radius: 8px;
-      overflow: hidden;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+      font-size: 15px;
+      user-select: none;
     }
     th, td {
-      padding: 10px;
-      border-bottom: 1px solid #eee;
+      padding: 14px 18px;
       text-align: left;
-      font-size: 14px;
+      vertical-align: middle;
     }
-    th {
-      background: #2874f0;
+    thead th {
+      background-color: #2874f0;
       color: white;
+      font-weight: 700;
+      border-radius: 10px 10px 0 0;
+      user-select: none;
+    }
+    tbody tr {
+      background-color: white;
+      box-shadow: 0 1px 6px rgb(0 0 0 / 0.07);
+      border-radius: 10px;
+      transition: background-color 0.15s ease;
+    }
+    tbody tr:hover {
+      background-color: #f3f7ff;
+    }
+    tbody tr td:first-child {
+      border-radius: 10px 0 0 10px;
+    }
+    tbody tr td:last-child {
+      border-radius: 0 10px 10px 0;
     }
     img {
-      border-radius: 4px;
+      border-radius: 6px;
+      max-width: 60px;
+      max-height: 40px;
+      object-fit: contain;
+      box-shadow: 0 0 4px rgb(0 0 0 / 0.1);
+    }
+    select.order-status {
+      padding: 6px 10px;
+      font-size: 14px;
+      border-radius: 6px;
+      border: 1.4px solid #999;
+      background: white;
+      cursor: pointer;
+      transition: border-color 0.2s ease;
+    }
+    select.order-status:hover {
+      border-color: #2874f0;
+      box-shadow: 0 0 8px rgb(40 116 240 / 0.2);
+    }
+    button.edit-btn {
+      background: #2874f0;
+      padding: 6px 12px;
+      font-size: 14px;
+      border-radius: 6px;
+      border: none;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    button.edit-btn:hover {
+      background: #1a52c0;
+    }
+    @media (max-width: 640px) {
+      h2 {
+        font-size: 18px;
+      }
+      button {
+        width: 100%;
+      }
+      button.cancel {
+        width: auto;
+        margin-left: 0;
+        margin-top: 8px;
+      }
+      thead th, tbody td {
+        padding: 10px 8px;
+      }
+      img {
+        max-width: 45px;
+        max-height: 30px;
+      }
     }
   </style>
 </head>
 <body>
 
-<header>
-  Banerjee Mart - Admin Panel
-</header>
+<header>Banerjee Mart - Admin Panel</header>
 
 <main>
-  <!-- Add Product Form -->
-  <div class="card">
-    <h2>Add Product</h2>
+
+  <section class="card" aria-label="Add or edit product form">
+    <h2 id="formTitle">Add Product</h2>
     <form id="productForm">
-      <label>Product Name</label>
-      <input type="text" id="name" required />
+      <label for="name">Product Name</label>
+      <input id="name" type="text" autocomplete="off" required />
 
-      <label>Price</label>
-      <input type="number" id="price" required />
+      <label for="price">Price (₹)</label>
+      <input id="price" type="number" min="0" step="0.01" required />
 
-      <label>Category</label>
+      <label for="category">Category</label>
       <select id="category" required>
         <option value="">Select Category</option>
         <option value="Groceries">Groceries</option>
@@ -109,67 +220,72 @@
         <option value="Health">Health</option>
       </select>
 
-      <label>Image File Name (e.g., productname.png)</label>
-      <input type="text" id="imageFileName" placeholder="e.g., rice.jpg" required />
+      <label for="imageFileName">Image File Name (e.g., productname.png)</label>
+      <input id="imageFileName" type="text" autocomplete="off" placeholder="e.g., rice.jpg" required />
 
-      <label>Description</label>
-      <textarea id="description" rows="3"></textarea>
+      <label for="description">Description</label>
+      <textarea id="description" rows="3" placeholder="Optional"></textarea>
 
-      <label>Deal of the Day?</label>
+      <label for="deal">Deal of the Day?</label>
       <select id="deal">
         <option value="">No</option>
         <option value="Deal of the Day">Yes</option>
       </select>
 
-      <label>Trending?</label>
+      <label for="trending">Trending?</label>
       <select id="trending">
         <option value="false">No</option>
         <option value="true">Yes</option>
       </select>
 
-      <button type="submit">Add Product</button>
+      <button type="submit" id="submitBtn" aria-label="Add product">Add Product</button>
+      <button type="button" id="cancelBtn" class="cancel" style="display:none;">Cancel</button>
     </form>
-  </div>
+  </section>
 
-  <!-- Product List -->
-  <div class="card">
+  <section class="card" aria-label="Product list table">
     <h2>Product List</h2>
-    <table>
+    <table role="table" aria-describedby="productTableDesc">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Price</th>
-          <th>Category</th>
-          <th>Image</th>
+          <th scope="col">Name</th>
+          <th scope="col">Price</th>
+          <th scope="col">Category</th>
+          <th scope="col">Image</th>
+          <th scope="col">Actions</th>
         </tr>
       </thead>
-      <tbody id="productTable"></tbody>
+      <tbody id="productTable" role="rowgroup"></tbody>
     </table>
-  </div>
+    <p id="productTableDesc" class="sr-only">List of products in your store</p>
+  </section>
 
-  <!-- Orders -->
-  <div class="card">
+  <section class="card" aria-label="Orders list table">
     <h2>Orders</h2>
-    <table>
+    <table role="table" aria-describedby="orderTableDesc">
       <thead>
         <tr>
-          <th>Order ID</th>
-          <th>Customer</th>
-          <th>Items</th>
-          <th>Status</th>
+          <th scope="col">Order ID</th>
+          <th scope="col">Customer</th>
+          <th scope="col">Items</th>
+          <th scope="col">Status</th>
         </tr>
       </thead>
-      <tbody id="orderTable"></tbody>
+      <tbody id="orderTable" role="rowgroup"></tbody>
     </table>
-  </div>
+    <p id="orderTableDesc" class="sr-only">List of customer orders</p>
+  </section>
+
 </main>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+<!-- Firebase SDKs (modular) -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getFirestore, collection, addDoc, getDocs, query, orderBy,
+    doc, updateDoc
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-<script>
-  // Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
     authDomain: "banerjee-mart.firebaseapp.com",
@@ -179,33 +295,44 @@
     appId: "1:183628570952:web:3028bb258001d004d9537d"
   };
 
-  // Init Firebase
-  const app = firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+  // Initialize Firebase app and Firestore
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-  // Base URL for images on GitHub raw
+  // Base URL for product images
   const baseImageUrl = "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/";
 
-  // Add product form submission
-  document.getElementById("productForm").addEventListener("submit", async (e) => {
+  // Elements
+  const productForm = document.getElementById("productForm");
+  const productTable = document.getElementById("productTable");
+  const orderTable = document.getElementById("orderTable");
+  const formTitle = document.getElementById("formTitle");
+  const submitBtn = document.getElementById("submitBtn");
+  const cancelBtn = document.getElementById("cancelBtn");
+
+  // State for editing
+  let editingProductId = null;
+
+  // Add or update product event handler
+  productForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const name = document.getElementById("name").value.trim();
-    const price = parseFloat(document.getElementById("price").value);
-    const category = document.getElementById("category").value;
-    const imageFileName = document.getElementById("imageFileName").value.trim();
-    const description = document.getElementById("description").value.trim();
-    const deal = document.getElementById("deal").value || null;
-    const trending = document.getElementById("trending").value === "true";
+    const name = productForm.name.value.trim();
+    const price = parseFloat(productForm.price.value);
+    const category = productForm.category.value;
+    const imageFileName = productForm.imageFileName.value.trim();
+    const description = productForm.description.value.trim();
+    const deal = productForm.deal.value || null;
+    const trending = productForm.trending.value === "true";
 
     if (!imageFileName) {
-      alert("Please enter image file name.");
+      alert("Please enter an image file name.");
       return;
     }
 
     const imageUrl = baseImageUrl + encodeURIComponent(imageFileName);
 
-    const product = {
+    const productData = {
       name,
       price,
       category,
@@ -213,89 +340,158 @@
       description,
       deal,
       trending,
-      createdAt: new Date()
+      createdAt: editingProductId ? undefined : new Date()
     };
 
     try {
-      await db.collection("products").add(product);
-      alert("Product added successfully!");
+      if (editingProductId) {
+        // Update existing product
+        const productRef = doc(db, "products", editingProductId);
+        // Remove createdAt on update to keep original timestamp
+        delete productData.createdAt;
+        await updateDoc(productRef, productData);
+        alert("Product updated successfully!");
+      } else {
+        // Add new product
+        await addDoc(collection(db, "products"), productData);
+        alert("Product added successfully!");
+      }
+
+      resetForm();
       loadProducts();
-      e.target.reset();
-    } catch (err) {
-      alert("Error adding product: " + err.message);
+    } catch (error) {
+      alert("Failed to save product: " + error.message);
     }
   });
 
-  // Load and display products
+  // Cancel edit button handler
+  cancelBtn.addEventListener("click", () => {
+    resetForm();
+  });
+
+  // Reset form to add mode
+  function resetForm() {
+    editingProductId = null;
+    productForm.reset();
+    formTitle.textContent = "Add Product";
+    submitBtn.textContent = "Add Product";
+    cancelBtn.style.display = "none";
+  }
+
+  // Load products from Firestore and display with edit buttons
   async function loadProducts() {
-    const table = document.getElementById("productTable");
-    table.innerHTML = "";
+    productTable.innerHTML = "";
     try {
-      const snapshot = await db.collection("products").orderBy("createdAt", "desc").get();
-      snapshot.forEach((doc) => {
-        const p = doc.data();
-        table.innerHTML += `
+      const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.empty) {
+        productTable.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#666;">No products found.</td></tr>`;
+        return;
+      }
+      querySnapshot.forEach((docSnap) => {
+        const p = docSnap.data();
+        productTable.innerHTML += `
           <tr>
             <td>${p.name}</td>
             <td>₹${p.price.toFixed(2)}</td>
             <td>${p.category}</td>
-            <td><img src="${p.imageUrl}" alt="${p.name}" width="50" /></td>
+            <td><img src="${p.imageUrl}" alt="${p.name}" loading="lazy" /></td>
+            <td>
+              <button class="edit-btn" data-id="${docSnap.id}">Edit</button>
+            </td>
           </tr>
         `;
       });
-    } catch (err) {
-      console.error("Error loading products: ", err);
-      table.innerHTML = "<tr><td colspan='4'>Error loading products.</td></tr>";
+
+      // Attach event listeners for all edit buttons
+      document.querySelectorAll(".edit-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          startEditing(btn.dataset.id);
+        });
+      });
+    } catch (error) {
+      productTable.innerHTML = `<tr><td colspan="5" style="color:red;">Error loading products: ${error.message}</td></tr>`;
     }
   }
 
-  // Load and display orders
+  // Load orders from Firestore and display
   async function loadOrders() {
-    const table = document.getElementById("orderTable");
-    table.innerHTML = "";
+    orderTable.innerHTML = "";
     try {
-      const snapshot = await db.collection("orders").get();
-      snapshot.forEach((doc) => {
-        const o = doc.data();
-        const statusOptions = `
-          <select onchange="updateOrderStatus('${doc.id}', this.value)">
-            <option ${o.status === "Pending" ? "selected" : ""}>Pending</option>
-            <option ${o.status === "Shipped" ? "selected" : ""}>Shipped</option>
-            <option ${o.status === "Delivered" ? "selected" : ""}>Delivered</option>
-            <option ${o.status === "Cancelled" ? "selected" : ""}>Cancelled</option>
+      const querySnapshot = await getDocs(collection(db, "orders"));
+      if (querySnapshot.empty) {
+        orderTable.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#666;">No orders found.</td></tr>`;
+        return;
+      }
+      querySnapshot.forEach((docSnap) => {
+        const o = docSnap.data();
+        const statusSelect = `
+          <select class="order-status" onchange="updateOrderStatus('${docSnap.id}', this.value)" aria-label="Change status for order ${docSnap.id}">
+            <option value="Pending" ${o.status === "Pending" ? "selected" : ""}>Pending</option>
+            <option value="Shipped" ${o.status === "Shipped" ? "selected" : ""}>Shipped</option>
+            <option value="Delivered" ${o.status === "Delivered" ? "selected" : ""}>Delivered</option>
+            <option value="Cancelled" ${o.status === "Cancelled" ? "selected" : ""}>Cancelled</option>
           </select>
         `;
-        table.innerHTML += `
+        orderTable.innerHTML += `
           <tr>
-            <td>${doc.id}</td>
+            <td>${docSnap.id}</td>
             <td>${o.customerName || "N/A"}</td>
             <td>${(o.items || []).map(i => i.name).join(", ")}</td>
-            <td>${statusOptions}</td>
+            <td>${statusSelect}</td>
           </tr>
         `;
       });
-    } catch (err) {
-      console.error("Error loading orders: ", err);
-      table.innerHTML = "<tr><td colspan='4'>Error loading orders.</td></tr>";
+    } catch (error) {
+      orderTable.innerHTML = `<tr><td colspan="4" style="color:red;">Error loading orders: ${error.message}</td></tr>`;
     }
   }
 
-  // Update order status
-  async function updateOrderStatus(orderId, newStatus) {
+  // Start editing a product by ID: fill form with its data
+  async function startEditing(productId) {
     try {
-      await db.collection("orders").doc(orderId).update({ status: newStatus });
-      alert("Order status updated!");
-    } catch (err) {
-      alert("Error updating order status: " + err.message);
+      const productRef = doc(db, "products", productId);
+      const docSnap = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js").then(({ getDoc }) => getDoc(productRef));
+      if (!docSnap.exists()) {
+        alert("Product not found!");
+        return;
+      }
+      const p = docSnap.data();
+
+      editingProductId = productId;
+      formTitle.textContent = "Edit Product";
+      submitBtn.textContent = "Update Product";
+      cancelBtn.style.display = "inline-block";
+
+      productForm.name.value = p.name || "";
+      productForm.price.value = p.price || "";
+      productForm.category.value = p.category || "";
+      // Extract image filename from full URL (last segment)
+      const urlParts = p.imageUrl?.split("/") || [];
+      productForm.imageFileName.value = urlParts.length ? decodeURIComponent(urlParts[urlParts.length - 1]) : "";
+      productForm.description.value = p.description || "";
+      productForm.deal.value = p.deal || "";
+      productForm.trending.value = p.trending ? "true" : "false";
+    } catch (error) {
+      alert("Failed to load product for editing: " + error.message);
     }
   }
 
-  // Expose updateOrderStatus to window so it can be called from inline onchange
-  window.updateOrderStatus = updateOrderStatus;
+  // Update order status function exposed to window
+  window.updateOrderStatus = async function (orderId, newStatus) {
+    try {
+      const orderRef = doc(db, "orders", orderId);
+      await updateDoc(orderRef, { status: newStatus });
+      alert(`Order ${orderId} status updated to "${newStatus}"`);
+    } catch (error) {
+      alert("Failed to update order status: " + error.message);
+    }
+  };
 
-  // Initial load
+  // On page load
   loadProducts();
   loadOrders();
+
 </script>
 
 </body>
