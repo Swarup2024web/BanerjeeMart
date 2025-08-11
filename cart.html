@@ -155,6 +155,16 @@
     color: #777;
     font-size: 18px;
   }
+  #empty-msg a {
+    color: #2874f0;
+    text-decoration: none;
+    font-weight: 700;
+    margin-top: 12px;
+    display: inline-block;
+  }
+  #empty-msg a:hover {
+    text-decoration: underline;
+  }
 
   /* Order confirmation popup overlay */
   #order-popup {
@@ -291,6 +301,7 @@
     { id: 8, name: "Pen Set", category: "Stationery", price: 70, image: "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/pen.png" },
   ];
 
+  // Initially, sample cart data - in real app, persist in localStorage or backend
   let cart = {
     1: 2,
     3: 1,
@@ -307,7 +318,13 @@
     cartContainer.innerHTML = "";
     const cartItems = Object.entries(cart).filter(([id, qty]) => qty > 0);
     if (cartItems.length === 0) {
-      cartContainer.innerHTML = '<div id="empty-msg">Your cart is empty.</div>';
+      cartContainer.innerHTML = `
+        <div id="empty-msg" style="text-align:center; padding: 50px 20px; color: #777; font-size: 18px;">
+          Your cart is empty!<br />
+          <a href="index.html" style="color: #2874f0; text-decoration: none; font-weight: 700; margin-top: 12px; display: inline-block;">
+            🛒 Shop now at Banerjee Mart
+          </a>
+        </div>`;
       checkoutBtn.style.display = "none";
       return;
     }
@@ -333,8 +350,6 @@
 
       const decBtn = itemDiv.querySelector(".dec");
       const incBtn = itemDiv.querySelector(".inc");
-      const qtySpan = itemDiv.querySelector(".qty");
-      const priceDiv = itemDiv.querySelector(".item-price");
 
       decBtn.addEventListener("click", () => {
         if (cart[id] > 1) {
@@ -404,6 +419,12 @@
     orderDesc.textContent = "Thank you for shopping with Banerjee Mart!";
     orderPopup.style.display = "flex";
 
+    // Clear cart data immediately
+    cart = {};
+
+    // Re-render cart so empty message appears right away
+    renderCart();
+
     // After 2 seconds redirect to orders.html
     setTimeout(() => {
       orderPopup.style.display = "none";
@@ -441,4 +462,4 @@
 </script>
 
 </body>
-      </html>
+</html>
