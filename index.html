@@ -10,6 +10,7 @@
     <style>
         :root {
             --amazon-prime-color: #007185;
+            --amazon-prime-hover: #005f73;
             --amazon-green-color: #388E3C;
             --amazon-orange-color: #FF9900;
             --text-color: #111;
@@ -30,6 +31,17 @@
             line-height: 1.5;
             padding-bottom: 60px; /* Space for the bottom navigation bar */
         }
+        
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
 
         /* Sticky Header */
         .header {
@@ -43,17 +55,43 @@
             box-shadow: var(--shadow);
             z-index: 1000;
         }
+        
+        .header-main-nav {
+            display: none;
+        }
+        @media (min-width: 768px) {
+            .header-main-nav {
+                display: flex;
+                align-items: center;
+                gap: 1.5rem;
+                margin-left: 1rem;
+            }
+        }
+        .header-main-nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: color 0.2s ease;
+        }
+        .header-main-nav a:hover {
+            color: var(--amazon-orange-color);
+        }
 
         .header .logo {
             font-size: 1.5rem;
             font-weight: 700;
-            margin-right: 1rem;
             text-decoration: none;
             color: #fff;
         }
 
-        .search-bar {
+        .search-bar-container {
             flex-grow: 1;
+            margin: 0 1rem;
+        }
+        
+        .search-bar {
             display: flex;
             align-items: center;
             background-color: #fff;
@@ -71,7 +109,7 @@
         }
         
         .search-bar .search-icon {
-            background-color: #febd69;
+            background-color: var(--amazon-orange-color);
             color: var(--text-color);
             padding: 0.5rem;
             display: flex;
@@ -80,34 +118,47 @@
             cursor: pointer;
         }
 
-        /* Categories Navigation */
-        .categories-nav {
-            overflow-x: auto;
-            white-space: nowrap;
-            padding: 0.5rem 1rem;
-            background-color: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
-            -webkit-overflow-scrolling: touch;
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
-        .categories-nav::-webkit-scrollbar {
-            display: none;
-        }
-
-        .category-item {
-            display: inline-block;
-            margin-right: 1.5rem;
-            color: var(--text-color);
+        .header-actions a {
+            color: #fff;
             text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: color 0.2s ease;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            white-space: nowrap;
         }
 
-        .category-item:hover, .category-item:focus {
-            color: var(--amazon-prime-color);
+        /* Hero Carousel */
+        .hero-carousel {
+            position: relative;
+            max-width: 100%;
+            overflow: hidden;
+            margin-top: 0.5rem;
         }
-        
+
+        .carousel-slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            border-radius: var(--border-radius);
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: var(--border-radius);
+            object-fit: cover;
+        }
+
         /* Main Content */
         .container {
             padding: 1rem;
@@ -244,32 +295,6 @@
             font-weight: 600;
         }
 
-        /* Hero Carousel */
-        .hero-carousel {
-            position: relative;
-            max-width: 100%;
-            overflow: hidden;
-            margin-top: 0.5rem;
-        }
-
-        .carousel-slides {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-        }
-
-        .carousel-slide {
-            min-width: 100%;
-            border-radius: var(--border-radius);
-        }
-
-        .carousel-slide img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: var(--border-radius);
-            object-fit: cover;
-        }
-
         /* Bottom Fixed Navigation */
         .bottom-nav {
             position: fixed;
@@ -282,6 +307,11 @@
             display: flex;
             justify-content: space-around;
             padding: 0.5rem 0;
+        }
+        @media (min-width: 768px) {
+            .bottom-nav {
+                display: none;
+            }
         }
 
         .nav-item {
@@ -309,37 +339,36 @@
             font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
         }
 
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            border: 0;
-        }
     </style>
 </head>
 <body>
 
     <header class="header">
         <a href="#" class="logo" aria-label="Banerjee Mart Home">Banerjee Mart</a>
-        <div class="search-bar">
-            <label for="search-input" class="sr-only">Search for products</label>
-            <input type="search" id="search-input" placeholder="Search for products..." aria-label="Search for products">
-            <div class="search-icon" aria-label="Search">
-                <span class="material-symbols-outlined" aria-hidden="true">search</span>
+        <nav class="header-main-nav" aria-label="Main Website Navigation">
+            <a href="#" class="category-item" aria-label="Groceries category">Groceries</a>
+            <a href="#" class="category-item" aria-label="Foods category">Foods</a>
+            <a href="#" class="category-item" aria-label="Stationery category">Stationery</a>
+            <a href="#" class="category-item" aria-label="Health category">Health</a>
+        </nav>
+        <div class="search-bar-container">
+            <div class="search-bar">
+                <label for="search-input" class="sr-only">Search for products</label>
+                <input type="search" id="search-input" placeholder="Search for products..." aria-label="Search for products">
+                <div class="search-icon" aria-label="Search">
+                    <span class="material-symbols-outlined" aria-hidden="true">search</span>
+                </div>
             </div>
         </div>
+        <div class="header-actions">
+            <a href="#" aria-label="Your Profile">
+                <span class="material-symbols-outlined" aria-hidden="true">account_circle</span>
+            </a>
+            <a href="#" aria-label="Your Cart">
+                <span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span>
+            </a>
+        </div>
     </header>
-
-    <nav class="categories-nav" aria-label="Product Categories">
-        <a href="#" class="category-item" aria-label="Groceries category">Groceries</a>
-        <a href="#" class="category-item" aria-label="Foods category">Foods</a>
-        <a href="#" class="category-item" aria-label="Stationery category">Stationery</a>
-        <a href="#" class="category-item" aria-label="Health category">Health</a>
-    </nav>
 
     <main class="container">
         <section class="hero-carousel" aria-label="Promotional Banners">
