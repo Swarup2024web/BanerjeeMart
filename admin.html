@@ -1,103 +1,168 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Banerjee Mart - Admin Panel</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
-    h1, h2 { color: #333; }
-    form { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 0 5px rgba(0,0,0,0.1);}
-    label { display: block; margin-top: 10px; font-weight: bold; }
-    input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; }
-    button { margin-top: 15px; padding: 10px; background: #007bff; color: white; border: none; cursor: pointer; border-radius: 5px; }
-    button:hover { background: #0056b3; }
-    table { width: 100%; border-collapse: collapse; background: white; }
-    th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
-    th { background: #007bff; color: white; }
-    img { border-radius: 4px; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f1f3f6;
+    }
+    header {
+      background: #2874f0;
+      color: white;
+      padding: 15px 20px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    main {
+      padding: 20px;
+      max-width: 1100px;
+      margin: auto;
+    }
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .card h2 {
+      margin-top: 0;
+      font-size: 18px;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: bold;
+      color: #555;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 16px;
+      background: #fb641b;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    button:hover {
+      background: #d35400;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+      font-size: 14px;
+    }
+    th {
+      background: #2874f0;
+      color: white;
+    }
+    img {
+      border-radius: 4px;
+    }
   </style>
 </head>
 <body>
 
-<h1>Banerjee Mart - Admin Panel</h1>
+<header>
+  Banerjee Mart - Admin Panel
+</header>
 
-<!-- Product Form -->
-<form id="productForm">
-  <h2>Add Product</h2>
+<main>
+  <!-- Add Product Form -->
+  <div class="card">
+    <h2>Add Product</h2>
+    <form id="productForm">
+      <label>Product Name</label>
+      <input type="text" id="name" required>
 
-  <label>Quick Select Product</label>
-  <select id="presetProducts">
-    <option value="">-- Select --</option>
-    <option value="Basmati Rice 1kg|https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/rice.jpg">Basmati Rice 1kg</option>
-    <option value="Notebook|https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/notebook.jpg">Notebook</option>
-    <option value="Toothpaste|https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/toothpaste.jpg">Toothpaste</option>
-    <option value="Cooking Oil 1L|https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/oil.jpg">Cooking Oil 1L</option>
-  </select>
+      <label>Price</label>
+      <input type="number" id="price" required>
 
-  <label>Product Name</label>
-  <input type="text" id="name" required>
+      <label>Category</label>
+      <select id="category" required>
+        <option value="">Select Category</option>
+        <option value="Groceries">Groceries</option>
+        <option value="Foods">Foods</option>
+        <option value="Stationery">Stationery</option>
+        <option value="Health">Health</option>
+      </select>
 
-  <label>Price</label>
-  <input type="number" id="price" required>
+      <label>Image URL</label>
+      <input type="url" id="imageUrl" required>
 
-  <label>Category</label>
-  <select id="category" required>
-    <option value="">Select Category</option>
-    <option value="Groceries">Groceries</option>
-    <option value="Foods">Foods</option>
-    <option value="Stationery">Stationery</option>
-    <option value="Health">Health</option>
-  </select>
+      <label>Description</label>
+      <textarea id="description" rows="3"></textarea>
 
-  <label>Image URL</label>
-  <input type="url" id="imageUrl" required>
+      <label>Deal of the Day?</label>
+      <select id="deal">
+        <option value="">No</option>
+        <option value="Deal of the Day">Yes</option>
+      </select>
 
-  <label>Description</label>
-  <textarea id="description" rows="3"></textarea>
+      <label>Trending?</label>
+      <select id="trending">
+        <option value="false">No</option>
+        <option value="true">Yes</option>
+      </select>
 
-  <label>Deal of the Day?</label>
-  <select id="deal">
-    <option value="">No</option>
-    <option value="Deal of the Day">Yes</option>
-  </select>
+      <button type="submit">Add Product</button>
+    </form>
+  </div>
 
-  <label>Trending?</label>
-  <select id="trending">
-    <option value="false">No</option>
-    <option value="true">Yes</option>
-  </select>
+  <!-- Product List -->
+  <div class="card">
+    <h2>Product List</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Category</th>
+          <th>Image</th>
+        </tr>
+      </thead>
+      <tbody id="productTable"></tbody>
+    </table>
+  </div>
 
-  <button type="submit">Add Product</button>
-</form>
-
-<!-- Product List -->
-<h2>Product List</h2>
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Price</th>
-      <th>Category</th>
-      <th>Image</th>
-    </tr>
-  </thead>
-  <tbody id="productTable"></tbody>
-</table>
-
-<!-- Orders Section -->
-<h2>Orders</h2>
-<table>
-  <thead>
-    <tr>
-      <th>Order ID</th>
-      <th>Customer</th>
-      <th>Items</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-  <tbody id="orderTable"></tbody>
-</table>
+  <!-- Orders -->
+  <div class="card">
+    <h2>Orders</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Customer</th>
+          <th>Items</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="orderTable"></tbody>
+    </table>
+  </div>
+</main>
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
@@ -117,14 +182,6 @@
   // Init Firebase
   const app = firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
-
-  // Prefill product fields from preset
-  document.getElementById('presetProducts').addEventListener('change', (e) => {
-    if (!e.target.value) return;
-    const [name, url] = e.target.value.split('|');
-    document.getElementById('name').value = name;
-    document.getElementById('imageUrl').value = url;
-  });
 
   // Add product
   document.getElementById('productForm').addEventListener('submit', async (e) => {
