@@ -6,98 +6,120 @@
 <title>Banners for Banerjee Mart</title>
 <style>
   body, html {
-    margin: 0; padding: 0; overflow-x: hidden; 
+    margin: 0; padding: 0;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fa;
   }
+
   .carousel {
     width: 100%;
     max-width: 960px;
-    margin: 0 auto;
-    overflow-x: hidden;
+    margin: 20px auto;
+    overflow: hidden;
     position: relative;
-    border-radius: 12px;
-    box-shadow: 0 6px 15px rgb(0 0 0 / 0.15);
+    border-radius: 16px;
   }
 
   .carousel-track {
     display: flex;
     scroll-behavior: smooth;
     overflow-x: auto;
-    scrollbar-width: none; /* Firefox */
+    scrollbar-width: none;
   }
   .carousel-track::-webkit-scrollbar {
-    display: none; /* Chrome, Safari */
+    display: none;
   }
 
   .banner {
     min-width: 100%;
     padding: 40px 20px;
     color: white;
-    font-size: 1.3rem;
-    font-weight: 700;
     text-align: center;
     user-select: none;
     flex-shrink: 0;
-    border-radius: 12px;
+    border-radius: 16px;
     box-sizing: border-box;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .banner i {
+    font-size: 2.4rem;
+    background: rgba(255,255,255,0.2);
+    padding: 12px;
+    border-radius: 50%;
   }
 
   .banner1 {
-    background: linear-gradient(135deg, #2874f0 0%, #54a0ff 100%);
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
   }
   .banner2 {
-    background: linear-gradient(135deg, #ff6f00 0%, #ffa726 100%);
+    background: linear-gradient(135deg, #f7971e, #ffd200);
   }
   .banner3 {
-    background: linear-gradient(135deg, #2e7d32 0%, #66bb6a 100%);
+    background: linear-gradient(135deg, #43e97b, #38f9d7);
   }
 
-  /* Responsive font size */
+  .banner-text {
+    font-size: 1.25rem;
+    max-width: 90%;
+    line-height: 1.4;
+  }
+
   @media (max-width: 600px) {
-    .banner {
+    .banner-text {
       font-size: 1.1rem;
-      padding: 30px 12px;
+    }
+    .banner i {
+      font-size: 2rem;
+      padding: 10px;
     }
   }
 </style>
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
 <div class="carousel" aria-label="Promotional Banners">
   <div class="carousel-track" tabindex="0">
-    <div class="banner banner1" role="group" aria-roledescription="slide" aria-label="Banner 1">
-      We deliver only to Pakurtala within a few hours.
+    <div class="banner banner1">
+      <i class="fas fa-truck"></i>
+      <div class="banner-text">We deliver only to Pakurtala within a few hours.</div>
     </div>
-    <div class="banner banner2" role="group" aria-roledescription="slide" aria-label="Banner 2">
-      Delivery charge is free for orders Rs. 199 and above
+    <div class="banner banner2">
+      <i class="fas fa-gift"></i>
+      <div class="banner-text">Delivery charge is free for orders Rs. 199 and above</div>
     </div>
-    <div class="banner banner3" role="group" aria-roledescription="slide" aria-label="Banner 3">
-      We value quality
+    <div class="banner banner3">
+      <i class="fas fa-leaf"></i>
+      <div class="banner-text">We value quality</div>
     </div>
   </div>
 </div>
 
 <script>
   const track = document.querySelector('.carousel-track');
-  let scrollAmount = 0;
-  const bannerWidth = track.offsetWidth;
-  const totalBanners = track.children.length;
   let currentIndex = 0;
+  const totalBanners = track.children.length;
 
   function autoScroll() {
     currentIndex++;
     if (currentIndex >= totalBanners) currentIndex = 0;
-    scrollAmount = bannerWidth * currentIndex;
+    const scrollAmount = track.offsetWidth * currentIndex;
     track.scrollTo({ left: scrollAmount, behavior: 'smooth' });
   }
 
   let interval = setInterval(autoScroll, 4000);
 
-  // Pause auto scroll on user interaction
   track.addEventListener('mouseenter', () => clearInterval(interval));
-  track.addEventListener('focusin', () => clearInterval(interval));
   track.addEventListener('mouseleave', () => interval = setInterval(autoScroll, 4000));
-  track.addEventListener('focusout', () => interval = setInterval(autoScroll, 4000));
 </script>
 
 </body>
