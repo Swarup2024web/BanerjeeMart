@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B Mart - Sign in / Sign up</title>
+    <title>B Mart - Login / Sign Up</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         :root {
@@ -36,15 +36,6 @@
             padding: 32px;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .logo-container {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-
-        .logo-container img {
-            width: 120px;
         }
 
         h1 {
@@ -143,40 +134,50 @@
         .auth-toggle a:hover {
             text-decoration: underline;
         }
+
+        .hidden {
+            display: none;
+        }
+
+        .forgot-password-link {
+            text-align: right;
+            margin-top: 10px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
 
     <div class="auth-container">
-        <div class="logo-container">
-            <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/b-mart-logo-dark.png" alt="B Mart Logo">
-        </div>
-
+        
         <div id="login-form-container">
-            <h1>Login</h1>
+            <h1>Login to B Mart</h1>
             <form id="login-form">
                 <div class="form-group">
-                    <label for="login-email-phone">Email or Phone Number</label>
+                    <label for="login-email">Email</label>
                     <div class="input-container">
-                        <input type="text" id="login-email-phone" placeholder="Enter Email or Phone" required>
+                        <input type="email" id="login-email" placeholder="Enter your email" required>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="login-password">Password</label>
                     <div class="input-container">
-                        <input type="password" id="login-password" placeholder="Enter Password" required>
+                        <input type="password" id="login-password" placeholder="Enter your password" required>
                         <i class="material-icons input-icon" onclick="togglePasswordVisibility('login-password')">visibility_off</i>
+                    </div>
+                    <div class="forgot-password-link">
+                        <a href="#" onclick="showForm('forgot-password-form-container')">Forgot Password?</a>
                     </div>
                 </div>
                 <button type="submit" class="btn">Login</button>
             </form>
             <div class="auth-toggle">
-                Don't have an account? <a href="#" onclick="showForm('signup-form-container')">Sign Up</a>
+                New to B Mart? <a href="#" onclick="showForm('signup-form-container')">Sign Up</a>
             </div>
         </div>
 
-        <div id="signup-form-container" style="display: none;">
-            <h1>Sign Up</h1>
+        <div id="signup-form-container" class="hidden">
+            <h1>Sign Up with B Mart</h1>
             <form id="signup-form">
                 <div class="form-group">
                     <label for="signup-name">Full Name</label>
@@ -185,26 +186,29 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="signup-email">Email</label>
+                    <div class="input-container">
+                        <input type="email" id="signup-email" placeholder="Enter your email" required>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="signup-phone">Phone Number</label>
                     <div class="phone-input-group">
                         <select id="country-code" required>
                             <option value="+91">+91 (IN)</option>
                             <option value="+1">+1 (US)</option>
-                            </select>
+                        </select>
                         <input type="tel" id="signup-phone" placeholder="9876543210" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="signup-email">Email (Optional)</label>
-                    <div class="input-container">
-                        <input type="email" id="signup-email" placeholder="Enter your email">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="signup-password">Password</label>
                     <div class="input-container">
-                        <input type="password" id="signup-password" placeholder="Enter a strong password" required>
+                        <input type="password" id="signup-password" placeholder="Create a strong password" required>
                         <i class="material-icons input-icon" onclick="togglePasswordVisibility('signup-password')">visibility_off</i>
+                    </div>
+                    <div class="forgot-password-link">
+                        <a href="#" onclick="showForm('forgot-password-form-container')">Forgot Password?</a>
                     </div>
                 </div>
                 <div class="form-group">
@@ -219,6 +223,23 @@
                 Already have an account? <a href="#" onclick="showForm('login-form-container')">Login</a>
             </div>
         </div>
+
+        <div id="forgot-password-form-container" class="hidden">
+            <h1>Reset Password</h1>
+            <form id="forgot-password-form">
+                <div class="form-group">
+                    <label for="reset-email">Email</label>
+                    <div class="input-container">
+                        <input type="email" id="reset-email" placeholder="Enter your email" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn">Send Reset Link</button>
+            </form>
+            <div class="auth-toggle">
+                Remember your password? <a href="#" onclick="showForm('login-form-container')">Login</a>
+            </div>
+        </div>
+
     </div>
 
     <script type="module">
@@ -226,35 +247,32 @@
         // FIREBASE AND JAVASCRIPT LOGIC
         // =========================================================
         
-        // This is a placeholder for your Firebase SDK initialization.
-        // You will need to uncomment this section and add your firebase config.
-        /*
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+          apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
+          authDomain: "banerjee-mart.firebaseapp.com",
+          projectId: "banerjee-mart",
+          storageBucket: "banerjee-mart.firebasestorage.app",
+          messagingSenderId: "183628570952",
+          appId: "1:183628570952:web:3028bb258001d004d9537d"
         };
         
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        */
 
         // =========================================================
         // FORM TOGGLING AND PASSWORD VISIBILITY
         // =========================================================
-        function showForm(formId) {
-            document.getElementById('login-form-container').style.display = 'none';
-            document.getElementById('signup-form-container').style.display = 'none';
-            document.getElementById(formId).style.display = 'block';
-        }
+        window.showForm = function(formId) {
+            document.getElementById('login-form-container').classList.add('hidden');
+            document.getElementById('signup-form-container').classList.add('hidden');
+            document.getElementById('forgot-password-form-container').classList.add('hidden');
+            document.getElementById(formId).classList.remove('hidden');
+        };
 
         window.togglePasswordVisibility = function(passwordFieldId) {
             const passwordInput = document.getElementById(passwordFieldId);
@@ -271,79 +289,75 @@
         // =========================================================
         // SIGN-UP LOGIC
         // =========================================================
-        /*
         const signupForm = document.getElementById('signup-form');
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const fullName = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
             const countryCode = document.getElementById('country-code').value;
             const phoneNumber = document.getElementById('signup-phone').value;
-            const email = document.getElementById('signup-email').value;
             const password = document.getElementById('signup-password').value;
             const address = document.getElementById('signup-address').value;
             
             const fullPhoneNumber = countryCode + phoneNumber;
 
             try {
-                // Here you would implement Firebase Phone Number Authentication
-                // You would need to set up a RecaptchaVerifier and handle the OTP flow.
-                // Or you could use email/password if the email field is filled out.
-                // The following is an example for email/password registration.
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
 
-                // This part requires email to be filled out.
-                if (email) {
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    const user = userCredential.user;
+                await addDoc(collection(db, 'users'), {
+                    uid: user.uid,
+                    fullName: fullName,
+                    phoneNumber: fullPhoneNumber,
+                    email: email,
+                    address: address
+                });
 
-                    // Save user data to Firestore
-                    await addDoc(collection(db, 'users'), {
-                        uid: user.uid,
-                        fullName: fullName,
-                        phoneNumber: fullPhoneNumber,
-                        email: email,
-                        address: address
-                    });
-
-                    alert('Account created successfully!');
-                    window.location.href = 'index.html'; // Redirect to home page
-                } else {
-                    // Handle phone number-only sign-up with OTP verification
-                    alert('Phone number sign-up requires OTP verification. This is a more complex flow to implement.');
-                }
+                alert('Account created successfully!');
+                window.location.href = 'index.html'; 
 
             } catch (error) {
                 console.error("Error during sign up:", error);
                 alert("Sign-up failed: " + error.message);
             }
         });
-        */
 
         // =========================================================
         // LOGIN LOGIC
         // =========================================================
-        /*
         const loginForm = document.getElementById('login-form');
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const emailOrPhone = document.getElementById('login-email-phone').value;
+            const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
 
             try {
-                // Here you would check if the input is an email or a phone number
-                // and use the appropriate Firebase authentication method.
-                if (emailOrPhone.includes('@')) {
-                    const userCredential = await signInWithEmailAndPassword(auth, emailOrPhone, password);
-                    alert('Login successful!');
-                    window.location.href = 'index.html'; // Redirect to home page
-                } else {
-                    alert('Phone number login is not yet implemented. Please use email.');
-                }
+                await signInWithEmailAndPassword(auth, email, password);
+                alert('Login successful!');
+                window.location.href = 'index.html'; 
             } catch (error) {
                 console.error("Error during login:", error);
                 alert("Login failed: " + error.message);
             }
         });
-        */
+        
+        // =========================================================
+        // FORGOT PASSWORD LOGIC
+        // =========================================================
+        const forgotPasswordForm = document.getElementById('forgot-password-form');
+        forgotPasswordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('reset-email').value;
+            
+            try {
+                await sendPasswordResetEmail(auth, email);
+                alert('Password reset email sent! Please check your inbox.');
+                showForm('login-form-container');
+            } catch (error) {
+                console.error("Error sending reset email:", error);
+                alert("Error sending reset email: " + error.message);
+            }
+        });
     </script>
 </body>
 </html>
