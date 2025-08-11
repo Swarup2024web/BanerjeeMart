@@ -93,24 +93,28 @@
   }
   .category-item {
     flex: 0 0 auto;
-    padding: 10px 22px;
+    width: 80px;
+    height: 90px;
     background: white;
-    border-radius: 25px;
+    border-radius: 15px;
     box-shadow: 0 2px 8px rgb(0 0 0 / 0.08);
     cursor: pointer;
     user-select: none;
     font-weight: 600;
-    white-space: nowrap;
     color: #555;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 8px;
-    font-size: 15px;
+    justify-content: center;
+    padding: 8px 0;
+    gap: 6px;
+    font-size: 13px;
     transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+    text-align: center;
   }
   .category-item i {
-    font-size: 18px;
-    color: #2874f0;
+    font-size: 28px;
+    transition: color 0.3s;
   }
   .category-item.active {
     background: #2874f0;
@@ -118,7 +122,21 @@
     box-shadow: 0 4px 12px rgb(40 116 240 / 0.6);
   }
   .category-item.active i {
-    color: white;
+    color: white !important;
+  }
+
+  /* Specific colors for icons */
+  .icon-groceries {
+    color: #39a845;
+  }
+  .icon-foods {
+    color: #f05a28;
+  }
+  .icon-personalcare {
+    color: #7a41f2;
+  }
+  .icon-stationery {
+    color: #ecb200;
   }
 
   /* Products grid */
@@ -164,8 +182,8 @@
     margin-bottom: 10px;
   }
   .price {
-    font-size: 18px;
-    font-weight: 800;
+    font-size: 16px;
+    font-weight: 700;
     color: #2874f0;
   }
   .qty-controls {
@@ -178,21 +196,22 @@
     color: white;
     border: none;
     border-radius: 4px;
-    font-size: 18px;
-    width: 32px;
-    height: 32px;
+    font-size: 16px;
+    width: 26px;
+    height: 26px;
     cursor: pointer;
     user-select: none;
     transition: background 0.3s;
+    line-height: 1;
   }
   .qty-controls button:hover {
     background: #1e59d9;
   }
   .qty-controls span {
-    min-width: 24px;
+    min-width: 22px;
     text-align: center;
     font-weight: 700;
-    font-size: 16px;
+    font-size: 14px;
   }
   .add-cart-btn {
     background: #ff6f00;
@@ -254,8 +273,12 @@
       height: 110px;
     }
     .category-item {
-      font-size: 14px;
-      padding: 8px 16px;
+      width: 70px;
+      height: 80px;
+      font-size: 12px;
+    }
+    .category-item i {
+      font-size: 24px;
     }
   }
 </style>
@@ -286,27 +309,27 @@
 
 <!-- Bottom Navigation -->
 <nav class="bottom-nav">
-  <a href="#" class="active" data-nav="home" title="Home">
+  <a href="index.html" data-nav="home" title="Home">
     <i class="fas fa-home"></i>
     <span>Home</span>
   </a>
-  <a href="#" data-nav="cart" title="Cart">
+  <a href="cart.html" data-nav="cart" title="Cart">
     <i class="fas fa-shopping-cart"></i>
     <span>Cart</span>
   </a>
-  <a href="#" data-nav="profile" title="Profile">
+  <a href="profile.html" data-nav="profile" title="Profile">
     <i class="fas fa-user"></i>
     <span>Profile</span>
   </a>
 </nav>
 
 <script>
-  // Sample categories with FontAwesome icons
+  // Sample categories with FontAwesome icons and color classes
   const categories = [
-    { name: "Groceries", icon: "fa-apple-whole" },
-    { name: "Foods", icon: "fa-bowl-food" },
-    { name: "Personal Care", icon: "fa-soap" },
-    { name: "Stationery", icon: "fa-pen" }
+    { name: "Groceries", icon: "fa-apple-whole", colorClass: "icon-groceries" },
+    { name: "Foods", icon: "fa-bowl-food", colorClass: "icon-foods" },
+    { name: "Personal Care", icon: "fa-soap", colorClass: "icon-personalcare" },
+    { name: "Stationery", icon: "fa-pen", colorClass: "icon-stationery" }
   ];
 
   // Sample products data
@@ -337,7 +360,7 @@
     }
   }
 
-  // Render categories horizontally with icons
+  // Render categories horizontally with icons stacked
   function renderCategories() {
     const catContainer = document.getElementById("categories");
     catContainer.innerHTML = "";
@@ -345,7 +368,7 @@
       const div = document.createElement("div");
       div.className = "category-item" + (idx === 0 ? " active" : "");
       div.dataset.category = cat.name;
-      div.innerHTML = `<i class="fas ${cat.icon}"></i><span>${cat.name}</span>`;
+      div.innerHTML = `<i class="fas ${cat.icon} ${cat.colorClass}"></i><span>${cat.name}</span>`;
       div.addEventListener("click", () => {
         document.querySelectorAll(".category-item").forEach((c) =>
           c.classList.remove("active")
@@ -419,17 +442,19 @@
     });
   }
 
-  // Bottom navigation interaction (simulate active page switching)
-  const navLinks = document.querySelectorAll("nav.bottom-nav a");
-  navLinks.forEach((link) => {
-    link.addEventListener("click", (e) => {
-      e.preventDefault();
-      navLinks.forEach((l) => l.classList.remove("active"));
-      link.classList.add("active");
-      // You can extend to navigate or show different pages
-      alert(`Navigate to ${link.dataset.nav} page (not implemented)`);
+  // Set active nav link based on current page URL
+  function setActiveNav() {
+    const navLinks = document.querySelectorAll("nav.bottom-nav a");
+    const path = window.location.pathname.split("/").pop().toLowerCase();
+    navLinks.forEach((link) => {
+      const href = link.getAttribute("href").toLowerCase();
+      if (href === path || (href === "index.html" && (path === "" || path === "index.html"))) {
+        link.classList.add("active");
+      } else {
+        link.classList.remove("active");
+      }
     });
-  });
+  }
 
   // Search input event
   document.getElementById("searchInput").addEventListener("input", (e) => {
@@ -446,8 +471,9 @@
     loadBanners();
     renderCategories();
     filterAndRenderProducts(categories[0].name, "");
+    setActiveNav();
   };
 </script>
 
 </body>
-</html>
+    </html>
