@@ -1,526 +1,539 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Banerjee Mart - Online Grocery Store</title>
-  <style>
-    /* Reset & base */
-    * {
-      box-sizing: border-box;
-      margin: 0; padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      user-select: none;
-    }
-    body {
-      background: #fff;
-      color: #111;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      padding-bottom: 60px; /* for bottom nav */
-    }
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-    img {
-      max-width: 100%;
-      display: block;
-      border-radius: 6px;
-    }
-    /* Header */
-    header {
-      background: #232f3e;
-      color: #fff;
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    }
-    header h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      letter-spacing: 1.2px;
-      cursor: default;
-      user-select: none;
-    }
-    /* Search bar */
-    .search-bar {
-      flex: 1;
-      margin-left: 20px;
-      position: relative;
-    }
-    .search-bar input {
-      width: 100%;
-      padding: 10px 48px 10px 16px;
-      border-radius: 30px;
-      border: none;
-      font-size: 1rem;
-      transition: box-shadow 0.3s ease;
-    }
-    .search-bar input:focus {
-      outline: none;
-      box-shadow: 0 0 10px #febd69;
-    }
-    .search-bar button {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      font-size: 1.2rem;
-      color: #232f3e;
-      user-select: none;
-    }
-    /* Categories nav */
-    nav.categories {
-      margin-top: 12px;
-      padding: 0 10px;
-      overflow-x: auto;
-      white-space: nowrap;
-      background: #fff;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      border-radius: 8px;
-    }
-    nav.categories::-webkit-scrollbar {
-      display: none;
-    }
-    nav.categories a {
-      display: inline-block;
-      padding: 12px 18px;
-      margin: 8px 8px 8px 0;
-      background: #232f3e;
-      color: #febd69;
-      border-radius: 30px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: background-color 0.3s ease;
-    }
-    nav.categories a:hover,
-    nav.categories a.active {
-      background: #febd69;
-      color: #232f3e;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banerjee Mart - Online Grocery Store</title>
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #f44336;
+            --text-color: #333;
+            --bg-color: #f8f8f8;
+            --card-bg: #fff;
+            --border-color: #ddd;
+            --shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
 
-    /* Carousel styles */
-    .carousel {
-      position: relative;
-      margin: 20px 0 32px;
-      max-width: 100%;
-      overflow: hidden;
-      border-radius: 12px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-      user-select: none;
-    }
-    .carousel-track {
-      display: flex;
-      transition: transform 0.5s ease;
-    }
-    .carousel-slide {
-      min-width: 100%;
-      position: relative;
-    }
-    .carousel-slide img {
-      border-radius: 12px;
-      height: 240px;
-      object-fit: cover;
-      width: 100%;
-    }
-    .carousel-buttons {
-      position: absolute;
-      top: 50%;
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      transform: translateY(-50%);
-      pointer-events: none;
-    }
-    .carousel-btn {
-      pointer-events: auto;
-      background: rgba(35, 47, 62, 0.6);
-      border: none;
-      color: #febd69;
-      font-size: 2.2rem;
-      padding: 6px 12px;
-      cursor: pointer;
-      border-radius: 6px;
-      user-select: none;
-      transition: background-color 0.3s ease;
-    }
-    .carousel-btn:hover {
-      background: #febd69;
-      color: #232f3e;
-    }
-  </style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-bottom: 60px; /* Space for the bottom navigation bar */
+        }
+
+        /* Sticky Header */
+        .header {
+            position: sticky;
+            top: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .search-bar {
+            flex-grow: 1;
+            margin-left: 1rem;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 1rem;
+        }
+
+        /* Categories Navigation */
+        .categories-nav {
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 0.75rem 0;
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .categories-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-item {
+            display: inline-block;
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .category-item:hover, .category-item:focus {
+            background-color: var(--primary-color);
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        /* Hero Carousel */
+        .hero-carousel {
+            position: relative;
+            max-width: 100%;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .carousel-slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        
+        /* Main Content */
+        .container {
+            padding: 1rem;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        /* Horizontal Scroll for Trending Products */
+        .trending-container {
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding-bottom: 1rem;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .trending-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .trending-card {
+            display: inline-block;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            margin-right: 0.75rem;
+            padding: 0.75rem;
+            text-align: center;
+            width: 120px;
+            flex-shrink: 0;
+            transition: transform 0.2s ease;
+        }
+
+        .trending-card:last-child {
+            margin-right: 0;
+        }
+        
+        .trending-card:hover, .trending-card:focus {
+            transform: translateY(-5px);
+        }
+
+        .trending-card img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 0.5rem;
+        }
+
+        .trending-card-name {
+            font-size: 0.875rem;
+            white-space: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .product-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            text-decoration: none;
+            color: var(--text-color);
+            position: relative;
+            transition: transform 0.2s ease;
+        }
+
+        .product-card:hover, .product-card:focus {
+            transform: translateY(-5px);
+        }
+
+        .product-card-image-container {
+            position: relative;
+            width: 100%;
+            padding-top: 100%;
+        }
+
+        .product-card-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-card-content {
+            padding: 0.75rem;
+        }
+
+        .product-card-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 0 0 0.5rem 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .product-card-prices {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+        }
+
+        .product-card-price {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .product-card-old-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 0.8rem;
+        }
+        
+        .deal-badge {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            background-color: var(--secondary-color);
+            color: #fff;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        /* Bottom Fixed Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--card-bg);
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #999;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+
+        .nav-item i {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Accessible Icons (Font Awesome for simplicity, but a custom SVG sprite would be better for no external libs) */
+        .icon-home::before { content: "🏠"; }
+        .icon-categories::before { content: "🛍️"; }
+        .icon-orders::before { content: "📦"; }
+        .icon-profile::before { content: "👤"; }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+    </style>
 </head>
 <body>
 
-<header>
-  <h1>Banerjee Mart</h1>
-  <form class="search-bar" onsubmit="event.preventDefault(); alert('Search not implemented yet!');" role="search">
-    <input type="search" placeholder="Search products, categories..." aria-label="Search products" />
-    <button type="submit" aria-label="Search">🔍</button>
-  </form>
-</header>
+    <header class="header">
+        <h1 aria-label="Banerjee Mart Home">Banerjee Mart</h1>
+        <div class="search-bar">
+            <label for="search-input" class="sr-only">Search for products</label>
+            <input type="search" id="search-input" placeholder="Search for products..." aria-label="Search for products">
+        </div>
+    </header>
 
-<nav class="categories" aria-label="Product categories">
-  <a href="#" class="active" aria-current="page">Groceries</a>
-  <a href="#">Foods</a>
-  <a href="#">Stationery</a>
-  <a href="#">Health</a>
-</nav>
+    <nav class="categories-nav" aria-label="Product Categories">
+        <a href="#" class="category-item" aria-label="Groceries category">Groceries</a>
+        <a href="#" class="category-item" aria-label="Foods category">Foods</a>
+        <a href="#" class="category-item" aria-label="Stationery category">Stationery</a>
+        <a href="#" class="category-item" aria-label="Health category">Health</a>
+    </nav>
 
-<section aria-label="Main hero banner carousel" class="carousel" id="heroCarousel">
-  <div class="carousel-track" id="carouselTrack">
-    <div class="carousel-slide"><img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/banner1.jpg" alt="Fresh groceries banner" /></div>
-    <div class="carousel-slide"><img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/banner2.jpg" alt="Stationery special offer" /></div>
-    <div class="carousel-slide"><img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/banner3.jpg" alt="Health products discount" /></div>
-  </div>
-  <div class="carousel-buttons">
-    <button class="carousel-btn" id="prevBtn" aria-label="Previous slide">‹</button>
-    <button class="carousel-btn" id="nextBtn" aria-label="Next slide">›</button>
-  </div>
-</section>
+    <main class="container">
+        <section class="hero-carousel" aria-label="Promotional Banners">
+            <div class="carousel-slides">
+                <div class="carousel-slide" role="tabpanel" aria-labelledby="slide-1">
+                    <img src="https://via.placeholder.com/1200x400/50C878/FFFFFF?text=Banner+1" alt="Special offer on fresh vegetables">
+                </div>
+                <div class="carousel-slide" role="tabpanel" aria-labelledby="slide-2">
+                    <img src="https://via.placeholder.com/1200x400/FFA07A/FFFFFF?text=Banner+2" alt="Huge discounts on all grocery items">
+                </div>
+                <div class="carousel-slide" role="tabpanel" aria-labelledby="slide-3">
+                    <img src="https://via.placeholder.com/1200x400/4682B4/FFFFFF?text=Banner+3" alt="New arrivals in the stationery section">
+                </div>
+            </div>
+        </section>
 
-<script>
-  // Hero carousel JS
-  const track = document.getElementById('carouselTrack');
-  const slides = Array.from(track.children);
-  const prevBtn = document.getElementById('prevBtn');
-  const nextBtn = document.getElementById('nextBtn');
-  let currentIndex = 0;
+        <section class="section">
+            <h2 class="section-title">Trending Products</h2>
+            <div id="trending-products" class="trending-container" role="region" aria-label="Trending Products">
+                <p>Loading trending products...</p>
+            </div>
+        </section>
 
-  function updateCarousel() {
-    track.style.transform = `translateX(-${currentIndex * 100}%)`;
-  }
-  prevBtn.addEventListener('click', () => {
-    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-    updateCarousel();
-  });
-  nextBtn.addEventListener('click', () => {
-    currentIndex = (currentIndex + 1) % slides.length;
-    updateCarousel();
-  });
-  // Auto slide every 5 seconds
-  setInterval(() => {
-    currentIndex = (currentIndex + 1) % slides.length;
-    updateCarousel();
-  }, 5000);
-      </script>
-<style>
-  /* Section titles */
-  section h2 {
-    font-size: 1.6rem;
-    color: #232f3e;
-    font-weight: 700;
-    padding: 0 14px;
-    margin-bottom: 12px;
-    user-select:none;
-  }
+        <section class="section">
+            <h2 class="section-title">Deals of the Day</h2>
+            <div id="deals-of-the-day" class="product-grid" role="region" aria-label="Deals of the Day">
+                <p>Loading deals...</p>
+            </div>
+        </section>
 
-  /* Trending horizontal scroll */
-  .horizontal-scroll {
-    overflow-x: auto;
-    padding-left: 14px;
-    display: flex;
-    gap: 14px;
-    scroll-behavior: smooth;
-    user-select:none;
-  }
-  .horizontal-scroll::-webkit-scrollbar {
-    display: none;
-  }
-  .product-card-sm {
-    flex: 0 0 auto;
-    width: 120px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    background: white;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    user-select:none;
-  }
-  .product-card-sm:hover,
-  .product-card-sm:focus {
-    transform: scale(1.05);
-    box-shadow: 0 6px 14px rgba(0,0,0,0.18);
-    outline: none;
-  }
-  .product-card-sm img {
-    height: 100px;
-    border-radius: 10px 10px 0 0;
-    object-fit: contain;
-    padding: 6px;
-    background: #f9f9f9;
-  }
-  .product-card-sm .name {
-    padding: 6px 8px 12px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #232f3e;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+        <section class="section">
+            <h2 class="section-title">Popular Products</h2>
+            <div id="popular-products" class="product-grid" role="region" aria-label="Popular Products">
+                <p>Loading popular products...</p>
+            </div>
+        </section>
 
-  /* Deals & Popular grids */
-  .product-grid {
-    padding: 0 14px 20px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(160px,1fr));
-    gap: 16px;
-    user-select:none;
-  }
-  .product-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 6px 14px rgba(0,0,0,0.1);
-    padding-bottom: 12px;
-    cursor: pointer;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-    position: relative;
-    user-select:none;
-  }
-  .product-card:hover,
-  .product-card:focus {
-    box-shadow: 0 10px 26px rgba(0,0,0,0.18);
-    transform: translateY(-3px);
-    outline: none;
-  }
-  .product-card img {
-    border-radius: 12px 12px 0 0;
-    object-fit: contain;
-    height: 140px;
-    width: 100%;
-    background: #fafafa;
-    padding: 12px;
-  }
-  .product-card .info {
-    padding: 6px 12px 0;
-    color: #232f3e;
-    font-weight: 600;
-    font-size: 1rem;
-  }
-  .product-card .price-container {
-    padding: 0 12px 6px;
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-  }
-  .product-card .price {
-    color: #b12704;
-    font-weight: 700;
-    font-size: 1.1rem;
-  }
-  .product-card .old-price {
-    text-decoration: line-through;
-    color: #666;
-    font-size: 0.9rem;
-    font-weight: 500;
-  }
-  .badge {
-    position: absolute;
-    background: #febd69;
-    color: #232f3e;
-    font-weight: 700;
-    font-size: 0.75rem;
-    padding: 2px 8px;
-    border-radius: 20px;
-    top: 12px;
-    left: 12px;
-    pointer-events:none;
-  }
+    </main>
 
-  /* Bottom nav */
-  nav.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0; right: 0;
-    background: #232f3e;
-    display: flex;
-    justify-content: space-around;
-    padding: 8px 0;
-    box-shadow: 0 -3px 10px rgba(0,0,0,0.3);
-    z-index: 9999;
-    user-select:none;
-  }
-  nav.bottom-nav a {
-    color: #febd69;
-    text-align: center;
-    font-size: 0.75rem;
-    flex-grow: 1;
-    max-width: 72px;
-    font-weight: 600;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    transition: color 0.3s ease;
-  }
-  nav.bottom-nav a svg {
-    width: 26px;
-    height: 26px;
-    fill: #febd69;
-  }
-  nav.bottom-nav a:hover,
-  nav.bottom-nav a.active {
-    color: #fff;
-  }
-  nav.bottom-nav a:hover svg,
-  nav.bottom-nav a.active svg {
-    fill: #fff;
-  }
-  /* Responsive tweaks */
-  @media (max-width: 600px) {
-    header h1 {
-      font-size: 1.4rem;
-    }
-    nav.categories a {
-      font-size: 0.85rem;
-      padding: 10px 14px;
-    }
-    section h2 {
-      font-size: 1.3rem;
-      padding-left: 10px;
-    }
-    .product-card {
-      padding-bottom: 8px;
-    }
-    .product-card img {
-      height: 120px;
-    }
-    .product-card-sm {
-      width: 100px;
-    }
-    .product-card-sm img {
-      height: 80px;
-    }
-  }
-</style>
+    <nav class="bottom-nav" aria-label="Main Navigation">
+        <a href="#" class="nav-item active" aria-label="Home">
+            <i class="icon-home" aria-hidden="true"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" class="nav-item" aria-label="Categories">
+            <i class="icon-categories" aria-hidden="true"></i>
+            <span>Categories</span>
+        </a>
+        <a href="#" class="nav-item" aria-label="Orders">
+            <i class="icon-orders" aria-hidden="true"></i>
+            <span>Orders</span>
+        </a>
+        <a href="#" class="nav-item" aria-label="Profile">
+            <i class="icon-profile" aria-hidden="true"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
 
-<section aria-label="Trending products" >
-  <h2>Trending Now</h2>
-  <div class="horizontal-scroll" id="trendingProducts">
-    <div class="product-card-sm" tabindex="0">
-      <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/rice.png" alt="Basmati Rice" />
-      <div class="name">Basmati Rice</div>
-    </div>
-    <div class="product-card-sm" tabindex="0">
-      <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/apple.png" alt="Fresh Apples" />
-      <div class="name">Fresh Apples</div>
-    </div>
-    <div class="product-card-sm" tabindex="0">
-      <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/notebook.png" alt="Notebook" />
-      <div class="name">Notebook</div>
-    </div>
-    <div class="product-card-sm" tabindex="0">
-      <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/vitamin.png" alt="Vitamins" />
-      <div class="name">Vitamins</div>
-    </div>
-  </div>
-</section>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-<section aria-label="Deals of the Day" >
-  <h2>Deals of the Day</h2>
-  <div class="product-grid" id="dealsGrid">
-    <div class="product-card" tabindex="0">
-      <div class="badge">-30%</div>
-      <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/cooking-oil.png" alt="Cooking Oil" />
-      <div class="info">Cooking Oil</div>
-      <div class="price-container">
-        <div class="price">₹140</div>
-        <div class="old-price">₹200</div>
-      </div>
-    </div>
-    <div class="product-card" tabindex="0">
-      <div class="badge">-25%</div>
-      <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/biscuits.png" alt="Biscuits" />
-      <div class="info">Biscuits</div>
-      <div class="price-container">
-        <div class="price">₹30</div>
-        <div class="old-price">₹40</div>
-      </div>
-    </div>
-    <div class="product-card" tabindex="0">
-      <div class="badge">-15%</div>
-      <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/health-drink.png" alt="Health Drink" />
-      <div class="info">Health Drink</div>
-      <div class="price-container">
-        <div class="price">₹85</div>
-        <div class="old-price">₹100</div>
-      </div>
-    </div>
-    <div class="product-card" tabindex="0">
-      <div class="badge">-20%</div>
-      <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/toothpaste.png" alt="Toothpaste" />
-      <div class="info">Toothpaste</div>
-      <div class="price-container">
-        <div class="price">₹40</div>
-        <div class="old-price">₹50</div>
-      </div>
-    </div>
-  </div>
-</section>
+    <script>
+        // Firebase Initialization
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
+            authDomain: "banerjee-mart.firebaseapp.com",
+            projectId: "banerjee-mart",
+            storageBucket: "banerjee-mart.firebasestorage.app",
+            messagingSenderId: "183628570952",
+            appId: "1:183628570952:web:3028bb258001d004d9537d"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-<section aria-label="Popular Products" >
-  <h2>Popular Products</h2>
-  <div class="product-grid" id="popularGrid">
-    <div class="product-card" tabindex="0">
-      <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/tea.png" alt="Green Tea" />
-      <div class="info">Green Tea</div>
-      <div class="price-container">
-        <div class="price">₹120</div>
-      </div>
-    </div>
-    <div class="product-card" tabindex="0">
-      <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/notebook.png" alt="Notebook" />
-      <div class="info">Notebook</div>
-      <div class="price-container">
-        <div class="price">₹50</div>
-      </div>
-    </div>
-    <div class="product-card" tabindex="0">
-      <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/hand-sanitizer.png" alt="Hand Sanitizer" />
-      <div class="info">Hand Sanitizer</div>
-      <div class="price-container">
-        <div class="price">₹90</div>
-      </div>
-    </div>
-    <div class="product-card" tabindex="0">
-      <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/soap.png" alt="Bath Soap" />
-      <div class="info">Bath Soap</div>
-      <div class="price-container">
-        <div class="price">₹25</div>
-      </div>
-    </div>
-  </div>
-</section>
+        // DOM Elements
+        const trendingContainer = document.getElementById('trending-products');
+        const dealsContainer = document.getElementById('deals-of-the-day');
+        const popularContainer = document.getElementById('popular-products');
 
-<nav class="bottom-nav" aria-label="Primary navigation">
-  <a href="#" class="active" aria-current="page" title="Home">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-    Home
-  </a>
-  <a href="#" title="Categories">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
-    Categories
-  </a>
-  <a href="#" title="Orders">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h12v2H3zm0 5h18v2H3z"/></svg>
-    Orders
-  </a>
-  <a href="#" title="Profile">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.4c-3.1 0-9.3 1.6-9.3 4.7v2.4h18.6v-2.4c0-3.1-6.2-4.7-9.3-4.7z"/></svg>
-    Profile
-  </a>
-</nav>
+        // Function to create a product card for grids
+        function createProductCard(product) {
+            const card = document.createElement('a');
+            card.href = '#'; // Placeholder for product detail page
+            card.className = 'product-card';
+            card.setAttribute('aria-label', `${product.name} - ${product.price} rupees`);
+            
+            const oldPriceHtml = product.oldPrice ? `<span class="product-card-old-price">₹${product.oldPrice.toFixed(2)}</span>` : '';
+            const dealBadge = product.deal ? '<span class="deal-badge">Deal</span>' : '';
+
+            card.innerHTML = `
+                <div class="product-card-image-container">
+                    <img src="${product.imageUrl}" alt="${product.name}" class="product-card-image">
+                    ${dealBadge}
+                </div>
+                <div class="product-card-content">
+                    <p class="product-card-name" title="${product.name}">${product.name}</p>
+                    <div class="product-card-prices">
+                        <span class="product-card-price">₹${product.price.toFixed(2)}</span>
+                        ${oldPriceHtml}
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        // Function to create a small card for trending products
+        function createTrendingCard(product) {
+            const card = document.createElement('a');
+            card.href = '#';
+            card.className = 'trending-card';
+            card.setAttribute('aria-label', `Trending product: ${product.name}`);
+
+            card.innerHTML = `
+                <img src="${product.imageUrl}" alt="${product.name}">
+                <p class="trending-card-name" title="${product.name}">${product.name}</p>
+            `;
+            return card;
+        }
+
+        // Fetch Trending Products
+        async function fetchTrendingProducts() {
+            try {
+                const trendingRef = db.collection('products').where('trending', '==', true);
+                const snapshot = await trendingRef.get();
+                trendingContainer.innerHTML = '';
+                if (snapshot.empty) {
+                    trendingContainer.innerHTML = '<p>No trending products found.</p>';
+                    return;
+                }
+                snapshot.forEach(doc => {
+                    const product = doc.data();
+                    trendingContainer.appendChild(createTrendingCard(product));
+                });
+            } catch (error) {
+                console.error("Error fetching trending products:", error);
+                trendingContainer.innerHTML = '<p>Error loading trending products.</p>';
+            }
+        }
+
+        // Fetch Deals of the Day
+        async function fetchDealsOfTheDay() {
+            try {
+                const dealsRef = db.collection('products').where('deal', '==', true);
+                const snapshot = await dealsRef.get();
+                dealsContainer.innerHTML = '';
+                if (snapshot.empty) {
+                    dealsContainer.innerHTML = '<p>No deals available today.</p>';
+                    return;
+                }
+                snapshot.forEach(doc => {
+                    const product = doc.data();
+                    dealsContainer.appendChild(createProductCard(product));
+                });
+            } catch (error) {
+                console.error("Error fetching deals:", error);
+                dealsContainer.innerHTML = '<p>Error loading deals of the day.</p>';
+            }
+        }
+
+        // Fetch Popular Products (latest 8)
+        async function fetchPopularProducts() {
+            try {
+                const popularRef = db.collection('products').orderBy('createdAt', 'desc').limit(8);
+                const snapshot = await popularRef.get();
+                popularContainer.innerHTML = '';
+                if (snapshot.empty) {
+                    popularContainer.innerHTML = '<p>No popular products found.</p>';
+                    return;
+                }
+                snapshot.forEach(doc => {
+                    const product = doc.data();
+                    popularContainer.appendChild(createProductCard(product));
+                });
+            } catch (error) {
+                console.error("Error fetching popular products:", error);
+                popularContainer.innerHTML = '<p>Error loading popular products.</p>';
+            }
+        }
+        
+        // Carousel logic
+        let currentSlide = 0;
+        const slides = document.querySelector('.carousel-slides');
+        const slideCount = document.querySelectorAll('.carousel-slide').length;
+
+        function showSlide(index) {
+            slides.style.transform = `translateX(-${index * 100}%)`;
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slideCount;
+            showSlide(currentSlide);
+        }
+        
+        setInterval(nextSlide, 5000); // Auto-rotate every 5 seconds
+
+        // Initial data load on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchTrendingProducts();
+            fetchDealsOfTheDay();
+            fetchPopularProducts();
+        });
+    </script>
 
 </body>
-        </html>
+</html>
