@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B Mart - Product Name</title>
+    <style>
+        body { font-family: 'Amazon Ember', Arial, sans-serif; margin: 0; padding: 0; background-color: #eaeded; color: #111; }
+        .header { background-color: #232f3e; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; }
+        .header-logo { color: #fff; font-size: 24px; font-weight: bold; }
+        .header-logo a { text-decoration: none; color: #fff; }
+        .header-search { flex-grow: 1; margin: 0 20px; }
+        .header-search input { width: 100%; padding: 8px 12px; border-radius: 4px; border: none; }
+        .header-nav a { color: #fff; text-decoration: none; margin-left: 20px; font-size: 14px; }
+        .product-page-container { display: flex; flex-wrap: wrap; max-width: 1200px; margin: 20px auto; padding: 20px; }
+        .product-image-gallery { flex: 2; text-align: center; margin-right: 20px; }
+        .product-image-gallery img { max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .product-details { flex: 3; }
+        .product-details-main h1 { font-size: 28px; font-weight: 400; margin-top: 0; }
+        .product-details-main .brand { color: #007600; font-size: 14px; margin-bottom: 5px; }
+        .product-details-main .price { font-size: 24px; font-weight: bold; color: #b12704; margin: 10px 0; }
+        .product-details-main .description { font-size: 14px; line-height: 1.5; color: #555; }
+        .buy-box { background-color: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 8px; margin-top: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .buy-box .price { font-size: 24px; font-weight: bold; color: #b12704; margin: 0 0 15px 0; }
+        .buy-box .stock { color: #007600; font-size: 14px; font-weight: bold; margin-bottom: 15px; }
+        .buy-box .quantity-selector { margin-bottom: 15px; }
+        .buy-box .quantity-selector label { font-size: 14px; font-weight: bold; margin-right: 10px; }
+        .buy-box .quantity-selector select { padding: 5px; border-radius: 4px; border: 1px solid #ccc; }
+        .add-to-cart-btn { background-color: #ffd814; border: 1px solid #fcd200; width: 100%; padding: 10px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; text-align: center; color: #111; text-decoration: none; display: block; margin-bottom: 10px; }
+        .add-to-cart-btn:hover { background-color: #f7ca00; }
+        .buy-now-btn { background-color: #ffa41c; border: 1px solid #ff8f00; width: 100%; padding: 10px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; text-align: center; color: #111; text-decoration: none; display: block; }
+        .buy-now-btn:hover { background-color: #f29a00; }
+        @media (max-width: 768px) {
+            .product-page-container { flex-direction: column; }
+            .product-image-gallery { margin-right: 0; margin-bottom: 20px; }
+            .product-details { flex: 1; }
+            .header-search { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-logo"><a href="#">B Mart</a></div>
+        <div class="header-search">
+            <input type="text" placeholder="Search B Mart">
+        </div>
+        <div class="header-nav">
+            <a href="#">Account</a>
+            <a href="#">Orders</a>
+            <a href="#">Cart</a>
+        </div>
+    </div>
+
+    <div class="product-page-container">
+        
+        <div class="product-image-gallery">
+            <img id="main-product-image" src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/pizza.png" alt="Product Image">
+        </div>
+
+        <div class="product-details">
+            <div class="product-details-main">
+                <div class="brand">Visit the B Mart Store</div>
+                <h1 id="product-name">Delicious Pepperoni Pizza</h1>
+                <div class="price" id="product-price">$12.00</div>
+                <p class="description" id="product-description">
+                    A delicious and classic pepperoni pizza with a crispy crust, rich tomato sauce, and a generous layer of mozzarella and pepperoni. Perfect for a quick meal or a family dinner.
+                </p>
+            </div>
+            
+            <div class="buy-box">
+                <div class="price" id="buy-box-price">$12.00</div>
+                <div class="stock">In Stock</div>
+                <div class="quantity-selector">
+                    <label for="quantity">Quantity:</label>
+                    <select id="quantity">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+                <button id="add-to-cart-btn" class="add-to-cart-btn">Add to Cart</button>
+                <button id="buy-now-btn" class="buy-now-btn">Buy Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // This is a placeholder for the actual JavaScript logic.
+        // You will need to add the code to:
+        // 1. Initialize Firebase and check for user authentication. Redirect to auth.html if not logged in.
+        // 2. Extract the product ID from the URL (e.g., `product.html?id=pizza`).
+        // 3. Fetch the product data from your Firebase database using the product ID.
+        // 4. Update the HTML elements with the fetched data:
+        //    - `document.getElementById('main-product-image').src = 'https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/' + fetched_product.image;`
+        //    - `document.getElementById('product-name').textContent = fetched_product.name;`
+        //    - `document.getElementById('product-price').textContent = '$' + fetched_product.price;`
+        //    - `document.getElementById('product-description').textContent = fetched_product.description;`
+        // 5. Add an event listener to the "Add to Cart" button to handle adding the product to the user's cart in Firebase.
+        // 6. Add an event listener to the "Buy Now" button to handle immediate checkout.
+    </script>
+</body>
+</html>
