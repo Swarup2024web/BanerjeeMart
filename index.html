@@ -4,15 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banerjee Mart - Online Grocery Store</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
     <style>
         :root {
-            --primary-color: #4CAF50;
-            --secondary-color: #f44336;
-            --text-color: #333;
-            --bg-color: #f8f8f8;
+            --amazon-prime-color: #007185;
+            --amazon-green-color: #388E3C;
+            --amazon-orange-color: #FF9900;
+            --text-color: #111;
+            --secondary-text-color: #565959;
+            --bg-color: #eaeded;
             --card-bg: #fff;
             --border-color: #ddd;
-            --shadow: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow: 0 1px 2px rgba(0,0,0,0.08);
+            --border-radius: 8px;
         }
 
         body {
@@ -21,7 +27,7 @@
             padding: 0;
             background-color: var(--bg-color);
             color: var(--text-color);
-            line-height: 1.6;
+            line-height: 1.5;
             padding-bottom: 60px; /* Space for the bottom navigation bar */
         }
 
@@ -30,40 +36,55 @@
             position: sticky;
             top: 0;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 1rem;
-            background-color: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            background-color: var(--amazon-prime-color);
+            color: #fff;
             box-shadow: var(--shadow);
             z-index: 1000;
         }
 
-        .header h1 {
-            margin: 0;
+        .header .logo {
             font-size: 1.5rem;
-            color: var(--primary-color);
+            font-weight: 700;
+            margin-right: 1rem;
+            text-decoration: none;
+            color: #fff;
         }
 
         .search-bar {
             flex-grow: 1;
-            margin-left: 1rem;
-            position: relative;
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 4px;
+            overflow: hidden;
+            height: 40px;
         }
 
         .search-bar input {
+            border: none;
+            padding: 0.5rem 1rem;
             width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
             font-size: 1rem;
+            outline: none;
+        }
+        
+        .search-bar .search-icon {
+            background-color: #febd69;
+            color: var(--text-color);
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            height: 100%;
+            cursor: pointer;
         }
 
         /* Categories Navigation */
         .categories-nav {
             overflow-x: auto;
             white-space: nowrap;
-            padding: 0.75rem 0;
+            padding: 0.5rem 1rem;
             background-color: var(--card-bg);
             border-bottom: 1px solid var(--border-color);
             -webkit-overflow-scrolling: touch;
@@ -75,46 +96,16 @@
 
         .category-item {
             display: inline-block;
-            margin: 0 0.5rem;
-            padding: 0.5rem 1rem;
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
+            margin-right: 1.5rem;
             color: var(--text-color);
             text-decoration: none;
+            font-size: 0.9rem;
             font-weight: 500;
-            transition: background-color 0.2s ease, transform 0.2s ease;
+            transition: color 0.2s ease;
         }
 
         .category-item:hover, .category-item:focus {
-            background-color: var(--primary-color);
-            color: #fff;
-            transform: scale(1.05);
-        }
-
-        /* Hero Carousel */
-        .hero-carousel {
-            position: relative;
-            max-width: 100%;
-            overflow: hidden;
-            margin-top: 1rem;
-        }
-
-        .carousel-slides {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-        }
-
-        .carousel-slide {
-            min-width: 100%;
-        }
-
-        .carousel-slide img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 8px;
-            object-fit: cover;
+            color: var(--amazon-prime-color);
         }
         
         /* Main Content */
@@ -123,12 +114,12 @@
         }
 
         .section {
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .section-title {
             font-size: 1.25rem;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 1rem;
         }
 
@@ -137,7 +128,7 @@
             display: flex;
             overflow-x: auto;
             white-space: nowrap;
-            padding-bottom: 1rem;
+            padding-bottom: 0.5rem;
             -webkit-overflow-scrolling: touch;
         }
 
@@ -148,22 +139,15 @@
         .trending-card {
             display: inline-block;
             background-color: var(--card-bg);
-            border-radius: 8px;
+            border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             margin-right: 0.75rem;
-            padding: 0.75rem;
+            padding: 0.5rem;
             text-align: center;
-            width: 120px;
+            width: 100px;
             flex-shrink: 0;
-            transition: transform 0.2s ease;
-        }
-
-        .trending-card:last-child {
-            margin-right: 0;
-        }
-        
-        .trending-card:hover, .trending-card:focus {
-            transform: translateY(-5px);
+            text-decoration: none;
+            color: var(--text-color);
         }
 
         .trending-card img {
@@ -171,11 +155,11 @@
             height: 80px;
             object-fit: cover;
             border-radius: 50%;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
 
         .trending-card-name {
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             white-space: normal;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -187,23 +171,18 @@
         /* Product Grid */
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 1rem;
         }
 
         .product-card {
             background-color: var(--card-bg);
-            border-radius: 8px;
+            border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             overflow: hidden;
             text-decoration: none;
             color: var(--text-color);
             position: relative;
-            transition: transform 0.2s ease;
-        }
-
-        .product-card:hover, .product-card:focus {
-            transform: translateY(-5px);
         }
 
         .product-card-image-container {
@@ -218,7 +197,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
+            padding: 0.5rem;
         }
 
         .product-card-content {
@@ -242,26 +222,52 @@
 
         .product-card-price {
             font-size: 1rem;
-            font-weight: 600;
-            color: var(--primary-color);
+            font-weight: 700;
+            color: var(--amazon-green-color);
         }
 
         .product-card-old-price {
             text-decoration: line-through;
-            color: #999;
+            color: var(--secondary-text-color);
             font-size: 0.8rem;
         }
         
         .deal-badge {
             position: absolute;
-            top: 0.75rem;
-            left: 0.75rem;
-            background-color: var(--secondary-color);
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: var(--amazon-orange-color);
             color: #fff;
             padding: 0.25rem 0.5rem;
             font-size: 0.75rem;
             border-radius: 4px;
             font-weight: 600;
+        }
+
+        /* Hero Carousel */
+        .hero-carousel {
+            position: relative;
+            max-width: 100%;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .carousel-slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            border-radius: var(--border-radius);
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: var(--border-radius);
+            object-fit: cover;
         }
 
         /* Bottom Fixed Navigation */
@@ -283,26 +289,25 @@
             flex-direction: column;
             align-items: center;
             text-decoration: none;
-            color: #999;
-            font-size: 0.75rem;
+            color: #888;
+            font-size: 0.7rem;
             font-weight: 500;
             transition: color 0.2s ease;
         }
 
         .nav-item.active {
-            color: var(--primary-color);
+            color: var(--amazon-prime-color);
         }
 
-        .nav-item i {
+        .nav-item .material-symbols-outlined {
             font-size: 1.5rem;
             margin-bottom: 0.25rem;
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
 
-        /* Accessible Icons (Font Awesome for simplicity, but a custom SVG sprite would be better for no external libs) */
-        .icon-home::before { content: "🏠"; }
-        .icon-categories::before { content: "🛍️"; }
-        .icon-orders::before { content: "📦"; }
-        .icon-profile::before { content: "👤"; }
+        .nav-item.active .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+        }
 
         .sr-only {
             position: absolute;
@@ -319,10 +324,13 @@
 <body>
 
     <header class="header">
-        <h1 aria-label="Banerjee Mart Home">Banerjee Mart</h1>
+        <a href="#" class="logo" aria-label="Banerjee Mart Home">Banerjee Mart</a>
         <div class="search-bar">
             <label for="search-input" class="sr-only">Search for products</label>
             <input type="search" id="search-input" placeholder="Search for products..." aria-label="Search for products">
+            <div class="search-icon" aria-label="Search">
+                <span class="material-symbols-outlined" aria-hidden="true">search</span>
+            </div>
         </div>
     </header>
 
@@ -337,13 +345,13 @@
         <section class="hero-carousel" aria-label="Promotional Banners">
             <div class="carousel-slides">
                 <div class="carousel-slide" role="tabpanel" aria-labelledby="slide-1">
-                    <img src="https://via.placeholder.com/1200x400/50C878/FFFFFF?text=Banner+1" alt="Special offer on fresh vegetables">
+                    <img src="https://via.placeholder.com/1200x400/50C878/FFFFFF?text=Great+Deals" alt="Great deals on select products">
                 </div>
                 <div class="carousel-slide" role="tabpanel" aria-labelledby="slide-2">
-                    <img src="https://via.placeholder.com/1200x400/FFA07A/FFFFFF?text=Banner+2" alt="Huge discounts on all grocery items">
+                    <img src="https://via.placeholder.com/1200x400/FFA07A/FFFFFF?text=Daily+Offers" alt="Daily offers on all items">
                 </div>
                 <div class="carousel-slide" role="tabpanel" aria-labelledby="slide-3">
-                    <img src="https://via.placeholder.com/1200x400/4682B4/FFFFFF?text=Banner+3" alt="New arrivals in the stationery section">
+                    <img src="https://via.placeholder.com/1200x400/4682B4/FFFFFF?text=New+Arrivals" alt="Exciting new arrivals">
                 </div>
             </div>
         </section>
@@ -373,19 +381,19 @@
 
     <nav class="bottom-nav" aria-label="Main Navigation">
         <a href="#" class="nav-item active" aria-label="Home">
-            <i class="icon-home" aria-hidden="true"></i>
+            <span class="material-symbols-outlined" aria-hidden="true">home</span>
             <span>Home</span>
         </a>
         <a href="#" class="nav-item" aria-label="Categories">
-            <i class="icon-categories" aria-hidden="true"></i>
+            <span class="material-symbols-outlined" aria-hidden="true">category</span>
             <span>Categories</span>
         </a>
         <a href="#" class="nav-item" aria-label="Orders">
-            <i class="icon-orders" aria-hidden="true"></i>
+            <span class="material-symbols-outlined" aria-hidden="true">receipt_long</span>
             <span>Orders</span>
         </a>
         <a href="#" class="nav-item" aria-label="Profile">
-            <i class="icon-profile" aria-hidden="true"></i>
+            <span class="material-symbols-outlined" aria-hidden="true">account_circle</span>
             <span>Profile</span>
         </a>
     </nav>
@@ -414,7 +422,7 @@
         // Function to create a product card for grids
         function createProductCard(product) {
             const card = document.createElement('a');
-            card.href = '#'; // Placeholder for product detail page
+            card.href = '#';
             card.className = 'product-card';
             card.setAttribute('aria-label', `${product.name} - ${product.price} rupees`);
             
