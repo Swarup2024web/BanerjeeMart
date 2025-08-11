@@ -5,35 +5,199 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>B Mart - Admin Dashboard</title>
     <style>
-        body { font-family: 'Segoe UI', 'Roboto', Arial, sans-serif; margin: 0; padding: 0; background-color: #f1f2f4; color: #212121; }
-        .header { background-color: #2874f0; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
-        .header-logo { color: #fff; font-size: 24px; font-weight: bold; }
-        .header-logo a { text-decoration: none; color: #fff; }
-        .header-nav { display: flex; align-items: center; }
-        .header-nav a { color: #fff; text-decoration: none; margin-left: 20px; font-size: 16px; font-weight: 500; }
-        .container { max-width: 1300px; margin: 20px auto; padding: 20px; }
-        .section { background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 1px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        h1, h2 { color: #212121; margin-top: 0; }
-        .section-header { font-size: 24px; font-weight: 500; margin-bottom: 20px; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 14px; color: #555; }
-        .form-group input[type="text"], .form-group input[type="number"], .form-group select { width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 4px; box-sizing: border-box; font-size: 14px; transition: border-color 0.3s; }
-        .form-group input:focus, .form-group select:focus { outline: none; border-color: #2874f0; box-shadow: 0 0 5px rgba(40,116,240,0.2); }
-        .btn { background-color: #2874f0; color: #fff; border: none; padding: 12px 24px; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: 500; transition: background-color 0.3s; }
-        .btn:hover { background-color: #1a64d0; }
-        .product-list-table, .order-list-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .product-list-table th, .order-list-table th { background-color: #f9f9f9; padding: 15px; text-align: left; font-size: 14px; font-weight: 500; border-bottom: 1px solid #e0e0e0; }
-        .product-list-table td, .order-list-table td { padding: 15px; font-size: 14px; border-bottom: 1px solid #e0e0e0; vertical-align: middle; }
-        .product-list-table td img { width: 60px; height: 60px; object-fit: contain; border: 1px solid #e0e0e0; border-radius: 4px; }
-        .action-buttons button { margin-right: 8px; padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; }
-        .btn-edit { background-color: #ffc107; color: #111; }
-        .btn-delete { background-color: #dc3545; color: #fff; }
-        .order-status { padding: 5px 10px; border-radius: 20px; font-weight: bold; font-size: 12px; display: inline-block; }
-        .status-packed { background-color: #f7a049; color: #fff; }
-        .status-shipped { background-color: #28a745; color: #fff; }
-        .status-delivered { background-color: #17a2b8; color: #fff; }
-        .status-cancelled { background-color: #dc3545; color: #fff; }
-        .btn-excel { background-color: #008000; color: #fff; margin-top: 20px; }
+        :root {
+            --primary-color: #2874f0;
+            --surface-color: #ffffff;
+            --background-color: #f1f2f4;
+            --on-surface-color: #212121;
+            --on-background-color: #555;
+            --border-color: #e0e0e0;
+            --button-hover-color: #1a64d0;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--on-surface-color);
+        }
+
+        .header {
+            background-color: var(--primary-color);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-logo {
+            color: var(--surface-color);
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-nav a {
+            color: var(--surface-color);
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .tab-button {
+            padding: 16px 24px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--on-background-color);
+            background-color: var(--surface-color);
+            border: none;
+            flex-grow: 1;
+            transition: color 0.3s, background-color 0.3s;
+        }
+        .tab-button:hover {
+            background-color: #f0f0f0;
+        }
+        .tab-button.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        .section {
+            background-color: var(--surface-color);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            font-size: 24px;
+            font-weight: 500;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--on-background-color);
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(40,116,240,0.2);
+        }
+        .btn {
+            background-color: var(--primary-color);
+            color: var(--surface-color);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: var(--button-hover-color);
+        }
+        .product-list-table, .order-list-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .product-list-table th, .order-list-table th {
+            background-color: #f9f9f9;
+            padding: 15px;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 500;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .product-list-table td, .order-list-table td {
+            padding: 15px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+        .product-list-table td img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        .action-buttons button {
+            margin-right: 8px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .btn-edit { background-color: var(--warning-color); color: var(--on-surface-color); }
+        .btn-delete { background-color: var(--danger-color); color: var(--surface-color); }
+        .order-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+            display: inline-block;
+        }
+        .status-packed { background-color: #f7a049; color: var(--surface-color); }
+        .status-shipped { background-color: var(--success-color); color: var(--surface-color); }
+        .status-delivered { background-color: #17a2b8; color: var(--surface-color); }
+        .status-cancelled { background-color: var(--danger-color); color: var(--surface-color); }
+        .btn-excel { background-color: #008000; color: var(--surface-color); margin-top: 20px; }
 
         /* Admin Login Overlay */
         #admin-login-overlay {
@@ -49,7 +213,7 @@
             z-index: 1000;
         }
         #admin-login-box {
-            background-color: #fff;
+            background-color: var(--surface-color);
             padding: 40px;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -66,12 +230,20 @@
             width: 100%;
             padding: 12px;
             margin-bottom: 20px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
             box-sizing: border-box;
         }
         #admin-login-box button {
             width: 100%;
+        }
+        .error-message {
+            color: var(--danger-color);
+            margin-top: 10px;
+            display: none;
+        }
+        .hidden {
+            display: none;
         }
 
         @media (max-width: 768px) {
@@ -82,9 +254,10 @@
             .product-list-table, .order-list-table { display: block; overflow-x: auto; white-space: nowrap; }
             .product-list-table thead, .order-list-table thead { display: none; }
             .product-list-table tbody, .order-list-table tbody { display: block; }
-            .product-list-table tr, .order-list-table tr { display: flex; flex-wrap: wrap; padding: 15px 0; border-bottom: 1px solid #e0e0e0; }
+            .product-list-table tr, .order-list-table tr { display: flex; flex-wrap: wrap; padding: 15px 0; border-bottom: 1px solid var(--border-color); }
             .product-list-table td, .order-list-table td { display: block; width: 100%; text-align: left; padding: 5px 0; }
             .product-list-table td:before, .order-list-table td:before { content: attr(data-label); font-weight: bold; margin-right: 10px; }
+            .tab-nav { flex-direction: column; }
         }
     </style>
 </head>
@@ -97,94 +270,101 @@
                 <input type="password" id="admin-password" placeholder="Enter Admin Password" required>
                 <button type="submit" class="btn">Login</button>
             </form>
-            <p id="login-error" style="color: red; margin-top: 10px; display: none;">Incorrect password. Please try again.</p>
+            <p id="login-error" class="error-message">Incorrect password. Please try again.</p>
         </div>
     </div>
 
-    <div id="admin-dashboard-content" style="display: none;">
+    <div id="admin-dashboard-content" class="hidden">
         <div class="header">
-            <div class="header-logo"><a href="#">B Mart Admin</a></div>
+            <a href="#" class="header-logo">B Mart Admin</a>
             <div class="header-nav">
-                <a href="#">Products</a>
-                <a href="#">Orders</a>
-                <a href="#">Analytics</a>
                 <a href="#" onclick="logout()">Logout</a>
             </div>
         </div>
 
         <div class="container">
-            <div class="section">
-                <h2 class="section-header">Add/Update Product</h2>
-                <form id="product-form">
-                    <input type="hidden" id="product-id">
-                    <div class="form-group">
-                        <label for="product-name">Product Name</label>
-                        <input type="text" id="product-name" placeholder="Enter product name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="product-price">Price ($)</label>
-                        <input type="number" id="product-price" step="0.01" placeholder="0.00" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="product-category">Category</label>
-                        <select id="product-category" required>
-                            <option value="Groceries">Groceries</option>
-                            <option value="Foods">Foods</option>
-                            <option value="Care">Care</option>
-                            <option value="Stationery">Stationery</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="product-image">Image File Name (e.g., apple.png)</label>
-                        <input type="text" id="product-image" placeholder="productname.png" required>
-                    </div>
-                    <button type="submit" class="btn" id="product-submit-btn">Add Product</button>
-                </form>
-            </div>
-
-            <div class="section">
-                <h2 class="section-header">Manage Products</h2>
-                <table class="product-list-table">
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Product Name</th>
-                            <th>Price</th>
-                            <th>Category</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="product-list">
-                        </tbody>
-                </table>
+            <div class="tab-nav">
+                <button class="tab-button active" onclick="openTab('addProductTab', this)">Add Products</button>
+                <button class="tab-button" onclick="openTab('updateProductTab', this)">Update Products</button>
+                <button class="tab-button" onclick="openTab('manageOrdersTab', this)">Manage Orders</button>
             </div>
             
-            <div class="section">
-                <h2 class="section-header">Manage Orders</h2>
-                <button class="btn btn-excel">Download Orders as Excel</button>
-                <table class="order-list-table">
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Customer</th>
-                            <th>Items</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="order-list">
-                        </tbody>
-                </table>
+            <div id="addProductTab" class="tab-content active">
+                <div class="section">
+                    <h2>Add New Product</h2>
+                    <form id="product-form">
+                        <div class="form-group">
+                            <label for="product-name">Product Name</label>
+                            <input type="text" id="product-name" placeholder="Enter product name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-price">Price (₹)</label>
+                            <input type="number" id="product-price" step="0.01" placeholder="0.00" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-category">Category</label>
+                            <select id="product-category" required>
+                                <option value="Groceries">Groceries</option>
+                                <option value="Foods">Foods</option>
+                                <option value="Care">Care</option>
+                                <option value="Stationery">Stationery</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-image">Image File Name (e.g., apple.png)</label>
+                            <input type="text" id="product-image" placeholder="productname.png" required>
+                        </div>
+                        <button type="submit" class="btn">Add Product</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="updateProductTab" class="tab-content">
+                <div class="section">
+                    <h2>Update/Delete Products</h2>
+                    <table class="product-list-table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Category</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="product-list">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="manageOrdersTab" class="tab-content">
+                <div class="section">
+                    <h2>Manage Orders</h2>
+                    <button class="btn btn-excel">Download Orders as Excel</button>
+                    <table class="order-list-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="order-list">
+                            </tbody>
+                    </table>
+                </div>
             </div>
 
         </div>
     </div>
 
     <script type="module">
-        // Import the necessary Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, getDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
         
         // Your Firebase configuration object
         const firebaseConfig = {
@@ -196,15 +376,13 @@
             appId: "1:183628570952:web:3028bb258001d004d9537d"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Reference to the 'products' collection in Firestore
         const productsCollection = collection(db, 'products');
 
         // =========================================================
-        // ADMIN LOGIN LOGIC
+        // ADMIN LOGIN LOGIC (PASSWORD-ONLY)
         // =========================================================
         const loginOverlay = document.getElementById('admin-login-overlay');
         const loginForm = document.getElementById('admin-login-form');
@@ -224,14 +402,14 @@
 
         function showLogin() {
             loginOverlay.style.display = 'flex';
-            dashboardContent.style.display = 'none';
+            dashboardContent.classList.add('hidden');
         }
 
         function showDashboard() {
             loginOverlay.style.display = 'none';
-            dashboardContent.style.display = 'block';
+            dashboardContent.classList.remove('hidden');
+            // Initial data fetch for the first tab
             fetchAndDisplayProducts();
-            fetchAndDisplayOrders();
         }
 
         loginForm.addEventListener('submit', (e) => {
@@ -249,69 +427,91 @@
             showLogin();
         };
 
-        // Initial check on page load
         checkLoginStatus();
+        
+        // =========================================================
+        // TAB SWITCHING LOGIC
+        // =========================================================
+        const tabContents = document.querySelectorAll('.tab-content');
+        const tabButtons = document.querySelectorAll('.tab-button');
 
+        window.openTab = function(tabId, button) {
+            tabContents.forEach(tab => tab.classList.remove('active'));
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            button.classList.add('active');
+            
+            // Fetch data based on the active tab
+            if (tabId === 'updateProductTab') {
+                fetchAndDisplayProducts();
+            } else if (tabId === 'manageOrdersTab') {
+                fetchAndDisplayOrders();
+            }
+        }
+        
         // =========================================================
         // PRODUCT MANAGEMENT LOGIC (Firestore Integration)
         // =========================================================
         const productForm = document.getElementById('product-form');
+        const productNameInput = document.getElementById('product-name');
+        const productPriceInput = document.getElementById('product-price');
+        const productCategoryInput = document.getElementById('product-category');
+        const productImageInput = document.getElementById('product-image');
         const productList = document.getElementById('product-list');
-        const productSubmitBtn = document.getElementById('product-submit-btn');
 
+        let isEditing = false;
+        let currentProductId = null;
+        
         productForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-
-            const productName = document.getElementById('product-name').value;
-            const productPrice = document.getElementById('product-price').value;
-            const productCategory = document.getElementById('product-category').value;
-            const productImage = document.getElementById('product-image').value;
-            const productId = document.getElementById('product-id').value;
-
-            const imageBasePath = 'https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/';
-            const imageUrl = imageBasePath + productImage;
-
             const productData = {
-                name: productName,
-                price: parseFloat(productPrice),
-                category: productCategory,
-                image: imageUrl
+                name: productNameInput.value,
+                price: parseFloat(productPriceInput.value),
+                category: productCategoryInput.value,
+                image: `https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/${productImageInput.value}`
             };
 
             try {
-                if (productId) {
-                    await updateDoc(doc(db, 'products', productId), productData);
+                if (isEditing) {
+                    await updateDoc(doc(db, 'products', currentProductId), productData);
                     alert('Product updated successfully!');
                 } else {
                     await addDoc(productsCollection, productData);
                     alert('Product added successfully!');
                 }
-
+                
+                // Reset form and state
                 productForm.reset();
-                document.getElementById('product-id').value = '';
-                productSubmitBtn.textContent = 'Add Product';
+                isEditing = false;
+                currentProductId = null;
                 
                 fetchAndDisplayProducts();
-
             } catch (error) {
-                console.error("Error adding/updating product: ", error);
-                alert('Error adding/updating product: ' + error.message);
+                console.error("Error saving product: ", error);
+                alert('Error saving product: ' + error.message);
             }
         });
 
         async function fetchAndDisplayProducts() {
-            productList.innerHTML = '';
+            productList.innerHTML = '<tr><td colspan="5" style="text-align: center;">Fetching products...</td></tr>';
             const snapshot = await getDocs(productsCollection);
+            productList.innerHTML = '';
             
-            snapshot.forEach(doc => {
-                const product = doc.data();
-                const productId = doc.id;
+            if (snapshot.empty) {
+                productList.innerHTML = '<tr><td colspan="5" style="text-align: center;">No products found.</td></tr>';
+                return;
+            }
+            
+            snapshot.forEach(productDoc => {
+                const product = productDoc.data();
+                const productId = productDoc.id;
                 
                 const productItem = `
                     <tr>
                         <td data-label="Image"><img src="${product.image}" alt="${product.name}"></td>
                         <td data-label="Product Name">${product.name}</td>
-                        <td data-label="Price">$${product.price.toFixed(2)}</td>
+                        <td data-label="Price">₹${product.price.toFixed(2)}</td>
                         <td data-label="Category">${product.category}</td>
                         <td data-label="Actions" class="action-buttons">
                             <button class="btn-edit" data-id="${productId}">Edit</button>
@@ -325,7 +525,6 @@
             document.querySelectorAll('.btn-edit').forEach(button => {
                 button.addEventListener('click', (e) => editProduct(e.target.dataset.id));
             });
-
             document.querySelectorAll('.btn-delete').forEach(button => {
                 button.addEventListener('click', (e) => deleteProduct(e.target.dataset.id));
             });
@@ -337,13 +536,21 @@
             
             if (productDoc.exists()) {
                 const product = productDoc.data();
-                document.getElementById('product-id').value = id;
-                document.getElementById('product-name').value = product.name;
-                document.getElementById('product-price').value = product.price;
-                document.getElementById('product-category').value = product.category;
+                
+                // Populate the form fields in the 'Add Products' tab
+                productNameInput.value = product.name;
+                productPriceInput.value = product.price;
+                productCategoryInput.value = product.category;
                 const filename = product.image.split('/').pop();
-                document.getElementById('product-image').value = filename;
-                productSubmitBtn.textContent = 'Update Product';
+                productImageInput.value = filename;
+                
+                // Set the state for editing
+                isEditing = true;
+                currentProductId = id;
+                
+                // Switch to the 'Add Products' tab and update the button text
+                openTab('addProductTab', document.querySelector('.tab-button:first-child'));
+                document.querySelector('#addProductTab .btn').textContent = 'Update Product';
             }
         }
 
@@ -363,10 +570,13 @@
 
         async function fetchAndDisplayOrders() {
             orderList.innerHTML = '<tr><td colspan="6">No orders found.</td></tr>';
+            // Here you would fetch data from your 'orders' collection
+            // and dynamically populate the orderList table.
         }
 
         downloadExcelBtn.addEventListener('click', () => {
             alert('Downloading Excel file...');
+            // Implement logic to fetch all orders and generate an Excel/CSV file here.
         });
         
     </script>
