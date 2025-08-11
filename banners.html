@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Banners for Banerjee Mart</title>
+<style>
+  body, html {
+    margin: 0; padding: 0; overflow-x: hidden; 
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+  .carousel {
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    overflow-x: hidden;
+    position: relative;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgb(0 0 0 / 0.15);
+  }
+
+  .carousel-track {
+    display: flex;
+    scroll-behavior: smooth;
+    overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
+  }
+  .carousel-track::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
+
+  .banner {
+    min-width: 100%;
+    padding: 40px 20px;
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-align: center;
+    user-select: none;
+    flex-shrink: 0;
+    border-radius: 12px;
+    box-sizing: border-box;
+  }
+
+  .banner1 {
+    background: linear-gradient(135deg, #2874f0 0%, #54a0ff 100%);
+  }
+  .banner2 {
+    background: linear-gradient(135deg, #ff6f00 0%, #ffa726 100%);
+  }
+  .banner3 {
+    background: linear-gradient(135deg, #2e7d32 0%, #66bb6a 100%);
+  }
+
+  /* Responsive font size */
+  @media (max-width: 600px) {
+    .banner {
+      font-size: 1.1rem;
+      padding: 30px 12px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="carousel" aria-label="Promotional Banners">
+  <div class="carousel-track" tabindex="0">
+    <div class="banner banner1" role="group" aria-roledescription="slide" aria-label="Banner 1">
+      We deliver only to Pakurtala within a few hours.
+    </div>
+    <div class="banner banner2" role="group" aria-roledescription="slide" aria-label="Banner 2">
+      Delivery charge is free for orders Rs. 199 and above
+    </div>
+    <div class="banner banner3" role="group" aria-roledescription="slide" aria-label="Banner 3">
+      We value quality
+    </div>
+  </div>
+</div>
+
+<script>
+  const track = document.querySelector('.carousel-track');
+  let scrollAmount = 0;
+  const bannerWidth = track.offsetWidth;
+  const totalBanners = track.children.length;
+  let currentIndex = 0;
+
+  function autoScroll() {
+    currentIndex++;
+    if (currentIndex >= totalBanners) currentIndex = 0;
+    scrollAmount = bannerWidth * currentIndex;
+    track.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+  }
+
+  let interval = setInterval(autoScroll, 4000);
+
+  // Pause auto scroll on user interaction
+  track.addEventListener('mouseenter', () => clearInterval(interval));
+  track.addEventListener('focusin', () => clearInterval(interval));
+  track.addEventListener('mouseleave', () => interval = setInterval(autoScroll, 4000));
+  track.addEventListener('focusout', () => interval = setInterval(autoScroll, 4000));
+</script>
+
+</body>
+</html>
