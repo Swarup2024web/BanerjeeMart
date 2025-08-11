@@ -15,6 +15,10 @@
             --border-color: #e0e0e0;
             --button-hover-color: #1a64d0;
             --link-color: #2874f0;
+            --toggle-active-color: #2874f0;
+            --toggle-inactive-color: #e0e0e0;
+            --toggle-text-active-color: #ffffff;
+            --toggle-text-inactive-color: #555;
         }
 
         body {
@@ -36,6 +40,32 @@
             padding: 32px;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-toggle-buttons {
+            display: flex;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 24px;
+            border: 1px solid var(--toggle-inactive-color);
+        }
+
+        .auth-toggle-button {
+            flex-grow: 1;
+            padding: 10px 20px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 16px;
+            background-color: var(--surface-color);
+            color: var(--toggle-text-inactive-color);
+            border: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .auth-toggle-button.active {
+            background-color: var(--toggle-active-color);
+            color: var(--toggle-text-active-color);
         }
 
         h1 {
@@ -149,7 +179,12 @@
 <body>
 
     <div class="auth-container">
-        
+
+        <div class="auth-toggle-buttons">
+            <button id="login-toggle-button" class="auth-toggle-button active" onclick="showForm('login-form-container')">Login</button>
+            <button id="signup-toggle-button" class="auth-toggle-button" onclick="showForm('signup-form-container')">Sign Up</button>
+        </div>
+
         <div id="login-form-container">
             <h1>Login to B Mart</h1>
             <form id="login-form">
@@ -171,9 +206,6 @@
                 </div>
                 <button type="submit" class="btn">Login</button>
             </form>
-            <div class="auth-toggle">
-                New to B Mart? <a href="#" onclick="showForm('signup-form-container')">Sign Up</a>
-            </div>
         </div>
 
         <div id="signup-form-container" class="hidden">
@@ -219,9 +251,6 @@
                 </div>
                 <button type="submit" class="btn">Sign Up</button>
             </form>
-            <div class="auth-toggle">
-                Already have an account? <a href="#" onclick="showForm('login-form-container')">Login</a>
-            </div>
         </div>
 
         <div id="forgot-password-form-container" class="hidden">
@@ -243,10 +272,6 @@
     </div>
 
     <script type="module">
-        // =========================================================
-        // FIREBASE AND JAVASCRIPT LOGIC
-        // =========================================================
-        
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
@@ -259,19 +284,28 @@
           messagingSenderId: "183628570952",
           appId: "1:183628570952:web:3028bb258001d004d9537d"
         };
-        
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // =========================================================
-        // FORM TOGGLING AND PASSWORD VISIBILITY
-        // =========================================================
+        const loginToggleButton = document.getElementById('login-toggle-button');
+        const signupToggleButton = document.getElementById('signup-toggle-button');
+
         window.showForm = function(formId) {
             document.getElementById('login-form-container').classList.add('hidden');
             document.getElementById('signup-form-container').classList.add('hidden');
             document.getElementById('forgot-password-form-container').classList.add('hidden');
             document.getElementById(formId).classList.remove('hidden');
+
+            loginToggleButton.classList.remove('active');
+            signupToggleButton.classList.remove('active');
+
+            if (formId === 'login-form-container') {
+                loginToggleButton.classList.add('active');
+            } else if (formId === 'signup-form-container') {
+                signupToggleButton.classList.add('active');
+            }
         };
 
         window.togglePasswordVisibility = function(passwordFieldId) {
@@ -286,9 +320,6 @@
             }
         };
 
-        // =========================================================
-        // SIGN-UP LOGIC
-        // =========================================================
         const signupForm = document.getElementById('signup-form');
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -298,7 +329,7 @@
             const phoneNumber = document.getElementById('signup-phone').value;
             const password = document.getElementById('signup-password').value;
             const address = document.getElementById('signup-address').value;
-            
+
             const fullPhoneNumber = countryCode + phoneNumber;
 
             try {
@@ -314,7 +345,7 @@
                 });
 
                 alert('Account created successfully!');
-                window.location.href = 'index.html'; 
+                window.location.href = 'index.html';
 
             } catch (error) {
                 console.error("Error during sign up:", error);
@@ -322,9 +353,6 @@
             }
         });
 
-        // =========================================================
-        // LOGIN LOGIC
-        // =========================================================
         const loginForm = document.getElementById('login-form');
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -334,21 +362,18 @@
             try {
                 await signInWithEmailAndPassword(auth, email, password);
                 alert('Login successful!');
-                window.location.href = 'index.html'; 
+                window.location.href = 'index.html';
             } catch (error) {
                 console.error("Error during login:", error);
                 alert("Login failed: " + error.message);
             }
         });
-        
-        // =========================================================
-        // FORGOT PASSWORD LOGIC
-        // =========================================================
+
         const forgotPasswordForm = document.getElementById('forgot-password-form');
         forgotPasswordForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('reset-email').value;
-            
+
             try {
                 await sendPasswordResetEmail(auth, email);
                 alert('Password reset email sent! Please check your inbox.');
@@ -358,6 +383,8 @@
                 alert("Error sending reset email: " + error.message);
             }
         });
+
+        showForm('login-form-container');
     </script>
 </body>
 </html>
