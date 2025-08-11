@@ -3,145 +3,347 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B Mart - Sign in</title>
+    <title>B Mart - Sign in / Sign up</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        body { font-family: 'Amazon Ember', Arial, sans-serif; background-color: #fff; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 100vh; }
-        .logo-container { padding: 20px 0; }
-        .logo-container img { width: 100px; }
-        .auth-container { width: 90%; max-width: 350px; padding: 20px 26px; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
-        h1 { font-size: 28px; font-weight: 400; margin-top: 0; margin-bottom: 20px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-weight: bold; font-size: 13px; margin-bottom: 5px; }
-        .form-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 3px; box-sizing: border-box; font-size: 14px; }
-        .form-group input:focus { outline: none; border-color: #e77600; box-shadow: 0 0 5px rgba(225,125,0,0.5); }
-        .btn-submit { background-color: #ff9900; border: 1px solid #ff8f00; color: #111; width: 100%; padding: 10px; border-radius: 3px; cursor: pointer; font-size: 14px; font-weight: bold; margin-top: 10px; }
-        .btn-submit:hover { background-color: #f79900; }
-        .forgot-password-link { display: block; text-align: right; margin-top: 10px; font-size: 13px; color: #0066c0; text-decoration: none; }
-        .forgot-password-link:hover { text-decoration: underline; }
-        .divider { display: flex; align-items: center; text-align: center; color: #767676; margin: 20px 0; font-size: 12px; }
-        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #ddd; }
-        .divider:not(:empty)::before { margin-right: .25em; }
-        .divider:not(:empty)::after { margin-left: .25em; }
-        .create-account-button { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 3px; background-color: #e7e9ec; font-size: 14px; cursor: pointer; text-decoration: none; display: block; text-align: center; color: #111; }
-        .create-account-button:hover { background-color: #d8dbdf; }
-        .back-to-login { display: block; text-align: center; margin-top: 20px; font-size: 13px; color: #0066c0; text-decoration: none; }
-        .back-to-login:hover { text-decoration: underline; }
-        .footer { margin-top: 50px; font-size: 12px; color: #555; text-align: center; }
-        .footer a { color: #0066c0; text-decoration: none; margin: 0 5px; }
-        .footer a:hover { text-decoration: underline; }
+        :root {
+            --primary-color: #2874f0;
+            --surface-color: #ffffff;
+            --background-color: #f1f2f4;
+            --on-surface-color: #212121;
+            --on-background-color: #555;
+            --border-color: #e0e0e0;
+            --button-hover-color: #1a64d0;
+            --link-color: #2874f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .auth-container {
+            background-color: var(--surface-color);
+            width: 90%;
+            max-width: 400px;
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .logo-container img {
+            width: 120px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 24px;
+            text-align: center;
+            color: var(--on-surface-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--on-background-color);
+        }
+
+        .input-container {
+            position: relative;
+            display: flex;
+        }
+
+        .input-container input, .input-container select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .input-container input:focus, .input-container select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(40, 116, 240, 0.2);
+        }
+
+        .phone-input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .phone-input-group select {
+            flex-shrink: 0;
+            width: 100px;
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--on-background-color);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .btn {
+            background-color: #fb641b;
+            color: var(--surface-color);
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            background-color: #e55a16;
+        }
+
+        .auth-toggle {
+            margin-top: 24px;
+            text-align: center;
+            color: var(--on-background-color);
+            font-size: 14px;
+        }
+
+        .auth-toggle a {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .auth-toggle a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
 
-    <div class="logo-container">
-        <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/b-mart-logo.png" alt="B Mart Logo">
-    </div>
-
-    <div class="auth-container" id="login-form-container">
-        <form id="login-form">
-            <h1>Sign in</h1>
-            <div class="form-group">
-                <label for="login-email">Email or mobile phone number</label>
-                <input type="email" id="login-email" required>
-            </div>
-            <div class="form-group">
-                <label for="login-password">Password</label>
-                <input type="password" id="login-password" required>
-            </div>
-            <button type="submit" class="btn-submit">Continue</button>
-            <a href="#" class="forgot-password-link" onclick="showForm('forgot-password-form-container')">Forgot your password?</a>
-        </form>
-    </div>
-
-    <div class="auth-container" id="registration-form-container" style="display: none;">
-        <form id="registration-form">
-            <h1>Create account</h1>
-            <div class="form-group">
-                <label for="register-name">Your name</label>
-                <input type="text" id="register-name" required>
-            </div>
-            <div class="form-group">
-                <label for="register-email">Email or mobile phone number</label>
-                <input type="email" id="register-email" required>
-            </div>
-            <div class="form-group">
-                <label for="register-password">Password</label>
-                <input type="password" id="register-password" placeholder="At least 6 characters" required>
-            </div>
-            <button type="submit" class="btn-submit">Create your B Mart account</button>
-        </form>
-        <a href="#" class="back-to-login" onclick="showForm('login-form-container')">Back to Sign in</a>
-    </div>
-
-    <div class="auth-container" id="forgot-password-form-container" style="display: none;">
-        <form id="forgot-password-form">
-            <h1>Password assistance</h1>
-            <p style="font-size: 14px; margin-bottom: 20px;">Enter the email address or mobile phone number associated with your B Mart account.</p>
-            <div class="form-group">
-                <label for="forgot-email">Email or mobile phone number</label>
-                <input type="email" id="forgot-email" required>
-            </div>
-            <button type="submit" class="btn-submit">Continue</button>
-        </form>
-        <a href="#" class="back-to-login" onclick="showForm('login-form-container')">Back to Sign in</a>
-    </div>
-
-    <div class="auth-container" style="margin-top: 20px; text-align: center; padding: 20px 0; border: none; box-shadow: none;">
-        <div class="divider">New to B Mart?</div>
-        <a href="#" class="create-account-button" onclick="showForm('registration-form-container')">Create your B Mart account</a>
-    </div>
-
-    <div class="footer">
-        <div>
-            <a href="#">Conditions of Use</a>
-            <a href="#">Privacy Notice</a>
-            <a href="#">Help</a>
+    <div class="auth-container">
+        <div class="logo-container">
+            <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/b-mart-logo-dark.png" alt="B Mart Logo">
         </div>
-        <div style="margin-top: 10px;">
-            &copy; 2024-2025, B Mart.com
+
+        <div id="login-form-container">
+            <h1>Login</h1>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email-phone">Email or Phone Number</label>
+                    <div class="input-container">
+                        <input type="text" id="login-email-phone" placeholder="Enter Email or Phone" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <div class="input-container">
+                        <input type="password" id="login-password" placeholder="Enter Password" required>
+                        <i class="material-icons input-icon" onclick="togglePasswordVisibility('login-password')">visibility_off</i>
+                    </div>
+                </div>
+                <button type="submit" class="btn">Login</button>
+            </form>
+            <div class="auth-toggle">
+                Don't have an account? <a href="#" onclick="showForm('signup-form-container')">Sign Up</a>
+            </div>
+        </div>
+
+        <div id="signup-form-container" style="display: none;">
+            <h1>Sign Up</h1>
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="signup-name">Full Name</label>
+                    <div class="input-container">
+                        <input type="text" id="signup-name" placeholder="Enter your full name" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-phone">Phone Number</label>
+                    <div class="phone-input-group">
+                        <select id="country-code" required>
+                            <option value="+91">+91 (IN)</option>
+                            <option value="+1">+1 (US)</option>
+                            </select>
+                        <input type="tel" id="signup-phone" placeholder="9876543210" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Email (Optional)</label>
+                    <div class="input-container">
+                        <input type="email" id="signup-email" placeholder="Enter your email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <div class="input-container">
+                        <input type="password" id="signup-password" placeholder="Enter a strong password" required>
+                        <i class="material-icons input-icon" onclick="togglePasswordVisibility('signup-password')">visibility_off</i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-address">Address</label>
+                    <div class="input-container">
+                        <input type="text" id="signup-address" placeholder="Enter your address" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn">Sign Up</button>
+            </form>
+            <div class="auth-toggle">
+                Already have an account? <a href="#" onclick="showForm('login-form-container')">Login</a>
+            </div>
         </div>
     </div>
 
-    <script>
-        // This is the JavaScript for switching between forms.
-        // The actual authentication logic for Firebase would go here.
+    <script type="module">
+        // =========================================================
+        // FIREBASE AND JAVASCRIPT LOGIC
+        // =========================================================
+        
+        // This is a placeholder for your Firebase SDK initialization.
+        // You will need to uncomment this section and add your firebase config.
+        /*
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        */
+
+        // =========================================================
+        // FORM TOGGLING AND PASSWORD VISIBILITY
+        // =========================================================
         function showForm(formId) {
             document.getElementById('login-form-container').style.display = 'none';
-            document.getElementById('registration-form-container').style.display = 'none';
-            document.getElementById('forgot-password-form-container').style.display = 'none';
+            document.getElementById('signup-form-container').style.display = 'none';
             document.getElementById(formId).style.display = 'block';
         }
 
-        // You will add your Firebase SDK initialization and authentication functions here.
-        // For example:
-        //
-        // import { initializeApp } from "firebase/app";
-        // import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged } from "firebase/auth";
-        //
-        // const firebaseConfig = {
-        //   apiKey: "YOUR_API_KEY",
-        //   ...
-        // };
-        // const app = initializeApp(firebaseConfig);
-        // const auth = getAuth(app);
-        //
-        // document.getElementById('login-form').addEventListener('submit', (e) => {
-        //   e.preventDefault();
-        //   const email = document.getElementById('login-email').value;
-        //   const password = document.getElementById('login-password').value;
-        //   signInWithEmailAndPassword(auth, email, password)
-        //     .then((userCredential) => {
-        //       // Signed in successfully, redirect to the main page or admin page
-        //       window.location.href = 'index.html'; // or admin.html
-        //     })
-        //     .catch((error) => {
-        //       // Handle errors here
-        //       alert(error.message);
-        //     });
-        // });
-        //
-        // Similar event listeners for registration and forgot password forms.
-        // The `onAuthStateChanged` function will be crucial for the redirect logic on all your pages.
+        window.togglePasswordVisibility = function(passwordFieldId) {
+            const passwordInput = document.getElementById(passwordFieldId);
+            const icon = passwordInput.nextElementSibling;
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.textContent = 'visibility';
+            } else {
+                passwordInput.type = 'password';
+                icon.textContent = 'visibility_off';
+            }
+        };
+
+        // =========================================================
+        // SIGN-UP LOGIC
+        // =========================================================
+        /*
+        const signupForm = document.getElementById('signup-form');
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fullName = document.getElementById('signup-name').value;
+            const countryCode = document.getElementById('country-code').value;
+            const phoneNumber = document.getElementById('signup-phone').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const address = document.getElementById('signup-address').value;
+            
+            const fullPhoneNumber = countryCode + phoneNumber;
+
+            try {
+                // Here you would implement Firebase Phone Number Authentication
+                // You would need to set up a RecaptchaVerifier and handle the OTP flow.
+                // Or you could use email/password if the email field is filled out.
+                // The following is an example for email/password registration.
+
+                // This part requires email to be filled out.
+                if (email) {
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+
+                    // Save user data to Firestore
+                    await addDoc(collection(db, 'users'), {
+                        uid: user.uid,
+                        fullName: fullName,
+                        phoneNumber: fullPhoneNumber,
+                        email: email,
+                        address: address
+                    });
+
+                    alert('Account created successfully!');
+                    window.location.href = 'index.html'; // Redirect to home page
+                } else {
+                    // Handle phone number-only sign-up with OTP verification
+                    alert('Phone number sign-up requires OTP verification. This is a more complex flow to implement.');
+                }
+
+            } catch (error) {
+                console.error("Error during sign up:", error);
+                alert("Sign-up failed: " + error.message);
+            }
+        });
+        */
+
+        // =========================================================
+        // LOGIN LOGIC
+        // =========================================================
+        /*
+        const loginForm = document.getElementById('login-form');
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const emailOrPhone = document.getElementById('login-email-phone').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                // Here you would check if the input is an email or a phone number
+                // and use the appropriate Firebase authentication method.
+                if (emailOrPhone.includes('@')) {
+                    const userCredential = await signInWithEmailAndPassword(auth, emailOrPhone, password);
+                    alert('Login successful!');
+                    window.location.href = 'index.html'; // Redirect to home page
+                } else {
+                    alert('Phone number login is not yet implemented. Please use email.');
+                }
+            } catch (error) {
+                console.error("Error during login:", error);
+                alert("Login failed: " + error.message);
+            }
+        });
+        */
     </script>
 </body>
 </html>
