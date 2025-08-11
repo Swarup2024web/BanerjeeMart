@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Banerjee Mart - Admin Panel</title>
   <style>
     body {
@@ -95,10 +95,10 @@
     <h2>Add Product</h2>
     <form id="productForm">
       <label>Product Name</label>
-      <input type="text" id="name" required>
+      <input type="text" id="name" required />
 
       <label>Price</label>
-      <input type="number" id="price" required>
+      <input type="number" id="price" required />
 
       <label>Category</label>
       <select id="category" required>
@@ -109,8 +109,8 @@
         <option value="Health">Health</option>
       </select>
 
-      <label>Image URL</label>
-      <input type="url" id="imageUrl" required>
+      <label>Image File Name (e.g., productname.png)</label>
+      <input type="text" id="imageFileName" placeholder="e.g., rice.jpg" required />
 
       <label>Description</label>
       <textarea id="description" rows="3"></textarea>
@@ -183,74 +183,117 @@
   const app = firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
 
-  // Add product
-  document.getElementById('productForm').addEventListener('submit', async (e) => {
+  // Base URL for images on GitHub raw
+  const baseImageUrl = "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/";
+
+  // Add product form submission
+  document.getElementById("productForm").addEventListener("submit", async (e) => {
     e.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const price = parseFloat(document.getElementById("price").value);
+    const category = document.getElementById("category").value;
+    const imageFileName = document.getElementById("imageFileName").value.trim();
+    const description = document.getElementById("description").value.trim();
+    const deal = document.getElementById("deal").value || null;
+    const trending = document.getElementById("trending").value === "true";
+
+    if (!imageFileName) {
+      alert("Please enter image file name.");
+      return;
+    }
+
+    const imageUrl = baseImageUrl + encodeURIComponent(imageFileName);
+
     const product = {
-      name: document.getElementById('name').value,
-      price: parseFloat(document.getElementById('price').value),
-      category: document.getElementById('category').value,
-      imageUrl: document.getElementById('imageUrl').value,
-      description: document.getElementById('description').value,
-      deal: document.getElementById('deal').value || null,
-      trending: document.getElementById('trending').value === "true"
+      name,
+      price,
+      category,
+      imageUrl,
+      description,
+      deal,
+      trending,
+      createdAt: new Date()
     };
-    await db.collection('products').add(product);
-    alert('Product added!');
-    loadProducts();
-    e.target.reset();
+
+    try {
+      await db.collection("products").add(product);
+      alert("Product added successfully!");
+      loadProducts();
+      e.target.reset();
+    } catch (err) {
+      alert("Error adding product: " + err.message);
+    }
   });
 
-  // Load products
+  // Load and display products
   async function loadProducts() {
-    const table = document.getElementById('productTable');
-    table.innerHTML = '';
-    const snapshot = await db.collection('products').get();
-    snapshot.forEach(doc => {
-      const p = doc.data();
-      table.innerHTML += `
-        <tr>
-          <td>${p.name}</td>
-          <td>₹${p.price}</td>
-          <td>${p.category}</td>
-          <td><img src="${p.imageUrl}" alt="${p.name}" width="50"></td>
-        </tr>
-      `;
-    });
+    const table = document.getElementById("productTable");
+    table.innerHTML = "";
+    try {
+      const snapshot = await db.collection("products").orderBy("createdAt", "desc").get();
+      snapshot.forEach((doc) => {
+        const p = doc.data();
+        table.innerHTML += `
+          <tr>
+            <td>${p.name}</td>
+            <td>₹${p.price.toFixed(2)}</td>
+            <td>${p.category}</td>
+            <td><img src="${p.imageUrl}" alt="${p.name}" width="50" /></td>
+          </tr>
+        `;
+      });
+    } catch (err) {
+      console.error("Error loading products: ", err);
+      table.innerHTML = "<tr><td colspan='4'>Error loading products.</td></tr>";
+    }
   }
 
-  // Load orders
+  // Load and display orders
   async function loadOrders() {
-    const table = document.getElementById('orderTable');
-    table.innerHTML = '';
-    const snapshot = await db.collection('orders').get();
-    snapshot.forEach(doc => {
-      const o = doc.data();
-      const statusSelect = `
-        <select onchange="updateOrderStatus('${doc.id}', this.value)">
-          <option ${o.status==='Pending'?'selected':''}>Pending</option>
-          <option ${o.status==='Shipped'?'selected':''}>Shipped</option>
-          <option ${o.status==='Delivered'?'selected':''}>Delivered</option>
-          <option ${o.status==='Cancelled'?'selected':''}>Cancelled</option>
-        </select>
-      `;
-      table.innerHTML += `
-        <tr>
-          <td>${doc.id}</td>
-          <td>${o.customerName || 'N/A'}</td>
-          <td>${(o.items || []).map(i => i.name).join(', ')}</td>
-          <td>${statusSelect}</td>
-        </tr>
-      `;
-    });
+    const table = document.getElementById("orderTable");
+    table.innerHTML = "";
+    try {
+      const snapshot = await db.collection("orders").get();
+      snapshot.forEach((doc) => {
+        const o = doc.data();
+        const statusOptions = `
+          <select onchange="updateOrderStatus('${doc.id}', this.value)">
+            <option ${o.status === "Pending" ? "selected" : ""}>Pending</option>
+            <option ${o.status === "Shipped" ? "selected" : ""}>Shipped</option>
+            <option ${o.status === "Delivered" ? "selected" : ""}>Delivered</option>
+            <option ${o.status === "Cancelled" ? "selected" : ""}>Cancelled</option>
+          </select>
+        `;
+        table.innerHTML += `
+          <tr>
+            <td>${doc.id}</td>
+            <td>${o.customerName || "N/A"}</td>
+            <td>${(o.items || []).map(i => i.name).join(", ")}</td>
+            <td>${statusOptions}</td>
+          </tr>
+        `;
+      });
+    } catch (err) {
+      console.error("Error loading orders: ", err);
+      table.innerHTML = "<tr><td colspan='4'>Error loading orders.</td></tr>";
+    }
   }
 
   // Update order status
   async function updateOrderStatus(orderId, newStatus) {
-    await db.collection('orders').doc(orderId).update({ status: newStatus });
-    alert('Order status updated!');
+    try {
+      await db.collection("orders").doc(orderId).update({ status: newStatus });
+      alert("Order status updated!");
+    } catch (err) {
+      alert("Error updating order status: " + err.message);
+    }
   }
 
+  // Expose updateOrderStatus to window so it can be called from inline onchange
+  window.updateOrderStatus = updateOrderStatus;
+
+  // Initial load
   loadProducts();
   loadOrders();
 </script>
