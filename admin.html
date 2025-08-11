@@ -3,60 +3,61 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Banerjee Mart - Admin Panel</title>
+  <title>Banerjee Mart Admin Panel</title>
   <style>
-    /* Reset & base */
-    * {
+    /* Reset and base */
+    *, *::before, *::after {
       box-sizing: border-box;
     }
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      background: #f9fafb;
-      color: #222;
-      line-height: 1.5;
+      margin: 0; 
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      color: #111;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
     header {
-      background-color: #2874f0;
+      background-color: #232f3e;
       color: white;
-      padding: 18px 24px;
-      font-size: 24px;
-      font-weight: 600;
-      box-shadow: 0 2px 6px rgb(40 116 240 / 0.3);
+      font-size: 1.8rem;
+      font-weight: 700;
+      padding: 20px 32px;
       user-select: none;
+      box-shadow: 0 3px 6px rgb(0 0 0 / 0.25);
     }
     main {
-      max-width: 1200px;
+      flex-grow: 1;
+      max-width: 1280px;
       margin: 24px auto;
-      padding: 0 16px 32px;
-    }
-    .card {
-      background: white;
-      border-radius: 10px;
-      padding: 24px 28px;
-      box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
-      margin-bottom: 32px;
-      transition: box-shadow 0.3s ease;
-    }
-    .card:hover {
-      box-shadow: 0 4px 14px rgb(0 0 0 / 0.15);
+      padding: 0 20px 40px;
+      width: 100%;
     }
     h2 {
       margin-top: 0;
       font-weight: 700;
-      font-size: 22px;
-      color: #222;
-      border-bottom: 2px solid #2874f0;
+      font-size: 1.6rem;
+      border-bottom: 3px solid #febd69;
       padding-bottom: 8px;
-      margin-bottom: 20px;
+      color: #232f3e;
       user-select: none;
+    }
+    /* Form styling */
+    form {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      padding: 24px 30px;
+      border-radius: 8px;
+      max-width: 480px;
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+      margin-bottom: 36px;
     }
     label {
       display: block;
+      margin-top: 18px;
       font-weight: 600;
-      margin-top: 16px;
-      margin-bottom: 6px;
-      color: #444;
+      color: #232f3e;
       user-select: none;
     }
     input[type="text"],
@@ -65,155 +66,152 @@
     textarea {
       width: 100%;
       padding: 10px 14px;
-      font-size: 15px;
-      border: 1.8px solid #ccc;
-      border-radius: 8px;
-      transition: border-color 0.2s ease;
-      font-family: inherit;
-      color: #222;
+      margin-top: 6px;
+      font-size: 1rem;
+      border: 1.8px solid #ddd;
+      border-radius: 6px;
+      transition: border-color 0.25s ease;
+      font-family: Arial, sans-serif;
+      color: #111;
     }
     input[type="text"]:focus,
     input[type="number"]:focus,
     select:focus,
     textarea:focus {
       outline: none;
-      border-color: #2874f0;
-      box-shadow: 0 0 8px rgb(40 116 240 / 0.3);
+      border-color: #febd69;
+      box-shadow: 0 0 10px rgb(254 189 105 / 0.5);
     }
     textarea {
       resize: vertical;
-      min-height: 72px;
+      min-height: 80px;
     }
     button {
-      margin-top: 24px;
-      background-color: #fb641b;
+      background-color: #febd69;
       border: none;
-      color: white;
       font-weight: 700;
-      font-size: 17px;
+      font-size: 1.1rem;
       padding: 14px 28px;
-      border-radius: 8px;
+      margin-top: 28px;
+      border-radius: 6px;
       cursor: pointer;
       user-select: none;
-      transition: background-color 0.25s ease;
+      color: #111;
+      transition: background-color 0.3s ease;
+      width: 100%;
     }
     button:hover {
-      background-color: #d35400;
+      background-color: #f7a600;
     }
     button.cancel {
-      background: #777;
-      margin-left: 10px;
+      background-color: #ddd;
+      color: #333;
+      margin-top: 12px;
+      width: 100%;
     }
     button.cancel:hover {
-      background: #555;
+      background-color: #bbb;
     }
+    /* Table styling */
     table {
       width: 100%;
       border-collapse: separate;
-      border-spacing: 0 10px;
-      font-size: 15px;
-      user-select: none;
-    }
-    th, td {
-      padding: 14px 18px;
-      text-align: left;
-      vertical-align: middle;
+      border-spacing: 0 12px;
+      font-size: 1rem;
     }
     thead th {
-      background-color: #2874f0;
-      color: white;
+      background-color: #232f3e;
+      color: #febd69;
       font-weight: 700;
-      border-radius: 10px 10px 0 0;
+      text-align: left;
+      padding: 12px 16px;
       user-select: none;
+      border-radius: 8px 8px 0 0;
     }
     tbody tr {
-      background-color: white;
-      box-shadow: 0 1px 6px rgb(0 0 0 / 0.07);
-      border-radius: 10px;
-      transition: background-color 0.15s ease;
+      background-color: #fff;
+      box-shadow: 0 3px 6px rgb(0 0 0 / 0.1);
+      transition: background-color 0.2s ease;
+      border-radius: 0 0 8px 8px;
     }
     tbody tr:hover {
-      background-color: #f3f7ff;
+      background-color: #fef4d4;
     }
-    tbody tr td:first-child {
-      border-radius: 10px 0 0 10px;
+    tbody td {
+      padding: 14px 16px;
+      vertical-align: middle;
+      color: #232f3e;
     }
-    tbody tr td:last-child {
-      border-radius: 0 10px 10px 0;
-    }
-    img {
-      border-radius: 6px;
-      max-width: 60px;
-      max-height: 40px;
+    tbody td img {
+      max-width: 80px;
+      max-height: 50px;
       object-fit: contain;
-      box-shadow: 0 0 4px rgb(0 0 0 / 0.1);
-    }
-    select.order-status {
-      padding: 6px 10px;
-      font-size: 14px;
       border-radius: 6px;
-      border: 1.4px solid #999;
-      background: white;
-      cursor: pointer;
-      transition: border-color 0.2s ease;
-    }
-    select.order-status:hover {
-      border-color: #2874f0;
-      box-shadow: 0 0 8px rgb(40 116 240 / 0.2);
+      box-shadow: 0 0 5px rgb(0 0 0 / 0.05);
     }
     button.edit-btn {
-      background: #2874f0;
-      padding: 6px 12px;
-      font-size: 14px;
-      border-radius: 6px;
+      background-color: #febd69;
       border: none;
-      color: white;
+      color: #232f3e;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 5px;
       cursor: pointer;
-      transition: background-color 0.2s ease;
+      user-select: none;
+      transition: background-color 0.3s ease;
     }
     button.edit-btn:hover {
-      background: #1a52c0;
+      background-color: #f7a600;
     }
-    @media (max-width: 640px) {
-      h2 {
-        font-size: 18px;
+    select.order-status {
+      padding: 6px 12px;
+      border-radius: 5px;
+      border: 1.5px solid #ccc;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #232f3e;
+      cursor: pointer;
+      transition: border-color 0.3s ease;
+    }
+    select.order-status:hover {
+      border-color: #febd69;
+      box-shadow: 0 0 8px rgb(254 189 105 / 0.4);
+    }
+    /* Responsive */
+    @media (max-width: 720px) {
+      main {
+        padding: 0 12px 32px;
       }
-      button {
-        width: 100%;
+      form {
+        max-width: 100%;
       }
-      button.cancel {
-        width: auto;
-        margin-left: 0;
-        margin-top: 8px;
+      tbody td img {
+        max-width: 60px;
+        max-height: 38px;
       }
       thead th, tbody td {
         padding: 10px 8px;
-      }
-      img {
-        max-width: 45px;
-        max-height: 30px;
       }
     }
   </style>
 </head>
 <body>
 
-<header>Banerjee Mart - Admin Panel</header>
+<header>Banerjee Mart Admin Panel</header>
 
 <main>
-
-  <section class="card" aria-label="Add or edit product form">
+  <section aria-label="Add or edit product form">
     <h2 id="formTitle">Add Product</h2>
-    <form id="productForm">
+    <form id="productForm" novalidate>
       <label for="name">Product Name</label>
-      <input id="name" type="text" autocomplete="off" required />
+      <input id="name" name="name" type="text" autocomplete="off" required />
 
       <label for="price">Price (₹)</label>
-      <input id="price" type="number" min="0" step="0.01" required />
+      <input id="price" name="price" type="number" min="0" step="0.01" required />
 
       <label for="category">Category</label>
-      <select id="category" required>
-        <option value="">Select Category</option>
+      <select id="category" name="category" required>
+        <option value="" disabled selected>Select Category</option>
         <option value="Groceries">Groceries</option>
         <option value="Foods">Foods</option>
         <option value="Stationery">Stationery</option>
@@ -221,69 +219,67 @@
       </select>
 
       <label for="imageFileName">Image File Name (e.g., productname.png)</label>
-      <input id="imageFileName" type="text" autocomplete="off" placeholder="e.g., rice.jpg" required />
+      <input id="imageFileName" name="imageFileName" type="text" autocomplete="off" placeholder="e.g., rice.png" required />
 
       <label for="description">Description</label>
-      <textarea id="description" rows="3" placeholder="Optional"></textarea>
+      <textarea id="description" name="description" placeholder="Optional"></textarea>
 
       <label for="deal">Deal of the Day?</label>
-      <select id="deal">
-        <option value="">No</option>
+      <select id="deal" name="deal">
+        <option value="" selected>No</option>
         <option value="Deal of the Day">Yes</option>
       </select>
 
       <label for="trending">Trending?</label>
-      <select id="trending">
-        <option value="false">No</option>
+      <select id="trending" name="trending" required>
+        <option value="false" selected>No</option>
         <option value="true">Yes</option>
       </select>
 
       <button type="submit" id="submitBtn" aria-label="Add product">Add Product</button>
-      <button type="button" id="cancelBtn" class="cancel" style="display:none;">Cancel</button>
+      <button type="button" id="cancelBtn" class="cancel" style="display:none;">Cancel Edit</button>
     </form>
   </section>
 
-  <section class="card" aria-label="Product list table">
+  <section aria-label="Product list">
     <h2>Product List</h2>
-    <table role="table" aria-describedby="productTableDesc">
+    <table aria-describedby="productTableDesc">
       <thead>
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Price</th>
           <th scope="col">Category</th>
           <th scope="col">Image</th>
-          <th scope="col">Actions</th>
+          <th scope="col" style="width: 110px;">Actions</th>
         </tr>
       </thead>
-      <tbody id="productTable" role="rowgroup"></tbody>
+      <tbody id="productTable"></tbody>
     </table>
-    <p id="productTableDesc" class="sr-only">List of products in your store</p>
+    <p id="productTableDesc" class="sr-only">List of products added in the store.</p>
   </section>
 
-  <section class="card" aria-label="Orders list table">
+  <section aria-label="Orders list" style="margin-top: 40px;">
     <h2>Orders</h2>
-    <table role="table" aria-describedby="orderTableDesc">
+    <table aria-describedby="orderTableDesc">
       <thead>
         <tr>
           <th scope="col">Order ID</th>
           <th scope="col">Customer</th>
           <th scope="col">Items</th>
-          <th scope="col">Status</th>
+          <th scope="col" style="width: 140px;">Status</th>
         </tr>
       </thead>
-      <tbody id="orderTable" role="rowgroup"></tbody>
+      <tbody id="orderTable"></tbody>
     </table>
-    <p id="orderTableDesc" class="sr-only">List of customer orders</p>
+    <p id="orderTableDesc" class="sr-only">List of customer orders and their statuses.</p>
   </section>
-
 </main>
 
-<!-- Firebase SDKs (modular) -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import {
     getFirestore, collection, addDoc, getDocs, query, orderBy,
-    doc, updateDoc
+    doc, updateDoc, getDoc
   } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -295,14 +291,12 @@
     appId: "1:183628570952:web:3028bb258001d004d9537d"
   };
 
-  // Initialize Firebase app and Firestore
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // Base URL for product images
   const baseImageUrl = "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/";
 
-  // Elements
+  // DOM elements
   const productForm = document.getElementById("productForm");
   const productTable = document.getElementById("productTable");
   const orderTable = document.getElementById("orderTable");
@@ -310,20 +304,19 @@
   const submitBtn = document.getElementById("submitBtn");
   const cancelBtn = document.getElementById("cancelBtn");
 
-  // State for editing
   let editingProductId = null;
 
-  // Add or update product event handler
   productForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const name = productForm.name.value.trim();
-    const price = parseFloat(productForm.price.value);
-    const category = productForm.category.value;
-    const imageFileName = productForm.imageFileName.value.trim();
-    const description = productForm.description.value.trim();
-    const deal = productForm.deal.value || null;
-    const trending = productForm.trending.value === "true";
+    const formData = new FormData(productForm);
+    const name = formData.get("name").trim();
+    const price = parseFloat(formData.get("price"));
+    const category = formData.get("category");
+    const imageFileName = formData.get("imageFileName").trim();
+    const description = formData.get("description").trim();
+    const deal = formData.get("deal") || null;
+    const trending = formData.get("trending") === "true";
 
     if (!imageFileName) {
       alert("Please enter an image file name.");
@@ -345,18 +338,15 @@
 
     try {
       if (editingProductId) {
-        // Update existing product
         const productRef = doc(db, "products", editingProductId);
-        // Remove createdAt on update to keep original timestamp
+        // Remove createdAt to preserve original creation date
         delete productData.createdAt;
         await updateDoc(productRef, productData);
         alert("Product updated successfully!");
       } else {
-        // Add new product
         await addDoc(collection(db, "products"), productData);
         alert("Product added successfully!");
       }
-
       resetForm();
       loadProducts();
     } catch (error) {
@@ -364,12 +354,10 @@
     }
   });
 
-  // Cancel edit button handler
   cancelBtn.addEventListener("click", () => {
     resetForm();
   });
 
-  // Reset form to add mode
   function resetForm() {
     editingProductId = null;
     productForm.reset();
@@ -378,7 +366,6 @@
     cancelBtn.style.display = "none";
   }
 
-  // Load products from Firestore and display with edit buttons
   async function loadProducts() {
     productTable.innerHTML = "";
     try {
@@ -396,14 +383,10 @@
             <td>₹${p.price.toFixed(2)}</td>
             <td>${p.category}</td>
             <td><img src="${p.imageUrl}" alt="${p.name}" loading="lazy" /></td>
-            <td>
-              <button class="edit-btn" data-id="${docSnap.id}">Edit</button>
-            </td>
+            <td><button class="edit-btn" data-id="${docSnap.id}" aria-label="Edit product ${p.name}">Edit</button></td>
           </tr>
         `;
       });
-
-      // Attach event listeners for all edit buttons
       document.querySelectorAll(".edit-btn").forEach(btn => {
         btn.addEventListener("click", () => {
           startEditing(btn.dataset.id);
@@ -414,7 +397,35 @@
     }
   }
 
-  // Load orders from Firestore and display
+  async function startEditing(productId) {
+    try {
+      const productRef = doc(db, "products", productId);
+      const docSnap = await getDoc(productRef);
+      if (!docSnap.exists()) {
+        alert("Product not found!");
+        return;
+      }
+      const p = docSnap.data();
+
+      editingProductId = productId;
+      formTitle.textContent = "Edit Product";
+      submitBtn.textContent = "Update Product";
+      cancelBtn.style.display = "block";
+
+      productForm.name.value = p.name || "";
+      productForm.price.value = p.price || "";
+      productForm.category.value = p.category || "";
+      const urlParts = p.imageUrl?.split("/") || [];
+      productForm.imageFileName.value = urlParts.length ? decodeURIComponent(urlParts[urlParts.length - 1]) : "";
+      productForm.description.value = p.description || "";
+      productForm.deal.value = p.deal || "";
+      productForm.trending.value = p.trending ? "true" : "false";
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (error) {
+      alert("Failed to load product for editing: " + error.message);
+    }
+  }
+
   async function loadOrders() {
     orderTable.innerHTML = "";
     try {
@@ -425,74 +436,44 @@
       }
       querySnapshot.forEach((docSnap) => {
         const o = docSnap.data();
-        const statusSelect = `
-          <select class="order-status" onchange="updateOrderStatus('${docSnap.id}', this.value)" aria-label="Change status for order ${docSnap.id}">
-            <option value="Pending" ${o.status === "Pending" ? "selected" : ""}>Pending</option>
-            <option value="Shipped" ${o.status === "Shipped" ? "selected" : ""}>Shipped</option>
-            <option value="Delivered" ${o.status === "Delivered" ? "selected" : ""}>Delivered</option>
-            <option value="Cancelled" ${o.status === "Cancelled" ? "selected" : ""}>Cancelled</option>
-          </select>
-        `;
+        const itemsList = (o.items || []).map(i => i.name).join(", ");
+        const statusOptions = ["Pending", "Shipped", "Delivered", "Cancelled"]
+          .map(s => `<option value="${s}" ${o.status === s ? "selected" : ""}>${s}</option>`).join("");
         orderTable.innerHTML += `
           <tr>
             <td>${docSnap.id}</td>
             <td>${o.customerName || "N/A"}</td>
-            <td>${(o.items || []).map(i => i.name).join(", ")}</td>
-            <td>${statusSelect}</td>
+            <td>${itemsList}</td>
+            <td>
+              <select class="order-status" aria-label="Change status for order ${docSnap.id}" data-id="${docSnap.id}">
+                ${statusOptions}
+              </select>
+            </td>
           </tr>
         `;
+      });
+      document.querySelectorAll(".order-status").forEach(sel => {
+        sel.addEventListener("change", async () => {
+          const orderId = sel.dataset.id;
+          const newStatus = sel.value;
+          try {
+            const orderRef = doc(db, "orders", orderId);
+            await updateDoc(orderRef, { status: newStatus });
+            alert(`Order ${orderId} status updated to "${newStatus}"`);
+          } catch (error) {
+            alert("Failed to update order status: " + error.message);
+          }
+        });
       });
     } catch (error) {
       orderTable.innerHTML = `<tr><td colspan="4" style="color:red;">Error loading orders: ${error.message}</td></tr>`;
     }
   }
 
-  // Start editing a product by ID: fill form with its data
-  async function startEditing(productId) {
-    try {
-      const productRef = doc(db, "products", productId);
-      const docSnap = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js").then(({ getDoc }) => getDoc(productRef));
-      if (!docSnap.exists()) {
-        alert("Product not found!");
-        return;
-      }
-      const p = docSnap.data();
-
-      editingProductId = productId;
-      formTitle.textContent = "Edit Product";
-      submitBtn.textContent = "Update Product";
-      cancelBtn.style.display = "inline-block";
-
-      productForm.name.value = p.name || "";
-      productForm.price.value = p.price || "";
-      productForm.category.value = p.category || "";
-      // Extract image filename from full URL (last segment)
-      const urlParts = p.imageUrl?.split("/") || [];
-      productForm.imageFileName.value = urlParts.length ? decodeURIComponent(urlParts[urlParts.length - 1]) : "";
-      productForm.description.value = p.description || "";
-      productForm.deal.value = p.deal || "";
-      productForm.trending.value = p.trending ? "true" : "false";
-    } catch (error) {
-      alert("Failed to load product for editing: " + error.message);
-    }
-  }
-
-  // Update order status function exposed to window
-  window.updateOrderStatus = async function (orderId, newStatus) {
-    try {
-      const orderRef = doc(db, "orders", orderId);
-      await updateDoc(orderRef, { status: newStatus });
-      alert(`Order ${orderId} status updated to "${newStatus}"`);
-    } catch (error) {
-      alert("Failed to update order status: " + error.message);
-    }
-  };
-
-  // On page load
+  // Initial load
   loadProducts();
   loadOrders();
-
 </script>
 
 </body>
-  </html>
+                                               </html>
