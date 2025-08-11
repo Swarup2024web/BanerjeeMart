@@ -1,594 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shopping Cart - Banerjee Mart</title>
-
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  
-  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
-
-  <style>
-    :root {
-      --primary-color: #007BFF;
-      --on-primary: #FFFFFF;
-      --secondary-color: #6C757D;
-      --on-secondary: #FFFFFF;
-      --background-color: #f8f9fa;
-      --surface-color: #FFFFFF;
-      --on-surface: #212529;
-      --border-color: #dee2e6;
-      --error-color: #dc3545;
-      --on-error: #FFFFFF;
-    }
-
-    body {
-      margin: 0;
-      font-family: 'Roboto', sans-serif;
-      background-color: var(--background-color);
-      color: var(--on-surface);
-    }
-
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 16px;
-      padding-bottom: 80px;
-    }
-
-    /* Loading Overlay & Skeleton Screen */
-    .loading-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: var(--background-color);
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      padding-top: 80px;
-      gap: 24px;
-      z-index: 2000;
-      transition: opacity 0.3s ease-in-out;
-    }
-    .loading-overlay.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .skeleton-card {
-      background: var(--surface-color);
-      padding: 24px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      width: 90%;
-      max-width: 600px;
-      animation: pulse 1.5s infinite;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .skeleton-list {
-        list-style: none;
-        padding: 0;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        margin-top: 24px;
-    }
-    .skeleton-list-item {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-    }
-    .skeleton-thumbnail {
-        width: 80px;
-        height: 80px;
-        background: var(--border-color);
-        border-radius: 4px;
-    }
-    .skeleton-text {
-        height: 16px;
-        background: var(--border-color);
-        border-radius: 4px;
-        width: 60%;
-    }
-    .skeleton-text.short {
-        width: 30%;
-    }
-    .skeleton-total {
-        width: 40%;
-        height: 24px;
-        background: var(--border-color);
-        border-radius: 4px;
-        margin-top: 32px;
-        margin-left: auto;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    /* Header */
-    .header {
-      background-color: var(--primary-color);
-      color: var(--on-primary);
-      padding: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    .header-logo {
-      font-weight: 700;
-      font-size: 24px;
-    }
-    #header-user-name {
-      font-size: 16px;
-      font-weight: 500;
-    }
-
-    /* Cart Content */
-    .cart-container {
-      margin-top: 24px;
-    }
-
-    .empty-cart {
-      text-align: center;
-      margin-top: 48px;
-      color: var(--secondary-color);
-    }
-    .empty-cart .material-symbols-rounded {
-      font-size: 64px;
-      margin-bottom: 16px;
-    }
-
-    .cart-item {
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      padding: 16px;
-      background-color: var(--surface-color);
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      margin-bottom: 16px;
-      transition: box-shadow 0.3s;
-    }
-    .cart-item:hover {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-    .product-thumbnail {
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 4px;
-      border: 1px solid var(--border-color);
-    }
-    .product-details {
-      flex-grow: 1;
-    }
-    .product-title {
-      font-size: 18px;
-      font-weight: 500;
-      margin: 0 0 4px 0;
-    }
-    .product-price {
-      font-size: 16px;
-      color: var(--secondary-color);
-    }
-    .item-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .item-controls button {
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: var(--primary-color);
-        padding: 4px;
-    }
-    .item-controls span {
-        font-size: 16px;
-    }
-    .remove-item-btn {
-        color: var(--error-color);
-    }
-
-    .cart-summary {
-      margin-top: 32px;
-      padding: 24px;
-      background-color: var(--surface-color);
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-    .cart-summary .total-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 24px;
-    }
-    .cart-summary .total-label {
-      color: var(--on-surface);
-    }
-    .cart-summary .total-value {
-      color: var(--primary-color);
-    }
-    .summary-item {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 8px;
-      color: var(--secondary-color);
-    }
-    
-    .checkout-btn {
-      width: 100%;
-      padding: 12px;
-      background-color: var(--primary-color);
-      color: var(--on-primary);
-      border: none;
-      border-radius: 4px;
-      font-size: 18px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    .checkout-btn:hover {
-      background-color: #0056b3;
-    }
-
-    /* Bottom Navigation */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 60px;
-      background-color: var(--surface-color);
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
-      z-index: 1000;
-    }
-    .nav-item {
-      text-align: center;
-      color: var(--secondary-color);
-      text-decoration: none;
-      transition: color 0.3s;
-      padding: 8px;
-    }
-    .nav-item.active {
-      color: var(--primary-color);
-    }
-    .nav-item .material-symbols-rounded {
-      font-size: 24px;
-      margin-bottom: 2px;
-    }
-    .nav-item-label {
-      font-size: 12px;
-      font-weight: 500;
-    }
-
-    /* Media Queries */
-    @media (min-width: 600px) {
-      .bottom-nav {
-        display: none;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B Mart - Shopping Cart</title>
+    <style>
+        body { font-family: 'Amazon Ember', Arial, sans-serif; margin: 0; padding: 0; background-color: #eaeded; color: #111; }
+        .header { background-color: #232f3e; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; }
+        .header-logo { color: #fff; font-size: 24px; font-weight: bold; }
+        .header-logo a { text-decoration: none; color: #fff; }
+        .header-search { flex-grow: 1; margin: 0 20px; }
+        .header-search input { width: 100%; padding: 8px 12px; border-radius: 4px; border: none; }
+        .header-nav a { color: #fff; text-decoration: none; margin-left: 20px; font-size: 14px; }
+        .cart-container { display: flex; flex-wrap: wrap; max-width: 1200px; margin: 20px auto; padding: 20px; }
+        .cart-items-section { flex: 3; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-right: 20px; }
+        .cart-items-section h1 { font-size: 28px; font-weight: 400; margin-top: 0; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+        .cart-item { display: flex; align-items: center; border-bottom: 1px solid #ddd; padding: 20px 0; }
+        .cart-item:last-child { border-bottom: none; }
+        .cart-item-image { width: 150px; height: 150px; object-fit: contain; margin-right: 20px; }
+        .cart-item-details { flex-grow: 1; }
+        .cart-item-details h2 { font-size: 18px; margin: 0 0 10px 0; }
+        .cart-item-details .price { font-size: 16px; font-weight: bold; color: #b12704; margin-bottom: 10px; }
+        .cart-item-details .stock { color: #007600; font-size: 14px; }
+        .cart-item-actions { display: flex; align-items: center; margin-top: 10px; }
+        .cart-item-actions select { padding: 5px; border-radius: 4px; border: 1px solid #ccc; margin-right: 10px; }
+        .cart-item-actions button { background: none; border: none; color: #007600; cursor: pointer; font-size: 14px; margin-left: 10px; }
+        .cart-item-actions button:hover { text-decoration: underline; }
+        .cart-summary-section { flex: 1; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .cart-summary-section h2 { font-size: 20px; font-weight: 400; margin-top: 0; }
+        .subtotal { font-size: 18px; margin: 15px 0; }
+        .subtotal span { font-weight: bold; }
+        .checkout-btn { background-color: #ffd814; border: 1px solid #fcd200; width: 100%; padding: 10px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; text-align: center; text-decoration: none; color: #111; }
+        .checkout-btn:hover { background-color: #f7ca00; }
+        @media (max-width: 768px) {
+            .cart-container { flex-direction: column; }
+            .cart-items-section { margin-right: 0; margin-bottom: 20px; }
+            .header-search { display: none; }
+            .cart-item { flex-direction: column; align-items: flex-start; }
+            .cart-item-image { width: 100%; height: auto; margin-right: 0; margin-bottom: 10px; }
+        }
+    </style>
 </head>
 <body>
-  
-  <div id="loading-overlay" class="loading-overlay">
-    <div class="skeleton-card">
-        <ul class="skeleton-list">
-            <li class="skeleton-list-item">
-                <div class="skeleton-thumbnail"></div>
-                <div>
-                    <div class="skeleton-text"></div>
-                    <div class="skeleton-text short" style="margin-top: 8px;"></div>
-                </div>
-            </li>
-            <li class="skeleton-list-item">
-                <div class="skeleton-thumbnail"></div>
-                <div>
-                    <div class="skeleton-text"></div>
-                    <div class="skeleton-text short" style="margin-top: 8px;"></div>
-                </div>
-            </li>
-            <li class="skeleton-list-item">
-                <div class="skeleton-thumbnail"></div>
-                <div>
-                    <div class="skeleton-text"></div>
-                    <div class="skeleton-text short" style="margin-top: 8px;"></div>
-                </div>
-            </li>
-        </ul>
-        <div class="skeleton-total"></div>
-    </div>
-  </div>
 
-  <div class="header">
-    <div class="header-logo">Banerjee Mart</div>
-    <div id="header-user-name">Welcome</div>
-  </div>
-
-  <div class="container" id="main-content" style="display: none;">
-    <h1 style="font-size: 28px; font-weight: 700;">My Cart</h1>
-
-    <div id="empty-cart-message" class="empty-cart" style="display: none;">
-        <span class="material-symbols-rounded">shopping_cart</span>
-        <h2>Your cart is empty.</h2>
-        <p>Start shopping to add items to your cart.</p>
+    <div class="header">
+        <div class="header-logo"><a href="#">B Mart</a></div>
+        <div class="header-search">
+            <input type="text" placeholder="Search B Mart">
+        </div>
+        <div class="header-nav">
+            <a href="#">Account</a>
+            <a href="#">Orders</a>
+            <a href="#">Logout</a>
+        </div>
     </div>
 
-    <div class="cart-container" id="cart-container">
-        </div>
-    
-    <div id="cart-summary" class="cart-summary" style="display: none;">
-        <div class="summary-item">
-            <span>Subtotal:</span>
-            <span id="subtotal-price">₹0.00</span>
-        </div>
-        <div class="summary-item">
-            <span>Delivery:</span>
-            <span id="delivery-price">₹0.00</span>
-        </div>
-        <div class="total-row">
-            <span class="total-label">Total:</span>
-            <span class="total-value" id="cart-total-price">₹0.00</span>
-        </div>
-        <button class="checkout-btn" id="checkout-btn">Proceed to Checkout</button>
-    </div>
-  </div>
-
-  <div class="bottom-nav">
-    <a href="index.html" class="nav-item">
-      <span class="material-symbols-rounded">home</span>
-      <div class="nav-item-label">Home</div>
-    </a>
-    <a href="orders.html" class="nav-item">
-      <span class="material-symbols-rounded">package_2</span>
-      <div class="nav-item-label">Orders</div>
-    </a>
-    <a href="cart.html" class="nav-item active">
-      <span class="material-symbols-rounded">shopping_cart</span>
-      <div class="nav-item-label">Cart</div>
-    </a>
-    <a href="profile.html" class="nav-item">
-      <span class="material-symbols-rounded">person</span>
-      <div class="nav-item-label">Profile</div>
-    </a>
-  </div>
-
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
-      authDomain: "banerjee-mart.firebaseapp.com",
-      projectId: "banerjee-mart",
-      storageBucket: "banerjee-mart.appspot.com",
-      messagingSenderId: "183628570952",
-      appId: "1:183628570952:web:3028bb258001d004d9537d"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    
-    const loadingOverlay = document.getElementById('loading-overlay');
-    const mainContent = document.getElementById('main-content');
-    const headerUserNameEl = document.getElementById('header-user-name');
-    const cartContainer = document.getElementById('cart-container');
-    const cartSummary = document.getElementById('cart-summary');
-    const subtotalPriceEl = document.getElementById('subtotal-price');
-    const deliveryPriceEl = document.getElementById('delivery-price');
-    const cartTotalPriceEl = document.getElementById('cart-total-price');
-    const emptyCartMessage = document.getElementById('empty-cart-message');
-    const checkoutBtn = document.getElementById('checkout-btn');
-
-    let currentUser;
-    const GITHUB_ASSETS_BASE_URL = "https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/";
-    const FREE_DELIVERY_THRESHOLD = 200;
-    const DELIVERY_CHARGE = 5;
-
-    auth.onAuthStateChanged(async (user) => {
-        if (!user) {
-            window.location.href = 'auth.html';
-            return;
-        }
+    <div class="cart-container">
         
-        currentUser = user;
-        
-        try {
-            const userDoc = await db.collection("users").doc(currentUser.uid).get();
-            const userData = userDoc.exists ? userDoc.data() : { name: 'User' };
-            headerUserNameEl.innerText = `Hi, ${userData.name || "User"}`;
-            
-            fetchCartItems();
-        } catch (error) {
-            console.error("Error fetching user data or cart:", error);
-            headerUserNameEl.innerText = 'Welcome';
-        } finally {
-            loadingOverlay.classList.add('hidden');
-            mainContent.style.display = 'block';
-        }
-    });
+        <div class="cart-items-section">
+            <h1>Shopping Cart</h1>
+            <div id="cart-item-list">
+                <div class="cart-item">
+                    <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/milk.png" alt="Milk" class="cart-item-image">
+                    <div class="cart-item-details">
+                        <h2>Milk</h2>
+                        <div class="price">$3.50</div>
+                        <div class="stock">In Stock</div>
+                        <div class="cart-item-actions">
+                            <label for="qty-milk">Qty:</label>
+                            <select id="qty-milk">
+                                <option value="1">1</option>
+                                <option value="2" selected>2</option>
+                                <option value="3">3</option>
+                            </select>
+                            <button class="remove-item-btn">Delete</button>
+                            <span class="price" style="margin-left: auto;">$7.00</span>
+                        </div>
+                    </div>
+                </div>
 
-    const fetchCartItems = async () => {
-        if (!currentUser) return;
+                <div class="cart-item">
+                    <img src="https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/pen.png" alt="Pen" class="cart-item-image">
+                    <div class="cart-item-details">
+                        <h2>Pen</h2>
+                        <div class="price">$1.50</div>
+                        <div class="stock">In Stock</div>
+                        <div class="cart-item-actions">
+                            <label for="qty-pen">Qty:</label>
+                            <select id="qty-pen">
+                                <option value="1" selected>1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                            <button class="remove-item-btn">Delete</button>
+                            <span class="price" style="margin-left: auto;">$1.50</span>
+                        </div>
+                    </div>
+                </div>
+                </div>
+        </div>
 
-        try {
-            const cartRef = db.collection("carts").doc(currentUser.uid);
-            
-            cartRef.onSnapshot(async (doc) => {
-                const cartData = doc.data();
-                const items = cartData ? cartData.items : [];
-                
-                cartContainer.innerHTML = '';
-                let subtotal = 0;
+        <div class="cart-summary-section">
+            <h2>Subtotal (<span id="item-count">2</span> items): <span class="subtotal-price">$8.50</span></h2>
+            <a href="#" class="checkout-btn">Proceed to checkout</a>
+        </div>
+    </div>
 
-                if (!items || items.length === 0) {
-                    emptyCartMessage.style.display = 'block';
-                    cartSummary.style.display = 'none';
-                    return;
-                }
-
-                emptyCartMessage.style.display = 'none';
-
-                const productPromises = items.map(item => db.collection("products").doc(item.productId).get());
-                const productDocs = await Promise.all(productPromises);
-                
-                const products = {};
-                productDocs.forEach(doc => {
-                    if (doc.exists) {
-                        products[doc.id] = doc.data();
-                    }
-                });
-                
-                items.forEach(item => {
-                    const product = products[item.productId];
-                    if (product) {
-                        const itemTotal = product.price * item.quantity;
-                        subtotal += itemTotal;
-
-                        const cartItemEl = document.createElement('div');
-                        cartItemEl.className = 'cart-item';
-                        cartItemEl.innerHTML = `
-                            <img src="${GITHUB_ASSETS_BASE_URL + product.imageUrl}" alt="${product.name}" class="product-thumbnail">
-                            <div class="product-details">
-                                <h3 class="product-title">${product.name}</h3>
-                                <p class="product-price">₹${product.price.toFixed(2)}</p>
-                            </div>
-                            <div class="item-controls">
-                                <button onclick="updateQuantity('${item.productId}', -1)"><span class="material-symbols-rounded">remove</span></button>
-                                <span>${item.quantity}</span>
-                                <button onclick="updateQuantity('${item.productId}', 1)"><span class="material-symbols-rounded">add</span></button>
-                                <button class="remove-item-btn" onclick="removeItem('${item.productId}')"><span class="material-symbols-rounded">delete</span></button>
-                            </div>
-                        `;
-                        cartContainer.appendChild(cartItemEl);
-                    }
-                });
-                
-                const deliveryCharge = subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_CHARGE;
-                const totalPrice = subtotal + deliveryCharge;
-                
-                subtotalPriceEl.innerText = `₹${subtotal.toFixed(2)}`;
-                deliveryPriceEl.innerText = deliveryCharge === 0 ? "Free" : `₹${deliveryCharge.toFixed(2)}`;
-                cartTotalPriceEl.innerText = `₹${totalPrice.toFixed(2)}`;
-                cartSummary.style.display = 'block';
-            });
-        } catch (error) {
-            console.error("Error fetching cart:", error);
-            emptyCartMessage.style.display = 'block';
-            cartSummary.style.display = 'none';
-        }
-    };
-
-    const updateQuantity = async (productId, change) => {
-        if (!currentUser) return;
-        const cartRef = db.collection("carts").doc(currentUser.uid);
-
-        await db.runTransaction(async (transaction) => {
-            const cartDoc = await transaction.get(cartRef);
-            if (!cartDoc.exists) {
-                return;
-            }
-
-            const items = cartDoc.data().items;
-            const itemIndex = items.findIndex(item => item.productId === productId);
-
-            if (itemIndex > -1) {
-                items[itemIndex].quantity += change;
-                if (items[itemIndex].quantity <= 0) {
-                    items.splice(itemIndex, 1);
-                }
-                transaction.update(cartRef, { items: items });
-            }
-        });
-    };
-
-    const removeItem = async (productId) => {
-        await updateQuantity(productId, -1000);
-    };
-    
-    const checkoutHandler = async () => {
-        if (!currentUser) {
-            alert("Please log in to confirm your order.");
-            return;
-        }
-
-        const cartDoc = await db.collection("carts").doc(currentUser.uid).get();
-        const cartItems = cartDoc.exists ? cartDoc.data().items : [];
-
-        if (!cartItems || cartItems.length === 0) {
-            alert("Your cart is empty. Add some items before confirming your order.");
-            return;
-        }
-
-        try {
-            // Fetch product data again to calculate correct totals
-            const productPromises = cartItems.map(item => db.collection("products").doc(item.productId).get());
-            const productDocs = await Promise.all(productPromises);
-            
-            let subtotal = 0;
-            const orderItems = [];
-
-            productDocs.forEach((doc, index) => {
-                if (doc.exists) {
-                    const product = doc.data();
-                    const cartItem = cartItems[index];
-                    const itemTotal = product.price * cartItem.quantity;
-                    subtotal += itemTotal;
-                    orderItems.push({
-                        productId: cartItem.productId,
-                        name: product.name,
-                        price: product.price,
-                        quantity: cartItem.quantity,
-                        imageUrl: product.imageUrl
-                    });
-                }
-            });
-
-            const deliveryCharge = subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_CHARGE;
-            const total = subtotal + deliveryCharge;
-
-            const orderRef = db.collection('orders').doc();
-            await orderRef.set({
-                userId: currentUser.uid,
-                items: orderItems,
-                subtotal: subtotal,
-                deliveryCharge: deliveryCharge,
-                total: total,
-                status: 'Confirmed',
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-
-            await db.collection("carts").doc(currentUser.uid).set({ items: [] });
-            
-            alert(`Order confirmed! Your Order ID is ${orderRef.id}.`);
-            window.location.href = 'orders.html';
-
-        } catch (error) {
-            console.error("Error confirming order:", error);
-            alert("An error occurred while confirming your order. Please try again.");
-        }
-    };
-    
-    checkoutBtn.addEventListener('click', checkoutHandler);
-  </script>
+    <script>
+        // This is a placeholder for the actual JavaScript logic.
+        // You will need to add the code to:
+        // 1. Initialize Firebase and check for user authentication. Redirect to auth.html if not logged in.
+        // 2. Fetch the user's cart data from Firebase Firestore or Realtime Database.
+        // 3. Dynamically generate the cart items in the `cart-item-list` div.
+        // 4. Implement event listeners for the quantity dropdowns to update item prices and the overall subtotal.
+        // 5. Implement event listeners for the "Delete" buttons to remove items from the cart in the database and on the page.
+        // 6. Update the `item-count` and `subtotal-price` elements whenever the cart changes.
+        // 7. Handle the "Proceed to checkout" button click, which would likely redirect the user to a checkout page.
+        // 8. The image URL generation should be handled by your script, prepending the base URL to the product filename.
+    </script>
 </body>
 </html>
