@@ -1,253 +1,202 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Banerjee Mart - Admin Panel</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      background: #f8f9fa;
-    }
-    header {
-      background: #2196f3;
-      color: white;
-      padding: 15px;
-      text-align: center;
-      font-size: 20px;
-      font-weight: bold;
-    }
-    nav {
-      display: flex;
-      background: #fff;
-      border-bottom: 1px solid #ddd;
-    }
-    nav button {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      background: #fff;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    nav button.active {
-      border-bottom: 3px solid #2196f3;
-      color: #2196f3;
-      font-weight: bold;
-    }
-    section {
-      padding: 15px;
-      display: none;
-    }
-    section.active {
-      display: block;
-    }
-    input, select {
-      width: 100%;
-      padding: 8px;
-      margin: 5px 0 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    button.action {
-      background: #2196f3;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      font-size: 14px;
-    }
-    th {
-      background: #f1f1f1;
-    }
-    .logout {
-      background: red;
-      margin-top: 10px;
-      padding: 8px 12px;
-      border: none;
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+    h1, h2 { color: #333; }
+    form { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 0 5px rgba(0,0,0,0.1);}
+    label { display: block; margin-top: 10px; font-weight: bold; }
+    input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; }
+    button { margin-top: 15px; padding: 10px; background: #007bff; color: white; border: none; cursor: pointer; border-radius: 5px; }
+    button:hover { background: #0056b3; }
+    table { width: 100%; border-collapse: collapse; background: white; }
+    th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+    th { background: #007bff; color: white; }
+    img { border-radius: 4px; }
   </style>
 </head>
 <body>
-  <header>Banerjee Mart - Admin Panel</header>
 
-  <nav>
-    <button class="tab active" data-target="products">Products</button>
-    <button class="tab" data-target="orders">Orders</button>
-    <button class="tab" data-target="categories">Categories</button>
-  </nav>
+<h1>Banerjee Mart - Admin Panel</h1>
 
-  <section id="products" class="active">
-    <h3>Add Product</h3>
-    <input type="text" id="productName" placeholder="Product Name">
-    <input type="number" id="productPrice" placeholder="Price">
-    <select id="productCategory"></select>
-    <input type="text" id="productImage" placeholder="Image URL">
-    <button class="action" onclick="addProduct()">Add Product</button>
+<!-- Product Form -->
+<form id="productForm">
+  <h2>Add Product</h2>
 
-    <h3>All Products</h3>
-    <table id="productsTable">
-      <thead>
-        <tr><th>Name</th><th>Price</th><th>Category</th><th>Image</th></tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </section>
+  <label>Quick Select Product</label>
+  <select id="presetProducts">
+    <option value="">-- Select --</option>
+    <option value="Basmati Rice 1kg|https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/rice.jpg">Basmati Rice 1kg</option>
+    <option value="Notebook|https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/notebook.jpg">Notebook</option>
+    <option value="Toothpaste|https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/toothpaste.jpg">Toothpaste</option>
+    <option value="Cooking Oil 1L|https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/oil.jpg">Cooking Oil 1L</option>
+  </select>
 
-  <section id="orders">
-    <h3>Orders</h3>
-    <table id="ordersTable">
-      <thead>
-        <tr><th>User</th><th>Product</th><th>Price</th><th>Status</th></tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </section>
+  <label>Product Name</label>
+  <input type="text" id="name" required>
 
-  <section id="categories">
-    <h3>Add Category</h3>
-    <input type="text" id="categoryName" placeholder="Category Name">
-    <button class="action" onclick="addCategory()">Add Category</button>
+  <label>Price</label>
+  <input type="number" id="price" required>
 
-    <h3>All Categories</h3>
-    <table id="categoriesTable">
-      <thead>
-        <tr><th>Name</th></tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </section>
+  <label>Category</label>
+  <select id="category" required>
+    <option value="">Select Category</option>
+    <option value="Groceries">Groceries</option>
+    <option value="Foods">Foods</option>
+    <option value="Stationery">Stationery</option>
+    <option value="Health">Health</option>
+  </select>
 
-  <div style="text-align:center; padding:10px;">
-    <button class="logout" onclick="logout()">Logout</button>
-  </div>
+  <label>Image URL</label>
+  <input type="url" id="imageUrl" required>
 
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
-      authDomain: "banerjee-mart.firebaseapp.com",
-      projectId: "banerjee-mart",
-      storageBucket: "banerjee-mart.appspot.com",
-      messagingSenderId: "183628570952",
-      appId: "1:183628570952:web:3028bb258001d004d9537d"
+  <label>Description</label>
+  <textarea id="description" rows="3"></textarea>
+
+  <label>Deal of the Day?</label>
+  <select id="deal">
+    <option value="">No</option>
+    <option value="Deal of the Day">Yes</option>
+  </select>
+
+  <label>Trending?</label>
+  <select id="trending">
+    <option value="false">No</option>
+    <option value="true">Yes</option>
+  </select>
+
+  <button type="submit">Add Product</button>
+</form>
+
+<!-- Product List -->
+<h2>Product List</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Category</th>
+      <th>Image</th>
+    </tr>
+  </thead>
+  <tbody id="productTable"></tbody>
+</table>
+
+<!-- Orders Section -->
+<h2>Orders</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Order ID</th>
+      <th>Customer</th>
+      <th>Items</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody id="orderTable"></tbody>
+</table>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+
+<script>
+  // Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
+    authDomain: "banerjee-mart.firebaseapp.com",
+    projectId: "banerjee-mart",
+    storageBucket: "banerjee-mart.firebasestorage.app",
+    messagingSenderId: "183628570952",
+    appId: "1:183628570952:web:3028bb258001d004d9537d"
+  };
+
+  // Init Firebase
+  const app = firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // Prefill product fields from preset
+  document.getElementById('presetProducts').addEventListener('change', (e) => {
+    if (!e.target.value) return;
+    const [name, url] = e.target.value.split('|');
+    document.getElementById('name').value = name;
+    document.getElementById('imageUrl').value = url;
+  });
+
+  // Add product
+  document.getElementById('productForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const product = {
+      name: document.getElementById('name').value,
+      price: parseFloat(document.getElementById('price').value),
+      category: document.getElementById('category').value,
+      imageUrl: document.getElementById('imageUrl').value,
+      description: document.getElementById('description').value,
+      deal: document.getElementById('deal').value || null,
+      trending: document.getElementById('trending').value === "true"
     };
+    await db.collection('products').add(product);
+    alert('Product added!');
+    loadProducts();
+    e.target.reset();
+  });
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
-    const adminEmails = ["admin@example.com"]; // change to your admin email
-
-    auth.onAuthStateChanged(user => {
-      if (!user || !adminEmails.includes(user.email)) {
-        alert("Unauthorized Access!");
-        window.location.href = "auth.html";
-      } else {
-        loadCategories();
-        loadProducts();
-        loadOrders();
-      }
+  // Load products
+  async function loadProducts() {
+    const table = document.getElementById('productTable');
+    table.innerHTML = '';
+    const snapshot = await db.collection('products').get();
+    snapshot.forEach(doc => {
+      const p = doc.data();
+      table.innerHTML += `
+        <tr>
+          <td>${p.name}</td>
+          <td>₹${p.price}</td>
+          <td>${p.category}</td>
+          <td><img src="${p.imageUrl}" alt="${p.name}" width="50"></td>
+        </tr>
+      `;
     });
+  }
 
-    document.querySelectorAll(".tab").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
-        document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
-        btn.classList.add("active");
-        document.getElementById(btn.dataset.target).classList.add("active");
-      });
+  // Load orders
+  async function loadOrders() {
+    const table = document.getElementById('orderTable');
+    table.innerHTML = '';
+    const snapshot = await db.collection('orders').get();
+    snapshot.forEach(doc => {
+      const o = doc.data();
+      const statusSelect = `
+        <select onchange="updateOrderStatus('${doc.id}', this.value)">
+          <option ${o.status==='Pending'?'selected':''}>Pending</option>
+          <option ${o.status==='Shipped'?'selected':''}>Shipped</option>
+          <option ${o.status==='Delivered'?'selected':''}>Delivered</option>
+          <option ${o.status==='Cancelled'?'selected':''}>Cancelled</option>
+        </select>
+      `;
+      table.innerHTML += `
+        <tr>
+          <td>${doc.id}</td>
+          <td>${o.customerName || 'N/A'}</td>
+          <td>${(o.items || []).map(i => i.name).join(', ')}</td>
+          <td>${statusSelect}</td>
+        </tr>
+      `;
     });
+  }
 
-    function addProduct() {
-      const name = document.getElementById("productName").value;
-      const price = parseFloat(document.getElementById("productPrice").value);
-      const category = document.getElementById("productCategory").value;
-      const imageUrl = document.getElementById("productImage").value;
-      if (!name || !price || !category || !imageUrl) return alert("Fill all fields");
-      db.collection("products").add({ name, price, category, imageUrl })
-        .then(() => {
-          alert("Product added!");
-          loadProducts();
-        });
-    }
+  // Update order status
+  async function updateOrderStatus(orderId, newStatus) {
+    await db.collection('orders').doc(orderId).update({ status: newStatus });
+    alert('Order status updated!');
+  }
 
-    function loadProducts() {
-      db.collection("products").get().then(snapshot => {
-        const tbody = document.querySelector("#productsTable tbody");
-        tbody.innerHTML = "";
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          tbody.innerHTML += `<tr>
-            <td>${data.name}</td>
-            <td>${data.price}</td>
-            <td>${data.category}</td>
-            <td><img src="${data.imageUrl}" width="40"></td>
-          </tr>`;
-        });
-      });
-    }
+  loadProducts();
+  loadOrders();
+</script>
 
-    function addCategory() {
-      const name = document.getElementById("categoryName").value;
-      if (!name) return alert("Enter category name");
-      db.collection("categories").add({ name })
-        .then(() => {
-          alert("Category added!");
-          loadCategories();
-        });
-    }
-
-    function loadCategories() {
-      db.collection("categories").get().then(snapshot => {
-        const tbody = document.querySelector("#categoriesTable tbody");
-        const select = document.getElementById("productCategory");
-        tbody.innerHTML = "";
-        select.innerHTML = "";
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          tbody.innerHTML += `<tr><td>${data.name}</td></tr>`;
-          select.innerHTML += `<option value="${data.name}">${data.name}</option>`;
-        });
-      });
-    }
-
-    function loadOrders() {
-      db.collection("orders").get().then(snapshot => {
-        const tbody = document.querySelector("#ordersTable tbody");
-        tbody.innerHTML = "";
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          tbody.innerHTML += `<tr>
-            <td>${data.user}</td>
-            <td>${data.product}</td>
-            <td>${data.price}</td>
-            <td>${data.status}</td>
-          </tr>`;
-        });
-      });
-    }
-
-    function logout() {
-      auth.signOut();
-    }
-  </script>
 </body>
-</html>
+  </html>
