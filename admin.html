@@ -517,7 +517,8 @@
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, getDoc, updateDoc, deleteDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, getDoc, updateDoc, deleteDoc, query, where, orderBy, Timestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
         
         // =========================================================
         // FIREBASE CONFIGURATION
@@ -532,10 +533,39 @@
         };
 
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
         const productsCollection = collection(db, 'products');
         const ordersCollection = collection(db, 'orders');
+        const usersCollection = collection(db, 'users');
         const IMAGE_BASE_URL = 'https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/';
+
+        // =========================================================
+        // ADMIN AUTHENTICATION CHECK
+        // =========================================================
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                // Not logged in, redirect to login page
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            try {
+                const userDocRef = doc(usersCollection, user.uid);
+                const userDoc = await getDoc(userDocRef);
+
+                if (userDoc.exists() && userDoc.data().role === 'admin') {
+                    // User is an admin, let them see the page.
+                    // The rest of the script can run.
+                } else {
+                    // Logged in but not an admin, redirect to home page.
+                    window.location.href = 'index.html';
+                }
+            } catch (error) {
+                console.error("Error checking admin role:", error);
+                window.location.href = 'index.html';
+            }
+        });
 
         // =========================================================
         // TAB SWITCHING LOGIC
@@ -601,6 +631,8 @@
                 await addDoc(productsCollection, productData);
                 alert('Product added successfully!');
                 productForm.reset();
+                // Refresh the update products list after adding a new product
+                fetchAndUpdateProducts();
             } catch (error) {
                 console.error("Error adding product: ", error);
                 alert('Error adding product: ' + error.message);
@@ -690,7 +722,7 @@
         let currentEditingProductId = null;
 
         async function openEditModal(id) {
-            const productDocRef = doc(db, 'products', id);
+            const productDocRef = doc(productsCollection, id);
             const productDoc = await getDoc(productDocRef);
             
             if (productDoc.exists()) {
@@ -717,7 +749,7 @@
             };
 
             try {
-                await updateDoc(doc(db, 'products', currentEditingProductId), productData);
+                await updateDoc(doc(productsCollection, currentEditingProductId), productData);
                 alert('Product updated successfully!');
                 closeEditModal();
                 fetchAndUpdateProducts();
@@ -743,7 +775,7 @@
         async function deleteProduct(id) {
             if (confirm('Are you sure you want to delete this product?')) {
                 try {
-                    await deleteDoc(doc(db, 'products', id));
+                    await deleteDoc(doc(productsCollection, id));
                     alert('Product deleted successfully!');
                     fetchAndUpdateProducts();
                 } catch (error) {
@@ -763,7 +795,6 @@
         async function fetchAndDisplayOrders() {
             orderList.innerHTML = '<tr><td colspan="7" style="text-align: center;">Loading orders...</td></tr>';
             try {
-                // To fetch all orders initially, we use an empty query.
                 const q = query(ordersCollection, orderBy('orderDate', 'desc'));
                 const ordersSnapshot = await getDocs(q);
                 
@@ -791,10 +822,10 @@
                             <td>₹${(order.total || 0).toFixed(2)}</td>
                             <td><span class="order-status ${statusClass}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></td>
                             <td class="action-buttons">
-                                <button class="btn-status" onclick="updateOrderStatus('${orderId}', 'packed')"><span class="material-symbols-outlined">package_2</span></button>
-                                <button class="btn-status" onclick="updateOrderStatus('${orderId}', 'shipped')"><span class="material-symbols-outlined">local_shipping</span></button>
-                                <button class="btn-status" onclick="updateOrderStatus('${orderId}', 'delivered')"><span class="material-symbols-outlined">check_circle</span></button>
-                                <button class="btn-delete" onclick="updateOrderStatus('${orderId}', 'cancelled')"><span class="material-symbols-outlined">cancel</span></button>
+                                <button class="btn-status" onclick="updateOrderStatus('${orderId}', 'Packed')"><span class="material-symbols-outlined">package_2</span></button>
+                                <button class="btn-status" onclick="updateOrderStatus('${orderId}', 'Shipped')"><span class="material-symbols-outlined">local_shipping</span></button>
+                                <button class="btn-status" onclick="updateOrderStatus('${orderId}', 'Delivered')"><span class="material-symbols-outlined">check_circle</span></button>
+                                <button class="btn-delete" onclick="updateOrderStatus('${orderId}', 'Cancelled')"><span class="material-symbols-outlined">cancel</span></button>
                             </td>
                         </tr>
                     `;
@@ -809,7 +840,7 @@
         window.updateOrderStatus = async function(orderId, newStatus) {
             if (confirm(`Are you sure you want to change the status of order ${orderId} to ${newStatus}?`)) {
                 try {
-                    const orderDocRef = doc(db, 'orders', orderId);
+                    const orderDocRef = doc(ordersCollection, orderId);
                     await updateDoc(orderDocRef, { status: newStatus });
                     alert(`Order ${orderId} status updated to ${newStatus}!`);
                     fetchAndDisplayOrders();
@@ -839,8 +870,8 @@
                 
                 const q = query(
                     ordersCollection,
-                    where('orderDate', '>=', startDate),
-                    where('orderDate', '<=', endDateAdjusted),
+                    where('orderDate', '>=', Timestamp.fromDate(startDate)),
+                    where('orderDate', '<=', Timestamp.fromDate(endDateAdjusted)),
                     orderBy('orderDate')
                 );
                 const ordersSnapshot = await getDocs(q);
@@ -857,9 +888,9 @@
 
                     return {
                         'Order ID': doc.id,
-                        'Customer Name': order.customerName,
-                        'Customer Phone': order.customerPhone,
-                        'Customer Address': order.customerAddress,
+                        'Customer Name': order.customerName || 'N/A',
+                        'Customer Phone': order.customerPhone || 'N/A',
+                        'Customer Address': order.customerAddress || 'N/A',
                         'Order Date': orderDate,
                         'Items': items,
                         'Total Amount': order.total,
