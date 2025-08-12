@@ -16,10 +16,11 @@
             --on-background-color: #4a4a4a;
             --outline-color: #c7c7c7;
             --outline-hover-color: #a0a0a0;
-            --shadow-color: rgba(0, 0, 0, 0.1);
-            --button-color: #fb641b;
+            --shadow-color-light: rgba(0, 0, 0, 0.1);
+            --shadow-color-dark: rgba(0, 0, 0, 0.15);
+            --button-bg-color: #fb641b;
             --button-on-color: #ffffff;
-            --button-hover-color: #e55a16;
+            --button-hover-bg-color: #e55a16;
             --link-color: #2874f0;
             --toggle-active-bg: var(--primary-color);
             --toggle-active-color: var(--on-primary-color);
@@ -45,7 +46,7 @@
             max-width: 400px;
             padding: 32px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px var(--shadow-color);
+            box-shadow: 0 8px 24px var(--shadow-color-light);
             transition: transform 0.3s ease-in-out;
         }
 
@@ -55,6 +56,7 @@
             overflow: hidden;
             margin-bottom: 24px;
             background-color: var(--toggle-inactive-bg);
+            padding: 4px;
         }
 
         .auth-toggle-button {
@@ -67,6 +69,7 @@
             color: var(--toggle-inactive-color);
             background-color: transparent;
             border: none;
+            border-radius: 6px;
             transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
         }
 
@@ -124,9 +127,19 @@
             gap: 8px;
         }
 
-        .phone-input-group select {
-            flex-shrink: 0;
-            width: 100px;
+        .phone-input-group .country-code-display {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background-color: var(--background-color);
+            border: 1px solid var(--outline-color);
+            border-radius: 8px;
+            font-size: 16px;
+            color: var(--on-background-color);
+        }
+
+        .phone-input-group input {
+            flex-grow: 1;
         }
 
         .input-icon {
@@ -139,7 +152,7 @@
         }
 
         .btn {
-            background-color: var(--button-color);
+            background-color: var(--button-bg-color);
             color: var(--button-on-color);
             border: none;
             width: 100%;
@@ -149,12 +162,12 @@
             font-size: 16px;
             font-weight: 600;
             transition: background-color 0.3s, box-shadow 0.3s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px var(--shadow-color-light);
         }
 
         .btn:hover {
-            background-color: var(--button-hover-color);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            background-color: var(--button-hover-bg-color);
+            box-shadow: 0 4px 8px var(--shadow-color-dark);
         }
 
         .auth-toggle {
@@ -243,10 +256,7 @@
                 <div class="form-group">
                     <label for="signup-phone">Phone Number</label>
                     <div class="phone-input-group">
-                        <select id="country-code" required>
-                            <option value="+91">+91 (IN)</option>
-                            <option value="+1">+1 (US)</option>
-                        </select>
+                        <span class="country-code-display">+91 (IN)</span>
                         <input type="tel" id="signup-phone" placeholder="9876543210" required pattern="[0-9]{10}">
                     </div>
                 </div>
@@ -290,10 +300,9 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithPhoneNumber, RecaptchaVerifier } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-        // Firebase configuration
         const firebaseConfig = {
           apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
           authDomain: "banerjee-mart.firebaseapp.com",
@@ -343,6 +352,7 @@
             e.preventDefault();
             const fullName = document.getElementById('signup-name').value;
             const email = document.getElementById('signup-email').value;
+            const phoneNumber = document.getElementById('signup-phone').value;
             const password = document.getElementById('signup-password').value;
             const address = document.getElementById('signup-address').value;
 
@@ -353,6 +363,7 @@
                 await addDoc(collection(db, 'users'), {
                     uid: user.uid,
                     fullName: fullName,
+                    phoneNumber: '+91' + phoneNumber,
                     email: email,
                     address: address
                 });
@@ -378,7 +389,7 @@
                     await signInWithEmailAndPassword(auth, emailOrPhone, password);
                 } else {
                     // Login with phone number
-                    const q = query(collection(db, 'users'), where('phoneNumber', '==', emailOrPhone));
+                    const q = query(collection(db, 'users'), where('phoneNumber', '==', '+91' + emailOrPhone));
                     const querySnapshot = await getDocs(q);
                     
                     if (querySnapshot.empty) {
@@ -386,8 +397,8 @@
                         return;
                     }
 
-                    const userData = querySnapshot.docs[0].data();
-                    const userEmail = userData.email;
+                    const userDoc = querySnapshot.docs[0];
+                    const userEmail = userDoc.data().email;
 
                     await signInWithEmailAndPassword(auth, userEmail, password);
                 }
