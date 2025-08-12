@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B Mart - Checkout</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+    <style>
+        :root {
+            --primary-color: #2874f0;
+            --on-primary-color: #ffffff;
+            --surface-color: #ffffff;
+            --background-color: #f0f2f5;
+            --on-surface-color: #1f1f1f;
+            --on-background-color: #585858;
+            --outline-color: #d1d1d1;
+            --shadow-color-light: rgba(0, 0, 0, 0.08);
+            --shadow-color-dark: rgba(0, 0, 0, 0.15);
+            --success-color: #4CAF50;
+            --danger-color: #d32f2f;
+            --skeleton-color: #e0e0e0;
+            --skeleton-highlight: #f5f5f5;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--on-background-color);
+        }
+
+        .header {
+            background-color: var(--primary-color);
+            padding: 16px 20px;
+            color: var(--on-primary-color);
+            text-align: center;
+        }
+
+        .header-row1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .main-content {
+            padding: 16px;
+            padding-bottom: 70px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--on-surface-color);
+            margin: 0 0 24px;
+        }
+
+        .section-card {
+            background-color: var(--surface-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px var(--shadow-color-light);
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--on-surface-color);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title .material-symbols-outlined {
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+
+        .user-info-text {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .user-info-address {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--on-background-color);
+        }
+
+        .change-address-btn {
+            color: var(--primary-color);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 12px;
+            display: inline-block;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .order-item-name {
+            font-size: 14px;
+        }
+
+        .order-total-summary {
+            border-top: 1px dashed var(--outline-color);
+            padding-top: 12px;
+            margin-top: 12px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .summary-label {
+            font-weight: 500;
+        }
+        
+        .summary-total .summary-label {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .summary-total .summary-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            border: 2px solid var(--outline-color);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .payment-option.selected {
+            border-color: var(--primary-color);
+        }
+
+        .payment-option:hover {
+            border-color: var(--primary-color);
+        }
+
+        .payment-option input[type="radio"] {
+            display: none;
+        }
+
+        .payment-option-info {
+            flex-grow: 1;
+        }
+        
+        .payment-option-info h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--on-surface-color);
+        }
+
+        .payment-option-info p {
+            margin: 4px 0 0;
+            font-size: 12px;
+            color: var(--on-background-color);
+        }
+        
+        .place-order-btn {
+            width: 100%;
+            background-color: var(--success-color);
+            color: var(--on-primary-color);
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .place-order-btn:hover {
+            background-color: #388e3c;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-row1">Checkout</div>
+    </header>
+
+    <main class="main-content">
+        <h1 class="page-title">Finalizing your order</h1>
+
+        <div class="section-card">
+            <h2 class="section-title">
+                <span class="material-symbols-outlined">location_on</span>
+                Delivery Address
+            </h2>
+            <div id="user-info">
+                <div class="user-info-text" id="user-name"></div>
+                <div class="user-info-text" id="user-mobile"></div>
+                <div class="user-info-address" id="user-address"></div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title">
+                <span class="material-symbols-outlined">receipt_long</span>
+                Order Summary
+            </h2>
+            <div id="order-items">
+                </div>
+            <div class="order-total-summary">
+                <div class="summary-row">
+                    <span class="summary-label">Subtotal</span>
+                    <span class="summary-value" id="subtotal">₹0.00</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Shipping</span>
+                    <span class="summary-value" id="shipping">₹40.00</span>
+                </div>
+                <div class="summary-row summary-total">
+                    <span class="summary-label">Total</span>
+                    <span class="summary-value" id="total">₹0.00</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title">
+                <span class="material-symbols-outlined">payments</span>
+                Payment Method
+            </h2>
+            <div id="payment-options">
+                <label class="payment-option selected" data-method="COD">
+                    <input type="radio" name="payment" value="COD" checked>
+                    <div class="payment-option-info">
+                        <h3>Cash on Delivery</h3>
+                        <p>Pay with cash upon delivery.</p>
+                    </div>
+                </label>
+                <label class="payment-option" data-method="UPI">
+                    <input type="radio" name="payment" value="UPI">
+                    <div class="payment-option-info">
+                        <h3>UPI Payment</h3>
+                        <p>Pay via UPI ID: **6294390641@apl**</p>
+                    </div>
+                </label>
+            </div>
+        </div>
+        
+        <button class="place-order-btn" id="place-order-btn">
+            <span class="material-symbols-outlined">shopping_cart_checkout</span>
+            <span>Place Order</span>
+        </button>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
+          authDomain: "banerjee-mart.firebaseapp.com",
+          projectId: "banerjee-mart",
+          storageBucket: "banerjee-mart.firebasestorage.app",
+          messagingSenderId: "183628570952",
+          appId: "1:183628570952:web:3028bb258001d004d9537d"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // =========================================================
+        // Checkout Logic
+        // =========================================================
+        const userInfoDiv = document.getElementById('user-info');
+        const userNameDiv = document.getElementById('user-name');
+        const userMobileDiv = document.getElementById('user-mobile');
+        const userAddressDiv = document.getElementById('user-address');
+        const orderItemsDiv = document.getElementById('order-items');
+        const subtotalSpan = document.getElementById('subtotal');
+        const shippingSpan = document.getElementById('shipping');
+        const totalSpan = document.getElementById('total');
+        const paymentOptionsDiv = document.getElementById('payment-options');
+        const placeOrderBtn = document.getElementById('place-order-btn');
+
+        const SHIPPING_COST = 40;
+        let currentUser = null;
+        let userCart = {};
+
+        // Authentication check
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                fetchUserData();
+                loadCartAndRenderSummary();
+            } else {
+                window.location.href = 'auth.html';
+            }
+        });
+
+        // Load user data from Firestore
+        async function fetchUserData() {
+            if (!currentUser) return;
+
+            try {
+                // Assuming your user data is in a 'users' collection, with a document ID matching the user's UID
+                const userDocRef = doc(db, 'users', currentUser.uid);
+                const userDoc = await getDoc(userDocRef);
+
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    userNameDiv.textContent = `Full Name: ${userData.fullName || 'N/A'}`;
+                    userMobileDiv.textContent = `Mobile: ${userData.mobileNumber || 'N/A'}`;
+                    userAddressDiv.textContent = `Address: ${userData.address || 'N/A'}`;
+                } else {
+                    console.error("No user data found for this user.");
+                    userNameDiv.textContent = 'User data not found.';
+                }
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
+        }
+
+        // Get cart data from local storage
+        function getCart() {
+            try {
+                return JSON.parse(localStorage.getItem('cart')) || {};
+            } catch (e) {
+                console.error("Failed to parse cart from localStorage", e);
+                return {};
+            }
+        }
+
+        function loadCartAndRenderSummary() {
+            userCart = getCart();
+            orderItemsDiv.innerHTML = '';
+            
+            let subtotal = 0;
+            const cartItemIds = Object.keys(userCart);
+
+            if (cartItemIds.length === 0) {
+                alert("Your cart is empty. Please add items to checkout.");
+                window.location.href = 'index.html';
+                return;
+            }
+
+            cartItemIds.forEach(productId => {
+                const item = userCart[productId];
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+
+                const itemElement = document.createElement('div');
+                itemElement.className = 'order-item';
+                itemElement.innerHTML = `
+                    <span class="order-item-name">${item.name} (${item.quantity}x)</span>
+                    <span class="order-item-price">₹${itemTotal.toFixed(2)}</span>
+                `;
+                orderItemsDiv.appendChild(itemElement);
+            });
+
+            const total = subtotal + SHIPPING_COST;
+            subtotalSpan.textContent = `₹${subtotal.toFixed(2)}`;
+            shippingSpan.textContent = `₹${SHIPPING_COST.toFixed(2)}`;
+            totalSpan.textContent = `₹${total.toFixed(2)}`;
+        }
+
+        // Handle payment option selection
+        paymentOptionsDiv.addEventListener('click', (e) => {
+            const selectedOption = e.target.closest('.payment-option');
+            if (selectedOption) {
+                document.querySelectorAll('.payment-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                selectedOption.classList.add('selected');
+            }
+        });
+
+        // Place order to Firestore
+        placeOrderBtn.addEventListener('click', async () => {
+            if (Object.keys(userCart).length === 0) {
+                alert("Your cart is empty. Please add items to checkout.");
+                return;
+            }
+
+            const selectedPaymentMethod = document.querySelector('.payment-option.selected').dataset.method;
+            const subtotal = Object.values(userCart).reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const total = subtotal + SHIPPING_COST;
+            
+            // Prepare order data to be saved to Firestore
+            const orderData = {
+                userId: currentUser.uid,
+                orderDate: serverTimestamp(),
+                items: Object.values(userCart),
+                subtotal: subtotal,
+                shipping: SHIPPING_COST,
+                total: total,
+                paymentMethod: selectedPaymentMethod,
+                status: 'Processing' // Initial status
+            };
+
+            try {
+                // Add a new document to the 'orders' collection
+                await addDoc(collection(db, 'orders'), orderData);
+                
+                // Clear the cart from local storage
+                localStorage.removeItem('cart');
+                
+                alert('Order placed successfully!');
+                
+                // Redirect to the orders page
+                window.location.href = 'orders.html';
+            } catch (error) {
+                console.error("Error placing order:", error);
+                alert("Failed to place order. Please try again.");
+            }
+        });
+    </script>
+</body>
+</html>
