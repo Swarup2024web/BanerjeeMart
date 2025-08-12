@@ -2,124 +2,331 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Banners for Banerjee Mart</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Enhanced Banners for Banerjee Mart</title>
 <style>
-  body, html {
-    margin: 0; padding: 0;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background: #f5f7fa;
+  :root {
+    --primary-color-1: #4a90e2;
+    --primary-color-2: #50e3c2;
+    --secondary-color-1: #f5a623;
+    --secondary-color-2: #f8e71c;
+    --tertiary-color-1: #7ed321;
+    --tertiary-color-2: #b8e986;
+    --text-color: #ffffff;
+    --bg-light: #f5f7fa;
+    --shadow-light: rgba(0, 0, 0, 0.1);
+    --shadow-strong: rgba(0, 0, 0, 0.2);
   }
 
-  .carousel {
+  body, html {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .carousel-container {
+    position: relative;
     width: 100%;
     max-width: 960px;
     margin: 20px auto;
+  }
+
+  .carousel {
     overflow: hidden;
     position: relative;
     border-radius: 16px;
+    box-shadow: 0 10px 30px var(--shadow-light);
   }
 
   .carousel-track {
     display: flex;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     scroll-behavior: smooth;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .carousel-track::-webkit-scrollbar {
-    display: none;
   }
 
   .banner {
     min-width: 100%;
-    padding: 40px 20px;
-    color: white;
+    height: 300px;
+    padding: 20px;
+    color: var(--text-color);
     text-align: center;
     user-select: none;
     flex-shrink: 0;
-    border-radius: 16px;
     box-sizing: border-box;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 16px;
     font-weight: 600;
     letter-spacing: 0.5px;
-  }
-
-  .banner i {
-    font-size: 2.4rem;
-    background: rgba(255,255,255,0.2);
-    padding: 12px;
-    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
   }
 
   .banner1 {
-    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    background-image: linear-gradient(135deg, var(--primary-color-1), var(--primary-color-2));
   }
   .banner2 {
-    background: linear-gradient(135deg, #f7971e, #ffd200);
+    background-image: linear-gradient(135deg, var(--secondary-color-1), var(--secondary-color-2));
   }
   .banner3 {
-    background: linear-gradient(135deg, #43e97b, #38f9d7);
+    background-image: linear-gradient(135deg, var(--tertiary-color-1), var(--tertiary-color-2));
+  }
+
+  .banner-icon {
+    font-size: 3rem;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 16px;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+  }
+  .banner:hover .banner-icon {
+    transform: scale(1.1);
   }
 
   .banner-text {
-    font-size: 1.25rem;
-    max-width: 90%;
+    font-size: 1.5rem;
+    max-width: 80%;
     line-height: 1.4;
+    font-weight: 700;
+  }
+
+  .carousel-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.4);
+    color: var(--text-color);
+    border: none;
+    padding: 12px;
+    cursor: pointer;
+    z-index: 10;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    transition: background 0.3s, transform 0.3s;
+    outline: none;
+  }
+  .carousel-nav-btn:hover {
+    background: rgba(0, 0, 0, 0.6);
+    transform: translateY(-50%) scale(1.1);
+  }
+  .carousel-nav-btn.prev {
+    left: 20px;
+  }
+  .carousel-nav-btn.next {
+    right: 20px;
+  }
+
+  .carousel-dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+  }
+  .dot.active {
+    background: var(--text-color);
+    transform: scale(1.2);
+  }
+
+  .play-pause-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.4);
+    color: var(--text-color);
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    z-index: 10;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    transition: background 0.3s;
+  }
+  .play-pause-btn:hover {
+    background: rgba(0, 0, 0, 0.6);
   }
 
   @media (max-width: 600px) {
     .banner-text {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
     }
-    .banner i {
-      font-size: 2rem;
-      padding: 10px;
+    .banner-icon {
+      font-size: 2.5rem;
+      padding: 12px;
+    }
+    .carousel-nav-btn {
+      padding: 8px;
+      font-size: 1.2rem;
+    }
+    .carousel-nav-btn.prev {
+      left: 10px;
+    }
+    .carousel-nav-btn.next {
+      right: 10px;
     }
   }
 </style>
-<!-- Font Awesome for icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 
-<div class="carousel" aria-label="Promotional Banners">
-  <div class="carousel-track" tabindex="0">
-    <div class="banner banner1">
-      <i class="fas fa-truck"></i>
-      <div class="banner-text">We deliver only to Pakurtala within a few hours.</div>
+<div class="carousel-container" aria-live="polite">
+  <div class="carousel">
+    <div class="carousel-track">
+      <div class="banner banner1" role="tabpanel" aria-labelledby="banner1-heading">
+        <span class="material-icons banner-icon" aria-hidden="true">local_shipping</span>
+        <h3 class="banner-text" id="banner1-heading">Fast delivery to Pakurtala within a few hours.</h3>
+      </div>
+      <div class="banner banner2" role="tabpanel" aria-labelledby="banner2-heading">
+        <span class="material-icons banner-icon" aria-hidden="true">card_giftcard</span>
+        <h3 class="banner-text" id="banner2-heading">Free delivery on all orders of ₹199 and above.</h3>
+      </div>
+      <div class="banner banner3" role="tabpanel" aria-labelledby="banner3-heading">
+        <span class="material-icons banner-icon" aria-hidden="true">spa</span>
+        <h3 class="banner-text" id="banner3-heading">Committed to quality and freshness in every product.</h3>
+      </div>
     </div>
-    <div class="banner banner2">
-      <i class="fas fa-gift"></i>
-      <div class="banner-text">Delivery charge is free for orders Rs. 199 and above</div>
-    </div>
-    <div class="banner banner3">
-      <i class="fas fa-leaf"></i>
-      <div class="banner-text">We value quality</div>
-    </div>
+  </div>
+  <button class="carousel-nav-btn prev" aria-label="Previous banner">
+    <span class="material-icons">arrow_back_ios</span>
+  </button>
+  <button class="carousel-nav-btn next" aria-label="Next banner">
+    <span class="material-icons">arrow_forward_ios</span>
+  </button>
+  <button class="play-pause-btn" aria-label="Pause automatic scrolling">
+    <span class="material-icons">pause</span>
+  </button>
+  <div class="carousel-dots" role="tablist">
+    <div class="dot active" role="tab" aria-label="Go to banner 1"></div>
+    <div class="dot" role="tab" aria-label="Go to banner 2"></div>
+    <div class="dot" role="tab" aria-label="Go to banner 3"></div>
   </div>
 </div>
 
 <script>
+  const carousel = document.querySelector('.carousel');
   const track = document.querySelector('.carousel-track');
-  let currentIndex = 0;
-  const totalBanners = track.children.length;
+  const banners = Array.from(track.children);
+  const nextButton = document.querySelector('.carousel-nav-btn.next');
+  const prevButton = document.querySelector('.carousel-nav-btn.prev');
+  const dotsNav = document.querySelector('.carousel-dots');
+  const dots = Array.from(dotsNav.children);
+  const playPauseBtn = document.querySelector('.play-pause-btn');
 
-  function autoScroll() {
-    currentIndex++;
-    if (currentIndex >= totalBanners) currentIndex = 0;
-    const scrollAmount = track.offsetWidth * currentIndex;
-    track.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+  let currentIndex = 0;
+  let intervalId;
+  let isPlaying = true;
+  const bannerWidth = banners[0].getBoundingClientRect().width;
+
+  function updateBannerDisplay() {
+    track.style.transform = `translateX(-${currentIndex * bannerWidth}px)`;
+    updateDots();
+    updateAriaLabels();
   }
 
-  let interval = setInterval(autoScroll, 4000);
+  function updateDots() {
+    dots.forEach(dot => dot.classList.remove('active'));
+    dots[currentIndex].classList.add('active');
+  }
 
-  track.addEventListener('mouseenter', () => clearInterval(interval));
-  track.addEventListener('mouseleave', () => interval = setInterval(autoScroll, 4000));
+  function updateAriaLabels() {
+    banners.forEach((banner, index) => {
+      if (index === currentIndex) {
+        banner.setAttribute('aria-hidden', 'false');
+      } else {
+        banner.setAttribute('aria-hidden', 'true');
+      }
+    });
+  }
+
+  function handleNextClick() {
+    if (currentIndex < banners.length - 1) {
+      currentIndex++;
+    } else {
+      currentIndex = 0;
+    }
+    updateBannerDisplay();
+  }
+
+  function handlePrevClick() {
+    if (currentIndex > 0) {
+      currentIndex--;
+    } else {
+      currentIndex = banners.length - 1;
+    }
+    updateBannerDisplay();
+  }
+
+  function handleDotClick(e) {
+    const clickedDotIndex = dots.findIndex(dot => dot === e.target);
+    currentIndex = clickedDotIndex;
+    updateBannerDisplay();
+  }
+
+  function startAutoScroll() {
+    intervalId = setInterval(() => {
+      handleNextClick();
+    }, 4000);
+    isPlaying = true;
+    playPauseBtn.innerHTML = '<span class="material-icons">pause</span>';
+    playPauseBtn.setAttribute('aria-label', 'Pause automatic scrolling');
+  }
+
+  function stopAutoScroll() {
+    clearInterval(intervalId);
+    isPlaying = false;
+    playPauseBtn.innerHTML = '<span class="material-icons">play_arrow</span>';
+    playPauseBtn.setAttribute('aria-label', 'Play automatic scrolling');
+  }
+
+  function handlePlayPauseClick() {
+    if (isPlaying) {
+      stopAutoScroll();
+    } else {
+      startAutoScroll();
+    }
+  }
+
+  nextButton.addEventListener('click', handleNextClick);
+  prevButton.addEventListener('click', handlePrevClick);
+  dotsNav.addEventListener('click', handleDotClick);
+  playPauseBtn.addEventListener('click', handlePlayPauseClick);
+
+  carousel.addEventListener('mouseenter', stopAutoScroll);
+  carousel.addEventListener('mouseleave', () => {
+    if (isPlaying) {
+      startAutoScroll();
+    }
+  });
+
+  // Initial setup
+  updateBannerDisplay();
+  startAutoScroll();
+
+  // Handle window resize to keep carousel centered
+  window.addEventListener('resize', () => {
+    const newBannerWidth = banners[0].getBoundingClientRect().width;
+    track.style.transform = `translateX(-${currentIndex * newBannerWidth}px)`;
+  });
+
 </script>
 
 </body>
