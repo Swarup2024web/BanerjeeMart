@@ -274,7 +274,7 @@
         }
 
         .add-to-cart-btn:hover {
-            background-color: var(--button-hover-bg-color);
+            background-color: #1a5ac5;
         }
 
         .app-nav-bar {
@@ -495,6 +495,20 @@
             allProducts: [],
             cart: {} // A simple object to store product ID and quantity
         };
+        
+        // NEW: Utility functions to manage local storage
+        function getCart() {
+            try {
+                return JSON.parse(localStorage.getItem('cart')) || {};
+            } catch (e) {
+                console.error("Failed to parse cart from localStorage", e);
+                return {};
+            }
+        }
+        
+        function saveCart(cart) {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
 
         // NEW: This object maps your category strings to Material Symbols icon names.
         const categoryIcons = {
@@ -529,8 +543,10 @@
                 const querySnapshot = await getDocs(q);
                 state.allProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 state.products = [...state.allProducts];
+                state.cart = getCart(); // Load cart from localStorage
                 renderCategories();
                 renderProducts();
+                updateCartBadge();
             } catch (error) {
                 console.error("Error fetching products:", error);
                 productsContainer.innerHTML = '<h3 style="text-align: center;">Failed to load products.</h3>';
@@ -679,6 +695,7 @@
                 if (quantity > 0) {
                     const productData = state.products.find(p => p.id === productId);
                     state.cart[productId] = { ...productData, quantity: quantity };
+                    saveCart(state.cart); // ADDED: Save the cart to local storage
                     updateCartBadge();
                     alert(`${quantity} x ${productData.name} added to cart!`);
                 } else {
@@ -689,7 +706,8 @@
 
         // Update the cart badge in the navbar
         function updateCartBadge() {
-            const totalItems = Object.values(state.cart).reduce((sum, item) => sum + item.quantity, 0);
+            const cart = getCart(); // Get cart from localStorage
+            const totalItems = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
             cartBadge.textContent = totalItems;
             if (totalItems > 0) {
                 cartBadge.classList.add('visible');
@@ -711,6 +729,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             fetchBanners();
             fetchAllProducts();
+            updateCartBadge(); // Update badge on page load
         });
     </script>
 </body>
