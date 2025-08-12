@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Redesigned Banners for Banerjee Mart</title>
+<title>Responsive Banners for Banerjee Mart</title>
 <style>
   :root {
     --color-primary-1: #4a90e2;
@@ -15,10 +15,8 @@
     --color-text-light: #ffffff;
     --color-bg-light: #f0f2f5;
     --color-shadow-light: rgba(0, 0, 0, 0.1);
-    --color-shadow-strong: rgba(0, 0, 0, 0.2);
   }
-
-  /* Reset and base styles */
+  
   *, *::before, *::after {
     box-sizing: border-box;
   }
@@ -38,7 +36,6 @@
     position: relative;
     width: 100%;
     max-width: 960px;
-    margin: 20px 0;
   }
 
   .carousel {
@@ -70,7 +67,6 @@
     font-weight: 700;
   }
   
-  /* Glassmorphism effect */
   .banner::before {
     content: '';
     position: absolute;
@@ -182,7 +178,6 @@
     font-size: 1.2rem;
   }
 
-  /* Media Queries for fine-tuning responsiveness */
   @media (min-width: 769px) {
     .banner-icon {
       font-size: 4rem;
@@ -192,12 +187,6 @@
     }
     .banner {
       height: 35vh;
-    }
-    .carousel-nav-btn.prev {
-      left: 1.5rem;
-    }
-    .carousel-nav-btn.next {
-      right: 1.5rem;
     }
   }
 
@@ -271,7 +260,7 @@
   let isPlaying = true;
 
   function getBannerWidth() {
-    return banners[0].getBoundingClientRect().width;
+    return carousel.getBoundingClientRect().width;
   }
 
   function updateBannerDisplay() {
@@ -360,12 +349,10 @@
     }
   });
 
-  // Handle window resize to keep carousel centered
   window.addEventListener('resize', () => {
     updateBannerDisplay();
   });
 
-  // Initial setup
   updateBannerDisplay();
   startAutoScroll();
 </script>
