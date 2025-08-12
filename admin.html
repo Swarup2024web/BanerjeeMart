@@ -600,10 +600,8 @@
         function showDashboard() {
             loginPage.classList.add('hidden');
             dashboardContent.classList.remove('hidden');
-            // Fetch initial data for the dashboard overview and products
             updateDashboardOverview();
-            fetchAndDisplayProducts();
-            // Display the dashboard overview tab by default
+            // Default to showing the Dashboard tab
             openTab('dashboard-overview', document.querySelector('[data-tab="dashboard-overview"]'));
         }
 
@@ -638,15 +636,18 @@
             document.getElementById(tabId).classList.remove('hidden');
             button.classList.add('active');
 
-            pageTitle.textContent = button.textContent.trim();
-            
-            if (tabId === 'manageProductTab') {
+            // Handle specific tab content loading
+            if (tabId === 'dashboard-overview') {
+                updateDashboardOverview();
+            } else if (tabId === 'manageProductTab') {
                 fetchAndDisplayProducts();
             } else if (tabId === 'manageOrdersTab') {
                 fetchAndDisplayOrders();
             } else if (tabId === 'addProductTab') {
                 resetProductForm();
             }
+            
+            pageTitle.textContent = button.textContent.trim();
         }
 
         navLinks.forEach(link => {
@@ -728,8 +729,7 @@
                 await addDoc(productsCollection, productData);
                 alert('Product added successfully!');
                 productForm.reset();
-                fetchAndDisplayProducts();
-                updateDashboardOverview();
+                updateDashboardOverview(); // Update counts
             } catch (error) {
                 console.error("Error saving product: ", error);
                 alert('Error adding product: ' + error.message);
@@ -864,19 +864,22 @@
                     const order = orderDoc.data();
                     const orderId = orderDoc.id;
                     const statusClass = `status-${order.status.toLowerCase()}`;
-                    const itemsList = order.items.map(item => item.name).join(', ');
+                    
+                    // Display items as a list
+                    const itemsList = order.items.map(item => `<li>${item.name} (${item.quantity})</li>`).join('');
                     
                     const orderItem = `
                         <tr>
                             <td>${orderId}</td>
                             <td>${order.customerName}</td>
-                            <td>${itemsList}</td>
+                            <td><ul style="list-style-type:none; margin:0; padding:0;">${itemsList}</ul></td>
                             <td>₹${order.total.toFixed(2)}</td>
                             <td><span class="order-status ${statusClass}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></td>
                             <td class="action-buttons">
-                                <button class="btn-edit" onclick="updateOrderStatus('${orderId}', 'shipped')">Ship</button>
-                                <button class="btn-edit" onclick="updateOrderStatus('${orderId}', 'delivered')">Deliver</button>
-                                <button class="btn-delete" onclick="updateOrderStatus('${orderId}', 'cancelled')">Cancel</button>
+                                <button class="btn-edit" onclick="updateOrderStatus('${orderId}', 'packed')">Packed</button>
+                                <button class="btn-edit" onclick="updateOrderStatus('${orderId}', 'shipped')">Shipped</button>
+                                <button class="btn-edit" onclick="updateOrderStatus('${orderId}', 'delivered')">Delivered</button>
+                                <button class="btn-delete" onclick="updateOrderStatus('${orderId}', 'cancelled')">Canceled</button>
                             </td>
                         </tr>
                     `;
@@ -905,8 +908,6 @@
 
         downloadExcelBtn.addEventListener('click', () => {
             alert('Downloading a placeholder Excel file...');
-            // In a real-world application, you would implement the logic to fetch all orders from Firestore
-            // and then generate an Excel file (e.g., using a library like js-xlsx).
         });
         
     </script>
