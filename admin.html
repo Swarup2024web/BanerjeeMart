@@ -36,7 +36,6 @@
             padding: 24px;
         }
         
-        /* General layout */
         .header {
             display: flex;
             justify-content: space-between;
@@ -51,7 +50,6 @@
             margin: 0;
         }
 
-        /* Tab styles */
         .tabs-container {
             background-color: var(--surface-color);
             border-radius: 8px;
@@ -94,7 +92,6 @@
             margin-right: 8px;
         }
 
-        /* Tab Content */
         .tab-content-wrapper {
             padding: 24px;
             background-color: var(--surface-color);
@@ -118,7 +115,6 @@
             margin: 0;
         }
 
-        /* Forms */
         .form-group {
             margin-bottom: 20px;
         }
@@ -168,14 +164,13 @@
             background-color: var(--primary-light-color);
         }
         
-        /* Tables */
         .table-responsive {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
         .data-table {
             width: 100%;
-            min-width: 600px; /* Ensures table is wide enough for horizontal scroll */
+            min-width: 600px;
             border-collapse: collapse;
             margin-top: 16px;
         }
@@ -236,7 +231,6 @@
         .status-delivered { background-color: var(--success-color); }
         .status-cancelled { background-color: var(--danger-color); }
         
-        /* Modal */
         .modal {
             position: fixed;
             top: 0;
@@ -268,8 +262,29 @@
             border: none;
             color: var(--subtle-text-color);
         }
+        .filter-section {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        .filter-section .form-group {
+            margin-bottom: 0;
+            flex-grow: 1;
+        }
+        .filter-section .form-group label {
+            margin-bottom: 4px;
+        }
+        .filter-section .form-group input,
+        .filter-section .form-group select {
+            width: auto;
+            min-width: 150px;
+        }
+        .filter-section .btn {
+            align-self: flex-end;
+            min-width: 120px;
+        }
 
-        /* Mobile Responsiveness */
         @media (max-width: 768px) {
             .container {
                 padding: 16px;
@@ -300,6 +315,17 @@
             .data-table th, .data-table td {
                 padding: 12px;
             }
+            .filter-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-section .form-group input,
+            .filter-section .form-group select {
+                width: 100%;
+            }
+            .filter-section .btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -324,6 +350,18 @@
             <div id="allProductsTab" class="tab-content">
                 <div class="section-header">
                     <h2>All Products</h2>
+                </div>
+                <div class="filter-section">
+                    <div class="form-group" style="flex-grow: 1;">
+                        <label for="all-products-filter">Filter by Category</label>
+                        <select id="all-products-filter" onchange="filterProducts('allProductsTab')">
+                            <option value="All">All</option>
+                            <option value="Groceries">Groceries</option>
+                            <option value="Foods">Foods</option>
+                            <option value="Care">Care</option>
+                            <option value="Stationery">Stationery</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="table-responsive">
                     <table class="data-table">
@@ -376,6 +414,18 @@
                 <div class="section-header">
                     <h2>Update/Delete Products</h2>
                 </div>
+                <div class="filter-section">
+                    <div class="form-group" style="flex-grow: 1;">
+                        <label for="update-products-filter">Filter by Category</label>
+                        <select id="update-products-filter" onchange="filterProducts('updateProductTab')">
+                            <option value="All">All</option>
+                            <option value="Groceries">Groceries</option>
+                            <option value="Foods">Foods</option>
+                            <option value="Care">Care</option>
+                            <option value="Stationery">Stationery</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="table-responsive">
                     <table class="data-table">
                         <thead>
@@ -397,7 +447,17 @@
             <div id="manageOrdersTab" class="tab-content hidden">
                 <div class="section-header">
                     <h2>Manage Orders</h2>
-                    <button class="btn btn-secondary" onclick="alert('Downloading placeholder Excel...')"><span class="material-symbols-outlined">download</span> Download</button>
+                </div>
+                <div class="filter-section">
+                    <div class="form-group">
+                        <label for="start-date">From</label>
+                        <input type="date" id="start-date">
+                    </div>
+                    <div class="form-group">
+                        <label for="end-date">To</label>
+                        <input type="date" id="end-date">
+                    </div>
+                    <button class="btn" onclick="filterAndDownloadOrders()"><span class="material-symbols-outlined">download</span> Download</button>
                 </div>
                 <div class="table-responsive">
                     <table class="data-table">
@@ -405,6 +465,7 @@
                             <tr>
                                 <th>Order ID</th>
                                 <th>Customer</th>
+                                <th>Order Date</th>
                                 <th>Items</th>
                                 <th>Total</th>
                                 <th>Status</th>
@@ -412,7 +473,7 @@
                             </tr>
                         </thead>
                         <tbody id="order-list">
-                            <tr><td colspan="6" style="text-align: center;">No orders found.</td></tr>
+                            <tr><td colspan="7" style="text-align: center;">No orders found.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -453,9 +514,10 @@
         </div>
     </div>
 
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, getDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, getDoc, updateDoc, deleteDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
         
         // =========================================================
         // FIREBASE CONFIGURATION
@@ -546,42 +608,78 @@
         });
 
         // =========================================================
-        // ALL PRODUCTS TAB LOGIC
+        // ALL PRODUCTS TAB & UPDATE PRODUCTS TAB LOGIC
         // =========================================================
         const allProductsList = document.getElementById('all-products-list');
-        async function fetchAllProducts() {
-            allProductsList.innerHTML = '<tr><td colspan="4" style="text-align: center;">Loading products...</td></tr>';
+        const updateProductsList = document.getElementById('update-products-list');
+
+        async function fetchProducts(tabId, category = 'All') {
+            const container = tabId === 'allProductsTab' ? allProductsList : updateProductsList;
+            container.innerHTML = `<tr><td colspan="${tabId === 'allProductsTab' ? 4 : 5}" style="text-align: center;">Loading products...</td></tr>`;
+
             try {
-                const snapshot = await getDocs(productsCollection);
-                allProductsList.innerHTML = '';
+                let q = productsCollection;
+                if (category !== 'All') {
+                    q = query(productsCollection, where('category', '==', category));
+                }
+                const snapshot = await getDocs(q);
                 
-                if (snapshot.empty) {
-                    allProductsList.innerHTML = '<tr><td colspan="4" style="text-align: center;">No products found.</td></tr>';
+                const products = [];
+                snapshot.forEach(doc => {
+                    products.push({ id: doc.id, ...doc.data() });
+                });
+                
+                products.sort((a, b) => a.name.localeCompare(b.name));
+
+                container.innerHTML = '';
+                if (products.length === 0) {
+                    container.innerHTML = `<tr><td colspan="${tabId === 'allProductsTab' ? 4 : 5}" style="text-align: center;">No products found.</td></tr>`;
                     return;
                 }
                 
-                snapshot.forEach(productDoc => {
-                    const product = productDoc.data();
+                products.forEach(product => {
                     const productItem = `
                         <tr>
                             <td><img src="${product.image}" alt="${product.name}" class="product-image"></td>
                             <td>${product.name}</td>
                             <td>₹${product.price.toFixed(2)}</td>
                             <td>${product.category}</td>
+                            ${tabId === 'updateProductTab' ? `
+                            <td class="action-buttons">
+                                <button class="btn-edit" data-id="${product.id}"><span class="material-symbols-outlined">edit</span></button>
+                                <button class="btn-delete" data-id="${product.id}"><span class="material-symbols-outlined">delete</span></button>
+                            </td>
+                            ` : ''}
                         </tr>
                     `;
-                    allProductsList.innerHTML += productItem;
+                    container.innerHTML += productItem;
                 });
+
+                if (tabId === 'updateProductTab') {
+                    document.querySelectorAll('#update-products-list .btn-edit').forEach(button => {
+                        button.addEventListener('click', (e) => openEditModal(e.currentTarget.dataset.id));
+                    });
+                    document.querySelectorAll('#update-products-list .btn-delete').forEach(button => {
+                        button.addEventListener('click', (e) => deleteProduct(e.currentTarget.dataset.id));
+                    });
+                }
             } catch (error) {
                 console.error("Error fetching products: ", error);
-                allProductsList.innerHTML = '<tr><td colspan="4" style="text-align: center;">Error fetching products.</td></tr>';
+                container.innerHTML = `<tr><td colspan="${tabId === 'allProductsTab' ? 4 : 5}" style="text-align: center;">Error fetching products.</td></tr>`;
             }
         }
 
+        window.filterProducts = function(tabId) {
+            const categoryFilter = document.getElementById(`${tabId === 'allProductsTab' ? 'all-products-filter' : 'update-products-filter'}`);
+            fetchProducts(tabId, categoryFilter.value);
+        };
+        
+        const fetchAllProducts = () => fetchProducts('allProductsTab', document.getElementById('all-products-filter').value);
+        const fetchAndUpdateProducts = () => fetchProducts('updateProductTab', document.getElementById('update-products-filter').value);
+
         // =========================================================
-        // UPDATE/DELETE PRODUCT LOGIC
+        // UPDATE/DELETE PRODUCT MODAL LOGIC
         // =========================================================
-        const updateProductsList = document.getElementById('update-products-list');
         const editModal = document.getElementById('edit-product-modal');
         const editForm = document.getElementById('edit-product-form');
         const editProductName = document.getElementById('edit-product-name');
@@ -590,48 +688,6 @@
         const editProductImage = document.getElementById('edit-product-image');
         const closeModalBtn = editModal.querySelector('.modal-close-btn');
         let currentEditingProductId = null;
-
-        async function fetchAndUpdateProducts() {
-            updateProductsList.innerHTML = '<tr><td colspan="5" style="text-align: center;">Loading products...</td></tr>';
-            try {
-                const snapshot = await getDocs(productsCollection);
-                updateProductsList.innerHTML = '';
-                
-                if (snapshot.empty) {
-                    updateProductsList.innerHTML = '<tr><td colspan="5" style="text-align: center;">No products found.</td></tr>';
-                    return;
-                }
-                
-                snapshot.forEach(productDoc => {
-                    const product = productDoc.data();
-                    const productId = productDoc.id;
-                    
-                    const productItem = `
-                        <tr>
-                            <td><img src="${product.image}" alt="${product.name}" class="product-image"></td>
-                            <td>${product.name}</td>
-                            <td>₹${product.price.toFixed(2)}</td>
-                            <td>${product.category}</td>
-                            <td class="action-buttons">
-                                <button class="btn-edit" data-id="${productId}"><span class="material-symbols-outlined">edit</span></button>
-                                <button class="btn-delete" data-id="${productId}"><span class="material-symbols-outlined">delete</span></button>
-                            </td>
-                        </tr>
-                    `;
-                    updateProductsList.innerHTML += productItem;
-                });
-
-                document.querySelectorAll('#update-products-list .btn-edit').forEach(button => {
-                    button.addEventListener('click', (e) => openEditModal(e.currentTarget.dataset.id));
-                });
-                document.querySelectorAll('#update-products-list .btn-delete').forEach(button => {
-                    button.addEventListener('click', (e) => deleteProduct(e.currentTarget.dataset.id));
-                });
-            } catch (error) {
-                console.error("Error fetching products: ", error);
-                updateProductsList.innerHTML = '<tr><td colspan="5" style="text-align: center;">Error fetching products.</td></tr>';
-            }
-        }
 
         async function openEditModal(id) {
             const productDocRef = doc(db, 'products', id);
@@ -698,18 +754,23 @@
         }
 
         // =========================================================
-        // MANAGE ORDERS LOGIC
+        // MANAGE ORDERS LOGIC & EXCEL DOWNLOAD
         // =========================================================
         const orderList = document.getElementById('order-list');
-
+        const startDateInput = document.getElementById('start-date');
+        const endDateInput = document.getElementById('end-date');
+        
         async function fetchAndDisplayOrders() {
-            orderList.innerHTML = '<tr><td colspan="6" style="text-align: center;">Loading orders...</td></tr>';
+            orderList.innerHTML = '<tr><td colspan="7" style="text-align: center;">Loading orders...</td></tr>';
             try {
-                const ordersSnapshot = await getDocs(ordersCollection);
+                // To fetch all orders initially, we use an empty query.
+                const q = query(ordersCollection, orderBy('orderDate', 'desc'));
+                const ordersSnapshot = await getDocs(q);
+                
                 orderList.innerHTML = '';
                 
                 if (ordersSnapshot.empty) {
-                    orderList.innerHTML = '<tr><td colspan="6" style="text-align: center;">No orders found.</td></tr>';
+                    orderList.innerHTML = '<tr><td colspan="7" style="text-align: center;">No orders found.</td></tr>';
                     return;
                 }
                 
@@ -717,6 +778,7 @@
                     const order = orderDoc.data();
                     const orderId = orderDoc.id;
                     const statusClass = `status-${order.status.toLowerCase()}`;
+                    const orderDate = order.orderDate ? new Date(order.orderDate.seconds * 1000).toLocaleDateString() : 'N/A';
                     
                     const itemsList = (order.items && Array.isArray(order.items)) ? order.items.map(item => `<li>${item.name} (${item.quantity})</li>`).join('') : '<li>No items found</li>';
                     
@@ -724,6 +786,7 @@
                         <tr>
                             <td>${orderId}</td>
                             <td>${order.customerName || 'N/A'}</td>
+                            <td>${orderDate}</td>
                             <td><ul style="list-style-type:none; margin:0; padding:0;">${itemsList}</ul></td>
                             <td>₹${(order.total || 0).toFixed(2)}</td>
                             <td><span class="order-status ${statusClass}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></td>
@@ -739,7 +802,7 @@
                 });
             } catch (error) {
                 console.error("Error fetching orders: ", error);
-                orderList.innerHTML = '<tr><td colspan="6" style="text-align: center;">Error fetching orders.</td></tr>';
+                orderList.innerHTML = '<tr><td colspan="7" style="text-align: center;">Error fetching orders.</td></tr>';
             }
         }
 
@@ -754,6 +817,68 @@
                     console.error("Error updating order status: ", error);
                     alert('Error updating order status: ' + error.message);
                 }
+            }
+        };
+
+        window.filterAndDownloadOrders = async function() {
+            const startDate = startDateInput.value ? new Date(startDateInput.value) : null;
+            const endDate = endDateInput.value ? new Date(endDateInput.value) : null;
+
+            if (!startDate || !endDate) {
+                alert('Please select both a start and an end date.');
+                return;
+            }
+            if (startDate > endDate) {
+                alert('Start date cannot be after the end date.');
+                return;
+            }
+            
+            try {
+                // Adjusting end date to include the whole day
+                const endDateAdjusted = new Date(endDate.setHours(23, 59, 59, 999));
+                
+                const q = query(
+                    ordersCollection,
+                    where('orderDate', '>=', startDate),
+                    where('orderDate', '<=', endDateAdjusted),
+                    orderBy('orderDate')
+                );
+                const ordersSnapshot = await getDocs(q);
+
+                if (ordersSnapshot.empty) {
+                    alert('No orders found for the selected date range.');
+                    return;
+                }
+
+                const ordersData = ordersSnapshot.docs.map(doc => {
+                    const order = doc.data();
+                    const items = order.items ? order.items.map(item => `${item.name} (x${item.quantity})`).join(', ') : 'N/A';
+                    const orderDate = order.orderDate ? new Date(order.orderDate.seconds * 1000).toLocaleString() : 'N/A';
+
+                    return {
+                        'Order ID': doc.id,
+                        'Customer Name': order.customerName,
+                        'Customer Phone': order.customerPhone,
+                        'Customer Address': order.customerAddress,
+                        'Order Date': orderDate,
+                        'Items': items,
+                        'Total Amount': order.total,
+                        'Status': order.status
+                    };
+                });
+                
+                const worksheet = XLSX.utils.json_to_sheet(ordersData);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, 'Orders');
+                
+                const startDateFormat = startDate.toISOString().split('T')[0];
+                const endDateFormat = endDate.toISOString().split('T')[0];
+                const filename = `Orders_${startDateFormat}_to_${endDateFormat}.xlsx`;
+                
+                XLSX.writeFile(workbook, filename);
+            } catch (error) {
+                console.error("Error downloading orders: ", error);
+                alert('An error occurred while downloading the orders.');
             }
         };
     </script>
