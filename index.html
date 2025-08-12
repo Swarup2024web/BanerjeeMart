@@ -495,6 +495,14 @@
             allProducts: [],
             cart: {} // A simple object to store product ID and quantity
         };
+
+        // NEW: This object maps your category strings to Material Symbols icon names.
+        const categoryIcons = {
+            "Groceries": "local_grocery_store",
+            "Foods": "lunch_dining",
+            "Care": "medical_services",
+            "Stationery": "edit_note"
+        };
         
         // Fetch banners from banners.html
         async function fetchBanners() {
@@ -529,17 +537,13 @@
             }
         }
 
-        // Render categories based on products data
+        // Render categories based on products data and the new icon map
         function renderCategories() {
             categoriesContainer.innerHTML = '';
             
-            const categories = new Map();
-            state.allProducts.forEach(product => {
-                if (product.category && !categories.has(product.category.name)) {
-                    categories.set(product.category.name, product.category.icon);
-                }
-            });
-
+            // Get unique category names from the products
+            const uniqueCategories = [...new Set(state.allProducts.map(p => p.category))];
+            
             // "All Products" category
             const allProductsItem = document.createElement('div');
             allProductsItem.className = 'category-item active';
@@ -555,17 +559,19 @@
             categoriesContainer.appendChild(allProductsItem);
 
             // Other categories from products
-            categories.forEach((icon, name) => {
+            uniqueCategories.forEach(categoryName => {
+                // Use the category name to find the icon from our new map
+                const icon = categoryIcons[categoryName] || 'label'; // 'label' is a fallback icon
                 const categoryItem = document.createElement('div');
                 categoryItem.className = 'category-item';
                 categoryItem.onclick = () => {
-                    filterProducts(name);
+                    filterProducts(categoryName);
                     document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
                     categoryItem.classList.add('active');
                 };
                 categoryItem.innerHTML = `
                     <span class="material-symbols-outlined category-icon">${icon}</span>
-                    <span class="category-name">${name}</span>
+                    <span class="category-name">${categoryName}</span>
                 `;
                 categoriesContainer.appendChild(categoryItem);
             });
@@ -577,7 +583,7 @@
             
             if (categoryName) {
                 productsSectionTitle.textContent = categoryName;
-                filteredProducts = filteredProducts.filter(p => p.category && p.category.name === categoryName);
+                filteredProducts = filteredProducts.filter(p => p.category === categoryName);
             } else {
                 productsSectionTitle.textContent = 'All Products';
             }
