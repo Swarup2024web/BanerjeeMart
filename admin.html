@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B Mart Admin</title>
+    <title>B Mart Admin Dashboard</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
         :root {
@@ -34,6 +35,7 @@
             min-height: 100vh;
         }
 
+        /* Sidebar & Navigation */
         .sidebar {
             width: 250px;
             background-color: var(--surface-color);
@@ -92,6 +94,7 @@
             margin-right: 15px;
         }
 
+        /* Main Content Area */
         .main-content {
             flex-grow: 1;
             padding: 24px;
@@ -99,11 +102,10 @@
 
         .top-bar {
             display: flex;
-            justify-content: space-between;
             align-items: center;
             margin-bottom: 24px;
         }
-
+        
         .page-title {
             font-size: 28px;
             font-weight: 600;
@@ -232,6 +234,12 @@
             font-size: 12px;
             margin-right: 8px;
             transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .action-buttons button .material-symbols-outlined {
+            font-size: 16px;
         }
 
         .btn-edit { background-color: var(--warning-color); color: var(--text-color); }
@@ -252,6 +260,7 @@
         .status-delivered { background-color: var(--success-color); }
         .status-cancelled { background-color: var(--danger-color); }
         
+        /* Modal for Editing */
         .modal {
             position: fixed;
             top: 0;
@@ -309,6 +318,7 @@
             }
             .page-title {
                 font-size: 24px;
+                margin-left: 16px;
             }
             .data-table {
                 display: block;
@@ -317,6 +327,9 @@
             }
             .hamburger-menu {
                 display: block;
+            }
+            .logout-link {
+                display: none; /* Hide on mobile to save space */
             }
         }
         
@@ -462,6 +475,10 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, doc, getDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
         
+        // =========================================================
+        // FIREBASE CONFIGURATION
+        // Replace with your actual Firebase config
+        // =========================================================
         const firebaseConfig = {
             apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
             authDomain: "banerjee-mart.firebaseapp.com",
@@ -500,16 +517,18 @@
             navLinks.forEach(link => link.classList.remove('active'));
             
             document.getElementById(tabId).classList.remove('hidden');
-            button.classList.add('active');
+            if (button) {
+                button.classList.add('active');
+                pageTitle.textContent = button.textContent.trim();
+            }
 
+            // Load data specific to the tab
             if (tabId === 'manageProductTab') {
                 fetchAndDisplayProducts();
             } else if (tabId === 'manageOrdersTab') {
                 fetchAndDisplayOrders();
             }
             
-            pageTitle.textContent = button.textContent.trim();
-
             if (window.innerWidth <= 768) {
                 sidebar.classList.remove('active');
             }
@@ -522,13 +541,14 @@
             });
         });
 
-        // Initialize with the first tab
+        // Initialize with the first tab on page load
         document.addEventListener('DOMContentLoaded', () => {
-            openTab('addProductTab', document.querySelector('[data-tab="addProductTab"]'));
+            const firstTabButton = document.querySelector('[data-tab="addProductTab"]');
+            openTab('addProductTab', firstTabButton);
         });
         
         // =========================================================
-        // PRODUCT MANAGEMENT LOGIC (Firestore Integration)
+        // ADD/UPDATE/DELETE PRODUCT LOGIC
         // =========================================================
         const productForm = document.getElementById('product-form');
         const productNameInput = document.getElementById('product-name');
@@ -560,7 +580,7 @@
                 alert('Product added successfully!');
                 productForm.reset();
             } catch (error) {
-                console.error("Error saving product: ", error);
+                console.error("Error adding product: ", error);
                 alert('Error adding product: ' + error.message);
             }
         });
@@ -672,7 +692,7 @@
         }
 
         // =========================================================
-        // ORDER MANAGEMENT LOGIC (Firestore Integration)
+        // ORDER MANAGEMENT LOGIC
         // =========================================================
         const orderList = document.getElementById('order-list');
 
@@ -692,14 +712,14 @@
                     const orderId = orderDoc.id;
                     const statusClass = `status-${order.status.toLowerCase()}`;
                     
-                    const itemsList = order.items.map(item => `<li>${item.name} (${item.quantity})</li>`).join('');
+                    const itemsList = (order.items && Array.isArray(order.items)) ? order.items.map(item => `<li>${item.name} (${item.quantity})</li>`).join('') : '<li>No items found</li>';
                     
                     const orderItem = `
                         <tr>
                             <td>${orderId}</td>
-                            <td>${order.customerName}</td>
+                            <td>${order.customerName || 'N/A'}</td>
                             <td><ul style="list-style-type:none; margin:0; padding:0;">${itemsList}</ul></td>
-                            <td>₹${order.total.toFixed(2)}</td>
+                            <td>₹${(order.total || 0).toFixed(2)}</td>
                             <td><span class="order-status ${statusClass}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></td>
                             <td class="action-buttons">
                                 <button class="btn-edit" onclick="updateOrderStatus('${orderId}', 'packed')">Packed</button>
