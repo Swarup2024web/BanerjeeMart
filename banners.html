@@ -6,18 +6,23 @@
 <title>Redesigned Banners for Banerjee Mart</title>
 <style>
   :root {
-    --color-primary-1: #3b5998;
-    --color-primary-2: #2d9494;
-    --color-secondary-1: #d67a1c;
-    --color-secondary-2: #c4303e;
-    --color-tertiary-1: #4CAF50;
-    --color-tertiary-2: #8BC34A;
+    --color-primary-1: #4a90e2;
+    --color-primary-2: #50e3c2;
+    --color-secondary-1: #f5a623;
+    --color-secondary-2: #f8e71c;
+    --color-tertiary-1: #7ed321;
+    --color-tertiary-2: #b8e986;
     --color-text-light: #ffffff;
-    --color-text-dark: #333333;
-    --color-bg-light: #f4f5f7;
-    --color-shadow: rgba(0, 0, 0, 0.15);
+    --color-bg-light: #f0f2f5;
+    --color-shadow-light: rgba(0, 0, 0, 0.1);
+    --color-shadow-strong: rgba(0, 0, 0, 0.2);
   }
 
+  /* Reset and base styles */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  
   body, html {
     margin: 0;
     padding: 0;
@@ -28,47 +33,44 @@
     align-items: center;
     min-height: 100vh;
   }
-
+  
   .carousel-container {
     position: relative;
     width: 100%;
     max-width: 960px;
-    margin: 20px auto;
+    margin: 20px 0;
   }
 
   .carousel {
     overflow: hidden;
     position: relative;
     border-radius: 16px;
-    box-shadow: 0 12px 25px var(--color-shadow);
+    box-shadow: 0 10px 30px var(--color-shadow-light);
   }
 
   .carousel-track {
     display: flex;
     transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    scroll-behavior: smooth;
   }
-
+  
   .banner {
     min-width: 100%;
-    height: 40vh; /* Responsive height */
-    padding: 4vw 3vw; /* Responsive padding */
+    height: 40vh;
+    padding: 3vh 2vw;
     color: var(--color-text-light);
     text-align: center;
     user-select: none;
     flex-shrink: 0;
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1.5rem;
-    font-weight: 700;
-    letter-spacing: 0.8px;
+    gap: 20px;
     position: relative;
-    overflow: hidden;
+    font-weight: 700;
   }
-
+  
+  /* Glassmorphism effect */
   .banner::before {
     content: '';
     position: absolute;
@@ -76,7 +78,8 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.1);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
     z-index: 1;
   }
 
@@ -91,49 +94,45 @@
   }
 
   .banner-icon {
-    font-size: 6vw; /* Responsive icon size */
-    background: rgba(255, 255, 255, 0.2);
-    padding: 1rem;
+    font-size: 6vw;
+    background: rgba(255, 255, 255, 0.3);
+    padding: 18px;
     border-radius: 50%;
     transition: transform 0.3s ease;
     z-index: 2;
   }
-  .banner:hover .banner-icon {
-    transform: scale(1.1);
-  }
-
+  
   .banner-text {
-    font-size: 4vw; /* Responsive font size */
+    font-size: 4vw;
     max-width: 85%;
     line-height: 1.4;
-    font-weight: 600;
     z-index: 2;
+    font-weight: 600;
   }
 
   .carousel-nav-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.4);
     color: var(--color-text-light);
     border: none;
-    padding: 0.75rem;
+    padding: 12px;
     cursor: pointer;
     z-index: 10;
     border-radius: 50%;
-    font-size: 1.5rem;
     transition: background-color 0.3s, transform 0.3s;
     outline: none;
   }
   .carousel-nav-btn:hover {
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.6);
     transform: translateY(-50%) scale(1.1);
   }
   .carousel-nav-btn.prev {
-    left: 1.5rem;
+    left: 1rem;
   }
   .carousel-nav-btn.next {
-    right: 1.5rem;
+    right: 1rem;
   }
   .carousel-nav-btn .material-symbols-rounded {
     font-size: 1.5rem;
@@ -141,11 +140,12 @@
 
   .carousel-dots {
     position: absolute;
-    bottom: 1.5rem;
+    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 0.5rem;
+    gap: 8px;
+    z-index: 2;
   }
 
   .dot {
@@ -164,49 +164,62 @@
 
   .play-pause-btn {
     position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
-    background-color: rgba(0, 0, 0, 0.5);
+    top: 1rem;
+    right: 1rem;
+    background-color: rgba(0, 0, 0, 0.4);
     color: var(--color-text-light);
     border: none;
-    padding: 0.5rem;
+    padding: 8px;
     cursor: pointer;
     z-index: 10;
     border-radius: 50%;
-    font-size: 1.2rem;
     transition: background-color 0.3s;
   }
   .play-pause-btn:hover {
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+  .play-pause-btn .material-symbols-rounded {
+    font-size: 1.2rem;
   }
 
   /* Media Queries for fine-tuning responsiveness */
   @media (min-width: 769px) {
     .banner-icon {
-      font-size: 4rem; /* Fixed size for desktop */
+      font-size: 4rem;
     }
     .banner-text {
-      font-size: 2.2rem; /* Fixed size for desktop */
+      font-size: 2.2rem;
+    }
+    .banner {
+      height: 35vh;
+    }
+    .carousel-nav-btn.prev {
+      left: 1.5rem;
+    }
+    .carousel-nav-btn.next {
+      right: 1.5rem;
     }
   }
 
   @media (max-width: 600px) {
+    .carousel-nav-btn.prev {
+      left: 0.5rem;
+    }
+    .carousel-nav-btn.next {
+      right: 0.5rem;
+    }
     .banner-icon {
       font-size: 8vw;
     }
     .banner-text {
       font-size: 6vw;
     }
-    .banner {
-      height: 45vh;
-    }
   }
-
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -218,7 +231,7 @@
         <h3 class="banner-text" id="banner1-heading">Fast delivery to Pakurtala within a few hours.</h3>
       </div>
       <div class="banner banner2" role="tabpanel" aria-labelledby="banner2-heading">
-        <span class="material-symbols-rounded banner-icon" aria-hidden="true">card_giftcard</span>
+        <span class="material-symbols-rounded banner-icon" aria-hidden="true">redeem</span>
         <h3 class="banner-text" id="banner2-heading">Free delivery on all orders of ₹199 and above.</h3>
       </div>
       <div class="banner banner3" role="tabpanel" aria-labelledby="banner3-heading">
@@ -270,7 +283,9 @@
 
   function updateDots() {
     dots.forEach(dot => dot.classList.remove('active'));
-    dots[currentIndex].classList.add('active');
+    if (dots[currentIndex]) {
+      dots[currentIndex].classList.add('active');
+    }
   }
 
   function updateAriaLabels() {
