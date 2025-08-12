@@ -131,7 +131,7 @@
         }
 
         .hidden {
-            display: none;
+            display: none !important;
         }
 
         /* Forms */
@@ -477,7 +477,6 @@
         
         // =========================================================
         // FIREBASE CONFIGURATION
-        // Replace with your actual Firebase config
         // =========================================================
         const firebaseConfig = {
             apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
@@ -516,7 +515,11 @@
             tabContents.forEach(tab => tab.classList.add('hidden'));
             navLinks.forEach(link => link.classList.remove('active'));
             
-            document.getElementById(tabId).classList.remove('hidden');
+            const selectedTab = document.getElementById(tabId);
+            if (selectedTab) {
+                selectedTab.classList.remove('hidden');
+            }
+            
             if (button) {
                 button.classList.add('active');
                 pageTitle.textContent = button.textContent.trim();
