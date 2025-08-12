@@ -19,6 +19,8 @@
             --shadow-color-dark: rgba(0, 0, 0, 0.15);
             --success-color: #4CAF50;
             --danger-color: #d32f2f;
+            --skeleton-color: #e0e0e0;
+            --skeleton-highlight: #f5f5f5;
         }
 
         * {
@@ -83,6 +85,13 @@
 
         .main-content {
             padding-bottom: 70px; /* Space for the navbar */
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--on-surface-color);
+            margin: 24px 16px 16px;
         }
 
         .banners-container {
@@ -158,7 +167,6 @@
         .category-item.active .category-name {
             color: var(--primary-color);
         }
-
 
         .products-container {
             display: grid;
@@ -328,34 +336,67 @@
             display: block;
         }
         
-        /* Loading spinner CSS */
-        .loading-container {
+        /* Skeleton Loading CSS */
+        .skeleton-card {
+            background-color: var(--surface-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px var(--shadow-color-light);
+            overflow: hidden;
+            height: 320px;
+            animation: pulse 1.5s infinite;
+        }
+
+        .skeleton-image {
+            width: 100%;
+            height: 150px;
+            background-color: var(--skeleton-color);
+        }
+
+        .skeleton-details {
+            padding: 16px;
+            flex-grow: 1;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 200px;
             flex-direction: column;
-            gap: 16px;
-            color: var(--on-background-color);
+            align-items: center;
         }
 
-        .loader {
-            width: 50px;
-            height: 50px;
-            border: 5px solid var(--outline-color);
-            border-bottom-color: var(--primary-color);
-            border-radius: 50%;
-            display: inline-block;
-            box-sizing: border-box;
-            animation: rotation 1s linear infinite;
+        .skeleton-line {
+            background-color: var(--skeleton-color);
+            height: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
         }
 
-        @keyframes rotation {
+        .skeleton-name {
+            width: 80%;
+            margin-top: 8px;
+        }
+
+        .skeleton-price {
+            width: 50%;
+        }
+
+        .skeleton-quantity {
+            width: 60%;
+            height: 32px;
+        }
+
+        .skeleton-button {
+            width: 100%;
+            height: 40px;
+            border-radius: 8px;
+            background-color: var(--skeleton-color);
+        }
+
+        @keyframes pulse {
             0% {
-                transform: rotate(0deg);
+                background-color: var(--skeleton-color);
+            }
+            50% {
+                background-color: var(--skeleton-highlight);
             }
             100% {
-                transform: rotate(360deg);
+                background-color: var(--skeleton-color);
             }
         }
     </style>
@@ -385,9 +426,41 @@
         <div id="products-section">
             <h2 class="section-title" id="products-section-title">All Products</h2>
             <div id="products-container" class="products-container">
-                <div class="loading-container">
-                    <span class="loader"></span>
-                    <span>Products are loading...</span>
+                <div class="skeleton-card">
+                    <div class="skeleton-image"></div>
+                    <div class="skeleton-details">
+                        <div class="skeleton-line skeleton-name"></div>
+                        <div class="skeleton-line skeleton-price"></div>
+                        <div class="skeleton-line skeleton-quantity"></div>
+                        <div class="skeleton-button"></div>
+                    </div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton-image"></div>
+                    <div class="skeleton-details">
+                        <div class="skeleton-line skeleton-name"></div>
+                        <div class="skeleton-line skeleton-price"></div>
+                        <div class="skeleton-line skeleton-quantity"></div>
+                        <div class="skeleton-button"></div>
+                    </div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton-image"></div>
+                    <div class="skeleton-details">
+                        <div class="skeleton-line skeleton-name"></div>
+                        <div class="skeleton-line skeleton-price"></div>
+                        <div class="skeleton-line skeleton-quantity"></div>
+                        <div class="skeleton-button"></div>
+                    </div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton-image"></div>
+                    <div class="skeleton-details">
+                        <div class="skeleton-line skeleton-name"></div>
+                        <div class="skeleton-line skeleton-price"></div>
+                        <div class="skeleton-line skeleton-quantity"></div>
+                        <div class="skeleton-button"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -416,7 +489,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-        import { getFirestore, collection, getDocs, query, where, orderBy, or } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         // Firebase configuration
         const firebaseConfig = {
@@ -460,10 +533,16 @@
         async function fetchBanners() {
             try {
                 const response = await fetch('banners.html');
-                const html = await response.text();
-                bannersContainer.innerHTML = html;
+                if (response.ok) {
+                    const html = await response.text();
+                    bannersContainer.innerHTML = html;
+                } else {
+                    console.error("Failed to fetch banners. Status:", response.status);
+                    bannersContainer.innerHTML = '<p style="text-align: center;">Failed to load banners.</p>';
+                }
             } catch (error) {
                 console.error("Error fetching banners:", error);
+                bannersContainer.innerHTML = '<p style="text-align: center;">Error loading banners.</p>';
             }
         }
 
@@ -480,12 +559,7 @@
 
         // Fetch all products from Firestore once
         async function fetchAllProducts() {
-            productsContainer.innerHTML = `
-                <div class="loading-container">
-                    <span class="loader"></span>
-                    <span>Products are loading...</span>
-                </div>
-            `;
+            renderProducts(true); // Show skeleton loading
             const q = query(collection(db, 'products'), orderBy('name'));
             try {
                 const querySnapshot = await getDocs(q);
@@ -494,7 +568,7 @@
                 renderProducts();
             } catch (error) {
                 console.error("Error fetching products:", error);
-                productsContainer.innerHTML = '<h2>Failed to load products.</h2>';
+                productsContainer.innerHTML = '<h3 style="text-align: center;">Failed to load products.</h3>';
             }
         }
         
@@ -554,8 +628,18 @@
         }
 
         // Render products
-        function renderProducts() {
+        function renderProducts(isLoading = false) {
             productsContainer.innerHTML = '';
+            if (isLoading) {
+                // Render skeleton cards
+                for (let i = 0; i < 4; i++) {
+                    const skeletonCard = document.createElement('div');
+                    skeletonCard.className = 'skeleton-card';
+                    productsContainer.appendChild(skeletonCard);
+                }
+                return;
+            }
+
             if (state.products.length === 0) {
                 productsContainer.innerHTML = '<h3 style="text-align: center; color: var(--on-background-color);">No products found.</h3>';
                 return;
@@ -574,9 +658,9 @@
                         <div class="product-name">${product.name}</div>
                         <div class="product-price">₹<span data-initial-price="${product.price}">${totalPrice > 0 ? totalPrice.toFixed(2) : product.price.toFixed(2)}</span></div>
                         <div class="quantity-controls">
-                            <button class="decrease-btn" data-id="${product.id}" onclick="updateQuantity(this, -1)">-</button>
+                            <button class="decrease-btn" data-id="${product.id}">-</button>
                             <span class="quantity-value">${initialQuantity}</span>
-                            <button class="increase-btn" data-id="${product.id}" onclick="updateQuantity(this, 1)">+</button>
+                            <button class="increase-btn" data-id="${product.id}">+</button>
                         </div>
                         <button class="add-to-cart-btn" data-id="${product.id}">
                             <span class="material-symbols-outlined">add_shopping_cart</span>
@@ -586,10 +670,18 @@
                 `;
                 productsContainer.appendChild(productCard);
             });
+
+            // Add event listeners for quantity buttons
+            document.querySelectorAll('.increase-btn').forEach(button => {
+                button.addEventListener('click', () => updateQuantity(button, 1));
+            });
+            document.querySelectorAll('.decrease-btn').forEach(button => {
+                button.addEventListener('click', () => updateQuantity(button, -1));
+            });
         }
 
         // Update product quantity and price
-        window.updateQuantity = function(button, change) {
+        function updateQuantity(button, change) {
             const productCard = button.closest('.product-card');
             const quantityValueSpan = productCard.querySelector('.quantity-value');
             const priceSpan = productCard.querySelector('.product-price span');
