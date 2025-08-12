@@ -1,353 +1,534 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Banerjee Mart - Orders</title>
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-/>
-<style>
-  /* Reset & base */
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    margin: 0;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background: #f5f5f5;
-    color: #222;
-    padding-bottom: 60px; /* for bottom nav */
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B Mart - My Orders</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+    <style>
+        :root {
+            --primary-color: #2874f0;
+            --on-primary-color: #ffffff;
+            --surface-color: #ffffff;
+            --background-color: #f0f2f5;
+            --on-surface-color: #1f1f1f;
+            --on-background-color: #585858;
+            --outline-color: #d1d1d1;
+            --shadow-color-light: rgba(0, 0, 0, 0.08);
+            --shadow-color-dark: rgba(0, 0, 0, 0.15);
+            --success-color: #4CAF50;
+            --danger-color: #d32f2f;
+            --status-shipped-color: #2196F3;
+            --status-delivered-color: #4CAF50;
+            --status-processing-color: #FFC107;
+            --skeleton-color: #e0e0e0;
+            --skeleton-highlight: #f5f5f5;
+        }
 
-  /* Header */
-  header {
-    background: #2874f0;
-    color: white;
-    padding: 12px 16px 8px;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    text-align: center;
-    box-shadow: 0 2px 6px rgb(0 0 0 / 0.15);
-  }
-  header h1 {
-    margin: 0;
-    font-weight: 700;
-    font-size: 28px;
-    letter-spacing: 1.2px;
-  }
+        * {
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
 
-  /* Search bar row below header */
-  #search-row {
-    background: #2874f0;
-    padding: 8px 16px 12px;
-    position: sticky;
-    top: 56px;
-    z-index: 999;
-  }
-  #search-row input[type="search"] {
-    width: 100%;
-    padding: 10px 16px;
-    border-radius: 30px;
-    border: none;
-    font-size: 16px;
-    outline: none;
-    box-shadow: inset 0 2px 6px rgba(0,0,0,0.1);
-  }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--on-background-color);
+        }
 
-  /* Main container */
-  main {
-    max-width: 960px;
-    margin: 16px auto 100px;
-    padding: 0 12px;
-  }
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: var(--primary-color);
+            padding: 16px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            color: var(--on-primary-color);
+        }
 
-  /* Section titles */
-  h2.section-title {
-    font-weight: 700;
-    font-size: 22px;
-    margin-bottom: 12px;
-    color: #2874f0;
-    border-bottom: 2px solid #2874f0;
-    padding-bottom: 6px;
-  }
+        .header-row1 {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
 
-  /* Current Order Section */
-  #current-order {
-    background: white;
-    border-radius: 10px;
-    padding: 16px 20px;
-    margin-bottom: 24px;
-    box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
-  }
-  #current-order .order-status {
-    font-weight: 700;
-    font-size: 18px;
-    margin-bottom: 12px;
-  }
-  #current-order .order-details {
-    font-size: 15px;
-    margin-bottom: 12px;
-    line-height: 1.4;
-  }
-  #current-order button.cancel-btn {
-    background: #c62828;
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    font-weight: 700;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  #current-order button.cancel-btn:disabled {
-    background: #a2a2a2;
-    cursor: not-allowed;
-  }
-  #current-order button.cancel-btn:hover:not(:disabled) {
-    background: #9b2222;
-  }
+        .search-bar {
+            position: relative;
+        }
 
-  /* Past orders list */
-  #past-orders {
-    background: white;
-    border-radius: 10px;
-    padding: 16px 20px;
-    box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
-  }
-  #past-orders ul {
-    list-style: none;
-    padding-left: 0;
-    margin: 0;
-  }
-  #past-orders li {
-    border-bottom: 1px solid #eee;
-    padding: 10px 0;
-  }
-  #past-orders li:last-child {
-    border-bottom: none;
-  }
-  #past-orders .order-item-name {
-    font-weight: 700;
-    font-size: 16px;
-    margin-bottom: 4px;
-  }
-  #past-orders .order-item-date {
-    font-size: 13px;
-    color: #777;
-  }
-  #past-orders .order-item-status {
-    font-weight: 600;
-    color: #2e7d32;
-    font-size: 14px;
-  }
+        .search-bar input {
+            width: 100%;
+            padding: 12px 16px;
+            padding-left: 48px; /* Space for the icon */
+            border: none;
+            border-radius: 25px;
+            background-color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            color: var(--on-surface-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s;
+        }
 
-  /* Bottom Navigation */
-  nav.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 56px;
-    background: white;
-    box-shadow: 0 -1px 8px rgb(0 0 0 / 0.1);
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    z-index: 1100;
-  }
-  nav.bottom-nav a {
-    flex-grow: 1;
-    text-align: center;
-    color: #555;
-    font-size: 12px;
-    text-decoration: none;
-    user-select: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: 6px 0 4px;
-    transition: color 0.3s;
-  }
-  nav.bottom-nav a i {
-    font-size: 20px;
-  }
-  nav.bottom-nav a.active,
-  nav.bottom-nav a:hover {
-    color: #2874f0;
-  }
-</style>
+        .search-bar input:focus {
+            outline: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-bar .material-symbols-outlined {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--on-background-color);
+            font-size: 24px;
+        }
+
+        .main-content {
+            padding: 16px;
+            padding-bottom: 70px; /* Space for the navbar */
+            min-height: calc(100vh - 130px);
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--on-surface-color);
+            margin: 0 0 24px;
+        }
+
+        .orders-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .order-card {
+            background-color: var(--surface-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px var(--shadow-color-light);
+            padding: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .order-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px var(--shadow-color-dark);
+        }
+
+        .order-summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .order-info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .order-id, .order-date {
+            font-size: 14px;
+            color: var(--on-background-color);
+        }
+
+        .order-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        
+        .status-icon {
+            font-size: 18px;
+        }
+
+        .status-Shipped { color: var(--status-shipped-color); }
+        .status-Delivered { color: var(--status-delivered-color); }
+        .status-Processing { color: var(--status-processing-color); }
+
+        .order-total {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .toggle-icon {
+            font-size: 24px;
+            color: var(--on-background-color);
+            transition: transform 0.3s;
+        }
+        
+        .order-card.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+        
+        .order-details {
+            border-top: 1px solid var(--outline-color);
+            margin-top: 16px;
+            padding-top: 16px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .order-card.expanded .order-details {
+            display: flex;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .order-item-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .order-item-info {
+            flex-grow: 1;
+        }
+
+        .order-item-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--on-surface-color);
+        }
+
+        .order-item-qty-price {
+            font-size: 12px;
+            color: var(--on-background-color);
+        }
+
+        .empty-orders {
+            text-align: center;
+            padding: 40px 16px;
+            color: var(--on-background-color);
+        }
+
+        .empty-orders-icon {
+            font-size: 80px;
+            color: var(--outline-color);
+        }
+
+        .empty-orders h3 {
+            margin: 16px 0 8px;
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .empty-orders p {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .continue-shopping-btn {
+            display: inline-block;
+            margin-top: 24px;
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: var(--on-primary-color);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        .continue-shopping-btn:hover {
+            background-color: #1a5ac5;
+        }
+
+        .app-nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: var(--surface-color);
+            box-shadow: 0 -2px 10px var(--shadow-color-light);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--on-background-color);
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+
+        .nav-item:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-item-icon {
+            font-size: 24px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item-text {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .nav-item .badge {
+            position: absolute;
+            top: -2px;
+            right: -8px;
+            background-color: var(--danger-color);
+            color: var(--on-primary-color);
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 50%;
+            line-height: 1;
+            min-width: 18px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+        
+        .nav-item .badge.visible {
+            display: block;
+        }
+    </style>
 </head>
 <body>
 
-<header>
-  <h1>Banerjee Mart</h1>
-</header>
-<div id="search-row">
-  <input type="search" id="search-orders" placeholder="Search orders..." aria-label="Search orders" />
-</div>
+    <header class="header">
+        <div class="header-row1">Banerjee Mart</div>
+        <div class="search-bar">
+            <span class="material-symbols-outlined">search</span>
+            <input type="text" placeholder="Search orders..." disabled>
+        </div>
+    </header>
 
-<main>
-  <section id="current-order-section">
-    <h2 class="section-title">Current Order Status</h2>
-    <div id="current-order">
-      <!-- Filled by JS -->
-    </div>
-  </section>
+    <main class="main-content">
+        <h1 class="page-title">My Orders</h1>
 
-  <section id="past-orders-section">
-    <h2 class="section-title">Past Orders</h2>
-    <div id="past-orders">
-      <ul id="past-orders-list">
-        <!-- Filled by JS -->
-      </ul>
-    </div>
-  </section>
-</main>
+        <div id="orders-container" class="orders-container">
+            </div>
 
-<!-- Bottom Navigation -->
-<nav class="bottom-nav">
-  <a href="index.html" data-nav="home" title="Home">
-    <i class="fas fa-home"></i>
-    <span>Home</span>
-  </a>
-  <a href="orders.html" data-nav="orders" title="Orders" class="active">
-    <i class="fas fa-box"></i>
-    <span>Orders</span>
-  </a>
-  <a href="profile.html" data-nav="profile" title="Profile">
-    <i class="fas fa-user"></i>
-    <span>Profile</span>
-  </a>
-</nav>
+        <div id="empty-orders-message" class="empty-orders" style="display: none;">
+            <span class="material-symbols-outlined empty-orders-icon">shopping_bag</span>
+            <h3>No orders found!</h3>
+            <p>You haven't placed any orders yet.</p>
+            <a href="index.html" class="continue-shopping-btn">Continue Shopping</a>
+        </div>
+    </main>
 
-<script>
-  // Simulated data for demo:
-  let currentOrder = {
-    id: "ORD123456",
-    items: [
-      { name: "Organic Rice", qty: 2, price: 450 },
-      { name: "Shampoo", qty: 1, price: 200 },
-    ],
-    status: "Processing", // other statuses: "Shipped", "Delivered", "Cancelled"
-    orderDate: "2025-08-10",
-  };
+    <nav class="app-nav-bar">
+        <a href="index.html" class="nav-item">
+            <span class="material-symbols-outlined nav-item-icon">home</span>
+            <span class="nav-item-text">Home</span>
+        </a>
+        <a href="cart.html" class="nav-item">
+            <span class="material-symbols-outlined nav-item-icon">shopping_cart</span>
+            <span class="nav-item-text">Cart</span>
+            <span id="cart-badge" class="badge">0</span>
+        </a>
+        <a href="orders.html" class="nav-item active">
+            <span class="material-symbols-outlined nav-item-icon">receipt_long</span>
+            <span class="nav-item-text">Orders</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <span class="material-symbols-outlined nav-item-icon">person</span>
+            <span class="nav-item-text">Profile</span>
+        </a>
+    </nav>
 
-  let pastOrders = [
-    {
-      id: "ORD123455",
-      items: [
-        { name: "Notebook", qty: 3, price: 40 },
-        { name: "Apple Juice", qty: 1, price: 120 },
-      ],
-      status: "Delivered",
-      orderDate: "2025-07-30",
-    },
-    {
-      id: "ORD123454",
-      items: [
-        { name: "Soap Bar", qty: 2, price: 35 },
-      ],
-      status: "Cancelled",
-      orderDate: "2025-07-20",
-    },
-  ];
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        // You would typically import Firestore here:
+        // import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-  const currentOrderDiv = document.getElementById("current-order");
-  const pastOrdersList = document.getElementById("past-orders-list");
-  const searchInput = document.getElementById("search-orders");
+        // Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
+          authDomain: "banerjee-mart.firebaseapp.com",
+          projectId: "banerjee-mart",
+          storageBucket: "banerjee-mart.firebasestorage.app",
+          messagingSenderId: "183628570952",
+          appId: "1:183628570952:web:3028bb258001d004d9537d"
+        };
 
-  function renderCurrentOrder() {
-    if (!currentOrder || currentOrder.status === "Delivered" || currentOrder.status === "Cancelled") {
-      currentOrderDiv.innerHTML = "<em>No current active orders.</em>";
-      return;
-    }
-    const totalPrice = currentOrder.items.reduce((acc, item) => acc + item.price * item.qty, 0);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        
+        // Check if user is logged in
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'auth.html';
+            }
+        });
 
-    const itemsHtml = currentOrder.items.map(i =>
-      `<div>${i.name} × ${i.qty} = ₹${(i.price * i.qty).toFixed(2)}</div>`
-    ).join("");
+        // =========================================================
+        // ORDER PAGE LOGIC
+        // =========================================================
+        const ordersContainer = document.getElementById('orders-container');
+        const emptyOrdersMessage = document.getElementById('empty-orders-message');
+        const cartBadge = document.getElementById('cart-badge');
 
-    currentOrderDiv.innerHTML = `
-      <div class="order-status">Order #${currentOrder.id} - <span style="color: #2874f0;">${currentOrder.status}</span></div>
-      <div class="order-details">${itemsHtml}</div>
-      <div class="order-details"><strong>Total: ₹${totalPrice.toFixed(2)}</strong></div>
-      <button class="cancel-btn" id="cancel-order-btn" ${currentOrder.status !== "Processing" ? "disabled" : ""}>Cancel Order</button>
-    `;
+        // Mock data to simulate fetching from a 'orders' Firestore collection
+        const mockOrders = [
+            {
+                id: 'ORD-12345',
+                date: '2025-08-10',
+                status: 'Delivered',
+                total: 650.00,
+                items: [
+                    { name: 'Organic Bananas', price: 50, quantity: 2, imageUrl: 'https://cdn.pixabay.com/photo/2018/09/25/11/49/bananas-3702131_960_720.jpg' },
+                    { name: 'Chocolate Chip Cookies', price: 120, quantity: 4, imageUrl: 'https://cdn.pixabay.com/photo/2016/09/01/14/00/cookies-1636254_960_720.jpg' }
+                ]
+            },
+            {
+                id: 'ORD-12346',
+                date: '2025-08-11',
+                status: 'Shipped',
+                total: 340.00,
+                items: [
+                    { name: 'Vitamin C Serum', price: 300, quantity: 1, imageUrl: 'https://cdn.pixabay.com/photo/2018/12/15/15/45/skincare-3877334_960_720.jpg' },
+                    { name: 'Pencil Box', price: 40, quantity: 1, imageUrl: 'https://cdn.pixabay.com/photo/2015/07/20/12/11/pencil-902787_960_720.jpg' }
+                ]
+            },
+            {
+                id: 'ORD-12347',
+                date: '2025-08-12',
+                status: 'Processing',
+                total: 100.00,
+                items: [
+                    { name: 'Apples', price: 50, quantity: 2, imageUrl: 'https://cdn.pixabay.com/photo/2018/07/21/14/56/apple-3552932_960_720.jpg' }
+                ]
+            }
+        ];
 
-    const cancelBtn = document.getElementById("cancel-order-btn");
-    if (cancelBtn) {
-      cancelBtn.addEventListener("click", () => {
-        if (confirm("Are you sure you want to cancel this order?")) {
-          currentOrder.status = "Cancelled";
-          renderCurrentOrder();
-          alert("Order cancelled.");
+        // This function would fetch your orders from Firestore
+        async function fetchOrders() {
+            // This is where you would normally get orders from Firestore, like this:
+            // const q = query(collection(db, 'orders'), orderBy('date', 'desc'));
+            // const querySnapshot = await getDocs(q);
+            // const orders = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+            // For now, we use the mock data
+            const orders = mockOrders; 
+            
+            renderOrders(orders);
         }
-      });
-    }
-  }
 
-  function renderPastOrders(filterText = "") {
-    pastOrdersList.innerHTML = "";
-    let filteredOrders = pastOrders;
+        // Render orders from data
+        function renderOrders(orders) {
+            if (orders.length === 0) {
+                ordersContainer.style.display = 'none';
+                emptyOrdersMessage.style.display = 'block';
+                return;
+            }
 
-    if (filterText.trim()) {
-      filteredOrders = pastOrders.filter(order => {
-        return order.items.some(item => item.name.toLowerCase().includes(filterText.toLowerCase()))
-          || order.id.toLowerCase().includes(filterText.toLowerCase())
-          || order.status.toLowerCase().includes(filterText.toLowerCase());
-      });
-    }
+            ordersContainer.style.display = 'flex';
+            emptyOrdersMessage.style.display = 'none';
 
-    if (filteredOrders.length === 0) {
-      pastOrdersList.innerHTML = "<li><em>No past orders found.</em></li>";
-      return;
-    }
+            ordersContainer.innerHTML = '';
+            orders.forEach(order => {
+                const orderCard = document.createElement('div');
+                orderCard.className = 'order-card';
+                
+                let statusIcon;
+                switch (order.status) {
+                    case 'Shipped':
+                        statusIcon = 'local_shipping';
+                        break;
+                    case 'Delivered':
+                        statusIcon = 'check_circle';
+                        break;
+                    case 'Processing':
+                        statusIcon = 'hourglass_top';
+                        break;
+                    default:
+                        statusIcon = 'info';
+                }
 
-    filteredOrders.forEach(order => {
-      const itemsSummary = order.items.map(i => `${i.name} ×${i.qty}`).join(", ");
-      const date = new Date(order.orderDate).toLocaleDateString();
-      const statusColor = order.status === "Delivered" ? "#2e7d32" : (order.status === "Cancelled" ? "#c62828" : "#2874f0");
+                const orderItemsHtml = order.items.map(item => `
+                    <div class="order-item">
+                        <img src="${item.imageUrl}" alt="${item.name}" class="order-item-image">
+                        <div class="order-item-info">
+                            <div class="order-item-name">${item.name}</div>
+                            <div class="order-item-qty-price">${item.quantity} x ₹${item.price.toFixed(2)}</div>
+                        </div>
+                    </div>
+                `).join('');
 
-      const li = document.createElement("li");
-      li.innerHTML = `
-        <div class="order-item-name">Order #${order.id}</div>
-        <div>${itemsSummary}</div>
-        <div class="order-item-date">${date}</div>
-        <div class="order-item-status" style="color:${statusColor};">${order.status}</div>
-      `;
-      pastOrdersList.appendChild(li);
-    });
-  }
+                orderCard.innerHTML = `
+                    <div class="order-summary">
+                        <div class="order-info">
+                            <div class="order-id">Order ID: #${order.id}</div>
+                            <div class="order-date">Date: ${order.date}</div>
+                            <div class="order-status status-${order.status}">
+                                <span class="material-symbols-outlined status-icon">${statusIcon}</span>
+                                <span>${order.status}</span>
+                            </div>
+                        </div>
+                        <div class="order-actions">
+                            <div class="order-total">₹${order.total.toFixed(2)}</div>
+                            <span class="material-symbols-outlined toggle-icon">expand_more</span>
+                        </div>
+                    </div>
+                    <div class="order-details">
+                        ${orderItemsHtml}
+                    </div>
+                `;
+                
+                ordersContainer.appendChild(orderCard);
+            });
+        }
+        
+        function updateCartBadge() {
+            try {
+                const cart = JSON.parse(localStorage.getItem('cart')) || {};
+                const totalItems = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+                cartBadge.textContent = totalItems;
+                if (totalItems > 0) {
+                    cartBadge.classList.add('visible');
+                } else {
+                    cartBadge.classList.remove('visible');
+                }
+            } catch (e) {
+                console.error("Failed to update cart badge:", e);
+            }
+        }
+        
+        // Add event listener to toggle order details
+        ordersContainer.addEventListener('click', (e) => {
+            const orderCard = e.target.closest('.order-card');
+            if (orderCard) {
+                orderCard.classList.toggle('expanded');
+            }
+        });
 
-  // Search filter on past orders
-  searchInput.addEventListener("input", (e) => {
-    renderPastOrders(e.target.value);
-  });
-
-  // Bottom nav active highlight
-  function setActiveNav() {
-    const navLinks = document.querySelectorAll("nav.bottom-nav a");
-    const path = window.location.pathname.split("/").pop().toLowerCase();
-    navLinks.forEach((link) => {
-      const href = link.getAttribute("href").toLowerCase();
-      if (href === path || (href === "index.html" && (path === "" || path === "index.html"))) {
-        link.classList.add("active");
-      } else {
-        link.classList.remove("active");
-      }
-    });
-  }
-
-  window.onload = () => {
-    renderCurrentOrder();
-    renderPastOrders();
-    setActiveNav();
-  };
-</script>
-
+        // Initial render on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchOrders();
+            updateCartBadge();
+        });
+    </script>
 </body>
 </html>
