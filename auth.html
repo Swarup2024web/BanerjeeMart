@@ -11,21 +11,26 @@
             --primary-color: #2874f0;
             --on-primary-color: #ffffff;
             --surface-color: #ffffff;
-            --background-color: #f1f2f4;
+            --background-color: #f0f2f5;
             --on-surface-color: #1f1f1f;
-            --on-background-color: #4a4a4a;
-            --outline-color: #c7c7c7;
-            --outline-hover-color: #a0a0a0;
-            --shadow-color-light: rgba(0, 0, 0, 0.1);
+            --on-background-color: #585858;
+            --outline-color: #d1d1d1;
+            --outline-focus-color: #8c8c8c;
+            --shadow-color-light: rgba(0, 0, 0, 0.08);
             --shadow-color-dark: rgba(0, 0, 0, 0.15);
-            --button-bg-color: #fb641b;
+            --button-bg-color: #2874f0;
             --button-on-color: #ffffff;
-            --button-hover-bg-color: #e55a16;
+            --button-hover-bg-color: #1a64d0;
             --link-color: #2874f0;
             --toggle-active-bg: var(--primary-color);
             --toggle-active-color: var(--on-primary-color);
             --toggle-inactive-bg: #e0e0e0;
             --toggle-inactive-color: var(--on-background-color);
+            --danger-color: #d32f2f;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
@@ -38,50 +43,58 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
+            color: var(--on-background-color);
         }
 
         .auth-container {
             background-color: var(--surface-color);
             width: 90%;
-            max-width: 400px;
-            padding: 32px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px var(--shadow-color-light);
-            transition: transform 0.3s ease-in-out;
+            max-width: 450px;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px var(--shadow-color-light);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .auth-toggle-buttons {
-            display: flex;
-            border-radius: 8px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-radius: 12px;
             overflow: hidden;
-            margin-bottom: 24px;
+            margin-bottom: 32px;
             background-color: var(--toggle-inactive-bg);
             padding: 4px;
         }
 
         .auth-toggle-button {
-            flex-grow: 1;
-            padding: 12px 20px;
+            padding: 14px 20px;
             text-align: center;
             cursor: pointer;
             font-weight: 500;
             font-size: 16px;
-            color: var(--toggle-inactive-color);
+            color: var(--on-background-color);
             background-color: transparent;
             border: none;
-            border-radius: 6px;
+            border-radius: 10px;
             transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
         }
 
         .auth-toggle-button.active {
             background-color: var(--toggle-active-bg);
             color: var(--toggle-active-color);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            font-weight: 700;
         }
 
         h1 {
-            font-size: 24px;
-            font-weight: 600;
+            font-size: 28px;
+            font-weight: 700;
             margin-top: 0;
             margin-bottom: 24px;
             text-align: center;
@@ -89,7 +102,7 @@
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .form-group label {
@@ -104,51 +117,51 @@
             position: relative;
             display: flex;
             align-items: center;
+            width: 100%;
         }
 
-        .input-container input, .input-container select {
+        .input-container input {
             width: 100%;
-            padding: 12px;
+            padding: 14px 16px;
             border: 1px solid var(--outline-color);
-            border-radius: 8px;
-            box-sizing: border-box;
+            border-radius: 10px;
             font-size: 16px;
+            color: var(--on-surface-color);
+            background-color: var(--surface-color);
             transition: border-color 0.3s, box-shadow 0.3s;
         }
 
-        .input-container input:focus, .input-container select:focus {
+        .input-container input:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(40, 116, 240, 0.2);
+            box-shadow: 0 0 0 3px rgba(40, 116, 240, 0.1);
         }
 
         .phone-input-group {
             display: flex;
-            gap: 8px;
+            gap: 12px;
         }
 
         .phone-input-group .country-code-display {
             display: flex;
             align-items: center;
-            padding: 12px;
+            padding: 14px;
             background-color: var(--background-color);
             border: 1px solid var(--outline-color);
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 16px;
             color: var(--on-background-color);
-        }
-
-        .phone-input-group input {
-            flex-grow: 1;
+            white-space: nowrap;
         }
 
         .input-icon {
             position: absolute;
-            right: 12px;
+            right: 16px;
             color: var(--on-background-color);
             cursor: pointer;
             user-select: none;
             font-size: 20px;
+            transition: color 0.3s;
         }
 
         .btn {
@@ -156,53 +169,117 @@
             color: var(--button-on-color);
             border: none;
             width: 100%;
-            padding: 14px;
-            border-radius: 8px;
+            padding: 16px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 600;
+            letter-spacing: 0.5px;
             transition: background-color 0.3s, box-shadow 0.3s;
-            box-shadow: 0 2px 4px var(--shadow-color-light);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         .btn:hover {
             background-color: var(--button-hover-bg-color);
-            box-shadow: 0 4px 8px var(--shadow-color-dark);
+            box-shadow: 0 6px 20px var(--shadow-color-dark);
         }
 
-        .auth-toggle {
-            margin-top: 24px;
+        .auth-link {
             text-align: center;
-            color: var(--on-background-color);
+            margin-top: 24px;
             font-size: 14px;
+            color: var(--on-background-color);
         }
 
-        .auth-toggle a {
+        .auth-link a {
             color: var(--link-color);
             text-decoration: none;
             font-weight: 600;
+            transition: color 0.3s;
         }
 
-        .auth-toggle a:hover {
+        .auth-link a:hover {
             text-decoration: underline;
+            color: var(--primary-color);
         }
 
         .hidden {
-            display: none;
+            display: none !important;
         }
 
         .forgot-password-link {
             text-align: right;
-            margin-top: 10px;
+            margin-top: 12px;
             font-size: 14px;
         }
 
         .forgot-password-link a {
             color: var(--link-color);
             text-decoration: none;
+            transition: color 0.3s;
         }
         .forgot-password-link a:hover {
             text-decoration: underline;
+            color: var(--primary-color);
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        .modal.is-visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--surface-color);
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px var(--shadow-color-dark);
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.3s ease-in-out;
+        }
+        .modal.is-visible .modal-content {
+            transform: scale(1);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .modal-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--on-surface-color);
+        }
+        .modal-close-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--on-background-color);
+            font-size: 24px;
+            line-height: 1;
+            transition: color 0.3s;
+        }
+        .modal-close-btn:hover {
+            color: var(--danger-color);
         }
     </style>
 </head>
@@ -221,7 +298,7 @@
                 <div class="form-group">
                     <label for="login-email-phone">Email or Phone Number</label>
                     <div class="input-container">
-                        <input type="text" id="login-email-phone" placeholder="Email or 10-digit number" required>
+                        <input type="text" id="login-email-phone" placeholder="Enter email or 10-digit number" required>
                     </div>
                 </div>
                 <div class="form-group">
@@ -231,7 +308,7 @@
                         <span class="material-symbols-outlined input-icon" onclick="togglePasswordVisibility('login-password')">visibility_off</span>
                     </div>
                     <div class="forgot-password-link">
-                        <a href="#" onclick="showForm('forgot-password-form-container')">Forgot Password?</a>
+                        <a href="#" onclick="openForgotPasswordModal()">Forgot Password?</a>
                     </div>
                 </div>
                 <button type="submit" class="btn">Login</button>
@@ -267,7 +344,7 @@
                         <span class="material-symbols-outlined input-icon" onclick="togglePasswordVisibility('signup-password')">visibility_off</span>
                     </div>
                     <div class="forgot-password-link">
-                        <a href="#" onclick="showForm('forgot-password-form-container')">Forgot Password?</a>
+                        <a href="#" onclick="openForgotPasswordModal()">Forgot Password?</a>
                     </div>
                 </div>
                 <div class="form-group">
@@ -279,30 +356,32 @@
                 <button type="submit" class="btn">Sign Up</button>
             </form>
         </div>
+    </div>
 
-        <div id="forgot-password-form-container" class="hidden">
-            <h1>Reset Password</h1>
+    <div id="forgot-password-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Reset Password</h2>
+                <button class="modal-close-btn" onclick="closeForgotPasswordModal()">&times;</button>
+            </div>
             <form id="forgot-password-form">
                 <div class="form-group">
-                    <label for="reset-email">Email</label>
+                    <label for="reset-email-phone">Email or Phone Number</label>
                     <div class="input-container">
-                        <input type="email" id="reset-email" placeholder="Enter your email" required>
+                        <input type="text" id="reset-email-phone" placeholder="Enter your email or 10-digit number" required>
                     </div>
                 </div>
                 <button type="submit" class="btn">Send Reset Link</button>
             </form>
-            <div class="auth-toggle">
-                Remember your password? <a href="#" onclick="showForm('login-form-container')">Login</a>
-            </div>
         </div>
-
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
+        // Firebase configuration
         const firebaseConfig = {
           apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
           authDomain: "banerjee-mart.firebaseapp.com",
@@ -315,14 +394,27 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        
+        // =========================================================
+        // REDIRECT LOGIC FOR LOGGED-IN USERS
+        // =========================================================
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in, redirect to index.html
+                window.location.href = 'index.html';
+            }
+        });
 
+        // =========================================================
+        // UI LOGIC
+        // =========================================================
         const loginToggleButton = document.getElementById('login-toggle-button');
         const signupToggleButton = document.getElementById('signup-toggle-button');
+        const forgotPasswordModal = document.getElementById('forgot-password-modal');
 
         window.showForm = function(formId) {
             document.getElementById('login-form-container').classList.add('hidden');
             document.getElementById('signup-form-container').classList.add('hidden');
-            document.getElementById('forgot-password-form-container').classList.add('hidden');
             document.getElementById(formId).classList.remove('hidden');
 
             loginToggleButton.classList.remove('active');
@@ -347,6 +439,24 @@
             }
         };
 
+        window.openForgotPasswordModal = function() {
+            forgotPasswordModal.classList.add('is-visible');
+        };
+
+        window.closeForgotPasswordModal = function() {
+            forgotPasswordModal.classList.remove('is-visible');
+        };
+
+        // Close modal when clicking outside of it
+        forgotPasswordModal.addEventListener('click', (e) => {
+            if (e.target === forgotPasswordModal) {
+                closeForgotPasswordModal();
+            }
+        });
+
+        // =========================================================
+        // FIREBASE AUTHENTICATION LOGIC
+        // =========================================================
         const signupForm = document.getElementById('signup-form');
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -368,7 +478,7 @@
                     address: address
                 });
 
-                alert('Account created successfully!');
+                alert('Account created successfully! Redirecting to home page.');
                 window.location.href = 'index.html';
 
             } catch (error) {
@@ -403,7 +513,7 @@
                     await signInWithEmailAndPassword(auth, userEmail, password);
                 }
 
-                alert('Login successful!');
+                alert('Login successful! Redirecting to home page.');
                 window.location.href = 'index.html';
             } catch (error) {
                 console.error("Error during login:", error);
@@ -414,19 +524,39 @@
         const forgotPasswordForm = document.getElementById('forgot-password-form');
         forgotPasswordForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('reset-email').value;
+            const emailOrPhone = document.getElementById('reset-email-phone').value;
+            let emailToSend = emailOrPhone;
 
             try {
-                await sendPasswordResetEmail(auth, email);
+                if (!emailOrPhone.includes('@')) {
+                    // It's a phone number, find the associated email
+                    const q = query(collection(db, 'users'), where('phoneNumber', '==', '+91' + emailOrPhone));
+                    const querySnapshot = await getDocs(q);
+                    
+                    if (querySnapshot.empty) {
+                        alert('No user found with this phone number.');
+                        return;
+                    }
+
+                    const userDoc = querySnapshot.docs[0];
+                    emailToSend = userDoc.data().email;
+                }
+
+                await sendPasswordResetEmail(auth, emailToSend);
                 alert('Password reset email sent! Please check your inbox.');
-                showForm('login-form-container');
+                closeForgotPasswordModal();
             } catch (error) {
                 console.error("Error sending reset email:", error);
                 alert("Error sending reset email: " + error.message);
             }
         });
 
-        showForm('login-form-container');
+        // Initialize form view
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!auth.currentUser) {
+                showForm('login-form-container');
+            }
+        });
     </script>
 </body>
 </html>
