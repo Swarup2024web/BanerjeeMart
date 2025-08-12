@@ -577,7 +577,7 @@
             
             if (categoryName) {
                 productsSectionTitle.textContent = categoryName;
-                filteredProducts = filteredProducts.filter(p => p.category.name === categoryName);
+                filteredProducts = filteredProducts.filter(p => p.category && p.category.name === categoryName);
             } else {
                 productsSectionTitle.textContent = 'All Products';
             }
