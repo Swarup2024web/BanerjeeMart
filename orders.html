@@ -360,8 +360,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-        // You would typically import Firestore here:
-        // import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         // Firebase configuration
         const firebaseConfig = {
@@ -375,13 +374,7 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        
-        // Check if user is logged in
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                window.location.href = 'auth.html';
-            }
-        });
+        const db = getFirestore(app);
 
         // =========================================================
         // ORDER PAGE LOGIC
@@ -389,51 +382,38 @@
         const ordersContainer = document.getElementById('orders-container');
         const emptyOrdersMessage = document.getElementById('empty-orders-message');
         const cartBadge = document.getElementById('cart-badge');
+        let currentUser = null;
 
-        // Mock data to simulate fetching from a 'orders' Firestore collection
-        const mockOrders = [
-            {
-                id: 'ORD-12345',
-                date: '2025-08-10',
-                status: 'Delivered',
-                total: 650.00,
-                items: [
-                    { name: 'Organic Bananas', price: 50, quantity: 2, imageUrl: 'https://cdn.pixabay.com/photo/2018/09/25/11/49/bananas-3702131_960_720.jpg' },
-                    { name: 'Chocolate Chip Cookies', price: 120, quantity: 4, imageUrl: 'https://cdn.pixabay.com/photo/2016/09/01/14/00/cookies-1636254_960_720.jpg' }
-                ]
-            },
-            {
-                id: 'ORD-12346',
-                date: '2025-08-11',
-                status: 'Shipped',
-                total: 340.00,
-                items: [
-                    { name: 'Vitamin C Serum', price: 300, quantity: 1, imageUrl: 'https://cdn.pixabay.com/photo/2018/12/15/15/45/skincare-3877334_960_720.jpg' },
-                    { name: 'Pencil Box', price: 40, quantity: 1, imageUrl: 'https://cdn.pixabay.com/photo/2015/07/20/12/11/pencil-902787_960_720.jpg' }
-                ]
-            },
-            {
-                id: 'ORD-12347',
-                date: '2025-08-12',
-                status: 'Processing',
-                total: 100.00,
-                items: [
-                    { name: 'Apples', price: 50, quantity: 2, imageUrl: 'https://cdn.pixabay.com/photo/2018/07/21/14/56/apple-3552932_960_720.jpg' }
-                ]
+        // Authentication check
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                fetchOrders();
+            } else {
+                window.location.href = 'auth.html';
             }
-        ];
+        });
 
-        // This function would fetch your orders from Firestore
+        // This function fetches your orders from Firestore
         async function fetchOrders() {
-            // This is where you would normally get orders from Firestore, like this:
-            // const q = query(collection(db, 'orders'), orderBy('date', 'desc'));
-            // const querySnapshot = await getDocs(q);
-            // const orders = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            if (!currentUser) return;
 
-            // For now, we use the mock data
-            const orders = mockOrders; 
-            
-            renderOrders(orders);
+            try {
+                // Query the 'orders' collection for the current user's orders, sorted by date
+                const q = query(
+                    collection(db, 'orders'),
+                    where('userId', '==', currentUser.uid),
+                    orderBy('orderDate', 'desc')
+                );
+                
+                const querySnapshot = await getDocs(q);
+                const orders = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                renderOrders(orders);
+            } catch (error) {
+                console.error("Error fetching orders:", error);
+                ordersContainer.innerHTML = '<h3 style="text-align: center;">Failed to load orders.</h3>';
+            }
         }
 
         // Render orders from data
@@ -467,6 +447,10 @@
                         statusIcon = 'info';
                 }
 
+                // Format the Firestore timestamp
+                const orderDate = order.orderDate ? order.orderDate.toDate().toLocaleDateString('en-IN') : 'N/A';
+                const orderTotal = order.total ? order.total.toFixed(2) : '0.00';
+
                 const orderItemsHtml = order.items.map(item => `
                     <div class="order-item">
                         <img src="${item.imageUrl}" alt="${item.name}" class="order-item-image">
@@ -481,14 +465,14 @@
                     <div class="order-summary">
                         <div class="order-info">
                             <div class="order-id">Order ID: #${order.id}</div>
-                            <div class="order-date">Date: ${order.date}</div>
+                            <div class="order-date">Date: ${orderDate}</div>
                             <div class="order-status status-${order.status}">
                                 <span class="material-symbols-outlined status-icon">${statusIcon}</span>
                                 <span>${order.status}</span>
                             </div>
                         </div>
                         <div class="order-actions">
-                            <div class="order-total">₹${order.total.toFixed(2)}</div>
+                            <div class="order-total">₹${orderTotal}</div>
                             <span class="material-symbols-outlined toggle-icon">expand_more</span>
                         </div>
                     </div>
@@ -524,9 +508,8 @@
             }
         });
 
-        // Initial render on page load
+        // Initial actions on page load
         document.addEventListener('DOMContentLoaded', () => {
-            fetchOrders();
             updateCartBadge();
         });
     </script>
