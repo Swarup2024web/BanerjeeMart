@@ -3,337 +3,255 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B Mart - Admin Dashboard</title>
+    <title>B Mart Admin</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
         :root {
-            --primary-color: #007bff;
-            --primary-hover-color: #0056b3;
-            --secondary-color: #6c757d;
+            --primary-color: #2a55e5;
+            --primary-light-color: #eaf1ff;
+            --secondary-color: #f1f2f4;
             --surface-color: #ffffff;
-            --background-color: #f8f9fa;
-            --on-surface-color: #343a40;
-            --on-background-color: #495057;
-            --border-color: #e9ecef;
-            --sidebar-color: #343a40;
-            --sidebar-text-color: #adb5bd;
-            --sidebar-active-color: #ffffff;
-            --sidebar-active-bg: #007bff;
-            --shadow-light: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-            --success-color: #28a745;
-            --warning-color: #ffc107;
-            --danger-color: #dc3545;
-        }
-        
-        body {
-            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: var(--on-surface-color);
-            line-height: 1.6;
+            --text-color: #212121;
+            --subtle-text-color: #616161;
+            --border-color: #e0e0e0;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-hover: 0 4px 6px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
+            --success-color: #388e3c;
+            --warning-color: #fbc02d;
+            --danger-color: #d32f2f;
         }
 
-        /* Admin Login Page */
-        .login-page {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: var(--primary-color);
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
         }
-        .login-box {
-            background-color: var(--surface-color);
-            padding: 2.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 90%;
-            max-width: 400px;
-        }
-        .login-box h2 {
-            margin-bottom: 2rem;
-            font-size: 1.75rem;
-            color: var(--primary-color);
-        }
-        .login-box input {
-            width: 100%;
-            padding: 0.75rem;
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 1rem;
-        }
-        .login-box input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }
-        .login-box .btn {
-            width: 100%;
-        }
-        .login-error {
-            color: var(--danger-color);
-            margin-top: 1rem;
-            display: none;
-        }
-        
-        /* Dashboard Layout */
+
         .dashboard-container {
             display: flex;
             min-height: 100vh;
         }
+
         .sidebar {
             width: 250px;
-            background-color: var(--sidebar-color);
-            color: var(--sidebar-text-color);
-            padding: 1.5rem 1rem;
-            box-shadow: var(--shadow-light);
+            background-color: var(--surface-color);
+            box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
             transition: transform 0.3s ease-in-out;
+            z-index: 1000;
         }
-        .sidebar.collapsed {
-            transform: translateX(-250px);
-        }
+
         .sidebar-header {
-            text-align: center;
-            margin-bottom: 2.5rem;
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
         }
+
         .sidebar-header .logo {
-            color: var(--surface-color);
-            font-size: 1.5rem;
-            font-weight: bold;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
             text-decoration: none;
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 10px;
         }
+
         .sidebar-nav {
             flex-grow: 1;
+            padding: 20px 0;
         }
-        .sidebar-nav-item {
+
+        .sidebar-nav ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
-        .sidebar-nav-item li a {
+
+        .sidebar-nav li a {
             display: flex;
             align-items: center;
-            color: var(--sidebar-text-color);
+            padding: 12px 20px;
             text-decoration: none;
-            padding: 0.75rem 1rem;
-            margin-bottom: 0.5rem;
-            border-radius: 4px;
-            transition: all 0.2s ease-in-out;
-        }
-        .sidebar-nav-item li a:hover {
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--surface-color);
-        }
-        .sidebar-nav-item li a.active {
-            background-color: var(--sidebar-active-bg);
-            color: var(--sidebar-active-color);
-        }
-        .sidebar-nav-item li a .material-symbols-outlined {
-            margin-right: 1rem;
-            font-size: 1.25rem;
-            width: 25px;
-            text-align: center;
-        }
-        .logout-link {
-            display: block;
-            text-align: center;
-            padding: 1rem;
-            margin-top: auto;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .logout-link a {
-            color: var(--danger-color);
+            color: var(--subtle-text-color);
             font-weight: 500;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            transition: background-color 0.2s, color 0.2s;
+            border-radius: 8px;
+            margin: 0 10px 5px;
+        }
+
+        .sidebar-nav li a:hover,
+        .sidebar-nav li a.active {
+            background-color: var(--primary-light-color);
+            color: var(--primary-color);
+        }
+
+        .sidebar-nav li a .material-symbols-outlined {
+            margin-right: 15px;
         }
 
         .main-content {
             flex-grow: 1;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
+            padding: 24px;
         }
-        .top-navbar {
+
+        .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
+            margin-bottom: 24px;
         }
-        .top-navbar h1 {
-            font-size: 1.75rem;
+
+        .page-title {
+            font-size: 28px;
             font-weight: 600;
+            color: var(--text-color);
             margin: 0;
         }
-        .page-title {
-            font-size: 2rem;
-            color: var(--primary-color);
-            margin-bottom: 2rem;
-        }
-        
+
         .section {
             background-color: var(--surface-color);
-            padding: 2rem;
+            padding: 24px;
             border-radius: 8px;
-            box-shadow: var(--shadow-light);
-            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
         }
+
         .section h2 {
-            font-size: 1.5rem;
-            font-weight: 500;
+            font-size: 20px;
+            font-weight: 600;
             margin-top: 0;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.75rem;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
             border-bottom: 1px solid var(--border-color);
         }
+
         .hidden {
             display: none;
         }
-        
-        /* Form & Buttons */
+
+        /* Forms */
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 16px;
         }
+
         .form-group label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 8px;
             font-weight: 500;
-            font-size: 0.9rem;
-            color: var(--on-background-color);
+            color: var(--subtle-text-color);
         }
-        .form-group input, .form-group select {
+
+        .form-group input,
+        .form-group select {
             width: 100%;
-            padding: 0.75rem;
+            padding: 12px;
             border: 1px solid var(--border-color);
             border-radius: 4px;
             box-sizing: border-box;
-            font-size: 1rem;
-            transition: border-color 0.3s;
+            font-size: 16px;
+            transition: border-color 0.2s;
         }
-        .form-group input:focus, .form-group select:focus {
+
+        .form-group input:focus,
+        .form-group select:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            box-shadow: 0 0 0 2px rgba(42, 85, 229, 0.2);
         }
+
         .btn {
             background-color: var(--primary-color);
             color: var(--surface-color);
             border: none;
-            padding: 0.75rem 1.5rem;
+            padding: 12px 24px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 16px;
             font-weight: 500;
-            transition: background-color 0.3s;
-        }
-        .btn:hover {
-            background-color: var(--primary-hover-color);
+            transition: background-color 0.2s;
         }
 
-        /* Dashboard Cards */
-        .dashboard-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+        .btn:hover {
+            background-color: #1a42b1;
         }
-        .card {
-            background-color: var(--surface-color);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: var(--shadow-light);
-            display: flex;
-            align-items: center;
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
         }
-        .card .material-symbols-outlined {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-right: 1.5rem;
+
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
         }
-        .card-content h3 {
-            margin: 0;
-            font-size: 1rem;
-            color: var(--on-background-color);
-        }
-        .card-content p {
-            margin: 0;
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--on-surface-color);
-        }
-        
+
         /* Tables */
         .data-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 1.5rem;
+            margin-top: 16px;
         }
-        .data-table th, .data-table td {
-            padding: 1rem;
+
+        .data-table th,
+        .data-table td {
+            padding: 16px;
             text-align: left;
             border-bottom: 1px solid var(--border-color);
         }
+
         .data-table th {
-            background-color: var(--background-color);
-            font-size: 0.9rem;
+            background-color: var(--secondary-color);
             font-weight: 600;
-            color: var(--on-background-color);
+            color: var(--subtle-text-color);
         }
+
         .data-table td {
-            font-size: 0.9rem;
+            font-size: 14px;
         }
+
         .data-table tbody tr:hover {
-            background-color: rgba(0, 0, 0, 0.02);
+            background-color: #f5f5f5;
         }
+
         .product-image {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             object-fit: contain;
             border-radius: 4px;
             border: 1px solid var(--border-color);
         }
+
         .action-buttons button {
-            padding: 0.5rem 0.75rem;
+            padding: 8px 12px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 0.8rem;
-            margin-right: 0.5rem;
-            transition: all 0.2s ease-in-out;
+            font-size: 12px;
+            margin-right: 8px;
+            transition: all 0.2s;
         }
-        .btn-edit { background-color: var(--warning-color); color: var(--on-surface-color); }
-        .btn-edit:hover { background-color: #e0a800; }
+
+        .btn-edit { background-color: var(--warning-color); color: var(--text-color); }
+        .btn-edit:hover { background-color: #f9a825; }
         .btn-delete { background-color: var(--danger-color); color: var(--surface-color); }
-        .btn-delete:hover { background-color: #c82333; }
-        .btn-download-excel { background-color: #28a745; color: var(--surface-color); margin-top: 1rem; }
-        .btn-download-excel:hover { background-color: #218838; }
+        .btn-delete:hover { background-color: #c62828; }
 
         .order-status {
-            padding: 0.3rem 0.75rem;
+            padding: 4px 12px;
             border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.75rem;
+            font-weight: 500;
+            font-size: 12px;
             display: inline-block;
             color: var(--surface-color);
         }
-        .status-packed { background-color: #ff8c00; }
+        .status-packed { background-color: #ff9800; }
         .status-shipped { background-color: var(--primary-color); }
         .status-delivered { background-color: var(--success-color); }
         .status-cancelled { background-color: var(--danger-color); }
         
-        /* Modal for Editing */
         .modal {
             position: fixed;
             top: 0;
@@ -344,114 +262,98 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            z-index: 2000;
         }
         .modal-content {
             background-color: var(--surface-color);
-            padding: 2rem;
+            padding: 32px;
             border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: var(--shadow-hover);
             width: 90%;
             max-width: 500px;
             position: relative;
         }
         .modal-close-btn {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
-            font-size: 1.5rem;
+            top: 16px;
+            right: 16px;
+            font-size: 24px;
             cursor: pointer;
             background: none;
             border: none;
-            color: var(--on-background-color);
+            color: var(--subtle-text-color);
         }
 
+        /* Mobile Responsive adjustments */
         @media (max-width: 768px) {
             .sidebar {
-                width: 100%;
+                width: 0;
+                overflow: hidden;
                 position: fixed;
+                top: 0;
+                left: 0;
                 height: 100%;
-                z-index: 999;
+                box-shadow: none;
                 transform: translateX(-100%);
             }
             .sidebar.active {
+                width: 250px;
                 transform: translateX(0);
+                box-shadow: 2px 0 5px rgba(0,0,0,0.1);
             }
             .main-content {
-                padding: 1rem;
+                padding: 16px;
             }
-            .dashboard-cards {
-                grid-template-columns: 1fr;
+            .top-bar {
+                margin-bottom: 16px;
+            }
+            .page-title {
+                font-size: 24px;
             }
             .data-table {
                 display: block;
                 overflow-x: auto;
                 white-space: nowrap;
             }
+            .hamburger-menu {
+                display: block;
+            }
+        }
+        
+        .hamburger-menu {
+            display: none;
+            cursor: pointer;
+            font-size: 28px;
+            color: var(--text-color);
         }
     </style>
 </head>
 <body>
 
-    <div class="login-page" id="admin-login-page">
-        <div class="login-box">
-            <h2>B Mart Admin Login</h2>
-            <form id="admin-login-form">
-                <input type="password" id="admin-password" placeholder="Enter Admin Password" required>
-                <button type="submit" class="btn">Login</button>
-            </form>
-            <p id="login-error" class="login-error">Incorrect password. Please try again.</p>
-        </div>
-    </div>
-
-    <div class="dashboard-container hidden" id="admin-dashboard-content">
+    <div class="dashboard-container" id="admin-dashboard-content">
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <a href="#" class="logo"><span class="material-symbols-outlined">cube</span> B Mart</a>
+                <a href="#" class="logo"><span class="material-symbols-outlined">shopping_bag</span> B Mart</a>
             </div>
             <nav class="sidebar-nav">
-                <ul class="sidebar-nav-item">
-                    <li><a href="#" class="nav-link active" data-tab="dashboard-overview"><span class="material-symbols-outlined">home</span> Dashboard</a></li>
-                    <li><a href="#" class="nav-link" data-tab="addProductTab"><span class="material-symbols-outlined">add_circle</span> Add Product</a></li>
-                    <li><a href="#" class="nav-link" data-tab="manageProductTab"><span class="material-symbols-outlined">inventory_2</span> Manage Products</a></li>
+                <ul>
+                    <li><a href="#" class="nav-link active" data-tab="addProductTab"><span class="material-symbols-outlined">add_circle</span> Add Product</a></li>
+                    <li><a href="#" class="nav-link" data-tab="manageProductTab"><span class="material-symbols-outlined">inventory_2</span> Update Product</a></li>
                     <li><a href="#" class="nav-link" data-tab="manageOrdersTab"><span class="material-symbols-outlined">shopping_cart</span> Manage Orders</a></li>
                 </ul>
             </nav>
-            <div class="logout-link">
-                <a href="#" onclick="logout()"><span class="material-symbols-outlined">logout</span> Logout</a>
+            <div class="logout-link" style="padding: 20px;">
+                <a href="#" onclick="alert('Logged out successfully!');"><span class="material-symbols-outlined">logout</span> Logout</a>
             </div>
         </aside>
 
         <main class="main-content">
-            <h1 id="page-title">Dashboard</h1>
-            
-            <div id="dashboard-overview" class="tab-content">
-                <div class="dashboard-cards">
-                    <div class="card">
-                        <span class="material-symbols-outlined">inventory_2</span>
-                        <div class="card-content">
-                            <h3>Total Products</h3>
-                            <p id="total-products-count">...</p>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <span class="material-symbols-outlined">shopping_bag</span>
-                        <div class="card-content">
-                            <h3>Total Orders</h3>
-                            <p id="total-orders-count">...</p>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <span class="material-symbols-outlined">local_shipping</span>
-                        <div class="card-content">
-                            <h3>Orders in Transit</h3>
-                            <p id="shipped-orders-count">...</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="top-bar">
+                <span class="material-symbols-outlined hamburger-menu" id="hamburger-menu">menu</span>
+                <h1 id="page-title">Add Product</h1>
             </div>
-
-            <div id="addProductTab" class="tab-content hidden">
+            
+            <div id="addProductTab" class="tab-content">
                 <div class="section">
                     <h2>Add New Product</h2>
                     <form id="product-form">
@@ -483,7 +385,7 @@
 
             <div id="manageProductTab" class="tab-content hidden">
                 <div class="section">
-                    <h2>Manage Products</h2>
+                    <h2>Update Products</h2>
                     <table class="data-table">
                         <thead>
                             <tr>
@@ -504,7 +406,7 @@
             <div id="manageOrdersTab" class="tab-content hidden">
                 <div class="section">
                     <h2>Manage Orders</h2>
-                    <button class="btn btn-download-excel"><span class="material-symbols-outlined">download</span> Download as Excel</button>
+                    <button class="btn btn-secondary" onclick="alert('Downloading placeholder Excel...')"><span class="material-symbols-outlined">download</span> Download Excel</button>
                     <table class="data-table">
                         <thead>
                             <tr>
@@ -528,7 +430,7 @@
     <div id="edit-product-modal" class="modal hidden">
         <div class="modal-content">
             <button class="modal-close-btn">&times;</button>
-            <h2>Edit Product</h2>
+            <h2>Update Product</h2>
             <form id="edit-product-form">
                 <div class="form-group">
                     <label for="edit-product-name">Product Name</label>
@@ -573,55 +475,19 @@
         const db = getFirestore(app);
         const productsCollection = collection(db, 'products');
         const ordersCollection = collection(db, 'orders');
+        const IMAGE_BASE_URL = 'https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/';
 
         // =========================================================
-        // ADMIN LOGIN LOGIC
+        // MOBILE MENU TOGGLE LOGIC
         // =========================================================
-        const loginPage = document.getElementById('admin-login-page');
-        const loginForm = document.getElementById('admin-login-form');
-        const passwordInput = document.getElementById('admin-password');
-        const loginError = document.getElementById('login-error');
-        const dashboardContent = document.getElementById('admin-dashboard-content');
-        const ADMIN_PASSWORD = 'qwerty1234';
-
-        function checkLoginStatus() {
-            if (sessionStorage.getItem('adminLoggedIn') === 'true') {
-                showDashboard();
-            } else {
-                showLogin();
-            }
+        const sidebar = document.getElementById('sidebar');
+        const hamburgerMenu = document.getElementById('hamburger-menu');
+        if (hamburgerMenu) {
+            hamburgerMenu.addEventListener('click', () => {
+                sidebar.classList.toggle('active');
+            });
         }
-
-        function showLogin() {
-            loginPage.classList.remove('hidden');
-            dashboardContent.classList.add('hidden');
-        }
-
-        function showDashboard() {
-            loginPage.classList.add('hidden');
-            dashboardContent.classList.remove('hidden');
-            updateDashboardOverview();
-            // Default to showing the Dashboard tab
-            openTab('dashboard-overview', document.querySelector('[data-tab="dashboard-overview"]'));
-        }
-
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (passwordInput.value === ADMIN_PASSWORD) {
-                sessionStorage.setItem('adminLoggedIn', 'true');
-                showDashboard();
-            } else {
-                loginError.style.display = 'block';
-            }
-        });
-
-        window.logout = function() {
-            sessionStorage.removeItem('adminLoggedIn');
-            showLogin();
-        };
-
-        checkLoginStatus();
-
+        
         // =========================================================
         // NAVIGATION & TAB SWITCHING LOGIC
         // =========================================================
@@ -636,18 +502,17 @@
             document.getElementById(tabId).classList.remove('hidden');
             button.classList.add('active');
 
-            // Handle specific tab content loading
-            if (tabId === 'dashboard-overview') {
-                updateDashboardOverview();
-            } else if (tabId === 'manageProductTab') {
+            if (tabId === 'manageProductTab') {
                 fetchAndDisplayProducts();
             } else if (tabId === 'manageOrdersTab') {
                 fetchAndDisplayOrders();
-            } else if (tabId === 'addProductTab') {
-                resetProductForm();
             }
             
             pageTitle.textContent = button.textContent.trim();
+
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('active');
+            }
         }
 
         navLinks.forEach(link => {
@@ -656,40 +521,12 @@
                 openTab(e.currentTarget.dataset.tab, e.currentTarget);
             });
         });
+
+        // Initialize with the first tab
+        document.addEventListener('DOMContentLoaded', () => {
+            openTab('addProductTab', document.querySelector('[data-tab="addProductTab"]'));
+        });
         
-        // =========================================================
-        // DASHBOARD OVERVIEW LOGIC
-        // =========================================================
-        const totalProductsCount = document.getElementById('total-products-count');
-        const totalOrdersCount = document.getElementById('total-orders-count');
-        const shippedOrdersCount = document.getElementById('shipped-orders-count');
-
-        async function updateDashboardOverview() {
-            try {
-                // Fetch product count
-                const productsSnapshot = await getDocs(productsCollection);
-                totalProductsCount.textContent = productsSnapshot.size;
-
-                // Fetch orders from Firestore
-                const ordersSnapshot = await getDocs(ordersCollection);
-                totalOrdersCount.textContent = ordersSnapshot.size;
-
-                let shippedCount = 0;
-                ordersSnapshot.forEach(doc => {
-                    if (doc.data().status === 'shipped') {
-                        shippedCount++;
-                    }
-                });
-                shippedOrdersCount.textContent = shippedCount;
-
-            } catch (error) {
-                console.error("Error updating dashboard overview: ", error);
-                totalProductsCount.textContent = 'Error';
-                totalOrdersCount.textContent = 'Error';
-                shippedOrdersCount.textContent = 'Error';
-            }
-        }
-
         // =========================================================
         // PRODUCT MANAGEMENT LOGIC (Firestore Integration)
         // =========================================================
@@ -698,7 +535,6 @@
         const productPriceInput = document.getElementById('product-price');
         const productCategoryInput = document.getElementById('product-category');
         const productImageInput = document.getElementById('product-image');
-        const saveProductBtn = document.getElementById('save-product-btn');
         const productList = document.getElementById('product-list');
         const editModal = document.getElementById('edit-product-modal');
         const editForm = document.getElementById('edit-product-form');
@@ -710,26 +546,19 @@
 
         let currentEditingProductId = null;
         
-        function resetProductForm() {
-            productForm.reset();
-            saveProductBtn.textContent = 'Add Product';
-            currentEditingProductId = null;
-        }
-
         productForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const productData = {
                 name: productNameInput.value,
                 price: parseFloat(productPriceInput.value),
                 category: productCategoryInput.value,
-                image: `https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/${productImageInput.value}`
+                image: `${IMAGE_BASE_URL}${productImageInput.value}`
             };
 
             try {
                 await addDoc(productsCollection, productData);
                 alert('Product added successfully!');
                 productForm.reset();
-                updateDashboardOverview(); // Update counts
             } catch (error) {
                 console.error("Error saving product: ", error);
                 alert('Error adding product: ' + error.message);
@@ -758,8 +587,8 @@
                             <td>₹${product.price.toFixed(2)}</td>
                             <td>${product.category}</td>
                             <td class="action-buttons">
-                                <button class="btn-edit" data-id="${productId}">Edit</button>
-                                <button class="btn-delete" data-id="${productId}">Delete</button>
+                                <button class="btn-edit" data-id="${productId}"><span class="material-symbols-outlined" style="font-size: 16px;">edit</span></button>
+                                <button class="btn-delete" data-id="${productId}"><span class="material-symbols-outlined" style="font-size: 16px;">delete</span></button>
                             </td>
                         </tr>
                     `;
@@ -767,10 +596,10 @@
                 });
 
                 document.querySelectorAll('.btn-edit').forEach(button => {
-                    button.addEventListener('click', (e) => openEditModal(e.target.dataset.id));
+                    button.addEventListener('click', (e) => openEditModal(e.currentTarget.dataset.id));
                 });
                 document.querySelectorAll('.btn-delete').forEach(button => {
-                    button.addEventListener('click', (e) => deleteProduct(e.target.dataset.id));
+                    button.addEventListener('click', (e) => deleteProduct(e.currentTarget.dataset.id));
                 });
             } catch (error) {
                 console.error("Error fetching products: ", error);
@@ -802,7 +631,7 @@
                 name: editProductName.value,
                 price: parseFloat(editProductPrice.value),
                 category: editProductCategory.value,
-                image: `https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/${editProductImage.value}`
+                image: `${IMAGE_BASE_URL}${editProductImage.value}`
             };
 
             try {
@@ -835,7 +664,6 @@
                     await deleteDoc(doc(db, 'products', id));
                     alert('Product deleted successfully!');
                     fetchAndDisplayProducts();
-                    updateDashboardOverview();
                 } catch (error) {
                     console.error("Error deleting product: ", error);
                     alert('Error deleting product: ' + error.message);
@@ -847,7 +675,6 @@
         // ORDER MANAGEMENT LOGIC (Firestore Integration)
         // =========================================================
         const orderList = document.getElementById('order-list');
-        const downloadExcelBtn = document.querySelector('.btn-download-excel');
 
         async function fetchAndDisplayOrders() {
             orderList.innerHTML = '<tr><td colspan="6" style="text-align: center;">Loading orders...</td></tr>';
@@ -865,7 +692,6 @@
                     const orderId = orderDoc.id;
                     const statusClass = `status-${order.status.toLowerCase()}`;
                     
-                    // Display items as a list
                     const itemsList = order.items.map(item => `<li>${item.name} (${item.quantity})</li>`).join('');
                     
                     const orderItem = `
@@ -897,18 +723,13 @@
                     const orderDocRef = doc(db, 'orders', orderId);
                     await updateDoc(orderDocRef, { status: newStatus });
                     alert(`Order ${orderId} status updated to ${newStatus}!`);
-                    fetchAndDisplayOrders(); // Refresh the list
-                    updateDashboardOverview(); // Update dashboard counts
+                    fetchAndDisplayOrders();
                 } catch (error) {
                     console.error("Error updating order status: ", error);
                     alert('Error updating order status: ' + error.message);
                 }
             }
         };
-
-        downloadExcelBtn.addEventListener('click', () => {
-            alert('Downloading a placeholder Excel file...');
-        });
         
     </script>
 </body>
