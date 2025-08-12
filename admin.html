@@ -35,15 +35,15 @@
             margin: 0 auto;
             padding: 24px;
         }
-
-        /* Header */
+        
+        /* General layout */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 24px;
         }
-
+        
         .header h1 {
             font-size: 28px;
             font-weight: 700;
@@ -51,7 +51,7 @@
             margin: 0;
         }
 
-        /* Tabs */
+        /* Tab styles */
         .tabs-container {
             background-color: var(--surface-color);
             border-radius: 8px;
@@ -63,18 +63,15 @@
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
-
         .tabs-container::-webkit-scrollbar {
             display: none;
         }
-
         .tab-list {
             display: flex;
             list-style: none;
             padding: 0;
             margin: 0;
         }
-
         .tab-list li a {
             display: flex;
             align-items: center;
@@ -86,16 +83,13 @@
             white-space: nowrap;
             border-bottom: 3px solid transparent;
         }
-
         .tab-list li a:hover {
             color: var(--primary-color);
         }
-
         .tab-list li a.active {
             color: var(--primary-color);
             border-bottom-color: var(--primary-color);
         }
-
         .tab-list li a .material-symbols-outlined {
             margin-right: 8px;
         }
@@ -107,11 +101,9 @@
             border-radius: 8px;
             box-shadow: var(--shadow);
         }
-
         .hidden {
             display: none !important;
         }
-        
         .section-header {
             display: flex;
             justify-content: space-between;
@@ -120,7 +112,6 @@
             padding-bottom: 16px;
             margin-bottom: 16px;
         }
-
         .section-header h2 {
             font-size: 24px;
             font-weight: 600;
@@ -131,14 +122,12 @@
         .form-group {
             margin-bottom: 20px;
         }
-
         .form-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
             color: var(--subtle-text-color);
         }
-
         .form-group input,
         .form-group select {
             width: 100%;
@@ -149,14 +138,12 @@
             font-size: 16px;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
-
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 2px rgba(42, 85, 229, 0.2);
         }
-
         .btn {
             background-color: var(--primary-color);
             color: var(--surface-color);
@@ -168,12 +155,10 @@
             font-weight: 500;
             transition: background-color 0.2s, box-shadow 0.2s;
         }
-
         .btn:hover {
             background-color: #1a42b1;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-
         .btn-secondary {
             background-color: transparent;
             color: var(--primary-color);
@@ -184,12 +169,16 @@
         }
         
         /* Tables */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
         .data-table {
             width: 100%;
+            min-width: 600px; /* Ensures table is wide enough for horizontal scroll */
             border-collapse: collapse;
             margin-top: 16px;
         }
-
         .data-table th,
         .data-table td {
             padding: 16px;
@@ -197,21 +186,17 @@
             border-bottom: 1px solid var(--border-color);
             font-size: 14px;
         }
-
         .data-table th {
             background-color: var(--secondary-color);
             font-weight: 600;
             color: var(--subtle-text-color);
         }
-
         .data-table tbody tr:last-child td {
             border-bottom: none;
         }
-        
         .data-table tbody tr:hover {
             background-color: #f5f5f5;
         }
-
         .product-image {
             width: 60px;
             height: 60px;
@@ -219,7 +204,6 @@
             border-radius: 4px;
             border: 1px solid var(--border-color);
         }
-
         .action-buttons button {
             padding: 8px;
             border: none;
@@ -236,11 +220,9 @@
         .action-buttons button:hover {
             background-color: rgba(0,0,0,0.08);
         }
-
         .btn-edit { color: var(--warning-color); }
         .btn-delete { color: var(--danger-color); }
         .btn-status { color: var(--primary-color); }
-
         .order-status {
             padding: 4px 12px;
             border-radius: 20px;
@@ -286,6 +268,39 @@
             border: none;
             color: var(--subtle-text-color);
         }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+            .tabs-container {
+                padding: 0 8px;
+            }
+            .tab-list li a {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+            .tab-content-wrapper {
+                padding: 16px;
+            }
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .section-header h2 {
+                margin-bottom: 8px;
+            }
+            .btn-secondary {
+                width: 100%;
+            }
+            .data-table th, .data-table td {
+                padding: 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -297,7 +312,7 @@
 
         <div class="tabs-container">
             <ul class="tab-list">
-                <li><a href="#" class="tab-link" data-tab="allProductsTab"><span class="material-symbols-outlined">view_list</span>All Products</a></li>
+                <li><a href="#" class="tab-link active" data-tab="allProductsTab"><span class="material-symbols-outlined">view_list</span>All Products</a></li>
                 <li><a href="#" class="tab-link" data-tab="addProductTab"><span class="material-symbols-outlined">add_circle</span>Add Products</a></li>
                 <li><a href="#" class="tab-link" data-tab="updateProductTab"><span class="material-symbols-outlined">edit</span>Update Products</a></li>
                 <li><a href="#" class="tab-link" data-tab="manageOrdersTab"><span class="material-symbols-outlined">local_shipping</span>Manage Orders</a></li>
@@ -306,23 +321,25 @@
 
         <div class="tab-content-wrapper">
             
-            <div id="allProductsTab" class="tab-content hidden">
+            <div id="allProductsTab" class="tab-content">
                 <div class="section-header">
                     <h2>All Products</h2>
                 </div>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Product Name</th>
-                            <th>Price</th>
-                            <th>Category</th>
-                        </tr>
-                    </thead>
-                    <tbody id="all-products-list">
-                        <tr><td colspan="4" style="text-align: center;">Loading products...</td></tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Category</th>
+                            </tr>
+                        </thead>
+                        <tbody id="all-products-list">
+                            <tr><td colspan="4" style="text-align: center;">Loading products...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div id="addProductTab" class="tab-content hidden">
@@ -359,20 +376,22 @@
                 <div class="section-header">
                     <h2>Update/Delete Products</h2>
                 </div>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Product Name</th>
-                            <th>Price</th>
-                            <th>Category</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="update-products-list">
-                        <tr><td colspan="5" style="text-align: center;">Loading products...</td></tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Category</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="update-products-list">
+                            <tr><td colspan="5" style="text-align: center;">Loading products...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             
             <div id="manageOrdersTab" class="tab-content hidden">
@@ -380,21 +399,23 @@
                     <h2>Manage Orders</h2>
                     <button class="btn btn-secondary" onclick="alert('Downloading placeholder Excel...')"><span class="material-symbols-outlined">download</span> Download</button>
                 </div>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Customer</th>
-                            <th>Items</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="order-list">
-                        <tr><td colspan="6" style="text-align: center;">No orders found.</td></tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="order-list">
+                            <tr><td colspan="6" style="text-align: center;">No orders found.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
