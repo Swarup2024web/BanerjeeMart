@@ -1,172 +1,336 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Banerjee Mart - Profile</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Roboto', sans-serif;
-      background: #f8f9fa;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    header {
-      background: #00897b;
-      color: white;
-      padding: 15px;
-      text-align: center;
-      font-size: 20px;
-      font-weight: bold;
-    }
-    .profile-container {
-      padding: 20px;
-      max-width: 500px;
-      margin: auto;
-      background: white;
-      margin-top: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    .profile-pic {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #ddd;
-      display: block;
-      margin: 0 auto 15px auto;
-    }
-    .profile-info {
-      text-align: center;
-    }
-    .profile-info h2 {
-      margin: 5px 0;
-      font-size: 22px;
-    }
-    .profile-info p {
-      color: gray;
-      margin: 2px 0;
-      font-size: 15px;
-    }
-    .logout-btn {
-      background: #d32f2f;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 15px;
-    }
-    .logout-btn:hover {
-      background: #b71c1c;
-    }
-    nav {
-      background: #fff;
-      display: flex;
-      justify-content: space-around;
-      border-top: 1px solid #ddd;
-      padding: 8px 0;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-    }
-    nav a {
-      text-decoration: none;
-      color: #777;
-      font-size: 13px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    nav a.active {
-      color: #00897b;
-      font-weight: bold;
-    }
-    nav img {
-      width: 22px;
-      height: 22px;
-      margin-bottom: 2px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B Mart - My Profile</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        :root {
+            --primary-color: #2874f0;
+            --on-primary-color: #ffffff;
+            --surface-color: #ffffff;
+            --background-color: #f0f2f5;
+            --on-surface-color: #1f1f1f;
+            --on-background-color: #585858;
+            --outline-color: #d1d1d1;
+            --shadow-color-light: rgba(0, 0, 0, 0.08);
+            --shadow-color-dark: rgba(0, 0, 0, 0.15);
+            --success-color: #4CAF50;
+            --danger-color: #d32f2f;
+            --admin-color: #673ab7; /* A custom color for the admin badge */
+        }
+        
+        * {
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--on-background-color);
+        }
+        
+        /* Reusable Header from other pages */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: var(--primary-color);
+            padding: 16px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            color: var(--on-primary-color);
+        }
+        .header-row1 {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .main-content {
+            padding: 16px;
+            padding-bottom: 70px;
+            min-height: calc(100vh - 130px);
+        }
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--on-surface-color);
+            margin: 0 0 24px;
+        }
+
+        .profile-card {
+            background-color: var(--surface-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px var(--shadow-color-light);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+
+        .profile-icon {
+            font-size: 60px;
+            color: var(--primary-color);
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--on-surface-color);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .profile-email {
+            font-size: 16px;
+            color: var(--on-background-color);
+            margin-top: 4px;
+        }
+
+        .profile-details {
+            border-top: 1px solid var(--outline-color);
+            padding-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+            color: var(--on-background-color);
+        }
+        .detail-item .material-symbols-outlined {
+            font-size: 24px;
+            color: var(--on-surface-color);
+        }
+        
+        .admin-badge {
+            background-color: var(--admin-color);
+            color: var(--on-primary-color);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-left: 8px;
+            text-transform: uppercase;
+        }
+
+        .signout-btn, .admin-link {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        
+        .signout-btn {
+            background-color: var(--danger-color);
+            color: var(--on-primary-color);
+            border: none;
+            cursor: pointer;
+        }
+        .signout-btn:hover {
+            background-color: #a02020;
+        }
+
+        .admin-link {
+            background-color: var(--primary-color);
+            color: var(--on-primary-color);
+            display: inline-block;
+            margin-top: 16px;
+        }
+        .admin-link.hidden {
+            display: none !important;
+        }
+        .admin-link:hover {
+            background-color: #1a5ac5;
+        }
+        
+        /* Reusable Nav Bar from other pages */
+        .app-nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: var(--surface-color);
+            box-shadow: 0 -2px 10px var(--shadow-color-light);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--on-background-color);
+            transition: color 0.2s;
+        }
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+        .nav-item:hover {
+            color: var(--primary-color);
+        }
+        .nav-item-icon {
+            font-size: 24px;
+            margin-bottom: 2px;
+        }
+        .nav-item-text {
+            font-size: 12px;
+            font-weight: 500;
+        }
+    </style>
 </head>
 <body>
-  <header>My Profile</header>
 
-  <div class="profile-container" id="profile-container">
-    <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Profile Picture" class="profile-pic" id="profile-pic">
-    <div class="profile-info">
-      <h2 id="profile-name">Loading...</h2>
-      <p id="profile-phone"></p>
-      <p id="profile-address"></p>
-    </div>
-    <button class="logout-btn" onclick="logout()">Logout</button>
-  </div>
+    <header class="header">
+        <div class="header-row1">Banerjee Mart</div>
+    </header>
 
-  <nav>
-    <a href="index.html">
-      <img src="https://cdn-icons-png.flaticon.com/512/25/25694.png" alt="Home">
-      Home
-    </a>
-    <a href="cart.html">
-      <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Cart">
-      Cart
-    </a>
-    <a href="orders.html">
-      <img src="https://cdn-icons-png.flaticon.com/512/1828/1828859.png" alt="Orders">
-      Orders
-    </a>
-    <a href="profile.html" class="active">
-      <img src="https://cdn-icons-png.flaticon.com/512/1077/1077063.png" alt="Profile">
-      Profile
-    </a>
-  </nav>
+    <main class="main-content">
+        <h1 class="page-title">My Profile</h1>
+        
+        <div class="profile-card">
+            <div class="profile-header">
+                <span class="material-symbols-outlined profile-icon">account_circle</span>
+                <div class="profile-info">
+                    <div class="profile-name-and-badge">
+                        <span class="profile-name" id="user-full-name">Loading...</span>
+                        <span id="admin-badge" class="admin-badge" style="display:none;">Admin</span>
+                    </div>
+                    <p class="profile-email" id="user-email">Loading...</p>
+                </div>
+            </div>
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
-      authDomain: "banerjee-mart.firebaseapp.com",
-      projectId: "banerjee-mart",
-      storageBucket: "banerjee-mart.appspot.com",
-      messagingSenderId: "183628570952",
-      appId: "1:183628570952:web:3028bb258001d004d9537d"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+            <div class="profile-details">
+                <div class="detail-item">
+                    <span class="material-symbols-outlined">call</span>
+                    <span id="user-mobile-number">Loading...</span>
+                </div>
+            </div>
+            
+            <a href="admin.html" class="admin-link hidden" id="admin-panel-link">Admin Panel</a>
+            <button class="signout-btn" id="sign-out-btn">Sign Out</button>
+        </div>
+    </main>
 
-    auth.onAuthStateChanged(user => {
-      if (!user) {
-        window.location.href = "auth.html";
-      } else {
-        db.collection("users").doc(user.uid).get().then(doc => {
-          if (doc.exists) {
-            const data = doc.data();
-            document.getElementById("profile-name").innerText = data.name || "No Name";
-            document.getElementById("profile-phone").innerText = "📞 " + (data.phone || "Not provided");
-            document.getElementById("profile-address").innerText = "📍 " + (data.address || "Not provided");
-            if (data.imageUrl) {
-              document.getElementById("profile-pic").src = data.imageUrl;
+    <nav class="app-nav-bar">
+        <a href="index.html" class="nav-item">
+            <span class="material-symbols-outlined nav-item-icon">home</span>
+            <span class="nav-item-text">Home</span>
+        </a>
+        <a href="cart.html" class="nav-item">
+            <span class="material-symbols-outlined nav-item-icon">shopping_cart</span>
+            <span class="nav-item-text">Cart</span>
+        </a>
+        <a href="orders.html" class="nav-item">
+            <span class="material-symbols-outlined nav-item-icon">receipt_long</span>
+            <span class="nav-item-text">Orders</span>
+        </a>
+        <a href="profile.html" class="nav-item active">
+            <span class="material-symbols-outlined nav-item-icon">person</span>
+            <span class="nav-item-text">Profile</span>
+        </a>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+        // =========================================================
+        // FIREBASE CONFIGURATION
+        // =========================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
+            authDomain: "banerjee-mart.firebaseapp.com",
+            projectId: "banerjee-mart",
+            storageBucket: "banerjee-mart.firebasestorage.app",
+            messagingSenderId: "183628570952",
+            appId: "1:183628570952:web:3028bb258001d004d9537d"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // =========================================================
+        // PROFILE PAGE LOGIC
+        // =========================================================
+        const fullNameElement = document.getElementById('user-full-name');
+        const emailElement = document.getElementById('user-email');
+        const mobileElement = document.getElementById('user-mobile-number');
+        const adminBadge = document.getElementById('admin-badge');
+        const adminPanelLink = document.getElementById('admin-panel-link');
+        const signOutBtn = document.getElementById('sign-out-btn');
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                try {
+                    // Fetch user's data from Firestore
+                    const userDocRef = doc(db, 'users', user.uid);
+                    const userDoc = await getDoc(userDocRef);
+
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        fullNameElement.textContent = userData.fullName || 'N/A';
+                        emailElement.textContent = userData.email || 'N/A';
+                        mobileElement.textContent = userData.mobileNumber || 'N/A';
+
+                        // Check if the user is an admin
+                        if (userData.role === 'admin') {
+                            adminBadge.style.display = 'inline-block';
+                            adminPanelLink.classList.remove('hidden');
+                        }
+                    } else {
+                        // User exists in auth but not in Firestore
+                        fullNameElement.textContent = 'User not found';
+                        emailElement.textContent = 'Please contact support';
+                    }
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
+                    alert("Failed to load profile data.");
+                }
+            } else {
+                // No user is logged in, redirect to auth page
+                window.location.href = 'auth.html';
             }
-          }
         });
-      }
-    });
 
-    function logout() {
-      auth.signOut().then(() => {
-        window.location.href = "auth.html";
-      });
-    }
-  </script>
+        // Sign out function
+        signOutBtn.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                window.location.href = 'auth.html';
+            } catch (error) {
+                console.error("Error signing out:", error);
+                alert("Failed to sign out. Please try again.");
+            }
+        });
+    </script>
 </body>
 </html>
