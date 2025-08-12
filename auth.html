@@ -365,7 +365,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        // Correct import: `doc` and `setDoc` are now required
+        import { getFirestore, collection, addDoc, query, where, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         // Firebase configuration
         const firebaseConfig = {
@@ -455,11 +456,12 @@
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
-                await addDoc(collection(db, 'users'), {
-                    uid: user.uid,
+                // CORRECTED: Use setDoc with user.uid as the document ID
+                await setDoc(doc(db, 'users', user.uid), {
                     fullName: fullName,
                     phoneNumber: '+91' + phoneNumber,
                     email: email,
+                    role: 'user' // Add a default role for new users
                 });
 
                 alert('Account created successfully! Redirecting to home page.');
