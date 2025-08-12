@@ -18,6 +18,7 @@
             --shadow-color-light: rgba(0, 0, 0, 0.08);
             --shadow-color-dark: rgba(0, 0, 0, 0.15);
             --success-color: #4CAF50;
+            --danger-color: #d32f2f;
         }
 
         * {
@@ -84,13 +85,6 @@
             padding-bottom: 70px; /* Space for the navbar */
         }
 
-        .section-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--on-surface-color);
-            margin: 24px 16px 16px;
-        }
-
         .banners-container {
             display: flex;
             overflow-x: scroll;
@@ -115,28 +109,39 @@
 
         .categories-container {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
+            overflow-x: scroll;
             padding: 16px;
             gap: 8px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .categories-container::-webkit-scrollbar {
+            display: none;
         }
 
         .category-item {
+            flex-shrink: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 80px;
+            min-width: 80px;
             padding: 8px 0;
             text-align: center;
             cursor: pointer;
             transition: transform 0.2s, background-color 0.2s;
             border-radius: 12px;
+            user-select: none;
         }
 
         .category-item:hover {
             transform: translateY(-4px);
             background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .category-item.active {
+            color: var(--primary-color);
+            transform: translateY(-4px);
         }
 
         .category-icon {
@@ -150,6 +155,10 @@
             font-weight: 500;
             color: var(--on-background-color);
         }
+        .category-item.active .category-name {
+            color: var(--primary-color);
+        }
+
 
         .products-container {
             display: grid;
@@ -318,6 +327,37 @@
         .nav-item .badge.visible {
             display: block;
         }
+        
+        /* Loading spinner CSS */
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            flex-direction: column;
+            gap: 16px;
+            color: var(--on-background-color);
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--outline-color);
+            border-bottom-color: var(--primary-color);
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
@@ -326,13 +366,12 @@
         <div class="header-row1">Banerjee Mart</div>
         <div class="search-bar">
             <span class="material-symbols-outlined">search</span>
-            <input type="text" placeholder="Search for products...">
+            <input type="text" id="search-input" placeholder="Search for products...">
         </div>
     </header>
 
     <main class="main-content">
         <div id="banners-section">
-            <h2 class="section-title">Deals of the Day</h2>
             <div id="banners-container" class="banners-container">
                 </div>
         </div>
@@ -344,9 +383,13 @@
         </div>
 
         <div id="products-section">
-            <h2 class="section-title">All Products</h2>
+            <h2 class="section-title" id="products-section-title">All Products</h2>
             <div id="products-container" class="products-container">
+                <div class="loading-container">
+                    <span class="loader"></span>
+                    <span>Products are loading...</span>
                 </div>
+            </div>
         </div>
     </main>
 
@@ -373,7 +416,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-        import { getFirestore, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, query, where, orderBy, or } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         // Firebase configuration
         const firebaseConfig = {
@@ -402,10 +445,13 @@
         const productsContainer = document.getElementById('products-container');
         const categoriesContainer = document.getElementById('categories-container');
         const bannersContainer = document.getElementById('banners-container');
+        const productsSectionTitle = document.getElementById('products-section-title');
+        const searchInput = document.getElementById('search-input');
         const cartBadge = document.getElementById('cart-badge');
 
         const state = {
             products: [],
+            allProducts: [],
             categories: [],
             cart: {} // A simple object to store product ID and quantity
         };
@@ -432,33 +478,52 @@
             }
         }
 
-        // Fetch products from Firestore
-        async function fetchProducts(category = null) {
-            productsContainer.innerHTML = '<h2>Loading products...</h2>';
-            let q;
-            if (category) {
-                q = query(collection(db, 'products'), where('category', '==', category), orderBy('name'));
-            } else {
-                q = query(collection(db, 'products'), orderBy('name'));
-            }
+        // Fetch all products from Firestore once
+        async function fetchAllProducts() {
+            productsContainer.innerHTML = `
+                <div class="loading-container">
+                    <span class="loader"></span>
+                    <span>Products are loading...</span>
+                </div>
+            `;
+            const q = query(collection(db, 'products'), orderBy('name'));
             try {
                 const querySnapshot = await getDocs(q);
-                state.products = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                state.allProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                state.products = [...state.allProducts];
                 renderProducts();
             } catch (error) {
                 console.error("Error fetching products:", error);
                 productsContainer.innerHTML = '<h2>Failed to load products.</h2>';
             }
         }
-
+        
         // Render categories
         function renderCategories() {
             categoriesContainer.innerHTML = '';
+            
+            // "All Products" category
+            const allProductsItem = document.createElement('div');
+            allProductsItem.className = 'category-item active';
+            allProductsItem.onclick = () => {
+                filterProducts();
+                document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
+                allProductsItem.classList.add('active');
+            };
+            allProductsItem.innerHTML = `
+                <span class="material-symbols-outlined category-icon">widgets</span>
+                <span class="category-name">All Products</span>
+            `;
+            categoriesContainer.appendChild(allProductsItem);
+
+            // Other categories
             state.categories.forEach(category => {
                 const categoryItem = document.createElement('div');
                 categoryItem.className = 'category-item';
                 categoryItem.onclick = () => {
-                    fetchProducts(category.name);
+                    filterProducts(category.name);
+                    document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
+                    categoryItem.classList.add('active');
                 };
                 categoryItem.innerHTML = `
                     <span class="material-symbols-outlined category-icon">${category.icon}</span>
@@ -468,9 +533,34 @@
             });
         }
         
+        // Filter products based on category or search
+        function filterProducts(category = null, searchTerm = '') {
+            let filteredProducts = [...state.allProducts];
+            
+            if (category) {
+                productsSectionTitle.textContent = category;
+                filteredProducts = filteredProducts.filter(p => p.category === category);
+            } else {
+                productsSectionTitle.textContent = 'All Products';
+            }
+
+            if (searchTerm) {
+                productsSectionTitle.textContent = `Search results for "${searchTerm}"`;
+                filteredProducts = filteredProducts.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+            }
+
+            state.products = filteredProducts;
+            renderProducts();
+        }
+
         // Render products
         function renderProducts() {
             productsContainer.innerHTML = '';
+            if (state.products.length === 0) {
+                productsContainer.innerHTML = '<h3 style="text-align: center; color: var(--on-background-color);">No products found.</h3>';
+                return;
+            }
+
             state.products.forEach(product => {
                 const productCard = document.createElement('div');
                 productCard.className = 'product-card';
@@ -545,12 +635,21 @@
                 cartBadge.classList.remove('visible');
             }
         }
+        
+        // Search functionality
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const searchTerm = searchInput.value.trim();
+                filterProducts(null, searchTerm);
+                document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
+            }
+        });
 
         // Initial data load
         document.addEventListener('DOMContentLoaded', () => {
             fetchBanners();
             fetchCategories();
-            fetchProducts();
+            fetchAllProducts();
         });
     </script>
 </body>
