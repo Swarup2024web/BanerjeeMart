@@ -155,8 +155,12 @@
 
         .category-icon {
             font-size: 36px;
-            color: var(--primary-color);
+            color: var(--on-background-color);
             margin-bottom: 4px;
+        }
+        
+        .category-item.active .category-icon {
+            color: var(--primary-color);
         }
 
         .category-name {
@@ -426,43 +430,7 @@
         <div id="products-section">
             <h2 class="section-title" id="products-section-title">All Products</h2>
             <div id="products-container" class="products-container">
-                <div class="skeleton-card">
-                    <div class="skeleton-image"></div>
-                    <div class="skeleton-details">
-                        <div class="skeleton-line skeleton-name"></div>
-                        <div class="skeleton-line skeleton-price"></div>
-                        <div class="skeleton-line skeleton-quantity"></div>
-                        <div class="skeleton-button"></div>
-                    </div>
                 </div>
-                <div class="skeleton-card">
-                    <div class="skeleton-image"></div>
-                    <div class="skeleton-details">
-                        <div class="skeleton-line skeleton-name"></div>
-                        <div class="skeleton-line skeleton-price"></div>
-                        <div class="skeleton-line skeleton-quantity"></div>
-                        <div class="skeleton-button"></div>
-                    </div>
-                </div>
-                <div class="skeleton-card">
-                    <div class="skeleton-image"></div>
-                    <div class="skeleton-details">
-                        <div class="skeleton-line skeleton-name"></div>
-                        <div class="skeleton-line skeleton-price"></div>
-                        <div class="skeleton-line skeleton-quantity"></div>
-                        <div class="skeleton-button"></div>
-                    </div>
-                </div>
-                <div class="skeleton-card">
-                    <div class="skeleton-image"></div>
-                    <div class="skeleton-details">
-                        <div class="skeleton-line skeleton-name"></div>
-                        <div class="skeleton-line skeleton-price"></div>
-                        <div class="skeleton-line skeleton-quantity"></div>
-                        <div class="skeleton-button"></div>
-                    </div>
-                </div>
-            </div>
         </div>
     </main>
 
@@ -525,10 +493,9 @@
         const state = {
             products: [],
             allProducts: [],
-            categories: [],
             cart: {} // A simple object to store product ID and quantity
         };
-
+        
         // Fetch banners from banners.html
         async function fetchBanners() {
             try {
@@ -545,19 +512,8 @@
                 bannersContainer.innerHTML = '<p style="text-align: center;">Error loading banners.</p>';
             }
         }
-
-        // Fetch categories from Firestore
-        async function fetchCategories() {
-            try {
-                const querySnapshot = await getDocs(collection(db, 'categories'));
-                state.categories = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderCategories();
-            } catch (error) {
-                console.error("Error fetching categories:", error);
-            }
-        }
-
-        // Fetch all products from Firestore once
+        
+        // Fetch all products from Firestore once and process categories
         async function fetchAllProducts() {
             renderProducts(true); // Show skeleton loading
             const q = query(collection(db, 'products'), orderBy('name'));
@@ -565,17 +521,25 @@
                 const querySnapshot = await getDocs(q);
                 state.allProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 state.products = [...state.allProducts];
+                renderCategories();
                 renderProducts();
             } catch (error) {
                 console.error("Error fetching products:", error);
                 productsContainer.innerHTML = '<h3 style="text-align: center;">Failed to load products.</h3>';
             }
         }
-        
-        // Render categories
+
+        // Render categories based on products data
         function renderCategories() {
             categoriesContainer.innerHTML = '';
             
+            const categories = new Map();
+            state.allProducts.forEach(product => {
+                if (product.category && !categories.has(product.category.name)) {
+                    categories.set(product.category.name, product.category.icon);
+                }
+            });
+
             // "All Products" category
             const allProductsItem = document.createElement('div');
             allProductsItem.className = 'category-item active';
@@ -590,30 +554,30 @@
             `;
             categoriesContainer.appendChild(allProductsItem);
 
-            // Other categories
-            state.categories.forEach(category => {
+            // Other categories from products
+            categories.forEach((icon, name) => {
                 const categoryItem = document.createElement('div');
                 categoryItem.className = 'category-item';
                 categoryItem.onclick = () => {
-                    filterProducts(category.name);
+                    filterProducts(name);
                     document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
                     categoryItem.classList.add('active');
                 };
                 categoryItem.innerHTML = `
-                    <span class="material-symbols-outlined category-icon">${category.icon}</span>
-                    <span class="category-name">${category.name}</span>
+                    <span class="material-symbols-outlined category-icon">${icon}</span>
+                    <span class="category-name">${name}</span>
                 `;
                 categoriesContainer.appendChild(categoryItem);
             });
         }
         
         // Filter products based on category or search
-        function filterProducts(category = null, searchTerm = '') {
+        function filterProducts(categoryName = null, searchTerm = '') {
             let filteredProducts = [...state.allProducts];
             
-            if (category) {
-                productsSectionTitle.textContent = category;
-                filteredProducts = filteredProducts.filter(p => p.category === category);
+            if (categoryName) {
+                productsSectionTitle.textContent = categoryName;
+                filteredProducts = filteredProducts.filter(p => p.category.name === categoryName);
             } else {
                 productsSectionTitle.textContent = 'All Products';
             }
@@ -740,7 +704,6 @@
         // Initial data load
         document.addEventListener('DOMContentLoaded', () => {
             fetchBanners();
-            fetchCategories();
             fetchAllProducts();
         });
     </script>
