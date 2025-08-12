@@ -222,7 +222,7 @@
                         <span class="profile-name" id="user-full-name">Loading...</span>
                         <span id="admin-badge" class="admin-badge" style="display:none;">Admin</span>
                     </div>
-                    <p class="profile-email" id="user-email">Loading...</p>
+                    <p class="profile-email" id="user-email">Loading...</span></p>
                 </div>
             </div>
 
@@ -283,7 +283,7 @@
         // =========================================================
         const fullNameElement = document.getElementById('user-full-name');
         const emailElement = document.getElementById('user-email');
-        const phoneElement = document.getElementById('user-phone-number'); // Corrected ID
+        const phoneElement = document.getElementById('user-phone-number');
         const adminBadge = document.getElementById('admin-badge');
         const adminPanelLink = document.getElementById('admin-panel-link');
         const signOutBtn = document.getElementById('sign-out-btn');
@@ -299,8 +299,6 @@
                         const userData = userDoc.data();
                         fullNameElement.textContent = userData.fullName || 'N/A';
                         emailElement.textContent = userData.email || 'N/A';
-                        
-                        // Correctly fetching phoneNumber field from Firestore
                         phoneElement.textContent = userData.phoneNumber || 'N/A';
 
                         // Check if the user is an admin
