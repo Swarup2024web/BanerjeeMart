@@ -4,25 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>B Mart - Login / Sign Up</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
     <style>
         :root {
             --primary-color: #2874f0;
+            --on-primary-color: #ffffff;
             --surface-color: #ffffff;
             --background-color: #f1f2f4;
-            --on-surface-color: #212121;
-            --on-background-color: #555;
-            --border-color: #e0e0e0;
-            --button-hover-color: #1a64d0;
+            --on-surface-color: #1f1f1f;
+            --on-background-color: #4a4a4a;
+            --outline-color: #c7c7c7;
+            --outline-hover-color: #a0a0a0;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --button-color: #fb641b;
+            --button-on-color: #ffffff;
+            --button-hover-color: #e55a16;
             --link-color: #2874f0;
-            --toggle-active-color: #2874f0;
-            --toggle-inactive-color: #e0e0e0;
-            --toggle-text-active-color: #ffffff;
-            --toggle-text-inactive-color: #555;
+            --toggle-active-bg: var(--primary-color);
+            --toggle-active-color: var(--on-primary-color);
+            --toggle-inactive-bg: #e0e0e0;
+            --toggle-inactive-color: var(--on-background-color);
         }
 
         body {
-            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
             background-color: var(--background-color);
@@ -38,34 +44,36 @@
             width: 90%;
             max-width: 400px;
             padding: 32px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            transition: transform 0.3s ease-in-out;
         }
 
         .auth-toggle-buttons {
             display: flex;
-            border-radius: 6px;
+            border-radius: 8px;
             overflow: hidden;
             margin-bottom: 24px;
-            border: 1px solid var(--toggle-inactive-color);
+            background-color: var(--toggle-inactive-bg);
         }
 
         .auth-toggle-button {
             flex-grow: 1;
-            padding: 10px 20px;
+            padding: 12px 20px;
             text-align: center;
             cursor: pointer;
             font-weight: 500;
             font-size: 16px;
-            background-color: var(--surface-color);
-            color: var(--toggle-text-inactive-color);
+            color: var(--toggle-inactive-color);
+            background-color: transparent;
             border: none;
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
         }
 
         .auth-toggle-button.active {
-            background-color: var(--toggle-active-color);
-            color: var(--toggle-text-active-color);
+            background-color: var(--toggle-active-bg);
+            color: var(--toggle-active-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         h1 {
@@ -92,13 +100,14 @@
         .input-container {
             position: relative;
             display: flex;
+            align-items: center;
         }
 
         .input-container input, .input-container select {
             width: 100%;
             padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
+            border: 1px solid var(--outline-color);
+            border-radius: 8px;
             box-sizing: border-box;
             font-size: 16px;
             transition: border-color 0.3s, box-shadow 0.3s;
@@ -107,7 +116,7 @@
         .input-container input:focus, .input-container select:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 5px rgba(40, 116, 240, 0.2);
+            box-shadow: 0 0 0 2px rgba(40, 116, 240, 0.2);
         }
 
         .phone-input-group {
@@ -123,29 +132,29 @@
         .input-icon {
             position: absolute;
             right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
             color: var(--on-background-color);
             cursor: pointer;
             user-select: none;
+            font-size: 20px;
         }
 
         .btn {
-            background-color: #fb641b;
-            color: var(--surface-color);
+            background-color: var(--button-color);
+            color: var(--button-on-color);
             border: none;
             width: 100%;
             padding: 14px;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, box-shadow 0.3s;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .btn:hover {
-            background-color: #e55a16;
+            background-color: var(--button-hover-color);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
 
         .auth-toggle {
@@ -174,6 +183,14 @@
             margin-top: 10px;
             font-size: 14px;
         }
+
+        .forgot-password-link a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+        .forgot-password-link a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -189,16 +206,16 @@
             <h1>Login to B Mart</h1>
             <form id="login-form">
                 <div class="form-group">
-                    <label for="login-email">Email</label>
+                    <label for="login-email-phone">Email or Phone Number</label>
                     <div class="input-container">
-                        <input type="email" id="login-email" placeholder="Enter your email" required>
+                        <input type="text" id="login-email-phone" placeholder="Email or 10-digit number" required>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="login-password">Password</label>
                     <div class="input-container">
                         <input type="password" id="login-password" placeholder="Enter your password" required>
-                        <i class="material-icons input-icon" onclick="togglePasswordVisibility('login-password')">visibility_off</i>
+                        <span class="material-symbols-outlined input-icon" onclick="togglePasswordVisibility('login-password')">visibility_off</span>
                     </div>
                     <div class="forgot-password-link">
                         <a href="#" onclick="showForm('forgot-password-form-container')">Forgot Password?</a>
@@ -230,14 +247,14 @@
                             <option value="+91">+91 (IN)</option>
                             <option value="+1">+1 (US)</option>
                         </select>
-                        <input type="tel" id="signup-phone" placeholder="9876543210" required>
+                        <input type="tel" id="signup-phone" placeholder="9876543210" required pattern="[0-9]{10}">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="signup-password">Password</label>
                     <div class="input-container">
                         <input type="password" id="signup-password" placeholder="Create a strong password" required>
-                        <i class="material-icons input-icon" onclick="togglePasswordVisibility('signup-password')">visibility_off</i>
+                        <span class="material-symbols-outlined input-icon" onclick="togglePasswordVisibility('signup-password')">visibility_off</span>
                     </div>
                     <div class="forgot-password-link">
                         <a href="#" onclick="showForm('forgot-password-form-container')">Forgot Password?</a>
@@ -273,9 +290,10 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithPhoneNumber, RecaptchaVerifier } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
+        // Firebase configuration
         const firebaseConfig = {
           apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
           authDomain: "banerjee-mart.firebaseapp.com",
@@ -325,12 +343,8 @@
             e.preventDefault();
             const fullName = document.getElementById('signup-name').value;
             const email = document.getElementById('signup-email').value;
-            const countryCode = document.getElementById('country-code').value;
-            const phoneNumber = document.getElementById('signup-phone').value;
             const password = document.getElementById('signup-password').value;
             const address = document.getElementById('signup-address').value;
-
-            const fullPhoneNumber = countryCode + phoneNumber;
 
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -339,7 +353,6 @@
                 await addDoc(collection(db, 'users'), {
                     uid: user.uid,
                     fullName: fullName,
-                    phoneNumber: fullPhoneNumber,
                     email: email,
                     address: address
                 });
@@ -356,11 +369,29 @@
         const loginForm = document.getElementById('login-form');
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('login-email').value;
+            const emailOrPhone = document.getElementById('login-email-phone').value;
             const password = document.getElementById('login-password').value;
 
             try {
-                await signInWithEmailAndPassword(auth, email, password);
+                if (emailOrPhone.includes('@')) {
+                    // Login with email
+                    await signInWithEmailAndPassword(auth, emailOrPhone, password);
+                } else {
+                    // Login with phone number
+                    const q = query(collection(db, 'users'), where('phoneNumber', '==', emailOrPhone));
+                    const querySnapshot = await getDocs(q);
+                    
+                    if (querySnapshot.empty) {
+                        alert('No user found with this phone number. Please sign up or use a different phone number.');
+                        return;
+                    }
+
+                    const userData = querySnapshot.docs[0].data();
+                    const userEmail = userData.email;
+
+                    await signInWithEmailAndPassword(auth, userEmail, password);
+                }
+
                 alert('Login successful!');
                 window.location.href = 'index.html';
             } catch (error) {
