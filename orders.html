@@ -62,7 +62,7 @@
         .search-bar input {
             width: 100%;
             padding: 12px 16px;
-            padding-left: 48px; /* Space for the icon */
+            padding-left: 48px;
             border: none;
             border-radius: 25px;
             background-color: rgba(255, 255, 255, 0.9);
@@ -88,7 +88,7 @@
 
         .main-content {
             padding: 16px;
-            padding-bottom: 70px; /* Space for the navbar */
+            padding-bottom: 70px;
             min-height: calc(100vh - 130px);
         }
 
@@ -171,44 +171,66 @@
         }
         
         .order-details {
-            border-top: 1px solid var(--outline-color);
-            margin-top: 16px;
-            padding-top: 16px;
             display: none;
             flex-direction: column;
             gap: 12px;
+            border-top: 1px solid var(--outline-color);
+            margin-top: 16px;
+            padding-top: 16px;
         }
         
         .order-card.expanded .order-details {
             display: flex;
         }
 
-        .order-item {
+        .order-items-scrollable {
             display: flex;
-            align-items: center;
+            overflow-x: auto;
             gap: 12px;
+            padding-bottom: 8px; /* For scrollbar visibility */
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+        }
+
+        .order-items-scrollable::-webkit-scrollbar {
+            display: none; /* WebKit */
+        }
+
+        .order-item {
+            flex-shrink: 0;
+            width: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background-color: var(--background-color);
+            border-radius: 8px;
+            padding: 8px;
         }
 
         .order-item-image {
-            width: 50px;
-            height: 50px;
+            width: 80px;
+            height: 80px;
             border-radius: 8px;
             object-fit: cover;
             flex-shrink: 0;
+            margin-bottom: 8px;
         }
 
         .order-item-info {
-            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
         .order-item-name {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 500;
             color: var(--on-surface-color);
         }
 
         .order-item-qty-price {
-            font-size: 12px;
+            font-size: 10px;
             color: var(--on-background-color);
         }
 
@@ -477,7 +499,9 @@
                         </div>
                     </div>
                     <div class="order-details">
-                        ${orderItemsHtml}
+                        <div class="order-items-scrollable">
+                            ${orderItemsHtml}
+                        </div>
                     </div>
                 `;
                 
