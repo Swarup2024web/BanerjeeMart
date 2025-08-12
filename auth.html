@@ -27,23 +27,34 @@
             --toggle-inactive-bg: #e0e0e0;
             --toggle-inactive-color: var(--on-background-color);
             --danger-color: #d32f2f;
+            --gradient-start: #4a90e2;
+            --gradient-end: #50e3c2;
         }
 
         * {
             box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
         }
 
         body {
-            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--background-color);
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            background-size: 400% 400%;
+            animation: backgroundGradient 15s ease infinite;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             color: var(--on-background-color);
+            overflow: hidden;
+        }
+
+        @keyframes backgroundGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .auth-container {
@@ -52,9 +63,10 @@
             max-width: 450px;
             padding: 40px;
             border-radius: 16px;
-            box-shadow: 0 10px 30px var(--shadow-color-light);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
             animation: fadeIn 0.5s ease-out;
+            position: relative;
         }
 
         @keyframes fadeIn {
@@ -129,7 +141,7 @@
             font-size: 16px;
             color: var(--on-surface-color);
             background-color: var(--surface-color);
-            transition: border-color 0.3s, box-shadow 0.3s;
+            transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
         }
 
         .input-container input:focus,
@@ -138,7 +150,7 @@
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(40, 116, 240, 0.1);
         }
-
+        
         .phone-input-group {
             display: flex;
             gap: 12px;
@@ -181,8 +193,11 @@
             font-size: 18px;
             font-weight: 600;
             letter-spacing: 0.5px;
-            transition: background-color 0.3s, box-shadow 0.3s;
+            transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .btn:active {
+            transform: scale(0.98);
         }
 
         .btn:hover {
@@ -207,8 +222,22 @@
             color: var(--primary-color);
         }
 
-        .hidden {
-            display: none !important;
+        .form-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+            pointer-events: none;
+        }
+        .form-content.active {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
         }
 
         .modal {
@@ -282,11 +311,11 @@
     <div class="auth-container">
 
         <div class="auth-toggle-buttons">
-            <button id="login-toggle-button" class="auth-toggle-button active" onclick="showForm('login-form-container')">Login</button>
+            <button id="login-toggle-button" class="auth-toggle-button" onclick="showForm('login-form-container')">Login</button>
             <button id="signup-toggle-button" class="auth-toggle-button" onclick="showForm('signup-form-container')">Sign Up</button>
         </div>
 
-        <div id="login-form-container">
+        <div id="login-form-container" class="form-content">
             <h1>Login to B Mart</h1>
             <form id="login-form">
                 <div class="form-group">
@@ -309,7 +338,7 @@
             </form>
         </div>
 
-        <div id="signup-form-container" class="hidden">
+        <div id="signup-form-container" class="form-content">
             <h1>Sign Up with B Mart</h1>
             <form id="signup-form">
                 <div class="form-group">
@@ -377,7 +406,9 @@
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
         import { getFirestore, collection, query, where, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-        // Firebase configuration
+        // =========================================================
+        // FIREBASE CONFIGURATION
+        // =========================================================
         const firebaseConfig = {
           apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
           authDomain: "banerjee-mart.firebaseapp.com",
@@ -406,21 +437,24 @@
         const loginToggleButton = document.getElementById('login-toggle-button');
         const signupToggleButton = document.getElementById('signup-toggle-button');
         const forgotPasswordModal = document.getElementById('forgot-password-modal');
+        const loginFormContainer = document.getElementById('login-form-container');
+        const signupFormContainer = document.getElementById('signup-form-container');
 
-        window.showForm = function(formId) {
-            document.getElementById('login-form-container').classList.add('hidden');
-            document.getElementById('signup-form-container').classList.add('hidden');
-            document.getElementById(formId).classList.remove('hidden');
-
+        function showForm(formId) {
+            loginFormContainer.classList.remove('active');
+            signupFormContainer.classList.remove('active');
             loginToggleButton.classList.remove('active');
             signupToggleButton.classList.remove('active');
-
+            
             if (formId === 'login-form-container') {
+                loginFormContainer.classList.add('active');
                 loginToggleButton.classList.add('active');
-            } else if (formId === 'signup-form-container') {
+            } else {
+                signupFormContainer.classList.add('active');
                 signupToggleButton.classList.add('active');
             }
-        };
+        }
+        window.showForm = showForm;
 
         window.togglePasswordVisibility = function(passwordFieldId) {
             const passwordInput = document.getElementById(passwordFieldId);
@@ -457,20 +491,19 @@
             const fullName = document.getElementById('signup-name').value;
             const email = document.getElementById('signup-email').value;
             const phoneNumber = document.getElementById('signup-phone').value;
-            const address = document.getElementById('signup-address').value; // Get the address value
+            const address = document.getElementById('signup-address').value;
             const password = document.getElementById('signup-password').value;
 
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
-                // CORRECTED: Use setDoc with user.uid as the document ID and include all fields
                 await setDoc(doc(db, 'users', user.uid), {
                     address: address,
                     fullName: fullName,
                     email: email,
                     uid: user.uid,
-                    role: 'user', // Set a default role for new users
+                    role: 'user',
                     phoneNumber: '+91' + phoneNumber,
                 });
 
