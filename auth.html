@@ -4,104 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>B Mart - Login / Sign Up</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
     <style>
+        /* Material 3.0 Inspired Color Palette */
         :root {
-            --primary-color: #2874f0;
-            --on-primary-color: #ffffff;
-            --surface-color: #ffffff;
-            --background-color: #f0f2f5;
-            --on-surface-color: #1f1f1f;
-            --on-background-color: #585858;
-            --outline-color: #d1d1d1;
-            --outline-focus-color: #8c8c8c;
-            --shadow-color-light: rgba(0, 0, 0, 0.08);
-            --shadow-color-dark: rgba(0, 0, 0, 0.15);
-            --button-bg-color: #2874f0;
-            --button-on-color: #ffffff;
-            --button-hover-bg-color: #1a64d0;
-            --link-color: #2874f0;
-            --toggle-active-bg: var(--primary-color);
-            --toggle-active-color: var(--on-primary-color);
-            --toggle-inactive-bg: #e0e0e0;
-            --toggle-inactive-color: var(--on-background-color);
-            --danger-color: #d32f2f;
-            --gradient-start: #4a90e2;
-            --gradient-end: #50e3c2;
+            --md-sys-color-primary: #2874f0;
+            --md-sys-color-on-primary: #ffffff;
+            --md-sys-color-surface: #ffffff;
+            --md-sys-color-on-surface: #1f1f1f;
+            --md-sys-color-surface-container-high: #e3e8ed;
+            --md-sys-color-on-surface-variant: #585858;
+            --md-sys-color-background: #f0f2f5;
+            --md-sys-color-outline: #c4c6d0;
+            --md-sys-color-outline-variant: #e0e0e0;
+            --md-sys-color-error: #b3261e;
+            --md-sys-color-on-error: #ffffff;
+            --md-sys-color-tertiary: #5f5d72;
+            --md-sys-color-on-tertiary: #ffffff;
         }
 
         * {
             box-sizing: border-box;
             font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-            background-size: 400% 400%;
-            animation: backgroundGradient 15s ease infinite;
+            background-color: var(--md-sys-color-background);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            color: var(--on-background-color);
-            overflow: hidden;
-        }
-
-        @keyframes backgroundGradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            color: var(--md-sys-color-on-surface-variant);
+            padding: 16px;
         }
 
         .auth-container {
-            background-color: var(--surface-color);
-            width: 90%;
-            max-width: 450px;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-            animation: fadeIn 0.5s ease-out;
+            background-color: var(--md-sys-color-surface);
+            width: 100%;
+            max-width: 420px;
+            padding: 48px 32px;
+            border-radius: 28px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             position: relative;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            overflow: hidden;
+            transition: transform 0.4s ease-in-out;
+            min-height: 500px;
         }
 
         .auth-toggle-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            border-radius: 12px;
-            overflow: hidden;
+            display: flex;
+            gap: 8px;
             margin-bottom: 32px;
-            background-color: var(--toggle-inactive-bg);
-            padding: 4px;
+            justify-content: center;
         }
 
         .auth-toggle-button {
-            padding: 14px 20px;
+            padding: 12px 24px;
             text-align: center;
             cursor: pointer;
             font-weight: 500;
             font-size: 16px;
-            color: var(--on-background-color);
+            color: var(--md-sys-color-on-surface-variant);
             background-color: transparent;
             border: none;
-            border-radius: 10px;
-            transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+            border-radius: 100px;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .auth-toggle-button.active {
-            background-color: var(--toggle-active-bg);
-            color: var(--toggle-active-color);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            font-weight: 700;
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
         }
 
         h1 {
@@ -110,19 +86,11 @@
             margin-top: 0;
             margin-bottom: 24px;
             text-align: center;
-            color: var(--on-surface-color);
+            color: var(--md-sys-color-on-surface);
         }
 
         .form-group {
-            margin-bottom: 24px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            font-size: 14px;
-            color: var(--on-background-color);
+            margin-bottom: 20px;
         }
 
         .input-container {
@@ -132,39 +100,59 @@
             width: 100%;
         }
 
+        .input-container label {
+            position: absolute;
+            top: 14px;
+            left: 16px;
+            pointer-events: none;
+            color: var(--md-sys-color-on-surface-variant);
+            transition: all 0.2s ease-out;
+            font-size: 16px;
+            background-color: var(--md-sys-color-surface-container-high);
+            padding: 0 4px;
+        }
+
         .input-container input,
         .input-container select {
             width: 100%;
-            padding: 14px 16px;
-            border: 1px solid var(--outline-color);
-            border-radius: 10px;
+            padding: 24px 16px 8px;
+            border: 1px solid var(--md-sys-color-outline);
+            border-radius: 16px;
             font-size: 16px;
-            color: var(--on-surface-color);
-            background-color: var(--surface-color);
-            transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+            color: var(--md-sys-color-on-surface);
+            background-color: var(--md-sys-color-surface-container-high);
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
         .input-container input:focus,
         .input-container select:focus {
             outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(40, 116, 240, 0.1);
+            border-color: var(--md-sys-color-primary);
+        }
+        
+        .input-container input:not(:placeholder-shown) + label,
+        .input-container input:focus + label,
+        .input-container select:focus + label,
+        .input-container select:valid + label {
+            transform: translateY(-16px) scale(0.75);
+            background-color: var(--md-sys-color-surface-container-high);
+            padding: 0 4px;
         }
         
         .phone-input-group {
             display: flex;
-            gap: 12px;
+            gap: 8px;
         }
 
         .phone-input-group .country-code-display {
             display: flex;
             align-items: center;
             padding: 14px;
-            background-color: var(--background-color);
-            border: 1px solid var(--outline-color);
-            border-radius: 10px;
+            background-color: var(--md-sys-color-surface-container-high);
+            border: 1px solid var(--md-sys-color-outline);
+            border-radius: 16px;
             font-size: 16px;
-            color: var(--on-background-color);
+            color: var(--md-sys-color-on-surface-variant);
             white-space: nowrap;
         }
         
@@ -175,34 +163,33 @@
         .input-icon {
             position: absolute;
             right: 16px;
-            color: var(--on-background-color);
+            color: var(--md-sys-color-on-surface-variant);
             cursor: pointer;
             user-select: none;
-            font-size: 20px;
+            font-size: 24px;
             transition: color 0.3s;
         }
 
         .btn {
-            background-color: var(--button-bg-color);
-            color: var(--button-on-color);
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
             border: none;
             width: 100%;
             padding: 16px;
-            border-radius: 10px;
+            border-radius: 100px;
             cursor: pointer;
             font-size: 18px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+            font-weight: 500;
             transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .btn:active {
-            transform: scale(0.98);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .btn:hover {
-            background-color: var(--button-hover-bg-color);
-            box-shadow: 0 6px 20px var(--shadow-color-dark);
+            background-color: #1c5fd6;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        .btn:active {
+            transform: scale(0.99);
         }
 
         .forgot-password-link {
@@ -212,14 +199,13 @@
         }
 
         .forgot-password-link a {
-            color: var(--link-color);
+            color: var(--md-sys-color-primary);
             text-decoration: none;
             transition: color 0.3s;
         }
 
         .forgot-password-link a:hover {
             text-decoration: underline;
-            color: var(--primary-color);
         }
 
         .form-content {
@@ -228,7 +214,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            padding: 40px;
+            padding: 48px 32px;
             opacity: 0;
             transform: scale(0.95);
             transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
@@ -239,7 +225,8 @@
             transform: scale(1);
             pointer-events: auto;
         }
-
+        
+        /* Modal and other styles remain the same */
         .modal {
             position: fixed;
             top: 0;
@@ -262,10 +249,10 @@
         }
 
         .modal-content {
-            background-color: var(--surface-color);
+            background-color: var(--md-sys-color-surface);
             padding: 32px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px var(--shadow-color-dark);
+            border-radius: 28px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             width: 90%;
             max-width: 400px;
             position: relative;
@@ -288,21 +275,21 @@
             font-size: 24px;
             font-weight: 700;
             margin: 0;
-            color: var(--on-surface-color);
+            color: var(--md-sys-color-on-surface);
         }
 
         .modal-close-btn {
             background: none;
             border: none;
             cursor: pointer;
-            color: var(--on-background-color);
+            color: var(--md-sys-color-on-surface-variant);
             font-size: 24px;
             line-height: 1;
             transition: color 0.3s;
         }
 
         .modal-close-btn:hover {
-            color: var(--danger-color);
+            color: var(--md-sys-color-error);
         }
     </style>
 </head>
@@ -316,18 +303,18 @@
         </div>
 
         <div id="login-form-container" class="form-content">
-            <h1>Login to B Mart</h1>
+            <h1>Login</h1>
             <form id="login-form">
                 <div class="form-group">
-                    <label for="login-email-phone">Email or Phone Number</label>
                     <div class="input-container">
-                        <input type="text" id="login-email-phone" placeholder="Enter email or 10-digit number" required>
+                        <input type="text" id="login-email-phone" placeholder=" " required>
+                        <label for="login-email-phone">Email or Phone Number</label>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="login-password">Password</label>
                     <div class="input-container">
-                        <input type="password" id="login-password" placeholder="Enter your password" required>
+                        <input type="password" id="login-password" placeholder=" " required>
+                        <label for="login-password">Password</label>
                         <span class="material-symbols-outlined input-icon" onclick="togglePasswordVisibility('login-password')">visibility_off</span>
                     </div>
                 </div>
@@ -339,39 +326,40 @@
         </div>
 
         <div id="signup-form-container" class="form-content">
-            <h1>Sign Up with B Mart</h1>
+            <h1>Sign Up</h1>
             <form id="signup-form">
                 <div class="form-group">
-                    <label for="signup-name">Full Name</label>
                     <div class="input-container">
-                        <input type="text" id="signup-name" placeholder="Enter your full name" required>
+                        <input type="text" id="signup-name" placeholder=" " required>
+                        <label for="signup-name">Full Name</label>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="signup-email">Email</label>
                     <div class="input-container">
-                        <input type="email" id="signup-email" placeholder="Enter your email" required>
+                        <input type="email" id="signup-email" placeholder=" " required>
+                        <label for="signup-email">Email</label>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="signup-phone">Phone Number</label>
-                    <div class="phone-input-group">
-                        <span class="country-code-display">+91 (IN)</span>
-                        <input type="tel" id="signup-phone" placeholder="9876543210" required pattern="[0-9]{10}">
+                    <div class="input-container phone-input-group">
+                        <span class="country-code-display">+91</span>
+                        <input type="tel" id="signup-phone" placeholder=" " required pattern="[0-9]{10}">
+                        <label for="signup-phone" style="left: 64px;">Phone Number</label>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="signup-address">Address</label>
                     <div class="input-container">
                         <select id="signup-address" required>
+                            <option value="" disabled selected></option>
                             <option value="Pakurtala">Pakurtala</option>
                         </select>
+                        <label for="signup-address">Address</label>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="signup-password">Password</label>
                     <div class="input-container">
-                        <input type="password" id="signup-password" placeholder="Create a strong password" required>
+                        <input type="password" id="signup-password" placeholder=" " required>
+                        <label for="signup-password">Password</label>
                         <span class="material-symbols-outlined input-icon" onclick="togglePasswordVisibility('signup-password')">visibility_off</span>
                     </div>
                 </div>
@@ -391,9 +379,9 @@
             </div>
             <form id="forgot-password-form">
                 <div class="form-group">
-                    <label for="reset-email-phone">Email or Phone Number</label>
                     <div class="input-container">
-                        <input type="text" id="reset-email-phone" placeholder="Enter your email or 10-digit number" required>
+                        <input type="text" id="reset-email-phone" placeholder=" " required>
+                        <label for="reset-email-phone">Email or Phone Number</label>
                     </div>
                 </div>
                 <button type="submit" class="btn">Send Reset Link</button>
@@ -459,12 +447,19 @@
         window.togglePasswordVisibility = function(passwordFieldId) {
             const passwordInput = document.getElementById(passwordFieldId);
             const icon = passwordInput.nextElementSibling;
+            const filledIcon = 'visibility';
+            const outlinedIcon = 'visibility_off';
+
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
-                icon.textContent = 'visibility';
+                icon.textContent = filledIcon;
+                icon.style.fontWeight = '500';
+                icon.style.fontVariationSettings = `'FILL' 1`;
             } else {
                 passwordInput.type = 'password';
-                icon.textContent = 'visibility_off';
+                icon.textContent = outlinedIcon;
+                icon.style.fontWeight = '400';
+                icon.style.fontVariationSettings = `'FILL' 0`;
             }
         };
 
