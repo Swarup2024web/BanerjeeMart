@@ -121,7 +121,11 @@
             background-color: var(--md-sys-color-surface-container-high);
             transition: border-color 0.2s, box-shadow 0.2s;
         }
-
+        
+        .input-container select {
+            padding: 16px;
+        }
+        
         .input-container input:focus,
         .input-container select:focus {
             outline: none;
@@ -347,9 +351,6 @@
                         <span class="material-symbols-outlined input-icon" onclick="togglePasswordVisibility('signup-password')">visibility_off</span>
                     </div>
                 </div>
-                <div class="forgot-password-link">
-                    <a href="#" onclick="openForgotPasswordModal()">Forgot Password?</a>
-                </div>
                 <button type="submit" class="btn">Sign Up</button>
             </form>
         </div>
@@ -399,9 +400,23 @@
         // =========================================================
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                window.location.href = 'index.html';
+                // Ensure a user document exists before redirecting
+                checkUserDocumentAndRedirect(user);
             }
         });
+
+        async function checkUserDocumentAndRedirect(user) {
+            try {
+                const userDocRef = doc(db, 'users', user.uid);
+                const docSnap = await getDocs(query(collection(db, 'users'), where('uid', '==', user.uid)));
+                if (!docSnap.empty) {
+                    window.location.href = 'index.html';
+                }
+            } catch (error) {
+                console.error("Error checking user document:", error);
+            }
+        }
+
 
         // =========================================================
         // UI LOGIC
@@ -461,9 +476,15 @@
         // =========================================================
         // FIREBASE AUTHENTICATION LOGIC
         // =========================================================
+        let isCreatingUser = false; // Flag to prevent double submission
+
         const signupForm = document.getElementById('signup-form');
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            if (isCreatingUser) return;
+            isCreatingUser = true;
+
             const fullName = document.getElementById('signup-name').value;
             const email = document.getElementById('signup-email').value;
             const phoneNumber = document.getElementById('signup-phone').value;
@@ -474,21 +495,34 @@
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
-                await setDoc(doc(db, 'users', user.uid), {
-                    address: address,
-                    fullName: fullName,
-                    email: email,
-                    uid: user.uid,
-                    role: 'user',
-                    phoneNumber: '+91' + phoneNumber,
+                // Use a one-time listener to ensure auth state is ready for Firestore write
+                const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+                    if (currentUser && currentUser.uid === user.uid) {
+                        try {
+                            await setDoc(doc(db, 'users', currentUser.uid), {
+                                address: address,
+                                fullName: fullName,
+                                email: email,
+                                uid: currentUser.uid,
+                                role: 'user',
+                                phoneNumber: '+91' + phoneNumber,
+                            });
+                            alert('Account created successfully! Redirecting to home page.');
+                            window.location.href = 'index.html';
+                        } catch (firestoreError) {
+                            console.error("Error writing user to Firestore:", firestoreError);
+                            alert("Sign-up failed: Could not create user profile.");
+                        } finally {
+                            isCreatingUser = false;
+                            unsubscribe(); // Unsubscribe after the operation
+                        }
+                    }
                 });
-
-                alert('Account created successfully! Redirecting to home page.');
-                window.location.href = 'index.html';
 
             } catch (error) {
                 console.error("Error during sign up:", error);
                 alert("Sign-up failed: " + error.message);
+                isCreatingUser = false;
             }
         });
 
@@ -554,8 +588,11 @@
         });
 
         document.addEventListener('DOMContentLoaded', () => {
-            if (!auth.currentUser) {
+            const currentUser = auth.currentUser;
+            if (!currentUser) {
                 showForm('login');
+            } else {
+                checkUserDocumentAndRedirect(currentUser);
             }
         });
     </script>
