@@ -110,9 +110,17 @@
         }
 
         .status-processing {
-            background-color: var(--primary-color);
+            background-color: #ff9800; /* Orange */
+        }
+
+        .status-packed {
+            background-color: #2196f3; /* Blue */
         }
         
+        .status-shipped {
+            background-color: #5C6BC0; /* Indigo */
+        }
+
         .status-delivered {
             background-color: var(--success-color);
         }
@@ -121,10 +129,6 @@
             background-color: var(--danger-color);
         }
         
-        .status-shipped {
-            background-color: #2196f3;
-        }
-
         .order-item {
             display: flex;
             gap: 12px;
@@ -135,8 +139,9 @@
         .order-item-image {
             width: 60px;
             height: 60px;
-            object-fit: cover;
+            object-fit: contain;
             border-radius: 8px;
+            border: 1px solid var(--outline-color);
         }
 
         .order-item-details {
@@ -627,8 +632,8 @@
 
                 allOrders.sort((a, b) => b.orderDate.toDate() - a.orderDate.toDate());
 
-                const currentOrders = allOrders.filter(o => o.status === 'Processing' || o.status === 'Delivered');
-                const pastOrders = allOrders.filter(o => o.status === 'Cancelled' || o.status === 'Shipped');
+                const currentOrders = allOrders.filter(o => o.status === 'Processing' || o.status === 'Packed' || o.status === 'Shipped');
+                const pastOrders = allOrders.filter(o => o.status === 'Cancelled' || o.status === 'Delivered');
 
                 if (currentOrders.length > 0) {
                     await renderOrders(currentOrders, currentOrdersContainer);
