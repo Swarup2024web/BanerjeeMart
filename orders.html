@@ -63,6 +63,13 @@
             color: var(--on-surface-color);
             margin: 0 0 24px;
         }
+        
+        .orders-section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--on-surface-color);
+            margin: 24px 0 16px;
+        }
 
         .order-container {
             display: flex;
@@ -106,8 +113,16 @@
             background-color: var(--primary-color);
         }
         
+        .status-delivered {
+            background-color: var(--success-color);
+        }
+
         .status-cancelled {
             background-color: var(--danger-color);
+        }
+        
+        .status-shipped {
+            background-color: #2196f3;
         }
 
         .order-item {
@@ -306,19 +321,25 @@
             padding: 40px 16px;
             color: var(--on-background-color);
         }
-
+        
+        .section-empty-state {
+            text-align: center;
+            padding: 20px 16px;
+            color: var(--on-background-color);
+        }
+        
         .empty-state-icon {
             font-size: 80px;
             color: var(--outline-color);
         }
 
-        .empty-state h3 {
+        .empty-state h3, .section-empty-state h3 {
             margin: 16px 0 8px;
             font-size: 20px;
             font-weight: 500;
         }
 
-        .empty-state p {
+        .empty-state p, .section-empty-state p {
             margin: 0;
             font-size: 16px;
         }
@@ -413,10 +434,27 @@
     <main class="main-content">
         <h1 class="page-title">My Orders</h1>
 
-        <div id="orders-container" class="order-container">
+        <div id="current-orders-section">
+            <h2 class="orders-section-title">Current Orders</h2>
+            <div id="current-orders-container" class="order-container">
+                </div>
+            <div id="current-empty-state" class="section-empty-state" style="display: none;">
+                <h3>No Current Orders</h3>
+                <p>Track new orders here after you place them.</p>
             </div>
+        </div>
 
-        <div id="empty-state" class="empty-state" style="display: none;">
+        <div id="past-orders-section">
+            <h2 class="orders-section-title">Past Orders</h2>
+            <div id="past-orders-container" class="order-container">
+                </div>
+            <div id="past-empty-state" class="section-empty-state" style="display: none;">
+                <h3>No Past Orders</h3>
+                <p>Your previous orders will appear here.</p>
+            </div>
+        </div>
+
+        <div id="all-empty-state" class="empty-state" style="display: none;">
             <span class="material-symbols-outlined empty-state-icon">receipt_long</span>
             <h3>No Orders Found</h3>
             <p>You haven't placed any orders yet.</p>
@@ -499,8 +537,11 @@
         // =========================================================
         // Orders Logic
         // =========================================================
-        const ordersContainer = document.getElementById('orders-container');
-        const emptyState = document.getElementById('empty-state');
+        const currentOrdersContainer = document.getElementById('current-orders-container');
+        const pastOrdersContainer = document.getElementById('past-orders-container');
+        const currentEmptyState = document.getElementById('current-empty-state');
+        const pastEmptyState = document.getElementById('past-empty-state');
+        const allEmptyState = document.getElementById('all-empty-state');
         const cartBadge = document.getElementById('cart-badge');
         const cancelPopupOverlay = document.getElementById('cancel-popup-overlay');
         const popupCloseBtn = document.getElementById('popup-close-btn');
@@ -539,12 +580,35 @@
                 cartBadge.classList.remove('visible');
             }
         }
-
+        
+        // Caching for product images to avoid redundant Firestore reads
+        const productCache = new Map();
+        async function getProductImage(productId) {
+            if (productCache.has(productId)) {
+                return productCache.get(productId);
+            }
+            try {
+                const docRef = doc(db, 'products', productId);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const imageUrl = docSnap.data().image || 'placeholder.jpg'; // Use a placeholder if no image URL
+                    productCache.set(productId, imageUrl);
+                    return imageUrl;
+                }
+            } catch (error) {
+                console.error("Error fetching product image:", error);
+            }
+            return 'https://via.placeholder.com/60?text=No+Image'; // Fallback placeholder
+        }
+        
         async function fetchOrders() {
             if (!currentUser) return;
 
-            ordersContainer.innerHTML = ''; // Clear previous orders
-            emptyState.style.display = 'none';
+            currentOrdersContainer.innerHTML = '';
+            pastOrdersContainer.innerHTML = '';
+            currentEmptyState.style.display = 'none';
+            pastEmptyState.style.display = 'none';
+            allEmptyState.style.display = 'none';
 
             try {
                 const ordersRef = collection(db, 'orders');
@@ -552,43 +616,59 @@
                 const querySnapshot = await getDocs(q);
 
                 if (querySnapshot.empty) {
-                    emptyState.style.display = 'block';
+                    allEmptyState.style.display = 'block';
                     return;
                 }
 
-                const orders = [];
+                const allOrders = [];
                 querySnapshot.forEach(doc => {
-                    orders.push({ id: doc.id, ...doc.data() });
+                    allOrders.push({ id: doc.id, ...doc.data() });
                 });
 
-                // Sort orders by date, most recent first
-                orders.sort((a, b) => b.orderDate.toDate() - a.orderDate.toDate());
+                allOrders.sort((a, b) => b.orderDate.toDate() - a.orderDate.toDate());
 
-                renderOrders(orders);
+                const currentOrders = allOrders.filter(o => o.status === 'Processing' || o.status === 'Delivered');
+                const pastOrders = allOrders.filter(o => o.status === 'Cancelled' || o.status === 'Shipped');
+
+                if (currentOrders.length > 0) {
+                    await renderOrders(currentOrders, currentOrdersContainer);
+                } else {
+                    currentEmptyState.style.display = 'block';
+                }
+
+                if (pastOrders.length > 0) {
+                    await renderOrders(pastOrders, pastOrdersContainer);
+                } else {
+                    pastEmptyState.style.display = 'block';
+                }
+
             } catch (error) {
                 console.error("Error fetching orders:", error);
                 alert("Failed to load orders. Please try again.");
             }
         }
 
-        function renderOrders(orders) {
-            orders.forEach(order => {
+        async function renderOrders(orders, container) {
+            for (const order of orders) {
                 const orderCard = document.createElement('div');
                 orderCard.className = 'order-card';
                 orderCard.dataset.id = order.id;
 
-                const statusClass = order.status === 'Cancelled' ? 'status-cancelled' : 'status-processing';
+                const statusClass = `status-${order.status.toLowerCase().replace(/\s/g, '-')}`;
                 const date = order.orderDate ? new Date(order.orderDate.seconds * 1000).toLocaleDateString() : 'N/A';
                 
-                let itemsHtml = order.items.map(item => `
-                    <div class="order-item">
-                        <img src="${item.imageUrl}" alt="${item.name}" class="order-item-image">
-                        <div class="order-item-details">
-                            <div class="order-item-name">${item.name} (${item.quantity}x)</div>
-                            <div class="order-item-price">₹${(item.price * item.quantity).toFixed(2)}</div>
+                let itemsHtml = await Promise.all(order.items.map(async item => {
+                    const imageUrl = await getProductImage(item.productId);
+                    return `
+                        <div class="order-item">
+                            <img src="${imageUrl}" alt="${item.name}" class="order-item-image">
+                            <div class="order-item-details">
+                                <div class="order-item-name">${item.name} (${item.quantity}x)</div>
+                                <div class="order-item-price">₹${(item.price * item.quantity).toFixed(2)}</div>
+                            </div>
                         </div>
-                    </div>
-                `).join('');
+                    `;
+                }));
 
                 const cancelBtnHtml = order.status === 'Processing' ? `
                     <div class="cancel-btn-container">
@@ -604,15 +684,15 @@
                     <div class="order-date">
                         <span style="font-size: 12px;">Ordered on: ${date}</span>
                     </div>
-                    ${itemsHtml}
+                    ${itemsHtml.join('')}
                     <div class="order-summary">
                         <span>Total:</span>
                         <span>₹${order.total.toFixed(2)}</span>
                     </div>
                     ${cancelBtnHtml}
                 `;
-                ordersContainer.appendChild(orderCard);
-            });
+                container.appendChild(orderCard);
+            }
         }
         
         function openCancelPopup(orderId) {
@@ -624,7 +704,6 @@
         function closeCancelPopup() {
             cancelPopupOverlay.style.display = 'none';
             selectedOrderIdToCancel = null;
-            // Clear selected radio button
             document.querySelectorAll('input[name="cancel-reason"]').forEach(radio => radio.checked = false);
             confirmCancelBtn.disabled = true;
         }
@@ -643,7 +722,7 @@
 
                 alert('Order has been successfully cancelled.');
                 closeCancelPopup();
-                fetchOrders(); // Re-fetch and re-render orders
+                fetchOrders();
             } catch (error) {
                 console.error("Error cancelling order:", error);
                 alert("Failed to cancel order. Please try again.");
@@ -651,7 +730,7 @@
         }
         
         // Event listeners
-        ordersContainer.addEventListener('click', (e) => {
+        currentOrdersContainer.addEventListener('click', (e) => {
             const cancelBtn = e.target.closest('.cancel-order-btn');
             if (cancelBtn) {
                 const orderId = cancelBtn.dataset.id;
