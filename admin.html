@@ -669,7 +669,6 @@
         // =========================================================
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
-                // Not logged in, redirect to login page
                 window.location.href = 'auth.html';
                 return;
             }
@@ -679,10 +678,8 @@
                 const userDoc = await getDoc(userDocRef);
 
                 if (userDoc.exists() && userDoc.data().role === 'admin') {
-                    // User is an admin, let them see the page.
-                    // The rest of the script can run.
+                    // User is an admin, allow access
                 } else {
-                    // Logged in but not an admin, redirect to home page.
                     window.location.href = 'index.html';
                 }
             } catch (error) {
@@ -711,7 +708,6 @@
                 selectedLink.classList.add('active');
             }
 
-            // Load data specific to the tab
             if (tabId === 'allProductsTab') {
                 fetchAllProducts();
             } else if (tabId === 'updateProductTab') {
@@ -728,7 +724,6 @@
             });
         });
 
-        // Initialize with the first tab on page load
         document.addEventListener('DOMContentLoaded', () => {
             openTab('allProductsTab');
         });
@@ -755,7 +750,6 @@
                 await addDoc(productsCollection, productData);
                 alert('Product added successfully!');
                 productForm.reset();
-                // Refresh the update products list after adding a new product
                 fetchAndUpdateProducts();
             } catch (error) {
                 console.error("Error adding product: ", error);
@@ -934,15 +928,14 @@
                 // Fetch all customer details in a single batch
                 const userIds = orders.map(order => order.userId);
                 const uniqueUserIds = [...new Set(userIds)];
-                const userPromises = uniqueUserIds.map(uid => getDoc(doc(usersCollection, uid)));
-                const userDocs = await Promise.all(userPromises);
                 
                 const users = {};
-                userDocs.forEach(userDoc => {
+                for (const uid of uniqueUserIds) {
+                    const userDoc = await getDoc(doc(usersCollection, uid));
                     if (userDoc.exists()) {
-                        users[userDoc.id] = userDoc.data();
+                        users[uid] = userDoc.data();
                     }
-                });
+                }
 
                 orders.forEach(order => {
                     const orderId = order.id;
@@ -1022,7 +1015,6 @@
             }
             
             try {
-                // Adjusting end date to include the whole day
                 const endDateAdjusted = new Date(endDate.setHours(23, 59, 59, 999));
                 
                 const q = query(
@@ -1038,13 +1030,22 @@
                     return;
                 }
                 
-                const ordersData = await Promise.all(ordersSnapshot.docs.map(async doc => {
+                const userIds = ordersSnapshot.docs.map(doc => doc.data().userId);
+                const uniqueUserIds = [...new Set(userIds)];
+                
+                const users = {};
+                for (const uid of uniqueUserIds) {
+                    const userDoc = await getDoc(doc(usersCollection, uid));
+                    if (userDoc.exists()) {
+                        users[uid] = userDoc.data();
+                    }
+                }
+                
+                const ordersData = ordersSnapshot.docs.map(doc => {
                     const order = doc.data();
                     const items = order.items ? order.items.map(item => `${item.name} (x${item.quantity})`).join(', ') : 'N/A';
                     const orderDate = order.orderDate ? new Date(order.orderDate.seconds * 1000).toLocaleString() : 'N/A';
-                    
-                    const customerDoc = await getDoc(doc(usersCollection, order.userId));
-                    const customer = customerDoc.exists() ? customerDoc.data() : null;
+                    const customer = users[order.userId];
 
                     return {
                         'Order ID': doc.id,
@@ -1056,7 +1057,7 @@
                         'Total Amount': order.total,
                         'Status': order.status
                     };
-                }));
+                });
                 
                 const worksheet = XLSX.utils.json_to_sheet(ordersData);
                 const workbook = XLSX.utils.book_new();
