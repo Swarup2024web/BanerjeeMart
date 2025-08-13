@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping Mart Banners</title>
+    <title>Shopping Mart Banners Slider</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <style>
         :root {
@@ -20,13 +20,24 @@
             padding: 20px;
             background-color: var(--mdc-theme-surface-container);
             color: var(--mdc-theme-on-surface);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
 
-        .banners-container {
+        .slider-container {
+            position: relative;
+            max-width: 90%;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .slides {
             display: flex;
-            flex-direction: column;
-            gap: 16px;
-            padding: 16px;
+            transition: transform 0.5s ease-in-out;
+            width: 300%; /* Adjust this based on the number of banners */
         }
 
         .banner {
@@ -35,14 +46,8 @@
             gap: 12px;
             padding: 24px;
             background-color: #fff;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .banner:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.08);
+            min-width: 33.3333%; /* Each banner takes up one third of the slides container */
+            box-sizing: border-box;
         }
 
         .banner-row-1 {
@@ -73,51 +78,101 @@
             margin: 0;
         }
 
-        @media (min-width: 768px) {
-            .banners-container {
-                flex-direction: row;
-                justify-content: space-between;
-            }
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: var(--mdc-theme-on-primary);
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 10;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+        }
 
-            .banner {
-                flex: 1;
-            }
+        .slider-nav:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .slider-nav.left {
+            left: 10px;
+        }
+
+        .slider-nav.right {
+            right: 10px;
         }
     </style>
 </head>
 <body>
 
-<div class="banners-container">
-    <div class="banner">
-        <div class="banner-row-1">
-            <span class="material-icons banner-icon">directions_bike</span>
-            <h3 class="banner-title">Fast delivery</h3>
+<div class="slider-container">
+    <div class="slides">
+        <div class="banner">
+            <div class="banner-row-1">
+                <span class="material-icons banner-icon">directions_bike</span>
+                <h3 class="banner-title">Fast delivery</h3>
+            </div>
+            <div class="banner-row-2">
+                <p class="banner-text">We deliver within Pakurtala within the hour.</p>
+            </div>
         </div>
-        <div class="banner-row-2">
-            <p class="banner-text">We deliver within Pakurtala within the hour.</p>
+
+        <div class="banner">
+            <div class="banner-row-1">
+                <span class="material-icons banner-icon">verified</span>
+                <h3 class="banner-title">Awesome quality</h3>
+            </div>
+            <div class="banner-row-2">
+                <p class="banner-text">Our ambition is to deliver quality products only.</p>
+            </div>
+        </div>
+
+        <div class="banner">
+            <div class="banner-row-1">
+                <span class="material-icons banner-icon">local_shipping</span>
+                <h3 class="banner-title">Free delivery</h3>
+            </div>
+            <div class="banner-row-2">
+                <p class="banner-text">Delivery is free for orders above ₹199; otherwise we charge ₹5.</p>
+            </div>
         </div>
     </div>
 
-    <div class="banner">
-        <div class="banner-row-1">
-            <span class="material-icons banner-icon">verified</span>
-            <h3 class="banner-title">Awesome quality</h3>
-        </div>
-        <div class="banner-row-2">
-            <p class="banner-text">Our ambition is to deliver quality products only.</p>
-        </div>
-    </div>
-
-    <div class="banner">
-        <div class="banner-row-1">
-            <span class="material-icons banner-icon">local_shipping</span>
-            <h3 class="banner-title">Free delivery</h3>
-        </div>
-        <div class="banner-row-2">
-            <p class="banner-text">Delivery is free for orders above ₹199; otherwise we charge ₹5.</p>
-        </div>
-    </div>
+    <button class="slider-nav left" aria-label="Previous slide">
+        <span class="material-icons">chevron_left</span>
+    </button>
+    <button class="slider-nav right" aria-label="Next slide">
+        <span class="material-icons">chevron_right</span>
+    </button>
 </div>
+
+<script>
+    const slides = document.querySelector('.slides');
+    const leftArrow = document.querySelector('.slider-nav.left');
+    const rightArrow = document.querySelector('.slider-nav.right');
+    const totalSlides = document.querySelectorAll('.banner').length;
+    let currentSlide = 0;
+
+    function updateSlider() {
+        const slideWidth = slides.offsetWidth / totalSlides;
+        slides.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+    }
+
+    leftArrow.addEventListener('click', () => {
+        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+        updateSlider();
+    });
+
+    rightArrow.addEventListener('click', () => {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        updateSlider();
+    });
+</script>
 
 </body>
 </html>
