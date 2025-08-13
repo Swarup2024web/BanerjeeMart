@@ -925,7 +925,6 @@
                 
                 const orders = ordersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-                // Fetch all customer details in a single batch
                 const userIds = orders.map(order => order.userId);
                 const uniqueUserIds = [...new Set(userIds)];
                 
@@ -942,7 +941,7 @@
                     const statusClass = `status-${order.status.toLowerCase()}`;
                     const orderDate = order.orderDate ? new Date(order.orderDate.seconds * 1000).toLocaleDateString() : 'N/A';
                     const customer = users[order.userId];
-                    const customerName = customer ? customer.name : 'Unknown User';
+                    const customerName = customer ? customer.fullName : 'Unknown User';
                     const customerAddress = customer ? customer.address : 'N/A';
                     const customerPhoneNumber = customer ? customer.phoneNumber : 'N/A';
                     
@@ -1049,7 +1048,7 @@
 
                     return {
                         'Order ID': doc.id,
-                        'Customer Name': customer ? customer.name : 'Unknown User',
+                        'Customer Name': customer ? customer.fullName : 'Unknown User',
                         'Customer Phone': customer ? customer.phoneNumber : 'N/A',
                         'Customer Address': customer ? customer.address : 'N/A',
                         'Order Date': orderDate,
