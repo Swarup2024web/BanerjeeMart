@@ -377,7 +377,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-        import { getFirestore, collection, query, where, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, collection, query, where, getDocs, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         // =========================================================
         // FIREBASE CONFIGURATION
@@ -398,18 +398,22 @@
         // =========================================================
         // REDIRECT LOGIC FOR LOGGED-IN USERS
         // =========================================================
+        // Check for existing user on initial load
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // Ensure a user document exists before redirecting
+                // User is signed in, check for their profile document
                 checkUserDocumentAndRedirect(user);
+            } else {
+                // No user is signed in, display the login form
+                showForm('login');
             }
         });
 
         async function checkUserDocumentAndRedirect(user) {
             try {
                 const userDocRef = doc(db, 'users', user.uid);
-                const docSnap = await getDocs(query(collection(db, 'users'), where('uid', '==', user.uid)));
-                if (!docSnap.empty) {
+                const docSnap = await getDoc(userDocRef); // Use getDoc for a specific document
+                if (docSnap.exists()) {
                     window.location.href = 'index.html';
                 }
             } catch (error) {
@@ -492,36 +496,29 @@
             const password = document.getElementById('signup-password').value;
 
             try {
+                // Step 1: Create the user in Firebase Authentication
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
-                // Use a one-time listener to ensure auth state is ready for Firestore write
-                const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-                    if (currentUser && currentUser.uid === user.uid) {
-                        try {
-                            await setDoc(doc(db, 'users', currentUser.uid), {
-                                address: address,
-                                fullName: fullName,
-                                email: email,
-                                uid: currentUser.uid,
-                                role: 'user',
-                                phoneNumber: '+91' + phoneNumber,
-                            });
-                            alert('Account created successfully! Redirecting to home page.');
-                            window.location.href = 'index.html';
-                        } catch (firestoreError) {
-                            console.error("Error writing user to Firestore:", firestoreError);
-                            alert("Sign-up failed: Could not create user profile.");
-                        } finally {
-                            isCreatingUser = false;
-                            unsubscribe(); // Unsubscribe after the operation
-                        }
-                    }
+                // Step 2: Create the user document in Firestore
+                // We use the user's UID as the document ID for a direct, one-to-one relationship
+                const userDocRef = doc(db, 'users', user.uid);
+                await setDoc(userDocRef, {
+                    address: address,
+                    fullName: fullName,
+                    email: email,
+                    uid: user.uid,
+                    role: 'user',
+                    phoneNumber: '+91' + phoneNumber,
                 });
+
+                alert('Account created successfully! Redirecting to home page.');
+                window.location.href = 'index.html';
 
             } catch (error) {
                 console.error("Error during sign up:", error);
                 alert("Sign-up failed: " + error.message);
+            } finally {
                 isCreatingUser = false;
             }
         });
@@ -584,15 +581,6 @@
             } catch (error) {
                 console.error("Error sending reset email:", error);
                 alert("Error sending reset email: " + error.message);
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const currentUser = auth.currentUser;
-            if (!currentUser) {
-                showForm('login');
-            } else {
-                checkUserDocumentAndRedirect(currentUser);
             }
         });
     </script>
