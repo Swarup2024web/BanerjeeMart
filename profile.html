@@ -69,14 +69,15 @@
             padding: 24px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 20px;
         }
 
         .profile-header {
             display: flex;
             align-items: center;
             gap: 16px;
-            margin-bottom: 8px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--outline-color);
         }
 
         .profile-icon {
@@ -87,10 +88,17 @@
         .profile-info {
             display: flex;
             flex-direction: column;
+            flex-grow: 1;
+        }
+        
+        .profile-name-and-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .profile-name {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
             color: var(--on-surface-color);
             margin: 0;
@@ -98,31 +106,11 @@
         }
 
         .profile-email {
-            font-size: 16px;
+            font-size: 14px;
             color: var(--on-background-color);
             margin-top: 4px;
         }
 
-        .profile-details {
-            border-top: 1px solid var(--outline-color);
-            padding-top: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .detail-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 16px;
-            color: var(--on-background-color);
-        }
-        .detail-item .material-symbols-outlined {
-            font-size: 24px;
-            color: var(--on-surface-color);
-        }
-        
         .admin-badge {
             background-color: var(--admin-color);
             color: var(--on-primary-color);
@@ -130,43 +118,101 @@
             font-weight: 700;
             padding: 4px 12px;
             border-radius: 20px;
-            margin-left: 8px;
             text-transform: uppercase;
         }
 
-        .signout-btn, .admin-link {
+        .profile-details-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--on-surface-color);
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--outline-color);
+            border-radius: 8px;
+            font-size: 16px;
+            color: var(--on-surface-color);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(40, 116, 240, 0.2);
+        }
+
+        .profile-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        
+        .action-btn {
             width: 100%;
             padding: 12px;
             border-radius: 8px;
             font-weight: 600;
             text-align: center;
             text-decoration: none;
+            border: none;
+            cursor: pointer;
             transition: background-color 0.2s, color 0.2s;
+            font-size: 16px;
         }
         
+        .save-btn {
+            background-color: var(--primary-color);
+            color: var(--on-primary-color);
+        }
+        .save-btn:hover {
+            background-color: #1a5ac5;
+        }
+        
+        .admin-link {
+            background-color: var(--admin-color);
+            color: var(--on-primary-color);
+        }
+        .admin-link:hover {
+            background-color: #512da8;
+        }
+
+        .contact-btn {
+            background-color: var(--on-surface-color);
+            color: var(--surface-color);
+        }
+        .contact-btn:hover {
+            background-color: #333333;
+        }
+
         .signout-btn {
             background-color: var(--danger-color);
             color: var(--on-primary-color);
-            border: none;
-            cursor: pointer;
         }
         .signout-btn:hover {
             background-color: #a02020;
         }
-
-        .admin-link {
-            background-color: var(--primary-color);
-            color: var(--on-primary-color);
-            display: inline-block;
-            margin-top: 16px;
-        }
-        .admin-link.hidden {
+        
+        .hidden {
             display: none !important;
         }
-        .admin-link:hover {
-            background-color: #1a5ac5;
-        }
-        
+
         /* Reusable Nav Bar from other pages */
         .app-nav-bar {
             position: fixed;
@@ -188,6 +234,7 @@
             text-decoration: none;
             color: var(--on-background-color);
             transition: color 0.2s;
+            position: relative;
         }
         .nav-item.active {
             color: var(--primary-color);
@@ -220,21 +267,33 @@
                 <div class="profile-info">
                     <div class="profile-name-and-badge">
                         <span class="profile-name" id="user-full-name">Loading...</span>
-                        <span id="admin-badge" class="admin-badge" style="display:none;">Admin</span>
+                        <span id="admin-badge" class="admin-badge hidden">Admin</span>
                     </div>
-                    <p class="profile-email" id="user-email">Loading...</span></p>
+                    <p class="profile-email" id="user-email">Loading...</p>
                 </div>
             </div>
 
-            <div class="profile-details">
-                <div class="detail-item">
-                    <span class="material-symbols-outlined">call</span>
-                    <span id="user-phone-number">Loading...</span>
+            <form id="profile-update-form" class="profile-details-form">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" placeholder="Enter your full name">
                 </div>
-            </div>
+                <div class="form-group">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Enter your phone number">
+                </div>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <textarea id="address" name="address" rows="3" placeholder="Enter your full address"></textarea>
+                </div>
+                <button type="submit" class="action-btn save-btn">Save Changes</button>
+            </form>
             
-            <a href="admin.html" class="admin-link hidden" id="admin-panel-link">Admin Panel</a>
-            <button class="signout-btn" id="sign-out-btn">Sign Out</button>
+            <div class="profile-actions">
+                <a href="admin.html" id="admin-panel-link" class="action-btn admin-link hidden">Admin Panel</a>
+                <a href="contact.html" id="contact-link" class="action-btn contact-btn">Contact Banerjee Mart</a>
+                <button class="action-btn signout-btn" id="sign-out-btn">Sign Out</button>
+            </div>
         </div>
     </main>
 
@@ -260,7 +319,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         // =========================================================
         // FIREBASE CONFIGURATION
@@ -283,34 +342,44 @@
         // =========================================================
         const fullNameElement = document.getElementById('user-full-name');
         const emailElement = document.getElementById('user-email');
-        const phoneElement = document.getElementById('user-phone-number');
+        const fullNameInput = document.getElementById('fullName');
+        const phoneNumberInput = document.getElementById('phoneNumber');
+        const addressInput = document.getElementById('address');
+        const profileUpdateForm = document.getElementById('profile-update-form');
         const adminBadge = document.getElementById('admin-badge');
         const adminPanelLink = document.getElementById('admin-panel-link');
         const signOutBtn = document.getElementById('sign-out-btn');
+        
+        let currentUser = null;
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
+                currentUser = user;
                 try {
-                    // Fetch user's data from Firestore
                     const userDocRef = doc(db, 'users', user.uid);
                     const userDoc = await getDoc(userDocRef);
 
                     if (userDoc.exists()) {
                         const userData = userDoc.data();
-                        fullNameElement.textContent = userData.fullName || 'N/A';
-                        emailElement.textContent = userData.email || 'N/A';
-                        phoneElement.textContent = userData.phoneNumber || 'N/A';
+                        
+                        // Display user data
+                        fullNameElement.textContent = userData.fullName || 'User';
+                        emailElement.textContent = userData.email || 'No email provided';
+                        
+                        // Populate form fields
+                        fullNameInput.value = userData.fullName || '';
+                        phoneNumberInput.value = userData.phoneNumber || '';
+                        addressInput.value = userData.address || '';
 
                         // Check if the user is an admin
                         if (userData.role === 'admin') {
-                            adminBadge.style.display = 'inline-block';
+                            adminBadge.classList.remove('hidden');
                             adminPanelLink.classList.remove('hidden');
                         }
                     } else {
                         // User exists in auth but not in Firestore
                         fullNameElement.textContent = 'User profile not found';
-                        emailElement.textContent = 'Please contact support';
-                        phoneElement.textContent = 'N/A';
+                        emailElement.textContent = user.email || 'N/A';
                     }
                 } catch (error) {
                     console.error("Error fetching user data:", error);
@@ -319,6 +388,34 @@
             } else {
                 // No user is logged in, redirect to auth page
                 window.location.href = 'auth.html';
+            }
+        });
+
+        // Handle profile update form submission
+        profileUpdateForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!currentUser) {
+                alert("You must be logged in to update your profile.");
+                return;
+            }
+
+            const updatedData = {
+                fullName: fullNameInput.value,
+                phoneNumber: phoneNumberInput.value,
+                address: addressInput.value,
+            };
+
+            const userDocRef = doc(db, 'users', currentUser.uid);
+
+            try {
+                await updateDoc(userDocRef, updatedData);
+                alert("Profile updated successfully!");
+                // Update the displayed name
+                fullNameElement.textContent = updatedData.fullName;
+            } catch (error) {
+                console.error("Error updating profile:", error);
+                alert("Failed to update profile. Please try again.");
             }
         });
 
