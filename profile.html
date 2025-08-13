@@ -8,10 +8,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
         :root {
-            --primary-color: #2874f0;
+            --primary-color: #f57c00;
             --on-primary-color: #ffffff;
             --surface-color: #ffffff;
-            --background-color: #f0f2f5;
+            --background-color: #fff8e1;
             --on-surface-color: #1f1f1f;
             --on-background-color: #585858;
             --outline-color: #d1d1d1;
@@ -19,7 +19,8 @@
             --shadow-color-dark: rgba(0, 0, 0, 0.15);
             --success-color: #4CAF50;
             --danger-color: #d32f2f;
-            --admin-color: #673ab7; /* A custom color for the admin badge */
+            --admin-color: #673ab7;
+            --link-color: #0d47a1;
         }
         
         * {
@@ -34,7 +35,7 @@
             color: var(--on-background-color);
         }
         
-        /* Reusable Header from other pages */
+        /* Reusable Header */
         .header {
             position: sticky;
             top: 0;
@@ -43,8 +44,6 @@
             padding: 16px 20px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             color: var(--on-primary-color);
-        }
-        .header-row1 {
             text-align: center;
             font-size: 24px;
             font-weight: 700;
@@ -62,6 +61,7 @@
             margin: 0 0 24px;
         }
 
+        /* Profile Card */
         .profile-card {
             background-color: var(--surface-color);
             border-radius: 12px;
@@ -69,36 +69,38 @@
             padding: 24px;
             display: flex;
             flex-direction: column;
+            align-items: center;
+            text-align: center;
             gap: 20px;
         }
 
         .profile-header {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 16px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--outline-color);
+            gap: 8px;
         }
 
         .profile-icon {
-            font-size: 60px;
+            font-size: 80px;
             color: var(--primary-color);
         }
 
-        .profile-info {
+        .profile-info-section {
             display: flex;
             flex-direction: column;
-            flex-grow: 1;
+            gap: 4px;
         }
         
         .profile-name-and-badge {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
         }
 
         .profile-name {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 700;
             color: var(--on-surface-color);
             margin: 0;
@@ -106,9 +108,9 @@
         }
 
         .profile-email {
-            font-size: 14px;
+            font-size: 16px;
             color: var(--on-background-color);
-            margin-top: 4px;
+            margin: 0;
         }
 
         .admin-badge {
@@ -121,47 +123,38 @@
             text-transform: uppercase;
         }
 
-        .profile-details-form {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group label {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--on-surface-color);
-            margin-bottom: 8px;
-        }
-
-        .form-group input,
-        .form-group textarea {
+        .profile-details-section {
             width: 100%;
-            padding: 12px;
-            border: 1px solid var(--outline-color);
-            border-radius: 8px;
-            font-size: 16px;
-            color: var(--on-surface-color);
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(40, 116, 240, 0.2);
-        }
-
-        .profile-actions {
+            border-top: 1px solid var(--outline-color);
+            padding-top: 20px;
             display: flex;
             flex-direction: column;
             gap: 12px;
-            margin-top: 8px;
+            text-align: left;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 16px;
+            color: var(--on-background-color);
+        }
+        .detail-item .material-symbols-outlined {
+            font-size: 24px;
+            color: var(--on-surface-color);
+            flex-shrink: 0;
+        }
+        .detail-text {
+            word-break: break-word;
+        }
+
+        .profile-actions {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 12px;
         }
         
         .action-btn {
@@ -177,12 +170,12 @@
             font-size: 16px;
         }
         
-        .save-btn {
+        .edit-profile-btn {
             background-color: var(--primary-color);
             color: var(--on-primary-color);
         }
-        .save-btn:hover {
-            background-color: #1a5ac5;
+        .edit-profile-btn:hover {
+            background-color: #e65100;
         }
         
         .admin-link {
@@ -213,7 +206,87 @@
             display: none !important;
         }
 
-        /* Reusable Nav Bar from other pages */
+        /* Pop-up Styles */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .popup-card {
+            background-color: var(--surface-color);
+            padding: 24px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .popup-close-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--on-background-color);
+        }
+
+        .popup-card h3 {
+            margin: 0 0 16px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--on-surface-color);
+            text-align: center;
+        }
+        
+        .edit-form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 16px;
+        }
+
+        .edit-form-group label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--on-surface-color);
+            margin-bottom: 8px;
+        }
+
+        .edit-form-group input,
+        .edit-form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--outline-color);
+            border-radius: 8px;
+            font-size: 16px;
+            color: var(--on-surface-color);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        .edit-form-group input:focus,
+        .edit-form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(245, 124, 0, 0.2);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Reusable Nav Bar */
         .app-nav-bar {
             position: fixed;
             bottom: 0;
@@ -250,12 +323,31 @@
             font-size: 12px;
             font-weight: 500;
         }
+        .nav-item .badge {
+            position: absolute;
+            top: -2px;
+            right: -8px;
+            background-color: var(--danger-color);
+            color: var(--on-primary-color);
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 50%;
+            line-height: 1;
+            min-width: 18px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+        .nav-item .badge.visible {
+            display: block;
+        }
     </style>
 </head>
 <body>
 
     <header class="header">
-        <div class="header-row1">Banerjee Mart</div>
+        Banerjee Mart
     </header>
 
     <main class="main-content">
@@ -264,7 +356,7 @@
         <div class="profile-card">
             <div class="profile-header">
                 <span class="material-symbols-outlined profile-icon">account_circle</span>
-                <div class="profile-info">
+                <div class="profile-info-section">
                     <div class="profile-name-and-badge">
                         <span class="profile-name" id="user-full-name">Loading...</span>
                         <span id="admin-badge" class="admin-badge hidden">Admin</span>
@@ -273,29 +365,49 @@
                 </div>
             </div>
 
-            <form id="profile-update-form" class="profile-details-form">
-                <div class="form-group">
-                    <label for="fullName">Full Name</label>
-                    <input type="text" id="fullName" name="fullName" placeholder="Enter your full name">
+            <div class="profile-details-section">
+                <div class="detail-item">
+                    <span class="material-symbols-outlined">call</span>
+                    <span id="user-phone-number" class="detail-text">Loading...</span>
                 </div>
-                <div class="form-group">
-                    <label for="phoneNumber">Phone Number</label>
-                    <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Enter your phone number">
+                <div class="detail-item">
+                    <span class="material-symbols-outlined">home</span>
+                    <span id="user-address" class="detail-text">Loading...</span>
                 </div>
-                <div class="form-group">
-                    <label for="address">Address</label>
-                    <textarea id="address" name="address" rows="3" placeholder="Enter your full address"></textarea>
-                </div>
-                <button type="submit" class="action-btn save-btn">Save Changes</button>
-            </form>
+            </div>
             
             <div class="profile-actions">
+                <button class="action-btn edit-profile-btn" id="edit-profile-btn">Edit Profile</button>
                 <a href="admin.html" id="admin-panel-link" class="action-btn admin-link hidden">Admin Panel</a>
                 <a href="contact.html" id="contact-link" class="action-btn contact-btn">Contact Banerjee Mart</a>
                 <button class="action-btn signout-btn" id="sign-out-btn">Sign Out</button>
             </div>
         </div>
     </main>
+
+    <div id="edit-popup-overlay" class="popup-overlay">
+        <div class="popup-card">
+            <button id="popup-close-btn" class="popup-close-btn">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <h3>Edit Profile</h3>
+            <form id="profile-update-form">
+                <div class="edit-form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" placeholder="Enter your full name">
+                </div>
+                <div class="edit-form-group">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Enter your phone number">
+                </div>
+                <div class="edit-form-group">
+                    <label for="address">Address</label>
+                    <textarea id="address" name="address" rows="3" placeholder="Enter your full address"></textarea>
+                </div>
+                <button type="submit" class="action-btn save-btn">Save Changes</button>
+            </form>
+        </div>
+    </div>
 
     <nav class="app-nav-bar">
         <a href="index.html" class="nav-item">
@@ -305,6 +417,7 @@
         <a href="cart.html" class="nav-item">
             <span class="material-symbols-outlined nav-item-icon">shopping_cart</span>
             <span class="nav-item-text">Cart</span>
+            <span id="cart-badge" class="badge">0</span>
         </a>
         <a href="orders.html" class="nav-item">
             <span class="material-symbols-outlined nav-item-icon">receipt_long</span>
@@ -338,67 +451,110 @@
         const db = getFirestore(app);
 
         // =========================================================
-        // PROFILE PAGE LOGIC
+        // DOM ELEMENTS & LOGIC
         // =========================================================
         const fullNameElement = document.getElementById('user-full-name');
         const emailElement = document.getElementById('user-email');
-        const fullNameInput = document.getElementById('fullName');
-        const phoneNumberInput = document.getElementById('phoneNumber');
-        const addressInput = document.getElementById('address');
-        const profileUpdateForm = document.getElementById('profile-update-form');
+        const phoneNumberElement = document.getElementById('user-phone-number');
+        const addressElement = document.getElementById('user-address');
         const adminBadge = document.getElementById('admin-badge');
         const adminPanelLink = document.getElementById('admin-panel-link');
         const signOutBtn = document.getElementById('sign-out-btn');
-        
+        const editProfileBtn = document.getElementById('edit-profile-btn');
+        const editPopupOverlay = document.getElementById('edit-popup-overlay');
+        const popupCloseBtn = document.getElementById('popup-close-btn');
+        const profileUpdateForm = document.getElementById('profile-update-form');
+        const fullNameInput = document.getElementById('fullName');
+        const phoneNumberInput = document.getElementById('phoneNumber');
+        const addressInput = document.getElementById('address');
+        const cartBadge = document.getElementById('cart-badge');
+
         let currentUser = null;
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
-                try {
-                    const userDocRef = doc(db, 'users', user.uid);
-                    const userDoc = await getDoc(userDocRef);
-
-                    if (userDoc.exists()) {
-                        const userData = userDoc.data();
-                        
-                        // Display user data
-                        fullNameElement.textContent = userData.fullName || 'User';
-                        emailElement.textContent = userData.email || 'No email provided';
-                        
-                        // Populate form fields
-                        fullNameInput.value = userData.fullName || '';
-                        phoneNumberInput.value = userData.phoneNumber || '';
-                        addressInput.value = userData.address || '';
-
-                        // Check if the user is an admin
-                        if (userData.role === 'admin') {
-                            adminBadge.classList.remove('hidden');
-                            adminPanelLink.classList.remove('hidden');
-                        }
-                    } else {
-                        // User exists in auth but not in Firestore
-                        fullNameElement.textContent = 'User profile not found';
-                        emailElement.textContent = user.email || 'N/A';
-                    }
-                } catch (error) {
-                    console.error("Error fetching user data:", error);
-                    alert("Failed to load profile data. Please try again later.");
-                }
+                fetchUserProfile(user);
+                updateCartBadge();
             } else {
-                // No user is logged in, redirect to auth page
                 window.location.href = 'auth.html';
             }
         });
+        
+        function getCart() {
+            try {
+                return JSON.parse(localStorage.getItem('cart')) || {};
+            } catch (e) {
+                console.error("Failed to parse cart from localStorage", e);
+                return {};
+            }
+        }
+        
+        function updateCartBadge() {
+            const cart = getCart();
+            const totalItems = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+            cartBadge.textContent = totalItems;
+            if (totalItems > 0) {
+                cartBadge.classList.add('visible');
+            } else {
+                cartBadge.classList.remove('visible');
+            }
+        }
 
-        // Handle profile update form submission
+        async function fetchUserProfile(user) {
+            try {
+                const userDocRef = doc(db, 'users', user.uid);
+                const userDoc = await getDoc(userDocRef);
+
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    
+                    // Display user data
+                    fullNameElement.textContent = userData.fullName || 'User';
+                    emailElement.textContent = userData.email || 'No email provided';
+                    phoneNumberElement.textContent = userData.phoneNumber || 'N/A';
+                    addressElement.textContent = userData.address || 'N/A';
+
+                    // Populate pop-up form fields
+                    fullNameInput.value = userData.fullName || '';
+                    phoneNumberInput.value = userData.phoneNumber || '';
+                    addressInput.value = userData.address || '';
+
+                    // Check if the user is an admin
+                    if (userData.role === 'admin') {
+                        adminBadge.classList.remove('hidden');
+                        adminPanelLink.classList.remove('hidden');
+                    }
+                } else {
+                    fullNameElement.textContent = 'User profile not found';
+                    emailElement.textContent = user.email || 'N/A';
+                    phoneNumberElement.textContent = 'N/A';
+                    addressElement.textContent = 'N/A';
+                }
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+                alert("Failed to load profile data. Please try again later.");
+            }
+        }
+
+        // Event listeners
+        editProfileBtn.addEventListener('click', () => {
+            editPopupOverlay.style.display = 'flex';
+        });
+
+        popupCloseBtn.addEventListener('click', () => {
+            editPopupOverlay.style.display = 'none';
+        });
+
+        editPopupOverlay.addEventListener('click', (e) => {
+            if (e.target === editPopupOverlay) {
+                editPopupOverlay.style.display = 'none';
+            }
+        });
+
         profileUpdateForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-
-            if (!currentUser) {
-                alert("You must be logged in to update your profile.");
-                return;
-            }
+            if (!currentUser) return;
 
             const updatedData = {
                 fullName: fullNameInput.value,
@@ -411,15 +567,15 @@
             try {
                 await updateDoc(userDocRef, updatedData);
                 alert("Profile updated successfully!");
-                // Update the displayed name
-                fullNameElement.textContent = updatedData.fullName;
+                // Refresh displayed data
+                fetchUserProfile(currentUser); 
+                editPopupOverlay.style.display = 'none';
             } catch (error) {
                 console.error("Error updating profile:", error);
                 alert("Failed to update profile. Please try again.");
             }
         });
 
-        // Sign out function
         signOutBtn.addEventListener('click', async () => {
             try {
                 await signOut(auth);
