@@ -420,6 +420,9 @@
         async function fetchOrders() {
             if (!currentUser) return;
 
+            // Display a loading message
+            ordersContainer.innerHTML = '<h3 style="text-align: center;">Loading orders...</h3>';
+
             try {
                 // Query the 'orders' collection for the current user's orders, sorted by date
                 const q = query(
@@ -473,12 +476,13 @@
                 const orderDate = order.orderDate ? order.orderDate.toDate().toLocaleDateString('en-IN') : 'N/A';
                 const orderTotal = order.total ? order.total.toFixed(2) : '0.00';
 
+                // Map over the items array, which is now populated with imageUrl
                 const orderItemsHtml = order.items.map(item => `
                     <div class="order-item">
                         <img src="${item.imageUrl}" alt="${item.name}" class="order-item-image">
                         <div class="order-item-info">
                             <div class="order-item-name">${item.name}</div>
-                            <div class="order-item-qty-price">${item.quantity} x ₹${item.price.toFixed(2)}</div>
+                            <div class="order-item-qty-price">${item.quantity} x ₹${(item.price * item.quantity).toFixed(2)}</div>
                         </div>
                     </div>
                 `).join('');
