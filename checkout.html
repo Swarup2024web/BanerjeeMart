@@ -330,14 +330,14 @@
             if (!currentUser) return;
 
             try {
-                // Assuming your user data is in a 'users' collection, with a document ID matching the user's UID
                 const userDocRef = doc(db, 'users', currentUser.uid);
                 const userDoc = await getDoc(userDocRef);
 
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
                     userNameDiv.textContent = `Full Name: ${userData.fullName || 'N/A'}`;
-                    userMobileDiv.textContent = `Mobile: ${userData.mobileNumber || 'N/A'}`;
+                    // Use 'phoneNumber' which is what is saved in your auth.html
+                    userMobileDiv.textContent = `Mobile: ${userData.phoneNumber || 'N/A'}`; 
                     userAddressDiv.textContent = `Address: ${userData.address || 'N/A'}`;
                 } else {
                     console.error("No user data found for this user.");
@@ -414,10 +414,16 @@
             const total = subtotal + SHIPPING_COST;
             
             // Prepare order data to be saved to Firestore
+            // This is the crucial part: Add the imageUrl to each item
+            const itemsWithImages = Object.values(userCart).map(item => ({
+                ...item,
+                imageUrl: item.imageUrl || '' // Use a fallback if imageUrl is not present
+            }));
+            
             const orderData = {
                 userId: currentUser.uid,
                 orderDate: serverTimestamp(),
-                items: Object.values(userCart),
+                items: itemsWithImages, // Save the modified items array
                 subtotal: subtotal,
                 shipping: SHIPPING_COST,
                 total: total,
