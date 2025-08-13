@@ -16,7 +16,7 @@
             --subtle-text-color: #616161;
             --border-color: #e0e0e0;
             --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
-            --shadow-hover: 0 4px 6px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-hover: 4px 6px rgba(0,0,0,0.1), 1px 3px rgba(0,0,0,0.08);
             --success-color: #388e3c;
             --warning-color: #fbc02d;
             --danger-color: #d32f2f;
@@ -125,7 +125,8 @@
             color: var(--subtle-text-color);
         }
         .form-group input,
-        .form-group select {
+        .form-group select,
+        .form-group textarea {
             width: 100%;
             padding: 12px;
             border: 1px solid var(--border-color);
@@ -135,7 +136,8 @@
             transition: border-color 0.2s, box-shadow 0.2s;
         }
         .form-group input:focus,
-        .form-group select:focus {
+        .form-group select:focus,
+        .form-group textarea:focus {
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 2px rgba(42, 85, 229, 0.2);
@@ -226,6 +228,7 @@
             display: inline-block;
             color: var(--surface-color);
         }
+        .status-processing { background-color: #9e9e9e; }
         .status-packed { background-color: #ff9800; }
         .status-shipped { background-color: var(--primary-color); }
         .status-delivered { background-color: var(--success-color); }
@@ -267,6 +270,7 @@
             display: flex;
             gap: 16px;
             align-items: center;
+            flex-wrap: wrap;
         }
         .filter-section .form-group {
             margin-bottom: 0;
@@ -283,6 +287,12 @@
         .filter-section .btn {
             align-self: flex-end;
             min-width: 120px;
+        }
+        .status-dropdown {
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
         }
 
         @media (max-width: 768px) {
@@ -805,27 +815,49 @@
                     return;
                 }
                 
-                ordersSnapshot.forEach(orderDoc => {
-                    const order = orderDoc.data();
-                    const orderId = orderDoc.id;
+                const orders = ordersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                // Fetch all customer names in a single batch to avoid multiple reads
+                const userIds = orders.map(order => order.userId);
+                const uniqueUserIds = [...new Set(userIds)];
+                const userPromises = uniqueUserIds.map(uid => getDoc(doc(usersCollection, uid)));
+                const userDocs = await Promise.all(userPromises);
+                
+                const users = {};
+                userDocs.forEach(userDoc => {
+                    if (userDoc.exists()) {
+                        users[userDoc.id] = userDoc.data();
+                    }
+                });
+
+                orders.forEach(order => {
+                    const orderId = order.id;
                     const statusClass = `status-${order.status.toLowerCase()}`;
                     const orderDate = order.orderDate ? new Date(order.orderDate.seconds * 1000).toLocaleDateString() : 'N/A';
+                    const customer = users[order.userId];
+                    const customerName = customer ? customer.name : 'Unknown User';
+                    const customerAddress = customer ? customer.address : 'N/A';
                     
-                    const itemsList = (order.items && Array.isArray(order.items)) ? order.items.map(item => `<li>${item.name} (${item.quantity})</li>`).join('') : '<li>No items found</li>';
+                    const itemsList = (order.items && Array.isArray(order.items)) 
+                        ? order.items.map(item => `<li>${item.name} (${item.quantity})</li>`).join('') 
+                        : '<li>No items found</li>';
                     
                     const orderItem = `
                         <tr>
                             <td>...${orderId.slice(-4)}</td>
-                            <td>${order.customerName || 'N/A'}</td>
+                            <td>${customerName}</td>
                             <td>${orderDate}</td>
                             <td><ul style="list-style-type:none; margin:0; padding:0;">${itemsList}</ul></td>
                             <td>₹${(order.total || 0).toFixed(2)}</td>
                             <td><span class="order-status ${statusClass}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></td>
                             <td class="action-buttons">
-                                <button class="btn-status" onclick="updateOrderStatus('${orderId}', 'Packed')"><span class="material-symbols-outlined">package_2</span></button>
-                                <button class="btn-status" onclick="updateOrderStatus('${orderId}', 'Shipped')"><span class="material-symbols-outlined">local_shipping</span></button>
-                                <button class="btn-status" onclick="updateOrderStatus('${orderId}', 'Delivered')"><span class="material-symbols-outlined">check_circle</span></button>
-                                <button class="btn-delete" onclick="updateOrderStatus('${orderId}', 'Cancelled')"><span class="material-symbols-outlined">cancel</span></button>
+                                <select onchange="updateOrderStatus('${orderId}', this.value)" class="status-dropdown">
+                                    <option value="Processing" ${order.status === 'Processing' ? 'selected' : ''}>Processing</option>
+                                    <option value="Packed" ${order.status === 'Packed' ? 'selected' : ''}>Packed</option>
+                                    <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                                    <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                                    <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                                </select>
                             </td>
                         </tr>
                     `;
@@ -885,12 +917,13 @@
                     const order = doc.data();
                     const items = order.items ? order.items.map(item => `${item.name} (x${item.quantity})`).join(', ') : 'N/A';
                     const orderDate = order.orderDate ? new Date(order.orderDate.seconds * 1000).toLocaleString() : 'N/A';
+                    const customer = users[order.userId];
 
                     return {
                         'Order ID': doc.id,
-                        'Customer Name': order.customerName || 'N/A',
-                        'Customer Phone': order.customerPhone || 'N/A',
-                        'Customer Address': order.customerAddress || 'N/A',
+                        'Customer Name': customer ? customer.name : 'Unknown User',
+                        'Customer Phone': customer ? customer.phone : 'N/A',
+                        'Customer Address': customer ? customer.address : 'N/A',
                         'Order Date': orderDate,
                         'Items': items,
                         'Total Amount': order.total,
