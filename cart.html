@@ -103,7 +103,7 @@
         .cart-item {
             background-color: var(--surface-color);
             border-radius: 12px;
-            box-shadow: 0 4px 10px var(--shadow-color-light);
+            box-shadow: 0 4-px 10px var(--shadow-color-light);
             display: flex;
             align-items: center;
             gap: 16px;
@@ -513,8 +513,9 @@
                 cartItemElement.className = 'cart-item';
                 cartItemElement.dataset.id = productId;
                 
+                // Corrected field name from imageUrl to image
                 cartItemElement.innerHTML = `
-                    <img src="${item.imageUrl}" alt="${item.name}" class="cart-item-image">
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-image">
                     <div class="cart-item-details">
                         <div class="cart-item-name">${item.name}</div>
                         <div class="cart-item-price">₹${item.price.toFixed(2)}</div>
@@ -561,7 +562,6 @@
             const cart = getCart();
             if (!cart[productId]) return;
 
-            // Ensure quantity doesn't go below 0
             const newQuantity = cart[productId].quantity + change;
             if (newQuantity <= 0) {
                 delete cart[productId];
@@ -580,7 +580,6 @@
             renderCart();
         }
 
-        // Add event listeners for cart item actions
         cartItemsContainer.addEventListener('click', (e) => {
             const decreaseBtn = e.target.closest('.decrease-btn');
             const increaseBtn = e.target.closest('.increase-btn');
