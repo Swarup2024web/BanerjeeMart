@@ -23,16 +23,16 @@
         }
 
         .banners-container {
-            display: grid;
+            display: flex;
+            flex-direction: column;
             gap: 16px;
             padding: 16px;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         }
 
         .banner {
             display: flex;
-            align-items: center;
-            gap: 16px;
+            flex-direction: column;
+            gap: 12px;
             padding: 24px;
             background-color: #fff;
             border-radius: 12px;
@@ -45,15 +45,15 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.08);
         }
 
-        .banner-icon {
-            font-size: 48px;
-            color: var(--mdc-theme-primary);
+        .banner-row-1 {
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
 
-        .banner-content {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
+        .banner-icon {
+            font-size: 36px;
+            color: var(--mdc-theme-primary);
         }
 
         .banner-title {
@@ -63,10 +63,25 @@
             margin: 0;
         }
 
+        .banner-row-2 {
+            display: flex;
+        }
+
         .banner-text {
             font-size: 0.9rem;
             color: var(--mdc-theme-on-surface-variant);
             margin: 0;
+        }
+
+        @media (min-width: 768px) {
+            .banners-container {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            .banner {
+                flex: 1;
+            }
         }
     </style>
 </head>
@@ -74,25 +89,31 @@
 
 <div class="banners-container">
     <div class="banner">
-        <span class="material-icons banner-icon">directions_bike</span>
-        <div class="banner-content">
+        <div class="banner-row-1">
+            <span class="material-icons banner-icon">directions_bike</span>
             <h3 class="banner-title">Fast delivery</h3>
+        </div>
+        <div class="banner-row-2">
             <p class="banner-text">We deliver within Pakurtala within the hour.</p>
         </div>
     </div>
 
     <div class="banner">
-        <span class="material-icons banner-icon">verified</span>
-        <div class="banner-content">
+        <div class="banner-row-1">
+            <span class="material-icons banner-icon">verified</span>
             <h3 class="banner-title">Awesome quality</h3>
+        </div>
+        <div class="banner-row-2">
             <p class="banner-text">Our ambition is to deliver quality products only.</p>
         </div>
     </div>
 
     <div class="banner">
-        <span class="material-icons banner-icon">local_shipping</span>
-        <div class="banner-content">
+        <div class="banner-row-1">
+            <span class="material-icons banner-icon">local_shipping</span>
             <h3 class="banner-title">Free delivery</h3>
+        </div>
+        <div class="banner-row-2">
             <p class="banner-text">Delivery is free for orders above ₹199; otherwise we charge ₹5.</p>
         </div>
     </div>
