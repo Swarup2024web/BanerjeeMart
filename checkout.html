@@ -334,7 +334,7 @@
                     <input type="radio" name="payment" value="UPI">
                     <div class="payment-option-info">
                         <h3>UPI Payment</h3>
-                        <p>Pay via UPI ID: 6294390641@apl</p>
+                        <p>Pay instantly with your UPI app.</p>
                     </div>
                 </label>
             </div>
@@ -401,8 +401,12 @@
 
         const DELIVERY_THRESHOLD = 199;
         const DELIVERY_COST = 5;
+        const UPI_ID = "6294390641@apl";
+        
         let currentUser = null;
         let userCart = {};
+        let finalSubtotal = 0;
+        let finalTotal = 0;
 
         // Authentication check
         onAuthStateChanged(auth, (user) => {
@@ -488,6 +492,10 @@
 
             const deliveryCost = subtotal < DELIVERY_THRESHOLD ? DELIVERY_COST : 0;
             const total = subtotal + deliveryCost;
+
+            finalSubtotal = subtotal;
+            finalTotal = total;
+
             subtotalSpan.textContent = `₹${subtotal.toFixed(2)}`;
             deliverySpan.textContent = `₹${deliveryCost.toFixed(2)}`;
             totalSpan.textContent = `₹${total.toFixed(2)}`;
@@ -505,41 +513,54 @@
         });
 
         // Place order to Firestore
-        placeOrderBtn.addEventListener('click', async () => {
+        async function placeOrder(paymentMethod) {
             if (Object.keys(userCart).length === 0) {
                 alert("Your cart is empty. Please add items to checkout.");
                 return;
             }
 
-            const selectedPaymentMethod = document.querySelector('.payment-option.selected').dataset.method;
-            const subtotal = Object.values(userCart).reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const deliveryCost = subtotal < DELIVERY_THRESHOLD ? DELIVERY_COST : 0;
-            const total = subtotal + deliveryCost;
-            
             const orderData = {
                 userId: currentUser.uid,
                 orderDate: serverTimestamp(),
                 items: Object.values(userCart),
-                subtotal: subtotal,
-                delivery: deliveryCost,
-                total: total,
-                paymentMethod: selectedPaymentMethod,
+                subtotal: finalSubtotal,
+                delivery: finalSubtotal < DELIVERY_THRESHOLD ? DELIVERY_COST : 0,
+                total: finalTotal,
+                paymentMethod: paymentMethod,
                 status: 'Processing'
             };
 
             try {
                 await addDoc(collection(db, 'orders'), orderData);
-                
                 localStorage.removeItem('cart');
-                
                 alert('Order placed successfully!');
-                
                 window.location.href = 'orders.html';
             } catch (error) {
                 console.error("Error placing order:", error);
                 alert("Failed to place order. Please try again.");
             }
+        }
+
+        placeOrderBtn.addEventListener('click', async () => {
+            const selectedPaymentMethod = document.querySelector('.payment-option.selected').dataset.method;
+            
+            if (selectedPaymentMethod === 'COD') {
+                await placeOrder('Cash on Delivery');
+            } else if (selectedPaymentMethod === 'UPI') {
+                const confirmed = confirm("You will be redirected to your UPI app to complete the payment. Have you already paid the amount?");
+                if (confirmed) {
+                    await placeOrder('UPI Payment');
+                    // This is where you would typically open the UPI app.
+                    // For a basic demo, we just alert. A real app would use a deep link.
+                    // Example: window.location.href = `upi://pay?pa=${UPI_ID}&pn=Banerjee%20Mart&am=${finalTotal.toFixed(2)}&cu=INR&tn=Order%20Payment`;
+                }
+            }
         });
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // No need to call loadCartAndRenderSummary here, it's called in onAuthStateChanged
+        });
+
     </script>
 </body>
 </html>
