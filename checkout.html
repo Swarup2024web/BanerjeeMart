@@ -166,8 +166,10 @@
             border-color: var(--primary-color);
         }
 
-        .payment-option input[type="radio"] {
-            display: none;
+        .payment-option.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+            border-color: var(--outline-color);
         }
 
         .payment-option-info {
@@ -323,18 +325,18 @@
                 Payment Method
             </h2>
             <div id="payment-options">
-                <label class="payment-option selected" data-method="COD">
-                    <input type="radio" name="payment" value="COD" checked>
+                <label class="payment-option selected" data-method="cod">
+                    <input type="radio" name="payment" value="cod" checked>
                     <div class="payment-option-info">
                         <h3>Cash on Delivery</h3>
                         <p>Pay with cash upon delivery.</p>
                     </div>
                 </label>
-                <label class="payment-option" data-method="UPI">
-                    <input type="radio" name="payment" value="UPI">
+                <label class="payment-option disabled" data-method="upi">
+                    <input type="radio" name="payment" value="upi" disabled>
                     <div class="payment-option-info">
                         <h3>UPI Payment</h3>
-                        <p>Pay instantly with your UPI app.</p>
+                        <p>Coming Soon</p>
                     </div>
                 </label>
             </div>
@@ -401,7 +403,6 @@
 
         const DELIVERY_THRESHOLD = 199;
         const DELIVERY_COST = 5;
-        const UPI_ID = "6294390641@apl";
         
         let currentUser = null;
         let userCart = {};
@@ -504,7 +505,7 @@
         // Handle payment option selection
         paymentOptionsDiv.addEventListener('click', (e) => {
             const selectedOption = e.target.closest('.payment-option');
-            if (selectedOption) {
+            if (selectedOption && !selectedOption.classList.contains('disabled')) {
                 document.querySelectorAll('.payment-option').forEach(option => {
                     option.classList.remove('selected');
                 });
@@ -542,25 +543,24 @@
         }
 
         placeOrderBtn.addEventListener('click', async () => {
-            const selectedPaymentMethod = document.querySelector('.payment-option.selected').dataset.method;
+            const selectedPaymentMethodElement = document.querySelector('.payment-option.selected');
+            if (!selectedPaymentMethodElement) {
+                alert("Please select a payment method.");
+                return;
+            }
             
-            if (selectedPaymentMethod === 'COD') {
-                await placeOrder('Cash on Delivery');
-            } else if (selectedPaymentMethod === 'UPI') {
-                const confirmed = confirm("You will be redirected to your UPI app to complete the payment. Have you already paid the amount?");
-                if (confirmed) {
-                    await placeOrder('UPI Payment');
-                    // This is where you would typically open the UPI app.
-                    // For a basic demo, we just alert. A real app would use a deep link.
-                    // Example: window.location.href = `upi://pay?pa=${UPI_ID}&pn=Banerjee%20Mart&am=${finalTotal.toFixed(2)}&cu=INR&tn=Order%20Payment`;
-                }
+            const selectedMethod = selectedPaymentMethodElement.dataset.method;
+            
+            if (selectedMethod === 'cod') {
+                await placeOrder('cod');
+            } else {
+                alert("Invalid payment method selected.");
             }
         });
         
         document.addEventListener('DOMContentLoaded', () => {
             // No need to call loadCartAndRenderSummary here, it's called in onAuthStateChanged
         });
-
     </script>
 </body>
 </html>
