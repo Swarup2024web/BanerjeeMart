@@ -437,7 +437,7 @@
         <div id="current-orders-section">
             <h2 class="orders-section-title">Current Orders</h2>
             <div id="current-orders-container" class="order-container">
-                </div>
+            </div>
             <div id="current-empty-state" class="section-empty-state" style="display: none;">
                 <h3>No Current Orders</h3>
                 <p>Track new orders here after you place them.</p>
@@ -447,7 +447,7 @@
         <div id="past-orders-section">
             <h2 class="orders-section-title">Past Orders</h2>
             <div id="past-orders-container" class="order-container">
-                </div>
+            </div>
             <div id="past-empty-state" class="section-empty-state" style="display: none;">
                 <h3>No Past Orders</h3>
                 <p>Your previous orders will appear here.</p>
@@ -518,7 +518,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-        import { getFirestore, collection, query, where, getDocs, doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         // Firebase configuration
         const firebaseConfig = {
@@ -591,7 +591,7 @@
                 const docRef = doc(db, 'products', productId);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
-                    const imageUrl = docSnap.data().image || 'placeholder.jpg'; // Use a placeholder if no image URL
+                    const imageUrl = docSnap.data().image || 'https://via.placeholder.com/60?text=No+Image'; // Use a placeholder if no image URL
                     productCache.set(productId, imageUrl);
                     return imageUrl;
                 }
