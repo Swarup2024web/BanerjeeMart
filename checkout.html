@@ -463,7 +463,7 @@
                 return {};
             }
         }
-
+        
         function loadCartAndRenderSummary() {
             userCart = getCart();
             orderItemsDiv.innerHTML = '';
@@ -520,10 +520,21 @@
                 return;
             }
 
+            // Create a new array of cart items, including the productId
+            const itemsWithProductId = Object.keys(userCart).map(productId => {
+                const item = userCart[productId];
+                return {
+                    productId: productId, // Add the productId here
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity
+                };
+            });
+
             const orderData = {
                 userId: currentUser.uid,
                 orderDate: serverTimestamp(),
-                items: Object.values(userCart),
+                items: itemsWithProductId, // Use the new array with productId
                 subtotal: finalSubtotal,
                 delivery: finalSubtotal < DELIVERY_THRESHOLD ? DELIVERY_COST : 0,
                 total: finalTotal,
