@@ -8,10 +8,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
     <style>
         :root {
-            --primary-color: #f57c00; /* Sweet new primary color */
+            --primary-color: #f57c00;
             --on-primary-color: #ffffff;
             --surface-color: #ffffff;
-            --background-color: #fff8e1; /* Lighter, sweeter background */
+            --background-color: #fff8e1;
             --on-surface-color: #1f1f1f;
             --on-background-color: #585858;
             --outline-color: #d1d1d1;
@@ -188,7 +188,7 @@
 
         .product-image-wrapper {
             position: relative;
-            padding-top: 100%; /* Creates a square container for the image */
+            padding-top: 100%;
         }
         
         .product-image {
@@ -493,10 +493,9 @@
         const state = {
             products: [],
             allProducts: [],
-            cart: {} // A simple object to store product ID and quantity
+            cart: {}
         };
         
-        // NEW: Utility functions to manage local storage
         function getCart() {
             try {
                 return JSON.parse(localStorage.getItem('cart')) || {};
@@ -510,7 +509,6 @@
             localStorage.setItem('cart', JSON.stringify(cart));
         }
 
-        // NEW: This object maps your category strings to Material Symbols icon names.
         const categoryIcons = {
             "Groceries": "local_grocery_store",
             "Foods": "lunch_dining",
@@ -518,15 +516,14 @@
             "Stationery": "edit_note"
         };
         
-        // Fetch all products from Firestore once and process categories
         async function fetchAllProducts() {
-            renderProducts(true); // Show skeleton loading
+            renderProducts(true);
             const q = query(collection(db, 'products'), orderBy('name'));
             try {
                 const querySnapshot = await getDocs(q);
                 state.allProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 state.products = [...state.allProducts];
-                state.cart = getCart(); // Load cart from localStorage
+                state.cart = getCart();
                 renderCategories();
                 renderProducts();
                 updateCartBadge();
@@ -536,14 +533,10 @@
             }
         }
 
-        // Render categories based on products data and the new icon map
         function renderCategories() {
             categoriesContainer.innerHTML = '';
-            
-            // Get unique category names from the products
             const uniqueCategories = [...new Set(state.allProducts.map(p => p.category))];
             
-            // "All Products" category
             const allProductsItem = document.createElement('div');
             allProductsItem.className = 'category-item active';
             allProductsItem.onclick = () => {
@@ -557,10 +550,8 @@
             `;
             categoriesContainer.appendChild(allProductsItem);
 
-            // Other categories from products
             uniqueCategories.forEach(categoryName => {
-                // Use the category name to find the icon from our new map
-                const icon = categoryIcons[categoryName] || 'label'; // 'label' is a fallback icon
+                const icon = categoryIcons[categoryName] || 'label';
                 const categoryItem = document.createElement('div');
                 categoryItem.className = 'category-item';
                 categoryItem.onclick = () => {
@@ -576,7 +567,6 @@
             });
         }
         
-        // Filter products based on category or search
         function filterProducts(categoryName = null, searchTerm = '') {
             let filteredProducts = [...state.allProducts];
             
@@ -596,11 +586,9 @@
             renderProducts();
         }
 
-        // Render products
         function renderProducts(isLoading = false) {
             productsContainer.innerHTML = '';
             if (isLoading) {
-                // Render skeleton cards
                 for (let i = 0; i < 4; i++) {
                     const skeletonCard = document.createElement('div');
                     skeletonCard.className = 'product-card skeleton-card';
@@ -635,7 +623,7 @@
                     </div>
                     <div class="product-details">
                         <div class="product-name">${product.name}</div>
-                        <div class="product-price">₹${product.price.toFixed(2)}</div>
+                        <div class="product-price">₹<span data-price-per-unit="${product.price}">${(product.price * initialQuantity || product.price).toFixed(2)}</span></div>
                         <div class="quantity-controls">
                             <button class="decrease-btn" data-id="${product.id}">-</button>
                             <span class="quantity-value">${initialQuantity}</span>
@@ -654,7 +642,6 @@
                 }
             });
 
-            // Add event listeners for quantity buttons
             document.querySelectorAll('.increase-btn').forEach(button => {
                 button.addEventListener('click', () => updateQuantity(button, 1));
             });
@@ -663,10 +650,10 @@
             });
         }
 
-        // Update product quantity
         function updateQuantity(button, change) {
             const productCard = button.closest('.product-card');
             const quantityValueSpan = productCard.querySelector('.quantity-value');
+            const priceSpan = productCard.querySelector('.product-price span');
             const addToCartBtn = productCard.querySelector('.add-to-cart-btn');
 
             let currentQuantity = parseInt(quantityValueSpan.textContent);
@@ -674,13 +661,15 @@
             
             if (newQuantity < 0) newQuantity = 0;
             
+            const pricePerUnit = parseFloat(priceSpan.dataset.pricePerUnit);
+            const newTotalPrice = pricePerUnit * newQuantity;
+
             quantityValueSpan.textContent = newQuantity;
+            priceSpan.textContent = newTotalPrice.toFixed(2);
             
-            // Toggle the added-to-cart class
             if (newQuantity > 0) {
                 productCard.classList.add('added-to-cart');
             } else {
-                // If quantity drops to zero, check if it's already in the cart and remove it
                 const productId = addToCartBtn.dataset.id;
                 if (state.cart[productId]) {
                     delete state.cart[productId];
@@ -691,7 +680,6 @@
             }
         };
 
-        // Add to cart functionality
         productsContainer.addEventListener('click', (e) => {
             const addToCartBtn = e.target.closest('.add-to-cart-btn');
             if (addToCartBtn) {
@@ -702,19 +690,16 @@
                 if (quantity > 0) {
                     const productData = state.products.find(p => p.id === productId);
                     state.cart[productId] = { ...productData, quantity: quantity };
-                    saveCart(state.cart); // ADDED: Save the cart to local storage
+                    saveCart(state.cart);
                     updateCartBadge();
-                    // Optional: Provide visual feedback without an alert
-                    // alert(`${quantity} x ${productData.name} added to cart!`);
                 } else {
                     alert('Please select a quantity greater than zero.');
                 }
             }
         });
 
-        // Update the cart badge in the navbar
         function updateCartBadge() {
-            const cart = getCart(); // Get cart from localStorage
+            const cart = getCart();
             const totalItems = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
             cartBadge.textContent = totalItems;
             if (totalItems > 0) {
@@ -724,7 +709,6 @@
             }
         }
         
-        // Search functionality
         searchInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 const searchTerm = searchInput.value.trim();
@@ -733,11 +717,9 @@
             }
         });
 
-        // Initial data load
         document.addEventListener('DOMContentLoaded', () => {
-            // fetchBanners() is removed
             fetchAllProducts();
-            updateCartBadge(); // Update badge on page load
+            updateCartBadge();
         });
     </script>
 </body>
