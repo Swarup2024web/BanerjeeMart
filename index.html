@@ -374,7 +374,7 @@
             transition: opacity 0.3s ease, visibility 0.3s ease;
             font-size: 16px;
             font-weight: 500;
-            white-space: nowrap; /* Ensures the message stays on a single line */
+            white-space: nowrap;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -588,10 +588,14 @@
                 state.allProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 state.products = [...state.allProducts];
                 state.cart = getCart();
-                // Initialize selectedQuantities based on cart
-                for (const id in state.cart) {
-                    selectedQuantities[id] = state.cart[id].quantity;
-                }
+                // Initialize selectedQuantities from the cart items
+                state.allProducts.forEach(product => {
+                    if (state.cart[product.id]) {
+                        selectedQuantities[product.id] = state.cart[product.id].quantity;
+                    } else {
+                        selectedQuantities[product.id] = 0;
+                    }
+                });
                 renderCategories();
                 renderProducts();
                 updateCartBadge();
