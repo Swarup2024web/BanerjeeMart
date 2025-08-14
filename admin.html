@@ -3,860 +3,586 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Core // Command Console</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
         :root {
-            --primary-color: #00e5ff;
-            --secondary-color: #a300ff;
-            --background-color: #0d1117;
-            --panel-bg: rgba(22, 27, 34, 0.6);
-            --card-bg: rgba(22, 27, 34, 0.4);
-            --border-color: rgba(60, 60, 60, 0.4);
-            --text-color: #e6e6e6;
-            --subtle-text-color: #9b9b9b;
-            --glass-blur: 10px;
-            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
-            --shadow-neon-primary: 0 0 15px rgba(0, 229, 255, 0.4);
-            --shadow-neon-secondary: 0 0 10px rgba(163, 0, 255, 0.4);
-            --success-color: #38a169;
-            --warning-color: #f6ad55;
-            --danger-color: #f56565;
-            --info-color: #4299e1;
+            --primary-color: #0073aa;
+            --primary-color-dark: #005177;
+            --secondary-color: #d54e21;
+            --background-color: #f0f0f1;
+            --panel-bg: #fff;
+            --border-color: #c3c4c7;
+            --text-color: #1d2327;
+            --subtle-text-color: #555d66;
+            --card-border-radius: 4px;
+            --box-shadow: 0 1px 1px rgba(0,0,0,.04);
+            --sidebar-width: 250px;
         }
 
         body {
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
             background-color: var(--background-color);
             color: var(--text-color);
-            overflow-x: hidden;
-            position: relative;
+            display: flex;
+            min-height: 100vh;
         }
 
-        body::before {
-            content: '';
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #1d2327;
+            color: #c3c4c7;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at top left, var(--secondary-color) 0%, transparent 35%),
-                        radial-gradient(circle at bottom right, var(--primary-color) 0%, transparent 35%);
-            opacity: 0.1;
-            z-index: -1;
-            animation: pulse-bg 15s infinite ease-in-out;
+            bottom: 0;
+            z-index: 1000;
         }
 
-        @keyframes pulse-bg {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #32373c;
         }
 
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 40px;
-            display: grid;
-            gap: 24px;
-            grid-template-columns: 1fr;
+        .sidebar-header h1 {
+            font-size: 1.5rem;
+            margin: 0;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            color: #c3c4c7;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: background-color 0.2s, color 0.2s;
+            border-left: 3px solid transparent;
         }
         
+        .sidebar-menu li a:hover {
+            background-color: #32373c;
+            color: #00b9eb;
+        }
+        .sidebar-menu li a.active {
+            background-color: #2c323b;
+            color: #fff;
+            border-left-color: var(--primary-color);
+        }
+        .sidebar-menu li a.active .material-symbols-outlined {
+            color: #00b9eb;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+        }
+
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 40px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 20px;
+            padding: 10px 20px;
+            background-color: var(--panel-bg);
+            border-bottom: 1px solid var(--border-color);
+            margin: -20px -20px 20px;
         }
         
         .header h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .tabs-container {
-            background-color: var(--panel-bg);
-            border-radius: 16px;
-            padding: 8px 12px;
-            margin-bottom: 24px;
-            backdrop-filter: blur(var(--glass-blur));
-            -webkit-backdrop-filter: blur(var(--glass-blur));
-            border: var(--glass-border);
-            box-shadow: var(--shadow-neon-primary);
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-        .tabs-container::-webkit-scrollbar {
-            display: none;
-        }
-        .tab-list {
-            display: flex;
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .tab-list li a {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 16px 24px;
-            text-decoration: none;
-            color: var(--subtle-text-color);
+            font-size: 1.8rem;
             font-weight: 500;
-            transition: color 0.3s, background-color 0.3s, box-shadow 0.3s;
-            white-space: nowrap;
-            border-radius: 12px;
-            position: relative;
-            overflow: hidden;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            margin: 0;
         }
-        .tab-list li a::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            transition: width 0.3s ease-out, left 0.3s ease-out;
-        }
-        .tab-list li a:hover::before,
-        .tab-list li a.active::before {
-            width: 100%;
-            left: 0;
-        }
-        .tab-list li a:hover {
-            color: var(--primary-color);
-        }
-        .tab-list li a.active {
-            color: var(--primary-color);
-            text-shadow: var(--shadow-neon-primary);
-        }
-        .tab-list li a .material-symbols-outlined {
-            font-size: 20px;
-            transition: color 0.3s;
-        }
-        .tab-list li a.active .material-symbols-outlined {
-            color: var(--primary-color);
+        .header .user-info {
+            font-size: 0.9rem;
+            color: var(--subtle-text-color);
         }
 
-        .tab-content-wrapper {
-            padding: 30px;
+        .tab-content {
             background-color: var(--panel-bg);
-            border-radius: 16px;
-            backdrop-filter: blur(var(--glass-blur));
-            -webkit-backdrop-filter: blur(var(--glass-blur));
-            border: var(--glass-border);
-            box-shadow: var(--shadow-neon-secondary);
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--box-shadow);
+            border-radius: var(--card-border-radius);
+            margin-bottom: 20px;
         }
+        
         .hidden {
             display: none !important;
         }
+
         .section-header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 16px;
-            margin-bottom: 24px;
         }
+        
         .section-header h2 {
-            font-size: 2rem;
-            font-weight: 600;
+            font-size: 1.5rem;
+            font-weight: 500;
             margin: 0;
-            text-shadow: 0 0 5px rgba(0, 229, 255, 0.2);
-            text-transform: uppercase;
         }
-
+        
         .form-group {
-            margin-bottom: 24px;
-            position: relative;
+            margin-bottom: 15px;
         }
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             font-weight: 500;
-            color: var(--subtle-text-color);
-            text-transform: uppercase;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
         }
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 12px;
-            border: var(--glass-border);
-            border-radius: 8px;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--card-border-radius);
             box-sizing: border-box;
             font-size: 1rem;
-            transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--text-color);
-            font-family: 'Orbitron', sans-serif;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
-            background-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 3px rgba(0, 115, 170, 0.5);
         }
+        
         .btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            color: var(--background-color);
+            background-color: var(--primary-color);
+            color: #fff;
             border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
+            padding: 10px 20px;
+            border-radius: var(--card-border-radius);
             cursor: pointer;
             font-size: 1rem;
-            font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s;
-            text-transform: uppercase;
-            text-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            font-weight: 500;
+            transition: background-color 0.2s;
+            text-decoration: none;
         }
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-neon-primary);
+            background-color: var(--primary-color-dark);
         }
         .btn-secondary {
-            background: none;
-            color: var(--primary-color);
-            border: 2px solid var(--primary-color);
-            text-shadow: none;
-            transition: color 0.2s, background-color 0.2s, box-shadow 0.2s;
+            background-color: var(--secondary-color);
         }
         .btn-secondary:hover {
-            background-color: var(--primary-color);
-            color: var(--background-color);
-            box-shadow: var(--shadow-neon-primary);
+            background-color: #c54017;
         }
-        
-        .table-responsive {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
+        .btn-icon {
+            padding: 5px 10px;
+            color: #fff;
+            border-radius: 4px;
         }
+        .btn-edit { background-color: #f39c12; }
+        .btn-delete { background-color: #e74c3c; }
+
         .data-table {
             width: 100%;
-            min-width: 900px;
             border-collapse: collapse;
-            margin-top: 24px;
+            margin-top: 15px;
         }
         .data-table th,
         .data-table td {
-            padding: 16px;
+            padding: 12px;
             text-align: left;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid #eee;
             font-size: 0.9rem;
-            font-weight: 400;
         }
         .data-table th {
-            background-color: var(--card-bg);
-            font-weight: 600;
-            color: var(--primary-color);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-size: 0.8rem;
-            border-top: var(--glass-border);
-        }
-        .data-table tbody tr:last-child td {
-            border-bottom: none;
+            background-color: #f7f7f7;
+            font-weight: 500;
         }
         .data-table tbody tr:hover {
-            background-color: rgba(255, 255, 255, 0.05);
+            background-color: #fcfcfc;
         }
         .product-image {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
+            border-radius: 4px;
         }
         .action-buttons button {
-            padding: 8px;
+            background: none;
             border: none;
-            border-radius: 50%;
             cursor: pointer;
-            transition: background-color 0.2s, transform 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: var(--text-color);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            border: var(--glass-border);
-        }
-        .action-buttons button .material-symbols-outlined {
-            font-size: 20px;
+            padding: 5px;
+            margin-right: 5px;
+            font-size: 1rem;
+            color: var(--subtle-text-color);
         }
         .action-buttons button:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: scale(1.1);
+            color: var(--primary-color);
         }
-        .btn-edit { color: var(--warning-color); }
-        .btn-delete { color: var(--danger-color); }
-        .btn-status { color: var(--primary-color); }
-        
+
         .modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.5);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 2000;
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
         }
         .modal-content {
             background-color: var(--panel-bg);
-            padding: 32px;
-            border-radius: 16px;
-            box-shadow: 0 0 30px rgba(0, 229, 255, 0.3), inset 0 0 10px rgba(0, 229, 255, 0.1);
+            padding: 30px;
+            border-radius: var(--card-border-radius);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             width: 90%;
-            max-width: 600px;
+            max-width: 500px;
             position: relative;
-            border: var(--glass-border);
-            animation: modal-fade-in 0.3s ease-out;
-        }
-        @keyframes modal-fade-in {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
         .modal-close-btn {
             position: absolute;
-            top: 16px;
-            right: 16px;
-            font-size: 32px;
+            top: 10px;
+            right: 15px;
+            font-size: 2rem;
             cursor: pointer;
             background: none;
             border: none;
             color: var(--subtle-text-color);
-            line-height: 1;
-            transition: color 0.2s;
         }
-        .modal-close-btn:hover {
-            color: var(--primary-color);
-            text-shadow: var(--shadow-neon-primary);
-        }
+
         .filter-section {
-            margin-bottom: 24px;
             display: flex;
-            gap: 16px;
-            align-items: center;
+            gap: 15px;
+            align-items: flex-end;
+            margin-bottom: 20px;
             flex-wrap: wrap;
-            padding: 16px;
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            border: var(--glass-border);
-            backdrop-filter: blur(var(--glass-blur));
         }
-        .filter-section .form-group {
-            margin-bottom: 0;
-            flex-grow: 1;
-        }
-        .filter-section .form-group label {
-            margin-bottom: 4px;
-        }
-        .filter-section .form-group input,
-        .filter-section .form-group select {
-            min-width: 180px;
-        }
-        .filter-section .btn {
-            align-self: flex-end;
-            min-width: 140px;
-        }
+
         .status-dropdown {
             padding: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
             font-size: 0.9rem;
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--text-color);
-            min-width: 120px;
-            transition: all 0.2s;
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
+            font-family: 'Roboto', sans-serif;
         }
-        .status-dropdown.Processing { border-color: #9ca3af; color: #9ca3af; }
-        .status-dropdown.Packed { border-color: #fcd34d; color: #fcd34d; }
-        .status-dropdown.Shipped { border-color: var(--primary-color); color: var(--primary-color); }
-        .status-dropdown.Delivered { border-color: var(--success-color); color: var(--success-color); }
-        .status-dropdown.Cancelled { border-color: var(--danger-color); color: var(--danger-color); }
+        .status-dropdown.Delivered { color: #2ecc71; }
+        .status-dropdown.Shipped { color: #3498db; }
+        .status-dropdown.Packed { color: #f1c40f; }
+        .status-dropdown.Processing { color: #95a5a6; }
+        .status-dropdown.Cancelled { color: #e74c3c; }
 
-        .status-dropdown:focus {
-            box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
-            outline: none;
-        }
-        
-        #order-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 24px;
-            padding: 0;
-            list-style: none;
-        }
-
-        .order-card {
-            background-color: var(--card-bg);
-            border-radius: 16px;
-            box-shadow: inset 0 0 10px rgba(0, 229, 255, 0.1);
-            padding: 24px;
-            transition: box-shadow 0.3s, transform 0.3s;
-            display: flex;
-            flex-direction: column;
-            border: var(--glass-border);
-            backdrop-filter: blur(var(--glass-blur));
-            -webkit-backdrop-filter: blur(var(--glass-blur));
-        }
-
-        .order-card:hover {
-            box-shadow: var(--shadow-neon-primary);
-            transform: translateY(-5px);
-        }
-        
-        .order-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            border-bottom: 1px dashed var(--border-color);
-            padding-bottom: 12px;
-        }
-
-        .order-id {
-            font-size: 0.8rem;
-            color: var(--primary-color);
-            font-family: monospace;
-            padding: 6px 12px;
-            background-color: rgba(255, 255, 255, 0.05);
-            border-radius: 6px;
-            font-weight: 500;
-            border: var(--glass-border);
-        }
-
-        .order-date {
-            font-size: 0.8rem;
-            color: var(--subtle-text-color);
-        }
-
-        .customer-info {
-            margin-bottom: 16px;
-            border-bottom: 1px dashed var(--border-color);
-            padding-bottom: 16px;
-        }
-
-        .customer-info h3 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin: 0 0 4px 0;
-            color: var(--primary-color);
-        }
-
-        .customer-info p {
-            font-size: 0.9rem;
-            margin: 0;
-            color: var(--subtle-text-color);
-        }
-        
-        .order-items {
-            margin-bottom: 16px;
-        }
-
-        .order-items h4 {
-            font-size: 1rem;
-            font-weight: 500;
-            margin: 0 0 8px 0;
-            color: var(--primary-color);
-            text-transform: uppercase;
-        }
-
-        .order-items ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .order-items li {
-            font-size: 0.9rem;
-            color: var(--text-color);
-            margin-bottom: 4px;
-            display: flex;
-            align-items: flex-start;
-        }
-        .order-items li::before {
-            content: '»';
-            color: var(--secondary-color);
-            font-weight: bold;
-            display: inline-block;
-            width: 1em;
-            margin-left: -1em;
-        }
-
-        .order-summary {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px dashed var(--border-color);
-            padding-top: 16px;
-            margin-top: auto;
-        }
-
-        .order-total {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            text-shadow: 0 0 5px rgba(0, 229, 255, 0.5);
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 48px 0;
-            color: var(--subtle-text-color);
-        }
-        .empty-state .material-symbols-outlined {
-            font-size: 64px;
-            color: var(--border-color);
-            margin-bottom: 16px;
-            text-shadow: none;
-        }
-        .empty-state p {
-            font-size: 1.2rem;
-            font-weight: 500;
-        }
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
         }
         .stat-card {
-            background-color: var(--card-bg);
-            padding: 24px;
-            border-radius: 16px;
-            box-shadow: inset 0 0 10px rgba(0, 229, 255, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            border: var(--glass-border);
-            transition: transform 0.3s, box-shadow 0.3s;
-            backdrop-filter: blur(var(--glass-blur));
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--card-border-radius);
+            box-shadow: var(--box-shadow);
         }
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-neon-primary);
-        }
-        .stat-card.products .stat-icon { background-color: rgba(0, 229, 255, 0.1); }
-        .stat-card.products .stat-icon .material-symbols-outlined { color: var(--primary-color); }
-        .stat-card.users .stat-icon { background-color: rgba(163, 0, 255, 0.1); }
-        .stat-card.users .stat-icon .material-symbols-outlined { color: var(--secondary-color); }
-        .stat-card.orders .stat-icon { background-color: rgba(56, 161, 105, 0.1); }
-        .stat-card.orders .stat-icon .material-symbols-outlined { color: var(--success-color); }
-
-        .stat-icon {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: var(--glass-border);
-            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
-        }
-        .stat-icon .material-symbols-outlined {
-            font-size: 32px;
-            text-shadow: 0 0 5px;
-        }
-        .stat-content h3 {
-            margin: 0;
+        .stat-card h3 {
             font-size: 1rem;
             font-weight: 500;
             color: var(--subtle-text-color);
-            text-transform: uppercase;
+            margin: 0 0 10px 0;
         }
-        .stat-content p {
-            margin: 0;
+        .stat-card p {
             font-size: 2.5rem;
             font-weight: 700;
-            color: var(--text-color);
-            text-shadow: 0 0 10px var(--primary-color);
-        }
-        .content-panel {
-            background-color: var(--panel-bg);
-            border-radius: 16px;
-            box-shadow: var(--shadow-neon-secondary);
-            border: var(--glass-border);
-            padding: 30px;
-            backdrop-filter: blur(var(--glass-blur));
+            margin: 0;
         }
 
+        /* Analytics Section Styles */
+        .analytics-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        .analytics-card {
+            background-color: var(--panel-bg);
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--box-shadow);
+            border-radius: var(--card-border-radius);
+        }
+        .analytics-card h3 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin: 0 0 15px 0;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        
+        .chart-container {
+            width: 100%;
+            height: 300px;
+        }
+        
         @media (max-width: 768px) {
-            .container {
-                padding: 16px;
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                box-shadow: none;
             }
-            .header h1 {
-                font-size: 2rem;
+            .main-content {
+                margin-left: 0;
             }
-            .tabs-container {
-                padding: 0 8px;
-            }
-            .tab-list li a {
-                padding: 12px 16px;
-                font-size: 0.9rem;
-            }
-            .tab-content-wrapper {
-                padding: 16px;
-            }
-            .section-header {
+            .header {
                 flex-direction: column;
                 align-items: flex-start;
             }
-            .section-header h2 {
-                margin-bottom: 8px;
-                font-size: 1.5rem;
-            }
-            .btn-secondary {
-                width: 100%;
-            }
-            .data-table th, .data-table td {
-                padding: 12px;
-            }
-            .filter-section {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .filter-section .form-group input,
-            .filter-section .form-group select {
-                width: 100%;
-            }
-            .filter-section .btn {
-                width: 100%;
-            }
-            .stat-card {
-                flex-direction: column;
-                text-align: center;
+            .header h1 {
+                margin-bottom: 10px;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>Admin Panel</h1>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="#" class="tab-link active" data-tab="dashboardTab"><span class="material-symbols-outlined">dashboard</span>Dashboard</a></li>
+            <li><a href="#" class="tab-link" data-tab="allProductsTab"><span class="material-symbols-outlined">inventory_2</span>Products</a></li>
+            <li><a href="#" class="tab-link" data-tab="addProductTab"><span class="material-symbols-outlined">add_circle</span>Add Products</a></li>
+            <li><a href="#" class="tab-link" data-tab="updateProductTab"><span class="material-symbols-outlined">edit</span>Update Products</a></li>
+            <li><a href="#" class="tab-link" data-tab="manageOrdersTab"><span class="material-symbols-outlined">local_shipping</span>Orders</a></li>
+            <li><a href="#" class="tab-link" data-tab="manageUsersTab"><span class="material-symbols-outlined">group</span>Users</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
         <div class="header">
-            <h1>Admin Core</h1>
+            <h1 id="page-title">Dashboard</h1>
+            <div class="user-info">Logged in as: Admin</div>
         </div>
 
-        <div class="tabs-container">
-            <ul class="tab-list">
-                <li><a href="#" class="tab-link active" data-tab="dashboardTab"><span class="material-symbols-outlined">dashboard</span>Dashboard</a></li>
-                <li><a href="#" class="tab-link" data-tab="allProductsTab"><span class="material-symbols-outlined">inventory_2</span>Products</a></li>
-                <li><a href="#" class="tab-link" data-tab="addProductTab"><span class="material-symbols-outlined">add_circle</span>Add Products</a></li>
-                <li><a href="#" class="tab-link" data-tab="updateProductTab"><span class="material-symbols-outlined">edit</span>Update Products</a></li>
-                <li><a href="#" class="tab-link" data-tab="manageOrdersTab"><span class="material-symbols-outlined">local_shipping</span>Orders</a></li>
-                <li><a href="#" class="tab-link" data-tab="manageUsersTab"><span class="material-symbols-outlined">group</span>Users</a></li>
-            </ul>
+        <div id="dashboardTab" class="tab-content">
+            <div class="section-header">
+                <h2>Quick Stats</h2>
+            </div>
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <h3>Total Products</h3>
+                    <p id="total-products-count">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Users</h3>
+                    <p id="total-users-count">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Orders</h3>
+                    <p id="total-orders-count">0</p>
+                </div>
+            </div>
+
+            <div class="section-header" style="margin-top: 30px;">
+                <h2>Orders Analytics</h2>
+            </div>
+            <div class="analytics-container">
+                <div class="analytics-card">
+                    <h3>Orders by Status</h3>
+                    <div class="chart-container">
+                        <canvas id="orders-status-chart"></canvas>
+                    </div>
+                </div>
+                <div class="analytics-card">
+                    <h3>Monthly Order Value</h3>
+                    <div class="chart-container">
+                        <canvas id="monthly-orders-chart"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="tab-content-wrapper">
-            
-            <div id="dashboardTab" class="tab-content">
-                <div class="section-header">
-                    <h2>System Status Overview</h2>
-                </div>
-                <div class="dashboard-grid">
-                    <div class="stat-card products">
-                        <div class="stat-icon"><span class="material-symbols-outlined">inventory_2</span></div>
-                        <div class="stat-content">
-                            <h3>Product Registry</h3>
-                            <p id="total-products-count">0</p>
-                        </div>
-                    </div>
-                    <div class="stat-card users">
-                        <div class="stat-icon"><span class="material-symbols-outlined">group</span></div>
-                        <div class="stat-content">
-                            <h3>Active Users</h3>
-                            <p id="total-users-count">0</p>
-                        </div>
-                    </div>
-                    <div class="stat-card orders">
-                        <div class="stat-icon"><span class="material-symbols-outlined">shopping_cart</span></div>
-                        <div class="stat-content">
-                            <h3>Pending Orders</h3>
-                            <p id="total-orders-count">0</p>
-                        </div>
-                    </div>
+        <div id="allProductsTab" class="tab-content hidden">
+            <div class="section-header">
+                <h2>Product Catalog</h2>
+            </div>
+            <div class="filter-section">
+                <div class="form-group">
+                    <label for="all-products-filter">Filter by Category</label>
+                    <select id="all-products-filter" onchange="filterProducts('allProductsTab')">
+                        <option value="All">All</option>
+                        <option value="Groceries">Groceries</option>
+                        <option value="Foods">Foods</option>
+                        <option value="Care">Care</option>
+                        <option value="Stationery">Stationery</option>
+                    </select>
                 </div>
             </div>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Product Name</th>
+                            <th>Price</th>
+                            <th>Category</th>
+                        </tr>
+                    </thead>
+                    <tbody id="all-products-list">
+                        <tr><td colspan="4" style="text-align: center;">Loading products...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-            <div id="allProductsTab" class="tab-content hidden content-panel">
-                <div class="section-header">
-                    <h2>Product Catalog</h2>
-                </div>
-                <div class="filter-section">
-                    <div class="form-group" style="flex-grow: 1;">
-                        <label for="all-products-filter">Filter by Category</label>
-                        <select id="all-products-filter" onchange="filterProducts('allProductsTab')">
-                            <option value="All">All</option>
-                            <option value="Groceries">Groceries</option>
-                            <option value="Foods">Foods</option>
-                            <option value="Care">Care</option>
-                            <option value="Stationery">Stationery</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Image</th>
-                                <th>Product Name</th>
-                                <th>Price</th>
-                                <th>Category</th>
-                            </tr>
-                        </thead>
-                        <tbody id="all-products-list">
-                            <tr><td colspan="4" style="text-align: center;">Loading products...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
+        <div id="addProductTab" class="tab-content hidden">
+            <div class="section-header">
+                <h2>Add New Product</h2>
             </div>
+            <form id="product-form">
+                <div class="form-group">
+                    <label for="product-name">Product Name</label>
+                    <input type="text" id="product-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-price">Price (₹)</label>
+                    <input type="number" id="product-price" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-category">Category</label>
+                    <select id="product-category" required>
+                        <option value="Groceries">Groceries</option>
+                        <option value="Foods">Foods</option>
+                        <option value="Care">Care</option>
+                        <option value="Stationery">Stationery</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="product-image">Image File Name (e.g., apple.png)</label>
+                    <input type="text" id="product-image" required>
+                </div>
+                <button type="submit" class="btn"><span class="material-symbols-outlined">add</span>Add Product</button>
+            </form>
+        </div>
 
-            <div id="addProductTab" class="tab-content hidden content-panel">
-                <div class="section-header">
-                    <h2>Add New Product</h2>
-                </div>
-                <form id="product-form">
-                    <div class="form-group">
-                        <label for="product-name">Product Name</label>
-                        <input type="text" id="product-name" placeholder="Enter product name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="product-price">Price (₹)</label>
-                        <input type="number" id="product-price" step="0.01" placeholder="0.00" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="product-category">Category</label>
-                        <select id="product-category" required>
-                            <option value="Groceries">Groceries</option>
-                            <option value="Foods">Foods</option>
-                            <option value="Care">Care</option>
-                            <option value="Stationery">Stationery</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="product-image">Image File Name (e.g., apple.png)</label>
-                        <input type="text" id="product-image" placeholder="productname.png" required>
-                    </div>
-                    <button type="submit" class="btn"><span class="material-symbols-outlined">add</span>Add Product</button>
-                </form>
+        <div id="updateProductTab" class="tab-content hidden">
+            <div class="section-header">
+                <h2>Update/Delete Products</h2>
             </div>
-
-            <div id="updateProductTab" class="tab-content hidden content-panel">
-                <div class="section-header">
-                    <h2>Update/Delete Products</h2>
-                </div>
-                <div class="filter-section">
-                    <div class="form-group" style="flex-grow: 1;">
-                        <label for="update-products-filter">Filter by Category</label>
-                        <select id="update-products-filter" onchange="filterProducts('updateProductTab')">
-                            <option value="All">All</option>
-                            <option value="Groceries">Groceries</option>
-                            <option value="Foods">Foods</option>
-                            <option value="Care">Care</option>
-                            <option value="Stationery">Stationery</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Image</th>
-                                <th>Product Name</th>
-                                <th>Price</th>
-                                <th>Category</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="update-products-list">
-                            <tr><td colspan="5" style="text-align: center;">Loading products...</td></tr>
-                        </tbody>
-                    </table>
+            <div class="filter-section">
+                <div class="form-group">
+                    <label for="update-products-filter">Filter by Category</label>
+                    <select id="update-products-filter" onchange="filterProducts('updateProductTab')">
+                        <option value="All">All</option>
+                        <option value="Groceries">Groceries</option>
+                        <option value="Foods">Foods</option>
+                        <option value="Care">Care</option>
+                        <option value="Stationery">Stationery</option>
+                    </select>
                 </div>
             </div>
-            
-            <div id="manageOrdersTab" class="tab-content hidden content-panel">
-                <div class="section-header">
-                    <h2>Order Queue</h2>
-                </div>
-                <div class="filter-section">
-                    <div class="form-group">
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Product Name</th>
+                            <th>Price</th>
+                            <th>Category</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="update-products-list">
+                        <tr><td colspan="5" style="text-align: center;">Loading products...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="manageOrdersTab" class="tab-content hidden">
+            <div class="section-header">
+                <h2>Order List</h2>
+                <div class="filter-section" style="margin-bottom: 0;">
+                    <div class="form-group" style="margin-bottom:0;">
                         <label for="start-date">From</label>
                         <input type="date" id="start-date">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="margin-bottom:0;">
                         <label for="end-date">To</label>
                         <input type="date" id="end-date">
                     </div>
                     <button class="btn" onclick="filterAndDownloadOrders()"><span class="material-symbols-outlined">download</span> Download Report</button>
                 </div>
-                <div id="order-list" class="order-grid">
-                    <div class="empty-state">
-                        <span class="material-symbols-outlined">shopping_cart</span>
-                        <p>Loading orders...</p>
-                    </div>
-                </div>
             </div>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer Name</th>
+                            <th>Order Date</th>
+                            <th>Total Amount</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="order-list">
+                        <tr><td colspan="6" style="text-align: center;">Loading orders...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-            <div id="manageUsersTab" class="tab-content hidden content-panel">
-                <div class="section-header">
-                    <h2>User Directory</h2>
+        <div id="manageUsersTab" class="tab-content hidden">
+            <div class="section-header">
+                <h2>User Directory</h2>
+            </div>
+            <div class="filter-section">
+                <div class="form-group">
+                    <label for="user-search">Search by Name/Email</label>
+                    <input type="text" id="user-search" placeholder="Enter name or email">
                 </div>
-                <div class="filter-section">
-                    <div class="form-group">
-                        <label for="user-search">Search by Name/Email</label>
-                        <input type="text" id="user-search" placeholder="Enter name or email">
-                    </div>
-                    <button class="btn" onclick="searchUsers()"><span class="material-symbols-outlined">search</span> Search</button>
-                </div>
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>User ID</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Role</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="user-list">
-                            <tr><td colspan="6" style="text-align: center;">Loading users...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
+                <button class="btn" onclick="searchUsers()"><span class="material-symbols-outlined">search</span> Search</button>
+            </div>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Role</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-list">
+                        <tr><td colspan="6" style="text-align: center;">Loading users...</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -929,6 +655,7 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
@@ -984,8 +711,9 @@
         // =========================================================
         const tabLinks = document.querySelectorAll('.tab-link');
         const tabContents = document.querySelectorAll('.tab-content');
+        const pageTitle = document.getElementById('page-title');
 
-        function openTab(tabId) {
+        function openTab(tabId, title) {
             tabContents.forEach(tab => tab.classList.add('hidden'));
             tabLinks.forEach(link => link.classList.remove('active'));
 
@@ -998,10 +726,14 @@
             if (selectedLink) {
                 selectedLink.classList.add('active');
             }
+            if (pageTitle) {
+                pageTitle.textContent = title;
+            }
 
             // Trigger data fetching for the newly opened tab
             if (tabId === 'dashboardTab') {
                 fetchDashboardStats();
+                fetchOrdersAnalytics();
             } else if (tabId === 'allProductsTab') {
                 fetchAllProducts();
             } else if (tabId === 'updateProductTab') {
@@ -1016,16 +748,18 @@
         tabLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-                openTab(e.currentTarget.dataset.tab);
+                const tabId = e.currentTarget.dataset.tab;
+                const title = e.currentTarget.textContent.trim();
+                openTab(tabId, title);
             });
         });
 
         document.addEventListener('DOMContentLoaded', () => {
-            openTab('dashboardTab');
+            openTab('dashboardTab', 'Dashboard');
         });
 
         // =========================================================
-        // DASHBOARD LOGIC
+        // DASHBOARD & ANALYTICS LOGIC
         // =========================================================
         async function fetchDashboardStats() {
             try {
@@ -1038,8 +772,110 @@
                 document.getElementById('total-orders-count').textContent = ordersCount;
             } catch (error) {
                 console.error("Error fetching dashboard stats:", error);
-                // Handle UI error state if needed
             }
+        }
+
+        async function fetchOrdersAnalytics() {
+            try {
+                const ordersSnapshot = await getDocs(ordersCollection);
+                const orders = ordersSnapshot.docs.map(doc => doc.data());
+
+                // Orders by Status
+                const statusCounts = orders.reduce((acc, order) => {
+                    acc[order.status] = (acc[order.status] || 0) + 1;
+                    return acc;
+                }, {});
+
+                renderOrdersStatusChart(statusCounts);
+                
+                // Monthly Order Value
+                const monthlySales = orders.reduce((acc, order) => {
+                    if (order.orderDate && order.total) {
+                        const date = new Date(order.orderDate.seconds * 1000);
+                        const monthYear = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                        acc[monthYear] = (acc[monthYear] || 0) + order.total;
+                    }
+                    return acc;
+                }, {});
+
+                renderMonthlyOrdersChart(monthlySales);
+
+            } catch (error) {
+                console.error("Error fetching analytics data:", error);
+            }
+        }
+        
+        let ordersStatusChart = null;
+        function renderOrdersStatusChart(data) {
+            const ctx = document.getElementById('orders-status-chart').getContext('2d');
+            if (ordersStatusChart) {
+                ordersStatusChart.destroy();
+            }
+            ordersStatusChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(data),
+                    datasets: [{
+                        data: Object.values(data),
+                        backgroundColor: [
+                            '#95a5a6', // Processing
+                            '#f1c40f', // Packed
+                            '#3498db', // Shipped
+                            '#2ecc71', // Delivered
+                            '#e74c3c'  // Cancelled
+                        ],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        }
+                    }
+                }
+            });
+        }
+        
+        let monthlyOrdersChart = null;
+        function renderMonthlyOrdersChart(data) {
+            const ctx = document.getElementById('monthly-orders-chart').getContext('2d');
+            if (monthlyOrdersChart) {
+                monthlyOrdersChart.destroy();
+            }
+            
+            const labels = Object.keys(data).sort();
+            const values = labels.map(month => data[month]);
+
+            monthlyOrdersChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total Sales (₹)',
+                        data: values,
+                        backgroundColor: 'rgba(0, 115, 170, 0.6)',
+                        borderColor: 'rgba(0, 115, 170, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,
+                        }
+                    }
+                }
+            });
         }
 
         // =========================================================
@@ -1110,8 +946,8 @@
                             <td>${product.category}</td>
                             ${tabId === 'updateProductTab' ? `
                             <td class="action-buttons">
-                                <button class="btn-edit" data-id="${product.id}"><span class="material-symbols-outlined">edit_square</span></button>
-                                <button class="btn-delete" data-id="${product.id}"><span class="material-symbols-outlined">delete</span></button>
+                                <button class="btn-edit btn-icon" data-id="${product.id}"><span class="material-symbols-outlined">edit_square</span></button>
+                                <button class="btn-delete btn-icon" data-id="${product.id}"><span class="material-symbols-outlined">delete</span></button>
                             </td>
                             ` : ''}
                         </tr>
@@ -1223,7 +1059,7 @@
         const endDateInput = document.getElementById('end-date');
         
         async function fetchAndDisplayOrders() {
-            orderList.innerHTML = `<div class="empty-state"><span class="material-symbols-outlined">shopping_cart</span><p>Loading orders...</p></div>`;
+            orderList.innerHTML = `<tr><td colspan="6" style="text-align: center;">Loading orders...</td></tr>`;
             try {
                 const q = query(ordersCollection, orderBy('orderDate', 'desc'));
                 const ordersSnapshot = await getDocs(q);
@@ -1231,7 +1067,7 @@
                 orderList.innerHTML = '';
                 
                 if (ordersSnapshot.empty) {
-                    orderList.innerHTML = `<div class="empty-state"><span class="material-symbols-outlined">shopping_cart</span><p>No orders found.</p></div>`;
+                    orderList.innerHTML = `<tr><td colspan="6" style="text-align: center;">No orders found.</td></tr>`;
                     return;
                 }
                 
@@ -1250,51 +1086,34 @@
 
                 orders.forEach(order => {
                     const orderId = order.id;
-                    const statusClass = `status-${order.status.toLowerCase()}`;
                     const orderDate = order.orderDate ? new Date(order.orderDate.seconds * 1000).toLocaleDateString() : 'N/A';
-                    const customer = users[order.userId];
-                    const customerName = customer ? customer.fullName : 'Unknown User';
-                    const customerAddress = customer ? customer.address : 'N/A';
-                    const customerPhoneNumber = customer ? customer.phoneNumber : 'N/A';
+                    const customerName = users[order.userId] ? users[order.userId].fullName : 'Unknown User';
                     
-                    const itemsList = (order.items && Array.isArray(order.items)) 
-                        ? order.items.map(item => `<li>${item.name} (${item.quantity})</li>`).join('') 
-                        : '<li>No items found</li>';
-                    
-                    const orderCard = `
-                        <div class="order-card">
-                            <div class="order-card-header">
-                                <span class="order-id">ID: ...${orderId.slice(-4)}</span>
-                                <span class="order-date">Date: ${orderDate}</span>
-                            </div>
-                            <div class="customer-info">
-                                <h3>${customerName}</h3>
-                                <p><strong>Phone:</strong> ${customerPhoneNumber}</p>
-                                <p><strong>Address:</strong> ${customerAddress}</p>
-                            </div>
-                            <div class="order-items">
-                                <h4>Items:</h4>
-                                <ul>${itemsList}</ul>
-                            </div>
-                            <div class="order-summary">
-                                <span class="order-total">Total: ₹${(order.total || 0).toFixed(2)}</span>
-                                <div class="order-actions">
-                                    <select onchange="updateOrderStatus('${orderId}', this.value)" class="status-dropdown ${order.status}">
-                                        <option value="Processing" ${order.status === 'Processing' ? 'selected' : ''}>Processing</option>
-                                        <option value="Packed" ${order.status === 'Packed' ? 'selected' : ''}>Packed</option>
-                                        <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
-                                        <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
-                                        <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
+                    const orderItem = `
+                        <tr>
+                            <td>...${orderId.slice(-4)}</td>
+                            <td>${customerName}</td>
+                            <td>${orderDate}</td>
+                            <td>₹${(order.total || 0).toFixed(2)}</td>
+                            <td>
+                                <select onchange="updateOrderStatus('${orderId}', this.value)" class="status-dropdown ${order.status}">
+                                    <option value="Processing" ${order.status === 'Processing' ? 'selected' : ''}>Processing</option>
+                                    <option value="Packed" ${order.status === 'Packed' ? 'selected' : ''}>Packed</option>
+                                    <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                                    <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                                    <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                                </select>
+                            </td>
+                            <td class="action-buttons">
+                                <button class="btn-info btn-icon" onclick="viewOrderDetails('${orderId}')"><span class="material-symbols-outlined">visibility</span></button>
+                            </td>
+                        </tr>
                     `;
-                    orderList.innerHTML += orderCard;
+                    orderList.innerHTML += orderItem;
                 });
             } catch (error) {
                 console.error("Error fetching orders: ", error);
-                orderList.innerHTML = `<div class="empty-state"><span class="material-symbols-outlined">error</span><p>Error fetching orders.</p></div>`;
+                orderList.innerHTML = `<tr><td colspan="6" style="text-align: center;">Error fetching orders.</td></tr>`;
             }
         }
 
@@ -1420,8 +1239,8 @@
                             <td>${user.phoneNumber || 'N/A'}</td>
                             <td>${user.role}</td>
                             <td class="action-buttons">
-                                <button class="btn-edit" data-id="${user.id}"><span class="material-symbols-outlined">edit_square</span></button>
-                                <button class="btn-delete" data-id="${user.id}"><span class="material-symbols-outlined">delete</span></button>
+                                <button class="btn-edit btn-icon" data-id="${user.id}"><span class="material-symbols-outlined">edit_square</span></button>
+                                <button class="btn-delete btn-icon" data-id="${user.id}"><span class="material-symbols-outlined">delete</span></button>
                             </td>
                         </tr>
                     `;
