@@ -588,14 +588,12 @@
                 state.allProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 state.products = [...state.allProducts];
                 state.cart = getCart();
-                // Initialize selectedQuantities from the cart items
+
+                // Initialize all selected quantities to 0 on page load
                 state.allProducts.forEach(product => {
-                    if (state.cart[product.id]) {
-                        selectedQuantities[product.id] = state.cart[product.id].quantity;
-                    } else {
-                        selectedQuantities[product.id] = 0;
-                    }
+                    selectedQuantities[product.id] = 0;
                 });
+                
                 renderCategories();
                 renderProducts();
                 updateCartBadge();
