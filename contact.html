@@ -156,6 +156,7 @@
             gap: 12px;
             font-size: 16px;
             color: var(--on-background-color);
+            text-decoration: none; /* Ensure no underline for links */
         }
         
         .info-item .material-symbols-outlined {
@@ -231,7 +232,7 @@
         <h1 class="page-title">Contact Us</h1>
         
         <div class="contact-card">
-            <p class="intro-text">Have a question or need assistance? Fill out the form below and we'll get back to you as soon as possible.</p>
+            <p class="intro-text">Have a question or need assistance? Send us a message on WhatsApp or fill out the form below to email us.</p>
 
             <form id="contact-form" class="contact-form">
                 <div class="form-group">
@@ -250,19 +251,19 @@
                     <label for="message">Message</label>
                     <textarea id="message" name="message" required placeholder="Type your message here..."></textarea>
                 </div>
-                <button type="submit" class="submit-btn">Send Message</button>
+                <button type="button" class="submit-btn" id="whatsapp-btn">Send on WhatsApp</button>
             </form>
             
             <div class="contact-info-section">
                 <h3>Our Details</h3>
-                <div class="info-item">
+                <a href="mailto:support@banerjeemart.com" class="info-item">
                     <span class="material-symbols-outlined">mail</span>
                     <span>support@banerjeemart.com</span>
-                </div>
-                <div class="info-item">
+                </a>
+                <a href="tel:+916294390641" class="info-item">
                     <span class="material-symbols-outlined">call</span>
-                    <span>+91 9876543210</span>
-                </div>
+                    <span>+91 6294390641</span>
+                </a>
             </div>
         </div>
     </main>
@@ -288,11 +289,10 @@
     </nav>
 
     <script type="module">
-        // Basic JavaScript to handle the form and cart badge
-        
         const contactForm = document.getElementById('contact-form');
+        const whatsappBtn = document.getElementById('whatsapp-btn');
         const cartBadge = document.getElementById('cart-badge');
-
+        
         function getCart() {
             try {
                 return JSON.parse(localStorage.getItem('cart')) || {};
@@ -313,15 +313,28 @@
             }
         }
 
-        // Initialize cart badge on page load
         updateCartBadge();
         
-        // Simple form submission handler
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            // In a real application, you would send this data to a backend service (e.g., Firestore, an email service).
-            alert('Thank you for your message! We will get back to you shortly.');
-            contactForm.reset();
+        whatsappBtn.addEventListener('click', () => {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+
+            if (!name || !email || !subject || !message) {
+                alert('Please fill out all fields before sending.');
+                return;
+            }
+
+            const phoneNumber = '+916294390641';
+            const whatsappMessage = `Hello, my name is ${name} and I am writing regarding: ${subject}. My email is ${email}.
+            
+${message}`;
+            
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+            
+            window.open(whatsappUrl, '_blank');
         });
     </script>
 </body>
