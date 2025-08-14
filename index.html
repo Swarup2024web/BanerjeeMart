@@ -179,11 +179,6 @@
             box-shadow: 0 8px 20px var(--shadow-color-dark);
         }
         
-        .product-card.added-to-cart {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 15px rgba(0, 121, 107, 0.4);
-        }
-
         .product-image-wrapper {
             position: relative;
             aspect-ratio: 4/3;
@@ -379,6 +374,7 @@
             transition: opacity 0.3s ease, visibility 0.3s ease;
             font-size: 16px;
             font-weight: 500;
+            white-space: nowrap; /* Ensures the message stays on a single line */
             display: flex;
             align-items: center;
             gap: 8px;
@@ -772,6 +768,12 @@
                 saveCart(state.cart);
                 updateCartBadge();
                 showToastMessage();
+
+                // Reset the quantity for this product after adding to cart
+                selectedQuantities[productId] = 0;
+                const productCard = productsContainer.querySelector(`.product-card .add-to-cart-btn[data-id="${productId}"]`).closest('.product-card');
+                productCard.querySelector('.quantity-value').textContent = 0;
+                productCard.querySelector('.product-price span').textContent = productData.price.toFixed(2);
             }
         }
         
