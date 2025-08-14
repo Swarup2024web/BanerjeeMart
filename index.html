@@ -229,11 +229,16 @@
             margin-bottom: 16px;
         }
 
+        .cart-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
         .quantity-controls {
             display: flex;
             align-items: center;
-            justify-content: center;
-            margin-bottom: 16px;
             background-color: var(--background-color);
             border-radius: 20px;
             padding: 4px;
@@ -259,7 +264,7 @@
         .quantity-controls .quantity-value {
             font-size: 18px;
             font-weight: 500;
-            margin: 0 16px;
+            margin: 0 8px;
             min-width: 20px;
             text-align: center;
         }
@@ -268,7 +273,7 @@
             background-color: var(--primary-color);
             color: var(--on-primary-color);
             border: none;
-            padding: 12px;
+            padding: 8px 12px;
             border-radius: 10px;
             font-size: 16px;
             font-weight: 600;
@@ -278,6 +283,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            flex-grow: 1;
         }
 
         .add-to-cart-btn:hover {
@@ -285,18 +291,9 @@
             transform: scale(1.02);
         }
         
-        .quantity-controls-wrapper {
-            display: none;
+        .add-to-cart-btn .material-symbols-outlined {
+            font-size: 20px;
         }
-
-        .product-card.added-to-cart .add-to-cart-btn {
-            display: none;
-        }
-        
-        .product-card.added-to-cart .quantity-controls-wrapper {
-            display: block;
-        }
-
 
         .app-nav-bar {
             position: fixed;
@@ -408,10 +405,26 @@
             width: 50%;
         }
 
-        .skeleton-quantity {
-            width: 60%;
+        .skeleton-controls {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .skeleton-quantity-btn {
+            width: 32px;
             height: 32px;
+            background-color: var(--skeleton-color);
+            border-radius: 50%;
+        }
+
+        .skeleton-quantity-val {
+            width: 40px;
+            height: 32px;
+            background-color: var(--skeleton-color);
             border-radius: 20px;
+            flex-grow: 1;
         }
 
         .skeleton-button {
@@ -620,8 +633,11 @@
                         <div class="product-details skeleton-details">
                             <div class="skeleton-line skeleton-name"></div>
                             <div class="skeleton-line skeleton-price"></div>
-                            <div class="skeleton-line skeleton-quantity"></div>
-                            <div class="skeleton-button"></div>
+                            <div class="skeleton-controls">
+                                <div class="skeleton-quantity-btn"></div>
+                                <div class="skeleton-quantity-val"></div>
+                                <div class="skeleton-quantity-btn"></div>
+                            </div>
                         </div>
                     `;
                     productsContainer.appendChild(skeletonCard);
@@ -651,16 +667,15 @@
                     <div class="product-details">
                         <div class="product-name">${product.name}</div>
                         <div class="product-price">₹<span data-price-per-unit="${product.price}">${(product.price * initialQuantity || product.price).toFixed(2)}</span></div>
-                        <button class="add-to-cart-btn" data-id="${product.id}">
-                            <span class="material-symbols-outlined">add_shopping_cart</span>
-                            <span>Add to Cart</span>
-                        </button>
-                        <div class="quantity-controls-wrapper">
+                        <div class="cart-controls">
                             <div class="quantity-controls">
                                 <button class="decrease-btn" data-id="${product.id}">-</button>
                                 <span class="quantity-value">${initialQuantity}</span>
                                 <button class="increase-btn" data-id="${product.id}">+</button>
                             </div>
+                            <button class="add-to-cart-btn" data-id="${product.id}">
+                                <span class="material-symbols-outlined">add_shopping_cart</span>
+                            </button>
                         </div>
                     </div>
                 `;
