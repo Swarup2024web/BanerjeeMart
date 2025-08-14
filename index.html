@@ -84,7 +84,7 @@
         }
         
         .main-content {
-            padding-bottom: 80px; /* Increased padding to prevent content from being hidden behind the nav bar */
+            padding-bottom: 80px;
         }
 
         .section-title {
@@ -94,7 +94,6 @@
             margin: 24px 20px 16px;
         }
 
-        /* Redesigned Category Section */
         .categories-container {
             display: flex;
             overflow-x: scroll;
@@ -155,7 +154,6 @@
             transition: color 0.2s;
         }
 
-        /* Redesigned Product Card Section */
         .products-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -300,7 +298,7 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 70px; /* Increased height */
+            height: 70px;
             background-color: var(--surface-color);
             box-shadow: 0 -2px 10px var(--shadow-color-light);
             display: flex;
@@ -365,7 +363,6 @@
             display: block;
         }
         
-        /* Skeleton Loading CSS */
         .skeleton-card {
             background-color: var(--surface-color);
             border-radius: 16px;
@@ -651,22 +648,19 @@
             }
 
             state.products.forEach(product => {
-                const productCard = document.createElement('div');
-                productCard.className = 'product-card';
-                
                 const initialQuantity = state.cart[product.id] ? state.cart[product.id].quantity : 0;
+                const totalPrice = (initialQuantity * product.price).toFixed(2);
                 
-                if (initialQuantity > 0) {
-                    productCard.classList.add('added-to-cart');
-                }
-
+                const productCard = document.createElement('div');
+                productCard.className = `product-card ${initialQuantity > 0 ? 'added-to-cart' : ''}`;
+                
                 productCard.innerHTML = `
                     <div class="product-image-wrapper">
                         <img src="${product.image}" alt="${product.name}" class="product-image">
                     </div>
                     <div class="product-details">
                         <div class="product-name">${product.name}</div>
-                        <div class="product-price">₹<span data-price-per-unit="${product.price}">${(product.price * initialQuantity || product.price).toFixed(2)}</span></div>
+                        <div class="product-price">₹<span data-price-per-unit="${product.price}">${totalPrice}</span></div>
                         <div class="cart-controls">
                             <div class="quantity-controls">
                                 <button class="decrease-btn" data-id="${product.id}">-</button>
@@ -681,62 +675,64 @@
                 `;
                 productsContainer.appendChild(productCard);
             });
-
-            document.querySelectorAll('.increase-btn').forEach(button => {
-                button.addEventListener('click', () => updateQuantity(button, 1));
-            });
-            document.querySelectorAll('.decrease-btn').forEach(button => {
-                button.addEventListener('click', () => updateQuantity(button, -1));
-            });
             
-            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-                button.addEventListener('click', () => {
-                    const productCard = button.closest('.product-card');
-                    const productId = button.dataset.id;
-                    const productData = state.products.find(p => p.id === productId);
+            attachEventListeners();
+        }
+        
+        function attachEventListeners() {
+            productsContainer.querySelectorAll('.increase-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = e.target.dataset.id;
+                    updateQuantity(productId, 1);
+                });
+            });
 
-                    const quantity = 1;
-                    productCard.querySelector('.quantity-value').textContent = quantity;
-                    productCard.querySelector('.product-price span').textContent = (productData.price * quantity).toFixed(2);
-                    
-                    productCard.classList.add('added-to-cart');
+            productsContainer.querySelectorAll('.decrease-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = e.target.dataset.id;
+                    updateQuantity(productId, -1);
+                });
+            });
 
-                    state.cart[productId] = { ...productData, quantity: quantity };
-                    saveCart(state.cart);
-                    updateCartBadge();
+            productsContainer.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = e.target.closest('.add-to-cart-btn').dataset.id;
+                    updateQuantity(productId, 1);
                 });
             });
         }
 
-        function updateQuantity(button, change) {
-            const productCard = button.closest('.product-card');
-            const quantityValueSpan = productCard.querySelector('.quantity-value');
-            const priceSpan = productCard.querySelector('.product-price span');
+        function updateQuantity(productId, change) {
+            const productCard = productsContainer.querySelector(`.product-card [data-id="${productId}"]`).closest('.product-card');
             
-            let currentQuantity = parseInt(quantityValueSpan.textContent);
+            let currentQuantity = state.cart[productId] ? state.cart[productId].quantity : 0;
             let newQuantity = currentQuantity + change;
             
             if (newQuantity < 0) newQuantity = 0;
             
-            const pricePerUnit = parseFloat(priceSpan.dataset.price-per-unit);
+            const productData = state.allProducts.find(p => p.id === productId);
+            if (!productData) return;
+
+            const pricePerUnit = productData.price;
             const newTotalPrice = pricePerUnit * newQuantity;
 
-            quantityValueSpan.textContent = newQuantity;
-            priceSpan.textContent = newTotalPrice.toFixed(2);
-            
-            const productId = button.dataset.id;
-
+            // Update state
             if (newQuantity > 0) {
-                const productData = state.products.find(p => p.id === productId);
                 state.cart[productId] = { ...productData, quantity: newQuantity };
                 productCard.classList.add('added-to-cart');
             } else {
                 delete state.cart[productId];
                 productCard.classList.remove('added-to-cart');
             }
+
+            // Update UI
+            productCard.querySelector('.quantity-value').textContent = newQuantity;
+            productCard.querySelector('.product-price span').textContent = newTotalPrice.toFixed(2);
+            
+            // Persist to local storage and update badge
             saveCart(state.cart);
             updateCartBadge();
-        };
+        }
 
         function updateCartBadge() {
             const cart = getCart();
