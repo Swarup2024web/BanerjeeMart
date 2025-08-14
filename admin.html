@@ -315,7 +315,7 @@
         /* Analytics Section Styles */
         .analytics-container {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 20px;
         }
         .analytics-card {
@@ -335,6 +335,34 @@
         .chart-container {
             width: 100%;
             height: 300px;
+        }
+
+        .most-sold-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .most-sold-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .most-sold-list li:last-child {
+            border-bottom: none;
+        }
+        .most-sold-list .product-name {
+            font-weight: 500;
+            flex-grow: 1;
+        }
+        .most-sold-list .sold-count {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
         }
 
         .order-card {
@@ -526,6 +554,12 @@
                     <div class="chart-container">
                         <canvas id="monthly-orders-chart"></canvas>
                     </div>
+                </div>
+                <div class="analytics-card">
+                    <h3>Most Sold Products</h3>
+                    <ul id="most-sold-list" class="most-sold-list">
+                        <li><div class="empty-state" style="padding: 0;"><p>Loading...</p></div></li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -879,6 +913,7 @@
 
         let ordersStatusChart = null;
         let monthlyOrdersChart = null;
+        const mostSoldList = document.getElementById('most-sold-list');
 
         async function fetchOrdersAnalytics() {
             try {
@@ -890,7 +925,6 @@
                     acc[order.status] = (acc[order.status] || 0) + 1;
                     return acc;
                 }, {});
-
                 renderOrdersStatusChart(statusCounts);
                 
                 // Monthly Order Value
@@ -902,9 +936,38 @@
                     }
                     return acc;
                 }, {});
-
                 renderMonthlyOrdersChart(monthlySales);
+                
+                // Most Sold Products
+                const productSales = {};
+                orders.forEach(order => {
+                    if (order.items && Array.isArray(order.items)) {
+                        order.items.forEach(item => {
+                            if (productSales[item.name]) {
+                                productSales[item.name] += item.quantity;
+                            } else {
+                                productSales[item.name] = item.quantity;
+                            }
+                        });
+                    }
+                });
 
+                const sortedProducts = Object.entries(productSales).sort(([, a], [, b]) => b - a);
+                const top5Products = sortedProducts.slice(0, 5);
+
+                mostSoldList.innerHTML = '';
+                if (top5Products.length === 0) {
+                    mostSoldList.innerHTML = `<li><div class="empty-state" style="padding: 0;"><p>No sales data available.</p></div></li>`;
+                } else {
+                    top5Products.forEach(([name, quantity]) => {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `
+                            <span class="product-name">${name}</span>
+                            <span class="sold-count">${quantity} sold</span>
+                        `;
+                        mostSoldList.appendChild(listItem);
+                    });
+                }
             } catch (error) {
                 console.error("Error fetching analytics data:", error);
             }
