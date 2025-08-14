@@ -766,8 +766,23 @@
             
             if (quantityToAdd > 0) {
                 const productData = state.allProducts.find(p => p.id === productId);
-                state.cart[productId] = { ...productData, quantity: quantityToAdd };
-                saveCart(state.cart);
+                
+                // Retrieve the current cart from localStorage
+                let cart = getCart();
+
+                if (cart[productId]) {
+                    // Item already in cart, so just add the new quantity to the existing one
+                    cart[productId].quantity += quantityToAdd;
+                } else {
+                    // Item not in cart, add it as a new entry
+                    cart[productId] = { ...productData, quantity: quantityToAdd };
+                }
+
+                // Save the updated cart back to localStorage
+                saveCart(cart);
+                
+                // Update the state and UI
+                state.cart = cart;
                 updateCartBadge();
                 showToastMessage();
 
