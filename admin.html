@@ -8,127 +8,94 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
         :root {
-            --primary-color: #0073aa;
-            --primary-color-dark: #005177;
-            --secondary-color: #d54e21;
-            --background-color: #f0f0f1;
-            --panel-bg: #fff;
-            --border-color: #c3c4c7;
-            --text-color: #1d2327;
-            --subtle-text-color: #555d66;
-            --card-border-radius: 4px;
-            --box-shadow: 0 1px 1px rgba(0,0,0,.04);
-            --sidebar-width: 250px;
+            --primary-color: #007bff;
+            --primary-color-hover: #0056b3;
+            --secondary-color: #6c757d;
+            --secondary-color-hover: #5a6268;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --background-color: #f8f9fa;
+            --card-bg: #fff;
+            --border-color: #e2e6ea;
+            --text-color: #343a40;
+            --subtle-text-color: #6c757d;
+            --font-family: 'Roboto', sans-serif;
+            --card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            --border-radius: 0.25rem;
         }
 
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: var(--font-family);
             margin: 0;
             padding: 0;
             background-color: var(--background-color);
             color: var(--text-color);
-            display: flex;
-            min-height: 100vh;
         }
 
-        .sidebar {
-            width: var(--sidebar-width);
-            background-color: #1d2327;
-            color: #c3c4c7;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            z-index: 1000;
-        }
-
-        .sidebar-header {
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid #32373c;
-        }
-
-        .sidebar-header h1 {
-            font-size: 1.5rem;
-            margin: 0;
-            color: #fff;
-            font-weight: 700;
-        }
-
-        .sidebar-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            flex-grow: 1;
-        }
-
-        .sidebar-menu li a {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 15px 20px;
-            color: #c3c4c7;
-            text-decoration: none;
-            font-size: 1rem;
-            transition: background-color 0.2s, color 0.2s;
-            border-left: 3px solid transparent;
-        }
-        
-        .sidebar-menu li a:hover {
-            background-color: #32373c;
-            color: #00b9eb;
-        }
-        .sidebar-menu li a.active {
-            background-color: #2c323b;
-            color: #fff;
-            border-left-color: var(--primary-color);
-        }
-        .sidebar-menu li a.active .material-symbols-outlined {
-            color: #00b9eb;
-        }
-
-        .main-content {
-            flex-grow: 1;
-            margin-left: var(--sidebar-width);
-            padding: 20px;
+        .container {
+            max-width: 1300px;
+            margin: 40px auto;
+            padding: 0 20px;
         }
 
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 20px;
-            background-color: var(--panel-bg);
-            border-bottom: 1px solid var(--border-color);
-            margin: -20px -20px 20px;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--primary-color);
         }
         
-        .header h1 {
-            font-size: 1.8rem;
-            font-weight: 500;
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            list-style: none;
+            padding: 0;
             margin: 0;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 20px;
         }
-        .header .user-info {
-            font-size: 0.9rem;
+
+        .nav-tabs a {
+            display: inline-block;
+            padding: 12px 20px;
+            text-decoration: none;
             color: var(--subtle-text-color);
+            font-weight: 500;
+            transition: color 0.2s, background-color 0.2s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-tabs a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-tabs a.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
         }
 
         .tab-content {
-            background-color: var(--panel-bg);
-            padding: 20px;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--box-shadow);
-            border-radius: var(--card-border-radius);
-            margin-bottom: 20px;
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
         }
         
         .hidden {
-            display: none !important;
+            display: none;
         }
-
+        
         .section-header {
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 10px;
@@ -143,91 +110,88 @@
             font-weight: 500;
             margin: 0;
         }
-        
+
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 1rem;
         }
         .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 0.5rem;
             font-weight: 500;
-            font-size: 0.9rem;
         }
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 8px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--card-border-radius);
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: var(--border-radius);
             box-sizing: border-box;
             font-size: 1rem;
             transition: border-color 0.2s, box-shadow 0.2s;
+            font-family: var(--font-family);
         }
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 3px rgba(0, 115, 170, 0.5);
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
         }
         
         .btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background-color: var(--primary-color);
-            color: #fff;
+            padding: 0.75rem 1.25rem;
             border: none;
-            padding: 10px 20px;
-            border-radius: var(--card-border-radius);
+            border-radius: var(--border-radius);
             cursor: pointer;
             font-size: 1rem;
             font-weight: 500;
             transition: background-color 0.2s;
             text-decoration: none;
+            color: #fff;
+            background-color: var(--primary-color);
         }
         .btn:hover {
-            background-color: var(--primary-color-dark);
+            background-color: var(--primary-color-hover);
         }
         .btn-secondary {
             background-color: var(--secondary-color);
         }
         .btn-secondary:hover {
-            background-color: #c54017;
+            background-color: var(--secondary-color-hover);
         }
-        .btn-icon {
-            padding: 5px 10px;
-            color: #fff;
-            border-radius: 4px;
-        }
-        .btn-edit { background-color: #f39c12; }
-        .btn-delete { background-color: #e74c3c; }
 
+        .table-responsive {
+            overflow-x: auto;
+        }
         .data-table {
             width: 100%;
+            min-width: 700px;
             border-collapse: collapse;
             margin-top: 15px;
         }
         .data-table th,
         .data-table td {
-            padding: 12px;
+            padding: 1rem;
             text-align: left;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border-color);
             font-size: 0.9rem;
         }
         .data-table th {
-            background-color: #f7f7f7;
+            background-color: #f1f3f5;
             font-weight: 500;
         }
         .data-table tbody tr:hover {
-            background-color: #fcfcfc;
+            background-color: #f8f9fa;
         }
         .product-image {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             object-fit: cover;
-            border-radius: 4px;
+            border-radius: var(--border-radius);
         }
         .action-buttons button {
             background: none;
@@ -237,6 +201,7 @@
             margin-right: 5px;
             font-size: 1rem;
             color: var(--subtle-text-color);
+            transition: color 0.2s;
         }
         .action-buttons button:hover {
             color: var(--primary-color);
@@ -255,9 +220,9 @@
             z-index: 2000;
         }
         .modal-content {
-            background-color: var(--panel-bg);
-            padding: 30px;
-            border-radius: var(--card-border-radius);
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             width: 90%;
             max-width: 500px;
@@ -265,8 +230,8 @@
         }
         .modal-close-btn {
             position: absolute;
-            top: 10px;
-            right: 15px;
+            top: 15px;
+            right: 20px;
             font-size: 2rem;
             cursor: pointer;
             background: none;
@@ -275,40 +240,44 @@
         }
 
         .filter-section {
+            margin-bottom: 20px;
             display: flex;
             gap: 15px;
             align-items: flex-end;
-            margin-bottom: 20px;
             flex-wrap: wrap;
+        }
+        .filter-section .form-group {
+            flex-grow: 1;
+            margin-bottom: 0;
         }
 
         .status-dropdown {
-            padding: 8px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
+            padding: 0.5rem;
+            border: 1px solid #ced4da;
+            border-radius: var(--border-radius);
             font-size: 0.9rem;
-            font-family: 'Roboto', sans-serif;
+            font-family: var(--font-family);
+            color: var(--text-color);
         }
-        .status-dropdown.Delivered { color: #2ecc71; }
-        .status-dropdown.Shipped { color: #3498db; }
-        .status-dropdown.Packed { color: #f1c40f; }
-        .status-dropdown.Processing { color: #95a5a6; }
-        .status-dropdown.Cancelled { color: #e74c3c; }
-
+        .status-dropdown.Processing { color: var(--secondary-color); }
+        .status-dropdown.Packed { color: var(--warning-color); }
+        .status-dropdown.Shipped { color: var(--info-color); }
+        .status-dropdown.Delivered { color: var(--success-color); }
+        .status-dropdown.Cancelled { color: var(--danger-color); }
+        
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
         }
         .stat-card {
-            background-color: #fff;
+            background-color: var(--card-bg);
             padding: 20px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--card-border-radius);
-            box-shadow: var(--box-shadow);
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
         }
         .stat-card h3 {
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 500;
             color: var(--subtle-text-color);
             margin: 0 0 10px 0;
@@ -318,7 +287,29 @@
             font-weight: 700;
             margin: 0;
         }
-
+        .stat-card .material-symbols-outlined {
+            font-size: 48px;
+            opacity: 0.2;
+            margin-top: -10px;
+            float: right;
+        }
+        .logout-btn {
+            background: none;
+            border: none;
+            color: var(--danger-color);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s;
+        }
+        .logout-btn:hover {
+            color: #b11f2a;
+        }
+        
         /* Analytics Section Styles */
         .analytics-container {
             display: grid;
@@ -326,16 +317,15 @@
             gap: 20px;
         }
         .analytics-card {
-            background-color: var(--panel-bg);
-            padding: 20px;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--box-shadow);
-            border-radius: var(--card-border-radius);
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
         }
         .analytics-card h3 {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             font-weight: 500;
-            margin: 0 0 15px 0;
+            margin: 0 0 1rem 0;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 10px;
         }
@@ -344,16 +334,10 @@
             width: 100%;
             height: 300px;
         }
-        
+
         @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                box-shadow: none;
-            }
-            .main-content {
-                margin-left: 0;
+            .container {
+                margin: 20px auto;
             }
             .header {
                 flex-direction: column;
@@ -362,51 +346,58 @@
             .header h1 {
                 margin-bottom: 10px;
             }
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+            .nav-tabs a {
+                padding: 10px;
+            }
+            .tab-content {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <h1>Admin Panel</h1>
-        </div>
-        <ul class="sidebar-menu">
-            <li><a href="#" class="tab-link active" data-tab="dashboardTab"><span class="material-symbols-outlined">dashboard</span>Dashboard</a></li>
-            <li><a href="#" class="tab-link" data-tab="allProductsTab"><span class="material-symbols-outlined">inventory_2</span>Products</a></li>
-            <li><a href="#" class="tab-link" data-tab="addProductTab"><span class="material-symbols-outlined">add_circle</span>Add Products</a></li>
-            <li><a href="#" class="tab-link" data-tab="updateProductTab"><span class="material-symbols-outlined">edit</span>Update Products</a></li>
-            <li><a href="#" class="tab-link" data-tab="manageOrdersTab"><span class="material-symbols-outlined">local_shipping</span>Orders</a></li>
-            <li><a href="#" class="tab-link" data-tab="manageUsersTab"><span class="material-symbols-outlined">group</span>Users</a></li>
-        </ul>
-    </div>
-
-    <div class="main-content">
+    <div class="container">
         <div class="header">
-            <h1 id="page-title">Dashboard</h1>
-            <div class="user-info">Logged in as: Admin</div>
+            <h1>Admin Dashboard</h1>
+            <button id="logout-btn" class="logout-btn"><span class="material-symbols-outlined">logout</span>Logout</button>
         </div>
+
+        <ul class="nav-tabs">
+            <li><a href="#" class="tab-link active" data-tab="dashboardTab">Dashboard</a></li>
+            <li><a href="#" class="tab-link" data-tab="analyticsTab">Analytics</a></li>
+            <li><a href="#" class="tab-link" data-tab="allProductsTab">Products</a></li>
+            <li><a href="#" class="tab-link" data-tab="addProductTab">Add Product</a></li>
+            <li><a href="#" class="tab-link" data-tab="updateProductTab">Update Products</a></li>
+            <li><a href="#" class="tab-link" data-tab="manageOrdersTab">Orders</a></li>
+            <li><a href="#" class="tab-link" data-tab="manageUsersTab">Users</a></li>
+        </ul>
 
         <div id="dashboardTab" class="tab-content">
             <div class="section-header">
-                <h2>Quick Stats</h2>
+                <h2>Overview</h2>
             </div>
             <div class="dashboard-grid">
                 <div class="stat-card">
-                    <h3>Total Products</h3>
+                    <h3>Total Products <span class="material-symbols-outlined">inventory_2</span></h3>
                     <p id="total-products-count">0</p>
                 </div>
                 <div class="stat-card">
-                    <h3>Total Users</h3>
+                    <h3>Total Users <span class="material-symbols-outlined">group</span></h3>
                     <p id="total-users-count">0</p>
                 </div>
                 <div class="stat-card">
-                    <h3>Total Orders</h3>
+                    <h3>Total Orders <span class="material-symbols-outlined">local_shipping</span></h3>
                     <p id="total-orders-count">0</p>
                 </div>
             </div>
-
-            <div class="section-header" style="margin-top: 30px;">
+        </div>
+        
+        <div id="analyticsTab" class="tab-content hidden">
+            <div class="section-header">
                 <h2>Orders Analytics</h2>
             </div>
             <div class="analytics-container">
@@ -659,7 +650,7 @@
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, doc, getDoc, updateDoc, deleteDoc, query, where, orderBy, Timestamp, runTransaction } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
         
         // =========================================================
@@ -711,9 +702,8 @@
         // =========================================================
         const tabLinks = document.querySelectorAll('.tab-link');
         const tabContents = document.querySelectorAll('.tab-content');
-        const pageTitle = document.getElementById('page-title');
 
-        function openTab(tabId, title) {
+        function openTab(tabId) {
             tabContents.forEach(tab => tab.classList.add('hidden'));
             tabLinks.forEach(link => link.classList.remove('active'));
 
@@ -726,13 +716,11 @@
             if (selectedLink) {
                 selectedLink.classList.add('active');
             }
-            if (pageTitle) {
-                pageTitle.textContent = title;
-            }
 
             // Trigger data fetching for the newly opened tab
             if (tabId === 'dashboardTab') {
                 fetchDashboardStats();
+            } else if (tabId === 'analyticsTab') {
                 fetchOrdersAnalytics();
             } else if (tabId === 'allProductsTab') {
                 fetchAllProducts();
@@ -748,14 +736,25 @@
         tabLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-                const tabId = e.currentTarget.dataset.tab;
-                const title = e.currentTarget.textContent.trim();
-                openTab(tabId, title);
+                openTab(e.currentTarget.dataset.tab);
             });
         });
 
         document.addEventListener('DOMContentLoaded', () => {
-            openTab('dashboardTab', 'Dashboard');
+            openTab('dashboardTab');
+        });
+
+        // =========================================================
+        // LOGOUT LOGIC
+        // =========================================================
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                window.location.href = 'auth.html';
+            } catch (error) {
+                console.error("Error signing out:", error);
+                alert("An error occurred during logout.");
+            }
         });
 
         // =========================================================
@@ -774,6 +773,9 @@
                 console.error("Error fetching dashboard stats:", error);
             }
         }
+
+        let ordersStatusChart = null;
+        let monthlyOrdersChart = null;
 
         async function fetchOrdersAnalytics() {
             try {
@@ -805,7 +807,6 @@
             }
         }
         
-        let ordersStatusChart = null;
         function renderOrdersStatusChart(data) {
             const ctx = document.getElementById('orders-status-chart').getContext('2d');
             if (ordersStatusChart) {
@@ -818,11 +819,11 @@
                     datasets: [{
                         data: Object.values(data),
                         backgroundColor: [
-                            '#95a5a6', // Processing
-                            '#f1c40f', // Packed
-                            '#3498db', // Shipped
-                            '#2ecc71', // Delivered
-                            '#e74c3c'  // Cancelled
+                            '#6c757d', // Processing
+                            '#ffc107', // Packed
+                            '#17a2b8', // Shipped
+                            '#28a745', // Delivered
+                            '#dc3545'  // Cancelled
                         ],
                         hoverOffset: 4
                     }]
@@ -839,7 +840,6 @@
             });
         }
         
-        let monthlyOrdersChart = null;
         function renderMonthlyOrdersChart(data) {
             const ctx = document.getElementById('monthly-orders-chart').getContext('2d');
             if (monthlyOrdersChart) {
@@ -856,8 +856,8 @@
                     datasets: [{
                         label: 'Total Sales (₹)',
                         data: values,
-                        backgroundColor: 'rgba(0, 115, 170, 0.6)',
-                        borderColor: 'rgba(0, 115, 170, 1)',
+                        backgroundColor: 'rgba(0, 123, 255, 0.6)',
+                        borderColor: 'rgba(0, 123, 255, 1)',
                         borderWidth: 1
                     }]
                 },
@@ -946,8 +946,8 @@
                             <td>${product.category}</td>
                             ${tabId === 'updateProductTab' ? `
                             <td class="action-buttons">
-                                <button class="btn-edit btn-icon" data-id="${product.id}"><span class="material-symbols-outlined">edit_square</span></button>
-                                <button class="btn-delete btn-icon" data-id="${product.id}"><span class="material-symbols-outlined">delete</span></button>
+                                <button class="btn-edit" data-id="${product.id}"><span class="material-symbols-outlined">edit_square</span></button>
+                                <button class="btn-delete" data-id="${product.id}"><span class="material-symbols-outlined">delete</span></button>
                             </td>
                             ` : ''}
                         </tr>
@@ -1105,7 +1105,7 @@
                                 </select>
                             </td>
                             <td class="action-buttons">
-                                <button class="btn-info btn-icon" onclick="viewOrderDetails('${orderId}')"><span class="material-symbols-outlined">visibility</span></button>
+                                <button class="btn-info" onclick="viewOrderDetails('${orderId}')"><span class="material-symbols-outlined">visibility</span></button>
                             </td>
                         </tr>
                     `;
@@ -1239,8 +1239,8 @@
                             <td>${user.phoneNumber || 'N/A'}</td>
                             <td>${user.role}</td>
                             <td class="action-buttons">
-                                <button class="btn-edit btn-icon" data-id="${user.id}"><span class="material-symbols-outlined">edit_square</span></button>
-                                <button class="btn-delete btn-icon" data-id="${user.id}"><span class="material-symbols-outlined">delete</span></button>
+                                <button class="btn-edit" data-id="${user.id}"><span class="material-symbols-outlined">edit_square</span></button>
+                                <button class="btn-delete" data-id="${user.id}"><span class="material-symbols-outlined">delete</span></button>
                             </td>
                         </tr>
                     `;
