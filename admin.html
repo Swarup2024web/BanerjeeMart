@@ -8,19 +8,19 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
         :root {
-            --primary-color: #007bff;
-            --primary-color-hover: #0056b3;
-            --secondary-color: #f8f9fa;
+            --primary-color: #3b82f6; /* A slightly darker blue for accents */
+            --primary-color-hover: #2563eb;
+            --secondary-color: #f3f4f6; /* Light gray background */
             --surface-color: #fff;
-            --text-color: #343a40;
-            --subtle-text-color: #6c757d;
-            --border-color: #e2e6ea;
-            --card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-            --border-radius: 0.25rem;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --warning-color: #ffc107;
-            --info-color: #17a2b8;
+            --text-color: #1f2937; /* Darker text */
+            --subtle-text-color: #6b7280;
+            --border-color: #e5e7eb;
+            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --border-radius: 0.5rem;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #0ea5e9;
         }
 
         body {
@@ -29,28 +29,89 @@
             padding: 0;
             background-color: var(--secondary-color);
             color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
         }
 
-        .container {
-            max-width: 1300px;
-            margin: 40px auto;
-            padding: 0 20px;
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 250px;
+            background-color: #1f2937;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            padding: 24px 16px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
 
+        .sidebar h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 0 2rem 0;
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .nav-tabs {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-tabs a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            text-decoration: none;
+            color: #d1d5db;
+            font-weight: 500;
+            border-radius: var(--border-radius);
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .nav-tabs a:hover {
+            background-color: #374151;
+            color: #fff;
+        }
+
+        .nav-tabs a.active {
+            background-color: var(--primary-color);
+            color: #fff;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        }
+        
+        .nav-tabs .material-symbols-outlined {
+            font-size: 20px;
+        }
+        
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 2rem;
+            background-color: var(--surface-color);
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
         }
 
         .header h1 {
-            font-size: 2.5rem;
+            font-size: 1.5rem;
             font-weight: 700;
             margin: 0;
-            color: var(--primary-color);
         }
         
         .logout-btn {
@@ -67,45 +128,12 @@
             transition: color 0.2s;
         }
         .logout-btn:hover {
-            color: #b11f2a;
+            color: #b91c1c;
         }
 
-        .nav-tabs {
-            display: flex;
-            gap: 10px;
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            border-bottom: 2px solid var(--border-color);
-            margin-bottom: 20px;
-        }
-
-        .nav-tabs a {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 20px;
-            text-decoration: none;
-            color: var(--subtle-text-color);
-            font-weight: 500;
-            transition: color 0.2s, background-color 0.2s;
-            border-bottom: 3px solid transparent;
-        }
-
-        .nav-tabs a:hover {
-            color: var(--primary-color);
-        }
-
-        .nav-tabs a.active {
-            color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
-        }
-        
+        /* General UI components */
         .tab-content {
-            background-color: var(--surface-color);
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
+            flex-grow: 1;
         }
         
         .hidden {
@@ -113,53 +141,62 @@
         }
         
         .section-header {
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         
         .section-header h2 {
-            font-size: 1.5rem;
-            font-weight: 500;
+            font-size: 1.25rem;
+            font-weight: 600;
             margin: 0;
+            color: var(--text-color);
+        }
+
+        .card {
+            background-color: var(--surface-color);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            margin-bottom: 1.5rem;
         }
 
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
+            color: var(--text-color);
         }
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid #ced4da;
+            border: 1px solid var(--border-color);
             border-radius: var(--border-radius);
             box-sizing: border-box;
             font-size: 1rem;
             transition: border-color 0.2s, box-shadow 0.2s;
             font-family: 'Roboto', sans-serif;
+            background-color: var(--surface-color);
         }
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
         }
         
         .btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 0.75rem 1.25rem;
+            padding: 0.75rem 1.5rem;
             border: none;
             border-radius: var(--border-radius);
             cursor: pointer;
@@ -190,7 +227,6 @@
             width: 100%;
             min-width: 700px;
             border-collapse: collapse;
-            margin-top: 15px;
         }
         .data-table th,
         .data-table td {
@@ -200,11 +236,11 @@
             font-size: 0.9rem;
         }
         .data-table th {
-            background-color: #f1f3f5;
+            background-color: var(--secondary-color);
             font-weight: 500;
         }
         .data-table tbody tr:hover {
-            background-color: #f8f9fa;
+            background-color: #f9fafb;
         }
         .product-image {
             width: 60px;
@@ -312,7 +348,6 @@
             float: right;
         }
         
-        /* Analytics Section Styles */
         .analytics-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -474,21 +509,34 @@
 
 
         @media (max-width: 768px) {
-            .container {
-                margin: 20px auto;
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                padding: 16px 20px;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .sidebar h1 {
+                margin: 0;
+                font-size: 1.25rem;
+            }
+            .nav-tabs {
+                display: none; /* Hide sidebar nav on mobile, use a hamburger menu if needed */
+            }
+            .main-content {
+                padding: 1rem;
             }
             .header {
                 flex-direction: column;
                 align-items: flex-start;
+                padding: 1rem;
             }
             .header h1 {
                 margin-bottom: 10px;
-            }
-            .nav-tabs {
-                flex-wrap: wrap;
-            }
-            .nav-tabs a {
-                padding: 10px;
+                font-size: 1.25rem;
             }
             .tab-content {
                 padding: 1rem;
@@ -502,12 +550,8 @@
 </head>
 <body>
 
-    <div class="container">
-        <div class="header">
-            <h1>Admin Dashboard</h1>
-            <button id="logout-btn" class="logout-btn"><span class="material-symbols-outlined">logout</span>Logout</button>
-        </div>
-
+    <div class="sidebar">
+        <h1>Admin Panel</h1>
         <ul class="nav-tabs">
             <li><a href="#" class="tab-link active" data-tab="dashboardTab"><span class="material-symbols-outlined">dashboard</span>Dashboard</a></li>
             <li><a href="#" class="tab-link" data-tab="analyticsTab"><span class="material-symbols-outlined">analytics</span>Analytics</a></li>
@@ -517,200 +561,221 @@
             <li><a href="#" class="tab-link" data-tab="manageOrdersTab"><span class="material-symbols-outlined">local_shipping</span>Orders</a></li>
             <li><a href="#" class="tab-link" data-tab="manageUsersTab"><span class="material-symbols-outlined">group</span>Users</a></li>
         </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Welcome, Admin!</h1>
+            <button id="logout-btn" class="logout-btn"><span class="material-symbols-outlined">logout</span>Logout</button>
+        </div>
 
         <div id="dashboardTab" class="tab-content">
-            <div class="section-header">
-                <h2>Overview</h2>
-            </div>
-            <div class="dashboard-grid">
-                <div class="stat-card">
-                    <h3>Total Products <span class="material-symbols-outlined">inventory_2</span></h3>
-                    <p id="total-products-count">0</p>
+            <div class="card">
+                <div class="section-header">
+                    <h2>Overview</h2>
                 </div>
-                <div class="stat-card">
-                    <h3>Total Users <span class="material-symbols-outlined">group</span></h3>
-                    <p id="total-users-count">0</p>
-                </div>
-                <div class="stat-card">
-                    <h3>Total Orders <span class="material-symbols-outlined">local_shipping</span></h3>
-                    <p id="total-orders-count">0</p>
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <h3>Total Products <span class="material-symbols-outlined">inventory_2</span></h3>
+                        <p id="total-products-count">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Users <span class="material-symbols-outlined">group</span></h3>
+                        <p id="total-users-count">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Orders <span class="material-symbols-outlined">local_shipping</span></h3>
+                        <p id="total-orders-count">0</p>
+                    </div>
                 </div>
             </div>
         </div>
         
         <div id="analyticsTab" class="tab-content hidden">
-            <div class="section-header">
-                <h2>Orders Analytics</h2>
-            </div>
-            <div class="analytics-container">
-                <div class="analytics-card">
-                    <h3>Orders by Status</h3>
-                    <div class="chart-container">
-                        <canvas id="orders-status-chart"></canvas>
-                    </div>
+            <div class="card">
+                <div class="section-header">
+                    <h2>Orders Analytics</h2>
                 </div>
-                <div class="analytics-card">
-                    <h3>Monthly Order Value</h3>
-                    <div class="chart-container">
-                        <canvas id="monthly-orders-chart"></canvas>
+                <div class="analytics-container">
+                    <div class="analytics-card">
+                        <h3>Orders by Status</h3>
+                        <div class="chart-container">
+                            <canvas id="orders-status-chart"></canvas>
+                        </div>
                     </div>
-                </div>
-                <div class="analytics-card">
-                    <h3>Most Sold Products</h3>
-                    <ul id="most-sold-list" class="most-sold-list">
-                        <li><div class="empty-state" style="padding: 0;"><p>Loading...</p></div></li>
-                    </ul>
+                    <div class="analytics-card">
+                        <h3>Monthly Order Value</h3>
+                        <div class="chart-container">
+                            <canvas id="monthly-orders-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Most Sold Products</h3>
+                        <ul id="most-sold-list" class="most-sold-list">
+                            <li><div class="empty-state" style="padding: 0;"><p>Loading...</p></div></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div id="allProductsTab" class="tab-content hidden">
-            <div class="section-header">
-                <h2>Product Catalog</h2>
-            </div>
-            <div class="filter-section">
-                <div class="form-group">
-                    <label for="all-products-filter">Filter by Category</label>
-                    <select id="all-products-filter" onchange="filterProducts('allProductsTab')">
-                        <option value="All">All</option>
-                        <option value="Groceries">Groceries</option>
-                        <option value="Foods">Foods</option>
-                        <option value="Care">Care</option>
-                        <option value="Stationery">Stationery</option>
-                    </select>
+            <div class="card">
+                <div class="section-header">
+                    <h2>Product Catalog</h2>
                 </div>
-            </div>
-            <div class="table-responsive">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Product Name</th>
-                            <th>Price</th>
-                            <th>Category</th>
-                        </tr>
-                    </thead>
-                    <tbody id="all-products-list">
-                        <tr><td colspan="4" style="text-align: center;">Loading products...</td></tr>
-                    </tbody>
-                </table>
+                <div class="filter-section">
+                    <div class="form-group">
+                        <label for="all-products-filter">Filter by Category</label>
+                        <select id="all-products-filter" onchange="filterProducts('allProductsTab')">
+                            <option value="All">All</option>
+                            <option value="Groceries">Groceries</option>
+                            <option value="Foods">Foods</option>
+                            <option value="Care">Care</option>
+                            <option value="Stationery">Stationery</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Category</th>
+                            </tr>
+                        </thead>
+                        <tbody id="all-products-list">
+                            <tr><td colspan="4" style="text-align: center;">Loading products...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
         <div id="addProductTab" class="tab-content hidden">
-            <div class="section-header">
-                <h2>Add New Product</h2>
+            <div class="card">
+                <div class="section-header">
+                    <h2>Add New Product</h2>
+                </div>
+                <form id="product-form">
+                    <div class="form-group">
+                        <label for="product-name">Product Name</label>
+                        <input type="text" id="product-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-price">Price (₹)</label>
+                        <input type="number" id="product-price" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-category">Category</label>
+                        <select id="product-category" required>
+                            <option value="Groceries">Groceries</option>
+                            <option value="Foods">Foods</option>
+                            <option value="Care">Care</option>
+                            <option value="Stationery">Stationery</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-image">Image File Name (e.g., apple.png)</label>
+                        <input type="text" id="product-image" required>
+                    </div>
+                    <button type="submit" class="btn"><span class="material-symbols-outlined">add</span>Add Product</button>
+                </form>
             </div>
-            <form id="product-form">
-                <div class="form-group">
-                    <label for="product-name">Product Name</label>
-                    <input type="text" id="product-name" required>
-                </div>
-                <div class="form-group">
-                    <label for="product-price">Price (₹)</label>
-                    <input type="number" id="product-price" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label for="product-category">Category</label>
-                    <select id="product-category" required>
-                        <option value="Groceries">Groceries</option>
-                        <option value="Foods">Foods</option>
-                        <option value="Care">Care</option>
-                        <option value="Stationery">Stationery</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="product-image">Image File Name (e.g., apple.png)</label>
-                    <input type="text" id="product-image" required>
-                </div>
-                <button type="submit" class="btn"><span class="material-symbols-outlined">add</span>Add Product</button>
-            </form>
         </div>
 
         <div id="updateProductTab" class="tab-content hidden">
-            <div class="section-header">
-                <h2>Update/Delete Products</h2>
-            </div>
-            <div class="filter-section">
-                <div class="form-group">
-                    <label for="update-products-filter">Filter by Category</label>
-                    <select id="update-products-filter" onchange="filterProducts('updateProductTab')">
-                        <option value="All">All</option>
-                        <option value="Groceries">Groceries</option>
-                        <option value="Foods">Foods</option>
-                        <option value="Care">Care</option>
-                        <option value="Stationery">Stationery</option>
-                    </select>
+            <div class="card">
+                <div class="section-header">
+                    <h2>Update/Delete Products</h2>
                 </div>
-            </div>
-            <div class="table-responsive">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Product Name</th>
-                            <th>Price</th>
-                            <th>Category</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="update-products-list">
-                        <tr><td colspan="5" style="text-align: center;">Loading products...</td></tr>
-                    </tbody>
-                </table>
+                <div class="filter-section">
+                    <div class="form-group">
+                        <label for="update-products-filter">Filter by Category</label>
+                        <select id="update-products-filter" onchange="filterProducts('updateProductTab')">
+                            <option value="All">All</option>
+                            <option value="Groceries">Groceries</option>
+                            <option value="Foods">Foods</option>
+                            <option value="Care">Care</option>
+                            <option value="Stationery">Stationery</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Category</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="update-products-list">
+                            <tr><td colspan="5" style="text-align: center;">Loading products...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         
         <div id="manageOrdersTab" class="tab-content hidden">
-            <div class="section-header">
-                <h2>Order List</h2>
-                <div class="filter-section" style="margin-bottom: 0;">
-                    <div class="form-group" style="margin-bottom:0;">
-                        <label for="start-date">From</label>
-                        <input type="date" id="start-date">
+            <div class="card">
+                <div class="section-header">
+                    <h2>Order List</h2>
+                    <div class="filter-section" style="margin-bottom: 0;">
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label for="start-date">From</label>
+                            <input type="date" id="start-date">
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label for="end-date">To</label>
+                            <input type="date" id="end-date">
+                        </div>
+                        <button class="btn" onclick="filterAndDownloadOrders()"><span class="material-symbols-outlined">download</span> Download Report</button>
                     </div>
-                    <div class="form-group" style="margin-bottom:0;">
-                        <label for="end-date">To</label>
-                        <input type="date" id="end-date">
-                    </div>
-                    <button class="btn" onclick="filterAndDownloadOrders()"><span class="material-symbols-outlined">download</span> Download Report</button>
                 </div>
-            </div>
-            <div id="order-list" class="order-grid">
-                <div class="empty-state">
-                    <span class="material-symbols-outlined">shopping_cart</span>
-                    <p>Loading orders...</p>
+                <div id="order-list" class="order-grid">
+                    <div class="empty-state">
+                        <span class="material-symbols-outlined">shopping_cart</span>
+                        <p>Loading orders...</p>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div id="manageUsersTab" class="tab-content hidden">
-            <div class="section-header">
-                <h2>User Directory</h2>
-            </div>
-            <div class="filter-section">
-                <div class="form-group">
-                    <label for="user-search">Search by Name/Email</label>
-                    <input type="text" id="user-search" placeholder="Enter name or email">
+            <div class="card">
+                <div class="section-header">
+                    <h2>User Directory</h2>
                 </div>
-                <button class="btn" onclick="searchUsers()"><span class="material-symbols-outlined">search</span> Search</button>
-            </div>
-            <div class="table-responsive">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>User ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Role</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="user-list">
-                        <tr><td colspan="6" style="text-align: center;">Loading users...</td></tr>
-                    </tbody>
-                </table>
+                <div class="filter-section">
+                    <div class="form-group">
+                        <label for="user-search">Search by Name/Email</label>
+                        <input type="text" id="user-search" placeholder="Enter name or email">
+                    </div>
+                    <button class="btn" onclick="searchUsers()"><span class="material-symbols-outlined">search</span> Search</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Role</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-list">
+                            <tr><td colspan="6" style="text-align: center;">Loading users...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -986,10 +1051,10 @@
                         data: Object.values(data),
                         backgroundColor: [
                             '#6c757d', // Processing
-                            '#ffc107', // Packed
-                            '#17a2b8', // Shipped
-                            '#28a745', // Delivered
-                            '#dc3545'  // Cancelled
+                            '#f59e0b', // Packed
+                            '#0ea5e9', // Shipped
+                            '#10b981', // Delivered
+                            '#ef4444'  // Cancelled
                         ],
                         hoverOffset: 4
                     }]
@@ -1022,8 +1087,8 @@
                     datasets: [{
                         label: 'Total Sales (₹)',
                         data: values,
-                        backgroundColor: 'rgba(0, 123, 255, 0.6)',
-                        borderColor: 'rgba(0, 123, 255, 1)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
                         borderWidth: 1
                     }]
                 },
