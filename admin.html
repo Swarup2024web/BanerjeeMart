@@ -8,19 +8,25 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
         :root {
-            --primary-color: #3b82f6;
-            --primary-light-color: #eff6ff;
-            --secondary-color: #f1f5f9;
+            --primary-color: #4a55e5;
+            --primary-light-color: #e8ecfb;
+            --secondary-color: #f8fafc;
             --surface-color: #ffffff;
-            --text-color: #1f2937;
-            --subtle-text-color: #6b7280;
-            --border-color: #e5e7eb;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --text-color: #1a202c;
+            --subtle-text-color: #4a5568;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-            --danger-color: #ef4444;
+            --success-color: #48bb78;
+            --warning-color: #f6ad55;
+            --danger-color: #f56565;
+            --info-color: #4299e1;
+            --card-bg-color: #fff;
+            --card-border-color: #edf2f7;
+            --accent-green: #38a169;
+            --accent-blue: #3182ce;
+            --accent-purple: #805ad5;
         }
 
         body {
@@ -162,7 +168,7 @@
             transition: background-color 0.2s, box-shadow 0.2s;
         }
         .btn:hover {
-            background-color: #2563eb;
+            background-color: #3f47d9;
             box-shadow: var(--shadow-sm);
         }
         .btn-secondary {
@@ -314,14 +320,14 @@
         }
 
         .order-card {
-            background-color: var(--surface-color);
+            background-color: var(--card-bg-color);
             border-radius: 12px;
             box-shadow: var(--shadow-sm);
             padding: 24px;
             transition: box-shadow 0.2s, transform 0.2s;
             display: flex;
             flex-direction: column;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--card-border-color);
         }
 
         .order-card:hover {
@@ -437,23 +443,30 @@
             gap: 24px;
         }
         .stat-card {
-            background-color: var(--surface-color);
+            background-color: var(--card-bg-color);
             padding: 24px;
             border-radius: 12px;
             box-shadow: var(--shadow-sm);
             display: flex;
             align-items: center;
             gap: 20px;
-            border: 1px solid var(--border-color);
-            transition: transform 0.2s;
+            border: 1px solid var(--card-border-color);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
         .stat-card:hover {
             transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
+        .stat-card.products .stat-icon { background-color: var(--primary-light-color); }
+        .stat-card.products .stat-icon .material-symbols-outlined { color: var(--primary-color); }
+        .stat-card.users .stat-icon { background-color: rgba(66, 153, 225, 0.1); }
+        .stat-card.users .stat-icon .material-symbols-outlined { color: var(--info-color); }
+        .stat-card.orders .stat-icon { background-color: rgba(56, 161, 105, 0.1); }
+        .stat-card.orders .stat-icon .material-symbols-outlined { color: var(--success-color); }
+
         .stat-icon {
             width: 60px;
             height: 60px;
-            background-color: var(--primary-light-color);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -461,7 +474,6 @@
         }
         .stat-icon .material-symbols-outlined {
             font-size: 32px;
-            color: var(--primary-color);
         }
         .stat-content h3 {
             margin: 0;
@@ -474,6 +486,13 @@
             font-size: 28px;
             font-weight: 700;
             color: var(--text-color);
+        }
+        .content-panel {
+            background-color: var(--card-bg-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--card-border-color);
+            padding: 24px;
         }
 
         @media (max-width: 768px) {
@@ -534,11 +553,11 @@
         <div class="tabs-container">
             <ul class="tab-list">
                 <li><a href="#" class="tab-link active" data-tab="dashboardTab"><span class="material-symbols-outlined">dashboard</span>Dashboard</a></li>
-                <li><a href="#" class="tab-link" data-tab="allProductsTab"><span class="material-symbols-outlined">view_list</span>All Products</a></li>
+                <li><a href="#" class="tab-link" data-tab="allProductsTab"><span class="material-symbols-outlined">inventory_2</span>Products</a></li>
                 <li><a href="#" class="tab-link" data-tab="addProductTab"><span class="material-symbols-outlined">add_circle</span>Add Products</a></li>
                 <li><a href="#" class="tab-link" data-tab="updateProductTab"><span class="material-symbols-outlined">edit</span>Update Products</a></li>
-                <li><a href="#" class="tab-link" data-tab="manageOrdersTab"><span class="material-symbols-outlined">local_shipping</span>Manage Orders</a></li>
-                <li><a href="#" class="tab-link" data-tab="manageUsersTab"><span class="material-symbols-outlined">group</span>Manage Users</a></li>
+                <li><a href="#" class="tab-link" data-tab="manageOrdersTab"><span class="material-symbols-outlined">local_shipping</span>Orders</a></li>
+                <li><a href="#" class="tab-link" data-tab="manageUsersTab"><span class="material-symbols-outlined">group</span>Users</a></li>
             </ul>
         </div>
 
@@ -546,24 +565,24 @@
             
             <div id="dashboardTab" class="tab-content">
                 <div class="section-header">
-                    <h2>Dashboard</h2>
+                    <h2>Dashboard Overview</h2>
                 </div>
                 <div class="dashboard-grid">
-                    <div class="stat-card">
+                    <div class="stat-card products">
                         <div class="stat-icon"><span class="material-symbols-outlined">inventory_2</span></div>
                         <div class="stat-content">
                             <h3>Total Products</h3>
                             <p id="total-products-count">0</p>
                         </div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card users">
                         <div class="stat-icon"><span class="material-symbols-outlined">group</span></div>
                         <div class="stat-content">
                             <h3>Total Users</h3>
                             <p id="total-users-count">0</p>
                         </div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card orders">
                         <div class="stat-icon"><span class="material-symbols-outlined">shopping_cart</span></div>
                         <div class="stat-content">
                             <h3>Total Orders</h3>
@@ -573,7 +592,7 @@
                 </div>
             </div>
 
-            <div id="allProductsTab" class="tab-content hidden">
+            <div id="allProductsTab" class="tab-content hidden content-panel">
                 <div class="section-header">
                     <h2>All Products</h2>
                 </div>
@@ -606,7 +625,7 @@
                 </div>
             </div>
 
-            <div id="addProductTab" class="tab-content hidden">
+            <div id="addProductTab" class="tab-content hidden content-panel">
                 <div class="section-header">
                     <h2>Add New Product</h2>
                 </div>
@@ -636,7 +655,7 @@
                 </form>
             </div>
 
-            <div id="updateProductTab" class="tab-content hidden">
+            <div id="updateProductTab" class="tab-content hidden content-panel">
                 <div class="section-header">
                     <h2>Update/Delete Products</h2>
                 </div>
@@ -670,7 +689,7 @@
                 </div>
             </div>
             
-            <div id="manageOrdersTab" class="tab-content hidden">
+            <div id="manageOrdersTab" class="tab-content hidden content-panel">
                 <div class="section-header">
                     <h2>Manage Orders</h2>
                 </div>
@@ -693,7 +712,7 @@
                 </div>
             </div>
 
-            <div id="manageUsersTab" class="tab-content hidden">
+            <div id="manageUsersTab" class="tab-content hidden content-panel">
                 <div class="section-header">
                     <h2>Manage Users</h2>
                 </div>
