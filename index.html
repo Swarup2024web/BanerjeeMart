@@ -171,9 +171,15 @@
 
         .products-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            grid-template-columns: repeat(2, 1fr); /* Two cards per row */
             gap: 20px;
             padding: 20px;
+        }
+
+        @media (min-width: 600px) {
+            .products-container {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
         }
         
         /* Flipkart-style Product Card */
@@ -244,32 +250,6 @@
             margin: 0;
         }
         
-        .product-discount {
-            font-size: 12px;
-            color: #388E3C;
-            font-weight: 500;
-            margin-left: 8px;
-        }
-        
-        .product-rating {
-            display: flex;
-            align-items: center;
-            background-color: #388E3C;
-            color: white;
-            padding: 2px 6px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 500;
-            margin-top: 4px;
-            width: fit-content;
-        }
-        
-        .product-rating .material-symbols-outlined {
-            font-size: 12px;
-            margin-left: 2px;
-            font-variation-settings: 'FILL' 1;
-        }
-
         .add-to-cart-btn {
             background-color: var(--primary-color);
             color: var(--on-primary-color);
@@ -674,9 +654,6 @@
                 const productCard = document.createElement('div');
                 productCard.className = 'product-card';
                 
-                const productRating = product.rating || 4.2; // Example static rating
-                const productDiscount = product.discount || '10% off'; // Example static discount
-
                 productCard.innerHTML = `
                     <div class="product-image-wrapper">
                         <img src="${product.image}" alt="${product.name}" class="product-image">
@@ -684,13 +661,8 @@
                     <div class="product-details">
                         <div>
                             <div class="product-name">${product.name}</div>
-                            <div class="product-rating">
-                                ${productRating}
-                                <span class="material-symbols-outlined">star</span>
-                            </div>
                             <div class="product-price-wrapper">
                                 <div class="product-price">₹${product.price.toFixed(2)}</div>
-                                <div class="product-discount">${productDiscount}</div>
                             </div>
                         </div>
                         <button class="add-to-cart-btn" data-id="${product.id}">
