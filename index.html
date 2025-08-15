@@ -8,22 +8,22 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap">
     <style>
         :root {
-            --primary-color: #4CAF50; /* A fresh Green */
-            --primary-variant: #388E3C;
-            --secondary-color: #FF9800; /* A vibrant Orange */
+            --primary-color: #00796B; /* A deep teal */
+            --primary-variant: #004d40;
+            --secondary-color: #26C6DA; /* A vibrant Cyan */
             --on-primary-color: #ffffff;
             --on-secondary-color: #212121;
             --surface-color: #ffffff;
-            --background-color: #f0f4f8; /* A cool, light blue-gray */
+            --background-color: #E0F7FA; /* A very light cyan for the background */
             --on-surface-color: #263238;
             --on-background-color: #546E7A;
-            --outline-color: #ECEFF1;
+            --outline-color: #B2EBF2;
             --shadow-color-light: rgba(0, 0, 0, 0.08);
             --shadow-color-dark: rgba(0, 0, 0, 0.15);
             --success-color: #4CAF50;
             --danger-color: #d32f2f;
-            --skeleton-color: #E0E0E0;
-            --skeleton-highlight: #CFD8DC;
+            --skeleton-color: #B2EBF2;
+            --skeleton-highlight: #80DEEA;
         }
 
         * {
@@ -208,15 +208,15 @@
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
-            border-bottom: 1px solid var(--outline-color);
         }
 
         .product-details {
-            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white for better readability */
+            background-color: var(--surface-color); /* Use a solid color to prevent the "wide bar" issue */
             padding: 16px;
             display: flex;
             flex-direction: column;
             align-items: stretch;
+            flex-grow: 1; /* Make the details section fill the remaining space */
         }
 
         .product-name {
@@ -260,7 +260,7 @@
         }
 
         .add-to-cart-btn:hover {
-            background-color: #FB8C00;
+            background-color: #00BCD4;
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.3);
         }
