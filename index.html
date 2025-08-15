@@ -8,22 +8,22 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap">
     <style>
         :root {
-            --primary-color: #673AB7; /* Deep Purple */
-            --primary-variant: #5E35B1;
-            --secondary-color: #FFC107; /* Amber */
+            --primary-color: #4CAF50; /* A fresh Green */
+            --primary-variant: #388E3C;
+            --secondary-color: #FF9800; /* A vibrant Orange */
             --on-primary-color: #ffffff;
             --on-secondary-color: #212121;
             --surface-color: #ffffff;
-            --background-color: #f0f0f4; /* A soft, light gray */
-            --on-surface-color: #212121;
-            --on-background-color: #424242;
-            --outline-color: #e0e0e0;
+            --background-color: #f0f4f8; /* A cool, light blue-gray */
+            --on-surface-color: #263238;
+            --on-background-color: #546E7A;
+            --outline-color: #ECEFF1;
             --shadow-color-light: rgba(0, 0, 0, 0.08);
             --shadow-color-dark: rgba(0, 0, 0, 0.15);
             --success-color: #4CAF50;
             --danger-color: #d32f2f;
-            --skeleton-color: #e8e8e8;
-            --skeleton-highlight: #d1d1d1;
+            --skeleton-color: #E0E0E0;
+            --skeleton-highlight: #CFD8DC;
         }
 
         * {
@@ -47,25 +47,22 @@
             padding: 24px;
             box-shadow: 0 4px 12px var(--shadow-color-dark);
             color: var(--on-primary-color);
-        }
-
-        .header-row1 {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
+            text-align: center; /* Center the entire header content */
         }
 
         .logo-text {
-            font-family: 'Roboto', sans-serif;
             font-size: 28px;
             font-weight: 900;
             letter-spacing: 1px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            margin-bottom: 16px; /* Add margin for spacing */
+            display: inline-block; /* Helps in centering */
         }
 
         .search-bar {
             position: relative;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .search-bar input {
@@ -84,7 +81,7 @@
         .search-bar input:focus {
             outline: none;
             background-color: var(--surface-color);
-            box-shadow: 0 0 0 3px var(--primary-color), 0 6px 12px var(--shadow-color-dark);
+            box-shadow: 0 0 0 3px var(--secondary-color), 0 6px 12px var(--shadow-color-dark);
         }
 
         .search-bar .material-symbols-outlined {
@@ -197,7 +194,7 @@
         
         .product-image-wrapper {
             position: relative;
-            aspect-ratio: 1; /* Make it a square for a cleaner look */
+            aspect-ratio: 1; 
             background-color: #fcfcfc;
             display: flex;
             align-items: center;
@@ -216,7 +213,7 @@
             padding: 16px;
             display: flex;
             flex-direction: column;
-            align-items: stretch; /* Stretch children to fill available width */
+            align-items: stretch;
         }
 
         .product-name {
@@ -239,7 +236,7 @@
             margin-bottom: 16px;
         }
         
-        /* Upgraded button style */
+        /* Upgraded button style to fill the row */
         .add-to-cart-btn {
             background-color: var(--primary-color);
             color: var(--on-primary-color);
@@ -251,9 +248,12 @@
             cursor: pointer;
             transition: background-color 0.3s, transform 0.1s, box-shadow 0.2s;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            width: 100%; /* Ensures it fills the container */
-            margin-top: auto; /* Pushes the button to the bottom */
-            display: block; /* New: Make it a block element to prevent weird spacing */
+            width: 100%;
+            margin-top: auto;
+            display: flex; /* Change to flex for cool design */
+            justify-content: center; /* Center content horizontally */
+            align-items: center; /* Center content vertically */
+            gap: 8px;
         }
 
         .add-to-cart-btn:hover {
@@ -423,9 +423,7 @@
 <body>
 
     <header class="header">
-        <div class="header-row1">
-            <div class="logo-text">Banerjee Mart</div>
-        </div>
+        <div class="logo-text">Banerjee Mart</div>
         <div class="search-bar">
             <span class="material-symbols-outlined">search</span>
             <input type="text" id="search-input" placeholder="Search for products...">
