@@ -4,35 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>B Mart - My Profile</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
         :root {
-            --primary-color: #f57c00;
-            --on-primary-color: #ffffff;
-            --surface-color: #ffffff;
-            --background-color: #fff8e1;
-            --on-surface-color: #1f1f1f;
-            --on-background-color: #585858;
-            --outline-color: #d1d1d1;
-            --shadow-color-light: rgba(0, 0, 0, 0.08);
+            --primary-color: #2E86DE; /* Modern Sky Blue */
+            --primary-variant: #1B65A3;
+            --secondary-color: #F8B400; /* Sunny yellow for accents */
+            --background-color: #F8F9FA; /* Off-white for clean background */
+            --surface-color: #FFFFFF;
+            --on-primary-color: #FFFFFF;
+            --on-secondary-color: #212121;
+            --on-background-color: #333333;
+            --on-surface-color: #444444;
+            --outline-color: #E0E0E0;
+            --shadow-color-light: rgba(0, 0, 0, 0.05);
             --shadow-color-dark: rgba(0, 0, 0, 0.15);
-            --success-color: #4CAF50;
-            --danger-color: #d32f2f;
-            --admin-color: #673ab7;
-            --link-color: #0d47a1;
+            --success-color: #28A745;
+            --danger-color: #DC3545;
+            --admin-color: #673ab7; /* Indigo for admin */
         }
         
         * {
             box-sizing: border-box;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            margin: 0;
-            padding: 0;
             background-color: var(--background-color);
             color: var(--on-background-color);
+            line-height: 1.6;
         }
         
         /* Reusable Header */
@@ -41,24 +46,26 @@
             top: 0;
             z-index: 1000;
             background-color: var(--primary-color);
-            padding: 16px 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-shadow: 0 4px 12px var(--shadow-color-dark);
             color: var(--on-primary-color);
             text-align: center;
-            font-size: 24px;
+            font-size: 2rem;
             font-weight: 700;
+            letter-spacing: 1px;
         }
 
         .main-content {
-            padding: 16px;
-            padding-bottom: 70px;
-            min-height: calc(100vh - 130px);
+            padding: 20px;
+            padding-bottom: 90px;
+            min-height: calc(100vh - 110px);
         }
+        
         .page-title {
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 1.8rem;
+            font-weight: 600;
             color: var(--on-surface-color);
-            margin: 0 0 24px;
+            margin: 0 0 20px;
         }
 
         /* Profile Card */
@@ -84,6 +91,7 @@
         .profile-icon {
             font-size: 80px;
             color: var(--primary-color);
+            font-variation-settings: 'FILL' 1;
         }
 
         .profile-info-section {
@@ -100,23 +108,24 @@
         }
 
         .profile-name {
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 1.5rem;
+            font-weight: 600;
             color: var(--on-surface-color);
             margin: 0;
             line-height: 1.2;
         }
 
         .profile-email {
-            font-size: 16px;
-            color: var(--on-background-color);
+            font-size: 1rem;
+            color: #888888;
             margin: 0;
+            font-weight: 400;
         }
 
         .admin-badge {
             background-color: var(--admin-color);
             color: var(--on-primary-color);
-            font-size: 12px;
+            font-size: 0.75rem;
             font-weight: 700;
             padding: 4px 12px;
             border-radius: 20px;
@@ -137,14 +146,17 @@
             display: flex;
             align-items: flex-start;
             gap: 12px;
-            font-size: 16px;
+            font-size: 1rem;
             color: var(--on-background-color);
         }
+        
         .detail-item .material-symbols-outlined {
             font-size: 24px;
-            color: var(--on-surface-color);
+            color: var(--primary-color);
             flex-shrink: 0;
+            font-variation-settings: 'FILL' 0;
         }
+        
         .detail-text {
             word-break: break-word;
         }
@@ -166,16 +178,25 @@
             text-decoration: none;
             border: none;
             cursor: pointer;
-            transition: background-color 0.2s, color 0.2s;
-            font-size: 16px;
+            transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px var(--shadow-color-light);
         }
         
+        .action-btn:hover {
+            box-shadow: 0 4px 10px var(--shadow-color-dark);
+        }
+
         .edit-profile-btn {
             background-color: var(--primary-color);
             color: var(--on-primary-color);
         }
         .edit-profile-btn:hover {
-            background-color: #e65100;
+            background-color: var(--primary-variant);
         }
         
         .admin-link {
@@ -187,11 +208,11 @@
         }
 
         .contact-btn {
-            background-color: var(--on-surface-color);
-            color: var(--surface-color);
+            background-color: #6c757d;
+            color: var(--on-primary-color);
         }
         .contact-btn:hover {
-            background-color: #333333;
+            background-color: #5a6268;
         }
 
         .signout-btn {
@@ -199,7 +220,7 @@
             color: var(--on-primary-color);
         }
         .signout-btn:hover {
-            background-color: #a02020;
+            background-color: #c82333;
         }
         
         .hidden {
@@ -218,6 +239,7 @@
             justify-content: center;
             align-items: center;
             z-index: 2000;
+            animation: fadeIn 0.3s ease-out;
         }
 
         .popup-card {
@@ -228,7 +250,12 @@
             width: 90%;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
             position: relative;
-            animation: fadeIn 0.3s ease-out;
+            transform: scale(0.95);
+            transition: transform 0.3s ease-out;
+        }
+
+        .popup-overlay.show .popup-card {
+            transform: scale(1);
         }
         
         .popup-close-btn {
@@ -237,15 +264,22 @@
             right: 12px;
             background: none;
             border: none;
-            font-size: 24px;
+            font-size: 1.5rem;
             cursor: pointer;
             color: var(--on-background-color);
+            font-variation-settings: 'FILL' 0;
+            transition: color 0.3s, font-variation-settings 0.3s;
+        }
+        
+        .popup-close-btn:hover {
+            color: var(--danger-color);
+            font-variation-settings: 'FILL' 1;
         }
 
         .popup-card h3 {
             margin: 0 0 16px;
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 1.2rem;
+            font-weight: 600;
             color: var(--on-surface-color);
             text-align: center;
         }
@@ -257,7 +291,7 @@
         }
 
         .edit-form-group label {
-            font-size: 14px;
+            font-size: 0.9rem;
             font-weight: 500;
             color: var(--on-surface-color);
             margin-bottom: 8px;
@@ -269,21 +303,33 @@
             padding: 12px;
             border: 1px solid var(--outline-color);
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 1rem;
             color: var(--on-surface-color);
             transition: border-color 0.2s, box-shadow 0.2s;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
         }
         
         .edit-form-group input:focus,
         .edit-form-group textarea:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(245, 124, 0, 0.2);
+            box-shadow: 0 0 0 3px rgba(46, 134, 222, 0.2);
+        }
+
+        .save-btn {
+            background-color: var(--primary-color);
+            color: var(--on-primary-color);
+            margin-top: 8px;
+        }
+        
+        .save-btn:hover {
+            background-color: var(--primary-variant);
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         /* Reusable Nav Bar */
@@ -292,44 +338,58 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 60px;
+            height: 70px;
             background-color: var(--surface-color);
-            box-shadow: 0 -2px 10px var(--shadow-color-light);
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
             display: flex;
             justify-content: space-around;
             align-items: center;
             z-index: 1000;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
         }
+
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
             text-decoration: none;
-            color: var(--on-background-color);
+            color: #AAAAAA;
             transition: color 0.2s;
             position: relative;
+            padding: 8px;
         }
+
         .nav-item.active {
             color: var(--primary-color);
         }
+
         .nav-item:hover {
             color: var(--primary-color);
         }
+
         .nav-item-icon {
-            font-size: 24px;
+            font-size: 1.8rem;
             margin-bottom: 2px;
+            font-variation-settings: 'FILL' 0;
         }
+        
+        .nav-item.active .nav-item-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+
         .nav-item-text {
-            font-size: 12px;
+            font-size: 0.75rem;
             font-weight: 500;
         }
+
         .nav-item .badge {
             position: absolute;
-            top: -2px;
-            right: -8px;
+            top: 4px;
+            right: 8px;
             background-color: var(--danger-color);
             color: var(--on-primary-color);
-            font-size: 10px;
+            font-size: 0.6rem;
             font-weight: 700;
             padding: 2px 6px;
             border-radius: 50%;
@@ -339,6 +399,7 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
             display: none;
         }
+        
         .nav-item .badge.visible {
             display: block;
         }
@@ -347,7 +408,7 @@
 <body>
 
     <header class="header">
-        Banerjee Mart
+        B Mart
     </header>
 
     <main class="main-content">
@@ -377,10 +438,22 @@
             </div>
             
             <div class="profile-actions">
-                <button class="action-btn edit-profile-btn" id="edit-profile-btn">Edit Profile</button>
-                <a href="admin.html" id="admin-panel-link" class="action-btn admin-link hidden">Admin Panel</a>
-                <a href="contact.html" id="contact-link" class="action-btn contact-btn">Contact Banerjee Mart</a>
-                <button class="action-btn signout-btn" id="sign-out-btn">Sign Out</button>
+                <button class="action-btn edit-profile-btn" id="edit-profile-btn">
+                    <span class="material-symbols-outlined">edit</span>
+                    Edit Profile
+                </button>
+                <a href="admin.html" id="admin-panel-link" class="action-btn admin-link hidden">
+                    <span class="material-symbols-outlined">shield</span>
+                    Admin Panel
+                </a>
+                <a href="contact.html" id="contact-link" class="action-btn contact-btn">
+                    <span class="material-symbols-outlined">support_agent</span>
+                    Contact B Mart
+                </a>
+                <button class="action-btn signout-btn" id="sign-out-btn">
+                    <span class="material-symbols-outlined">logout</span>
+                    Sign Out
+                </button>
             </div>
         </div>
     </main>
@@ -404,7 +477,10 @@
                     <label for="address">Address</label>
                     <textarea id="address" name="address" rows="3" placeholder="Enter your full address"></textarea>
                 </div>
-                <button type="submit" class="action-btn save-btn">Save Changes</button>
+                <button type="submit" class="action-btn save-btn">
+                    <span class="material-symbols-outlined">save</span>
+                    Save Changes
+                </button>
             </form>
         </div>
     </div>
@@ -524,6 +600,9 @@
                     if (userData.role === 'admin') {
                         adminBadge.classList.remove('hidden');
                         adminPanelLink.classList.remove('hidden');
+                    } else {
+                        adminBadge.classList.add('hidden');
+                        adminPanelLink.classList.add('hidden');
                     }
                 } else {
                     fullNameElement.textContent = 'User profile not found';
@@ -540,15 +619,22 @@
         // Event listeners
         editProfileBtn.addEventListener('click', () => {
             editPopupOverlay.style.display = 'flex';
+            editPopupOverlay.classList.add('show');
         });
 
         popupCloseBtn.addEventListener('click', () => {
-            editPopupOverlay.style.display = 'none';
+            editPopupOverlay.classList.remove('show');
+            setTimeout(() => {
+                editPopupOverlay.style.display = 'none';
+            }, 300);
         });
 
         editPopupOverlay.addEventListener('click', (e) => {
             if (e.target === editPopupOverlay) {
-                editPopupOverlay.style.display = 'none';
+                editPopupOverlay.classList.remove('show');
+                setTimeout(() => {
+                    editPopupOverlay.style.display = 'none';
+                }, 300);
             }
         });
 
@@ -569,7 +655,10 @@
                 alert("Profile updated successfully!");
                 // Refresh displayed data
                 fetchUserProfile(currentUser); 
-                editPopupOverlay.style.display = 'none';
+                editPopupOverlay.classList.remove('show');
+                setTimeout(() => {
+                    editPopupOverlay.style.display = 'none';
+                }, 300);
             } catch (error) {
                 console.error("Error updating profile:", error);
                 alert("Failed to update profile. Please try again.");
