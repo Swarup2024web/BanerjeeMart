@@ -217,9 +217,8 @@
 
         .product-details {
             padding: 20px;
-            display: flex; /* Maintain flexbox */
-            flex-direction: column; /* Maintain column layout */
-            /* Removed flex-grow to allow the button to be a fixed size */
+            display: flex;
+            flex-direction: column;
         }
 
         .product-name {
@@ -242,6 +241,7 @@
             margin-bottom: 16px;
         }
         
+        /* New design for the add to cart button */
         .add-to-cart-btn {
             background-color: var(--primary-color);
             color: var(--on-primary-color);
@@ -252,24 +252,16 @@
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.3s, transform 0.1s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            /* Removed flex-grow to ensure it doesn't expand vertically */
-            /* Add this to ensure it takes up full width */
-            width: 100%; 
+            display: block; /* Make it a block element to prevent inline stretching */
+            width: 100%; /* Ensure it takes up the full width */
+            margin-top: auto; /* Push the button to the bottom of the card content */
         }
-
+        
         .add-to-cart-btn:hover {
             background-color: #004d40;
             transform: scale(1.02);
         }
         
-        .add-to-cart-btn .material-symbols-outlined {
-            font-size: 20px;
-        }
-
         .app-nav-bar {
             position: fixed;
             bottom: 0;
@@ -648,7 +640,6 @@
                         <div class="product-name">${product.name}</div>
                         <div class="product-price">₹${product.price.toFixed(2)}</div>
                         <button class="add-to-cart-btn" data-id="${product.id}">
-                            <span class="material-symbols-outlined">add_shopping_cart</span>
                             Add to Cart
                         </button>
                     </div>
