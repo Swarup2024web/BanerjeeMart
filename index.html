@@ -5,19 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>B Mart - Home</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap">
     <style>
         :root {
-            --primary-color: #00796B; /* A rich teal */
+            --primary-color: #673AB7; /* Deep Purple */
+            --primary-variant: #5E35B1;
+            --secondary-color: #FFC107; /* Amber */
             --on-primary-color: #ffffff;
+            --on-secondary-color: #212121;
             --surface-color: #ffffff;
-            --background-color: #f7f7f7; /* A light gray for contrast */
-            --on-surface-color: #333333;
-            --on-background-color: #666666;
+            --background-color: #f0f0f4; /* A soft, light gray */
+            --on-surface-color: #212121;
+            --on-background-color: #424242;
             --outline-color: #e0e0e0;
-            --shadow-color-light: rgba(0, 0, 0, 0.05);
-            --shadow-color-dark: rgba(0, 0, 0, 0.1);
+            --shadow-color-light: rgba(0, 0, 0, 0.08);
+            --shadow-color-dark: rgba(0, 0, 0, 0.15);
             --success-color: #4CAF50;
             --danger-color: #d32f2f;
             --skeleton-color: #e8e8e8;
@@ -34,6 +36,7 @@
             padding: 0;
             background-color: var(--background-color);
             color: var(--on-background-color);
+            line-height: 1.6;
         }
 
         .header {
@@ -41,34 +44,24 @@
             top: 0;
             z-index: 1000;
             background-color: var(--primary-color);
-            padding: 20px 24px;
-            box-shadow: 0 2px 10px var(--shadow-color-dark);
+            padding: 24px;
+            box-shadow: 0 4px 12px var(--shadow-color-dark);
             color: var(--on-primary-color);
         }
 
         .header-row1 {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             margin-bottom: 16px;
-            position: relative;
         }
 
-        .logo {
-            font-family: 'Pacifico', cursive;
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: -2px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-            position: absolute;
-            left: 20px;
-        }
-        
         .logo-text {
-            font-family: 'Pacifico', cursive;
+            font-family: 'Roboto', sans-serif;
             font-size: 28px;
-            font-weight: 700;
-            margin-left: 50px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .search-bar {
@@ -77,40 +70,42 @@
 
         .search-bar input {
             width: 100%;
-            padding: 12px 16px;
-            padding-left: 48px;
+            padding: 14px 18px;
+            padding-left: 52px;
             border: none;
-            border-radius: 25px;
-            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 30px;
+            background-color: rgba(255, 255, 255, 0.95);
             font-size: 16px;
             color: var(--on-surface-color);
-            box-shadow: 0 2px 5px var(--shadow-color-light);
-            transition: box-shadow 0.3s;
+            box-shadow: 0 2px 8px var(--shadow-color-light);
+            transition: box-shadow 0.3s, background-color 0.3s;
         }
 
         .search-bar input:focus {
             outline: none;
-            box-shadow: 0 0 0 2px var(--primary-color), 0 4px 8px var(--shadow-color-dark);
+            background-color: var(--surface-color);
+            box-shadow: 0 0 0 3px var(--primary-color), 0 6px 12px var(--shadow-color-dark);
         }
 
         .search-bar .material-symbols-outlined {
             position: absolute;
-            left: 16px;
+            left: 20px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--on-background-color);
             font-size: 24px;
+            font-variation-settings: 'FILL' 0;
         }
         
         .main-content {
-            padding-bottom: 80px;
+            padding-bottom: 90px;
         }
 
         .section-title {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 700;
             color: var(--on-surface-color);
-            margin: 24px 20px 16px;
+            margin: 32px 20px 20px;
         }
 
         .categories-container {
@@ -131,26 +126,25 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 90px;
-            height: 90px;
-            padding: 8px;
+            width: 100px;
+            padding: 12px 8px;
             text-align: center;
             cursor: pointer;
             transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
-            border-radius: 12px;
+            border-radius: 16px;
             user-select: none;
             background-color: var(--surface-color);
-            box-shadow: 0 4px 10px var(--shadow-color-light);
+            box-shadow: 0 4px 12px var(--shadow-color-light);
         }
 
         .category-item:hover {
             transform: translateY(-5px);
-            box-shadow: 0 6px 15px var(--shadow-color-dark);
+            box-shadow: 0 6px 16px var(--shadow-color-dark);
         }
         
         .category-item.active {
             transform: scale(1.05);
-            box-shadow: 0 6px 15px var(--shadow-color-dark);
+            box-shadow: 0 6px 16px var(--shadow-color-dark);
             background-color: var(--primary-color);
         }
 
@@ -160,14 +154,19 @@
         }
 
         .category-icon {
-            font-size: 36px;
+            font-size: 40px;
             color: var(--primary-color);
-            margin-bottom: 4px;
+            margin-bottom: 8px;
             transition: color 0.2s;
+            font-variation-settings: 'FILL' 0;
+        }
+
+        .category-item.active .category-icon {
+             font-variation-settings: 'FILL' 1;
         }
         
         .category-name {
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 500;
             color: var(--on-background-color);
             transition: color 0.2s;
@@ -175,50 +174,49 @@
 
         .products-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
             gap: 20px;
             padding: 20px;
         }
 
         .product-card {
             background-color: var(--surface-color);
-            border-radius: 16px;
-            box-shadow: 0 4px 10px var(--shadow-color-light);
+            border-radius: 20px;
+            box-shadow: 0 4px 12px var(--shadow-color-light);
             overflow: hidden;
             text-align: center;
-            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            border: 2px solid transparent;
         }
 
         .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px var(--shadow-color-dark);
-            border-color: var(--primary-color);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px var(--shadow-color-dark);
         }
         
         .product-image-wrapper {
             position: relative;
-            aspect-ratio: 4/3;
+            aspect-ratio: 1; /* Make it a square for a cleaner look */
             background-color: #fcfcfc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
         }
         
         .product-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
             object-fit: contain;
             border-bottom: 1px solid var(--outline-color);
         }
 
         .product-details {
-            padding: 20px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
+            align-items: stretch; /* Stretch children to fill available width */
         }
 
         .product-name {
@@ -241,25 +239,27 @@
             margin-bottom: 16px;
         }
         
-        /* New design for the add to cart button */
+        /* Upgraded button style */
         .add-to-cart-btn {
             background-color: var(--primary-color);
             color: var(--on-primary-color);
             border: none;
-            padding: 12px 16px;
-            border-radius: 10px;
+            padding: 14px;
+            border-radius: 12px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.1s;
-            display: block; /* Make it a block element to prevent inline stretching */
-            width: 100%; /* Ensure it takes up the full width */
-            margin-top: auto; /* Push the button to the bottom of the card content */
+            transition: background-color 0.3s, transform 0.1s, box-shadow 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            width: 100%; /* Ensures it fills the container */
+            margin-top: auto; /* Pushes the button to the bottom */
+            display: block; /* New: Make it a block element to prevent weird spacing */
         }
-        
+
         .add-to-cart-btn:hover {
-            background-color: #004d40;
-            transform: scale(1.02);
+            background-color: var(--primary-variant);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
         }
         
         .app-nav-bar {
@@ -267,13 +267,15 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 70px;
+            height: 75px;
             background-color: var(--surface-color);
-            box-shadow: 0 -2px 10px var(--shadow-color-light);
+            box-shadow: 0 -4px 12px var(--shadow-color-light);
             display: flex;
             justify-content: space-around;
             align-items: center;
             z-index: 1000;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
         }
 
         .nav-item {
@@ -297,7 +299,7 @@
         }
 
         .nav-item-icon {
-            font-size: 28px;
+            font-size: 32px;
             margin-bottom: 2px;
             font-variation-settings: 'FILL' 0;
         }
@@ -334,7 +336,7 @@
 
         .toast-message {
             position: fixed;
-            bottom: 80px;
+            bottom: 90px;
             left: 50%;
             transform: translateX(-50%);
             background-color: var(--success-color);
@@ -361,8 +363,8 @@
         
         .skeleton-card {
             background-color: var(--surface-color);
-            border-radius: 16px;
-            box-shadow: 0 4px 10px var(--shadow-color-light);
+            border-radius: 20px;
+            box-shadow: 0 4px 12px var(--shadow-color-light);
             overflow: hidden;
             height: 250px;
             animation: pulse 1.5s infinite;
@@ -370,12 +372,12 @@
 
         .skeleton-image {
             width: 100%;
-            aspect-ratio: 4/3;
+            aspect-ratio: 1;
             background-color: var(--skeleton-color);
         }
 
         .skeleton-details {
-            padding: 20px;
+            padding: 16px;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
@@ -401,7 +403,7 @@
         .skeleton-button {
             width: 100%;
             height: 40px;
-            border-radius: 10px;
+            border-radius: 12px;
             background-color: var(--skeleton-color);
         }
 
@@ -422,7 +424,6 @@
 
     <header class="header">
         <div class="header-row1">
-            <span class="logo">BM</span>
             <div class="logo-text">Banerjee Mart</div>
         </div>
         <div class="search-bar">
@@ -437,6 +438,8 @@
             <div id="categories-container" class="categories-container">
             </div>
         </div>
+        
+        <hr style="border: 0; height: 1px; background-color: var(--outline-color); margin: 32px 20px;">
 
         <div id="products-section">
             <h2 class="section-title" id="products-section-title">All Products</h2>
@@ -530,7 +533,10 @@
             "Groceries": "local_grocery_store",
             "Foods": "lunch_dining",
             "Care": "medical_services",
-            "Stationery": "edit_note"
+            "Stationery": "edit_note",
+            "Electronics": "devices",
+            "Dresses": "t-shirt",
+            "Books": "book"
         };
         
         async function fetchAllProducts() {
@@ -611,7 +617,7 @@
                     const skeletonCard = document.createElement('div');
                     skeletonCard.className = 'product-card skeleton-card';
                     skeletonCard.innerHTML = `
-                        <div class="product-image-wrapper"><div class="skeleton-image"></div></div>
+                        <div class="skeleton-image"></div>
                         <div class="product-details skeleton-details">
                             <div class="skeleton-line skeleton-name"></div>
                             <div class="skeleton-line skeleton-price"></div>
