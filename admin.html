@@ -43,6 +43,45 @@
             display: flex;
             width: 100%;
         }
+        
+        /* Header Bar */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 32px;
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--outline-color);
+            box-shadow: 0 2px 5px var(--shadow-color-light);
+        }
+
+        .header-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .header-title .material-symbols-outlined {
+            font-size: 32px;
+            color: var(--primary-color);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            color: var(--on-surface-color);
+        }
+        .user-profile .material-symbols-outlined {
+            background-color: var(--primary-color);
+            color: var(--on-primary-color);
+            border-radius: 50%;
+            padding: 8px;
+            font-size: 24px;
+        }
 
         /* Vertical Navigation Bar */
         .admin-nav {
@@ -291,11 +330,11 @@
             font-size: 0.8rem;
             color: var(--on-primary-color);
         }
-        .status-Processing { background-color: #9E9E9E; }
-        .status-Packed { background-color: #FF9800; }
-        .status-Shipped { background-color: #2196F3; }
-        .status-Delivered { background-color: var(--success-color); }
-        .status-Cancelled { background-color: var(--danger-color); }
+        .status-processing { background-color: #9E9E9E; }
+        .status-packed { background-color: #FF9800; }
+        .status-shipped { background-color: #2196F3; }
+        .status-delivered { background-color: var(--success-color); }
+        .status-cancelled { background-color: var(--danger-color); }
 
         /* Analytics */
         .analytics-grid {
@@ -327,6 +366,74 @@
             margin: 8px 0 0;
         }
 
+        .filter-section {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .filter-section .form-group {
+            margin-bottom: 0;
+            flex-grow: 1;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        .modal.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: var(--surface-color);
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-hover);
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            transform: translateY(-50px);
+            transition: transform 0.3s ease-out;
+        }
+        .modal.visible .modal-content {
+            transform: translateY(0);
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: var(--subtle-text-color);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 48px 0;
+            color: var(--subtle-text-color);
+            animation: fadeIn 0.5s ease-in;
+        }
+        .empty-state .material-symbols-outlined {
+            font-size: 48px;
+            color: var(--outline-color);
+        }
+
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .app-container {
@@ -348,6 +455,8 @@
             .main-content { padding: 16px; padding-bottom: 80px; }
             .page-header h1 { font-size: 2rem; }
             .section-header h2 { font-size: 1.5rem; }
+            .top-header { display: none; }
+            .order-card-info { flex-direction: column; gap: 8px; }
         }
     </style>
 </head>
@@ -377,6 +486,17 @@
 
         <main class="main-content">
             
+            <div class="top-header">
+                <div class="header-title">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    Admin Panel
+                </div>
+                <div class="user-profile">
+                    <span class="material-symbols-outlined">person</span>
+                    Swarup Banerjee
+                </div>
+            </div>
+
             <div id="productsTab" class="tab-content">
                 <div class="page-header">
                     <h1>Product Management</h1>
@@ -849,14 +969,16 @@
         }
 
         window.updateOrderStatus = async function(orderId, newStatus) {
-            try {
-                const orderDocRef = doc(ordersCollection, orderId);
-                await updateDoc(orderDocRef, { status: newStatus });
-                alert(`Order ${orderId} status updated to ${newStatus}!`);
-                fetchAndDisplayOrders();
-            } catch (error) {
-                console.error("Error updating order status: ", error);
-                alert('Error updating order status: ' + error.message);
+            if (confirm(`Are you sure you want to change the status of order ${orderId} to ${newStatus}?`)) {
+                try {
+                    const orderDocRef = doc(ordersCollection, orderId);
+                    await updateDoc(orderDocRef, { status: newStatus });
+                    alert(`Order ${orderId} status updated to ${newStatus}!`);
+                    fetchAndDisplayOrders();
+                } catch (error) {
+                    console.error("Error updating order status: ", error);
+                    alert('Error updating order status: ' + error.message);
+                }
             }
         };
 
