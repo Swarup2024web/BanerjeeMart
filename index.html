@@ -175,16 +175,18 @@
             gap: 20px;
             padding: 20px;
         }
-
+        
+        /* New Product Card Design */
         .product-card {
-            background-color: var(--surface-color);
+            background: linear-gradient(135deg, #E0F7FA 0%, #B3E5FC 100%); /* Soft sky blue gradient */
             border-radius: 20px;
-            box-shadow: 0 4px 12px var(--shadow-color-light);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             overflow: hidden;
             text-align: center;
             transition: transform 0.2s, box-shadow 0.2s;
             display: flex;
             flex-direction: column;
+            border: 1px solid #B3E5FC; /* Subtle border for definition */
         }
 
         .product-card:hover {
@@ -210,6 +212,7 @@
         }
 
         .product-details {
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white for better readability */
             padding: 16px;
             display: flex;
             flex-direction: column;
@@ -238,8 +241,8 @@
         
         /* Upgraded button style to fill the row */
         .add-to-cart-btn {
-            background-color: var(--primary-color);
-            color: var(--on-primary-color);
+            background-color: var(--secondary-color);
+            color: var(--on-secondary-color);
             border: none;
             padding: 14px;
             border-radius: 12px;
@@ -257,7 +260,7 @@
         }
 
         .add-to-cart-btn:hover {
-            background-color: var(--primary-variant);
+            background-color: #FB8C00;
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.3);
         }
