@@ -25,6 +25,7 @@
             --success-color: #28A745;
             --danger-color: #DC3545;
             --admin-color: #673ab7; /* Indigo for admin */
+            --skeleton-color: #e0e0e0;
         }
         
         * {
@@ -79,6 +80,7 @@
             align-items: center;
             text-align: center;
             gap: 20px;
+            position: relative;
         }
 
         .profile-header {
@@ -225,6 +227,90 @@
         
         .hidden {
             display: none !important;
+        }
+
+        /* Skeleton Loading */
+        .skeleton {
+            animation: pulse 1.5s infinite ease-in-out;
+            background-color: var(--skeleton-color);
+            border-radius: 4px;
+        }
+
+        .skeleton-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--skeleton-color);
+        }
+
+        .skeleton-text {
+            height: 1.2rem;
+            margin: 4px 0;
+        }
+
+        .skeleton-name {
+            width: 150px;
+            height: 24px;
+            margin-bottom: 4px;
+        }
+        
+        .skeleton-email {
+            width: 200px;
+            height: 16px;
+        }
+
+        .skeleton-detail {
+            height: 16px;
+            width: 100%;
+        }
+
+        .skeleton-item-wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .skeleton-detail-icon {
+            width: 24px;
+            height: 24px;
+            background-color: var(--skeleton-color);
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+        
+        .loading .profile-icon,
+        .loading .profile-name-and-badge,
+        .loading .profile-email,
+        .loading .detail-item {
+            visibility: hidden;
+        }
+
+        .loading .skeleton-icon,
+        .loading .skeleton-name,
+        .loading .skeleton-email,
+        .loading .skeleton-detail {
+            visibility: visible;
+        }
+        
+        .loading .skeleton-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .loading .skeleton-details-placeholder {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 12px;
+            border-top: 1px solid var(--outline-color);
+            padding-top: 20px;
+        }
+
+        @keyframes pulse {
+            0% { background-color: var(--skeleton-color); }
+            50% { background-color: #cccccc; }
+            100% { background-color: var(--skeleton-color); }
         }
 
         /* Pop-up Styles */
@@ -414,26 +500,48 @@
     <main class="main-content">
         <h1 class="page-title">My Profile</h1>
         
-        <div class="profile-card">
-            <div class="profile-header">
-                <span class="material-symbols-outlined profile-icon">account_circle</span>
+        <div class="profile-card" id="profile-card">
+            <div id="skeleton-loading" class="skeleton-placeholder">
+                <div class="skeleton skeleton-icon"></div>
                 <div class="profile-info-section">
                     <div class="profile-name-and-badge">
-                        <span class="profile-name" id="user-full-name">Loading...</span>
-                        <span id="admin-badge" class="admin-badge hidden">Admin</span>
+                        <div class="skeleton skeleton-name"></div>
                     </div>
-                    <p class="profile-email" id="user-email">Loading...</p>
+                    <div class="skeleton skeleton-email"></div>
+                </div>
+                <div class="skeleton-details-placeholder">
+                    <div class="skeleton-item-wrapper">
+                        <div class="skeleton-detail-icon"></div>
+                        <div class="skeleton skeleton-detail" style="width: 150px;"></div>
+                    </div>
+                    <div class="skeleton-item-wrapper">
+                        <div class="skeleton-detail-icon"></div>
+                        <div class="skeleton skeleton-detail" style="width: 250px;"></div>
+                    </div>
                 </div>
             </div>
 
-            <div class="profile-details-section">
-                <div class="detail-item">
-                    <span class="material-symbols-outlined">call</span>
-                    <span id="user-phone-number" class="detail-text">Loading...</span>
+            <div id="profile-content" class="hidden">
+                <div class="profile-header">
+                    <span class="material-symbols-outlined profile-icon">account_circle</span>
+                    <div class="profile-info-section">
+                        <div class="profile-name-and-badge">
+                            <span class="profile-name" id="user-full-name"></span>
+                            <span id="admin-badge" class="admin-badge hidden">Admin</span>
+                        </div>
+                        <p class="profile-email" id="user-email"></p>
+                    </div>
                 </div>
-                <div class="detail-item">
-                    <span class="material-symbols-outlined">home</span>
-                    <span id="user-address" class="detail-text">Loading...</span>
+
+                <div class="profile-details-section">
+                    <div class="detail-item">
+                        <span class="material-symbols-outlined">call</span>
+                        <span id="user-phone-number" class="detail-text"></span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="material-symbols-outlined">home</span>
+                        <span id="user-address" class="detail-text"></span>
+                    </div>
                 </div>
             </div>
             
@@ -468,6 +576,10 @@
                 <div class="edit-form-group">
                     <label for="fullName">Full Name</label>
                     <input type="text" id="fullName" name="fullName" placeholder="Enter your full name">
+                </div>
+                <div class="edit-form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email address">
                 </div>
                 <div class="edit-form-group">
                     <label for="phoneNumber">Phone Number</label>
@@ -507,7 +619,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut, updateEmail } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         // =========================================================
@@ -529,6 +641,10 @@
         // =========================================================
         // DOM ELEMENTS & LOGIC
         // =========================================================
+        const profileCard = document.getElementById('profile-card');
+        const profileContent = document.getElementById('profile-content');
+        const skeletonLoading = document.getElementById('skeleton-loading');
+
         const fullNameElement = document.getElementById('user-full-name');
         const emailElement = document.getElementById('user-email');
         const phoneNumberElement = document.getElementById('user-phone-number');
@@ -541,6 +657,7 @@
         const popupCloseBtn = document.getElementById('popup-close-btn');
         const profileUpdateForm = document.getElementById('profile-update-form');
         const fullNameInput = document.getElementById('fullName');
+        const emailInput = document.getElementById('email');
         const phoneNumberInput = document.getElementById('phoneNumber');
         const addressInput = document.getElementById('address');
         const cartBadge = document.getElementById('cart-badge');
@@ -578,6 +695,10 @@
         }
 
         async function fetchUserProfile(user) {
+            profileCard.classList.add('loading');
+            profileContent.classList.add('hidden');
+            skeletonLoading.classList.remove('hidden');
+
             try {
                 const userDocRef = doc(db, 'users', user.uid);
                 const userDoc = await getDoc(userDocRef);
@@ -587,12 +708,13 @@
                     
                     // Display user data
                     fullNameElement.textContent = userData.fullName || 'User';
-                    emailElement.textContent = userData.email || 'No email provided';
+                    emailElement.textContent = user.email || 'No email provided';
                     phoneNumberElement.textContent = userData.phoneNumber || 'N/A';
                     addressElement.textContent = userData.address || 'N/A';
 
                     // Populate pop-up form fields
                     fullNameInput.value = userData.fullName || '';
+                    emailInput.value = user.email || '';
                     phoneNumberInput.value = userData.phoneNumber || '';
                     addressInput.value = userData.address || '';
 
@@ -613,6 +735,10 @@
             } catch (error) {
                 console.error("Error fetching user data:", error);
                 alert("Failed to load profile data. Please try again later.");
+            } finally {
+                profileCard.classList.remove('loading');
+                profileContent.classList.remove('hidden');
+                skeletonLoading.classList.add('hidden');
             }
         }
 
@@ -642,18 +768,24 @@
             e.preventDefault();
             if (!currentUser) return;
 
-            const updatedData = {
+            const updatedUserData = {
                 fullName: fullNameInput.value,
                 phoneNumber: phoneNumberInput.value,
                 address: addressInput.value,
             };
 
-            const userDocRef = doc(db, 'users', currentUser.uid);
+            const newEmail = emailInput.value;
+            const oldEmail = currentUser.email;
 
             try {
-                await updateDoc(userDocRef, updatedData);
+                if (newEmail !== oldEmail) {
+                    await updateEmail(currentUser, newEmail);
+                }
+
+                const userDocRef = doc(db, 'users', currentUser.uid);
+                await updateDoc(userDocRef, updatedUserData);
+                
                 alert("Profile updated successfully!");
-                // Refresh displayed data
                 fetchUserProfile(currentUser); 
                 editPopupOverlay.classList.remove('show');
                 setTimeout(() => {
@@ -661,7 +793,16 @@
                 }, 300);
             } catch (error) {
                 console.error("Error updating profile:", error);
-                alert("Failed to update profile. Please try again.");
+                // Handle specific Firebase errors
+                let errorMessage = "Failed to update profile. Please try again.";
+                if (error.code === 'auth/requires-recent-login') {
+                    errorMessage = "Please sign in again to update your email. For your security, this action requires a recent login.";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = "The email address is not valid.";
+                } else if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = "This email is already in use by another account.";
+                }
+                alert(errorMessage);
             }
         });
 
