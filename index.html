@@ -6,6 +6,7 @@
     <title>B Mart - Home</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
     <style>
         :root {
             --primary-color: #00796B; /* A rich teal */
@@ -46,10 +47,28 @@
         }
 
         .header-row1 {
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .logo {
+            font-family: 'Pacifico', cursive;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            position: absolute;
+            left: 20px;
+        }
+        
+        .logo-text {
+            font-family: 'Pacifico', cursive;
             font-size: 28px;
             font-weight: 700;
-            margin-bottom: 16px;
+            margin-left: 50px;
         }
 
         .search-bar {
@@ -95,15 +114,10 @@
         }
 
         .categories-container {
-            display: flex;
-            overflow-x: scroll;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
             padding: 16px 20px;
             gap: 16px;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-        .categories-container::-webkit-scrollbar {
-            display: none;
         }
 
         .category-item {
@@ -112,7 +126,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 90px;
+            width: 100%;
             height: 90px;
             padding: 8px;
             text-align: center;
@@ -167,7 +181,7 @@
             box-shadow: 0 4px 10px var(--shadow-color-light);
             overflow: hidden;
             text-align: center;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -177,6 +191,7 @@
         .product-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 20px var(--shadow-color-dark);
+            border-color: var(--primary-color);
         }
         
         .product-image-wrapper {
@@ -221,52 +236,12 @@
             color: var(--primary-color);
             margin-bottom: 16px;
         }
-
-        .cart-controls {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-        }
-
-        .quantity-controls {
-            display: flex;
-            align-items: center;
-            background-color: var(--background-color);
-            border-radius: 20px;
-            padding: 4px;
-        }
-
-        .quantity-controls button {
-            background: none;
-            border: none;
-            color: var(--primary-color);
-            font-size: 24px;
-            line-height: 1;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .quantity-controls button:hover {
-            background-color: rgba(0,0,0,0.05);
-        }
-
-        .quantity-controls .quantity-value {
-            font-size: 18px;
-            font-weight: 500;
-            margin: 0 8px;
-            min-width: 20px;
-            text-align: center;
-        }
         
         .add-to-cart-btn {
             background-color: var(--primary-color);
             color: var(--on-primary-color);
             border: none;
-            padding: 8px 12px;
+            padding: 12px 16px;
             border-radius: 10px;
             font-size: 16px;
             font-weight: 600;
@@ -390,7 +365,7 @@
             border-radius: 16px;
             box-shadow: 0 4px 10px var(--shadow-color-light);
             overflow: hidden;
-            height: 300px;
+            height: 250px; /* Adjusted height for new design */
             animation: pulse 1.5s infinite;
         }
 
@@ -424,28 +399,6 @@
             width: 50%;
         }
 
-        .skeleton-controls {
-            display: flex;
-            width: 100%;
-            justify-content: space-between;
-            gap: 8px;
-        }
-
-        .skeleton-quantity-btn {
-            width: 32px;
-            height: 32px;
-            background-color: var(--skeleton-color);
-            border-radius: 50%;
-        }
-
-        .skeleton-quantity-val {
-            width: 40px;
-            height: 32px;
-            background-color: var(--skeleton-color);
-            border-radius: 20px;
-            flex-grow: 1;
-        }
-
         .skeleton-button {
             width: 100%;
             height: 40px;
@@ -469,7 +422,10 @@
 <body>
 
     <header class="header">
-        <div class="header-row1">Banerjee Mart</div>
+        <div class="header-row1">
+            <span class="logo">BM</span>
+            <div class="logo-text">Banerjee Mart</div>
+        </div>
         <div class="search-bar">
             <span class="material-symbols-outlined">search</span>
             <input type="text" id="search-input" placeholder="Search for products...">
@@ -512,7 +468,7 @@
 
     <div id="toast-message" class="toast-message">
         <span class="material-symbols-outlined">check_circle</span>
-        <span>Item added to cart!</span>
+        <span id="toast-text">Item added to cart!</span>
     </div>
 
     <script type="module">
@@ -550,10 +506,8 @@
         const searchInput = document.getElementById('search-input');
         const cartBadge = document.getElementById('cart-badge');
         const toastMessage = document.getElementById('toast-message');
+        const toastText = document.getElementById('toast-text');
         
-        // A temporary store for user-selected quantities, not yet in cart
-        const selectedQuantities = {};
-
         const state = {
             products: [],
             allProducts: [],
@@ -588,11 +542,6 @@
                 state.allProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 state.products = [...state.allProducts];
                 state.cart = getCart();
-
-                // Initialize all selected quantities to 0 on page load
-                state.allProducts.forEach(product => {
-                    selectedQuantities[product.id] = 0;
-                });
                 
                 renderCategories();
                 renderProducts();
@@ -667,11 +616,7 @@
                         <div class="product-details skeleton-details">
                             <div class="skeleton-line skeleton-name"></div>
                             <div class="skeleton-line skeleton-price"></div>
-                            <div class="skeleton-controls">
-                                <div class="skeleton-quantity-btn"></div>
-                                <div class="skeleton-quantity-val"></div>
-                                <div class="skeleton-quantity-btn"></div>
-                            </div>
+                            <div class="skeleton-button"></div>
                         </div>
                     `;
                     productsContainer.appendChild(skeletonCard);
@@ -685,9 +630,6 @@
             }
 
             state.products.forEach(product => {
-                const initialQuantity = selectedQuantities[product.id] || 0;
-                const totalPrice = (initialQuantity * product.price).toFixed(2);
-                
                 const productCard = document.createElement('div');
                 productCard.className = 'product-card';
                 
@@ -697,17 +639,11 @@
                     </div>
                     <div class="product-details">
                         <div class="product-name">${product.name}</div>
-                        <div class="product-price">₹<span data-price-per-unit="${product.price}">${totalPrice}</span></div>
-                        <div class="cart-controls">
-                            <div class="quantity-controls">
-                                <button class="decrease-btn" data-id="${product.id}">-</button>
-                                <span class="quantity-value">${initialQuantity}</span>
-                                <button class="increase-btn" data-id="${product.id}">+</button>
-                            </div>
-                            <button class="add-to-cart-btn" data-id="${product.id}">
-                                <span class="material-symbols-outlined">add_shopping_cart</span>
-                            </button>
-                        </div>
+                        <div class="product-price">₹${product.price.toFixed(2)}</div>
+                        <button class="add-to-cart-btn" data-id="${product.id}">
+                            <span class="material-symbols-outlined">add_shopping_cart</span>
+                            Add to Cart
+                        </button>
                     </div>
                 `;
                 productsContainer.appendChild(productCard);
@@ -717,20 +653,6 @@
         }
         
         function attachEventListeners() {
-            productsContainer.querySelectorAll('.increase-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const productId = e.target.dataset.id;
-                    updateSelectedQuantity(productId, 1);
-                });
-            });
-
-            productsContainer.querySelectorAll('.decrease-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const productId = e.target.dataset.id;
-                    updateSelectedQuantity(productId, -1);
-                });
-            });
-
             productsContainer.querySelectorAll('.add-to-cart-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const productId = e.target.closest('.add-to-cart-btn').dataset.id;
@@ -739,63 +661,33 @@
             });
         }
 
-        function updateSelectedQuantity(productId, change) {
-            const productCard = productsContainer.querySelector(`.product-card .increase-btn[data-id="${productId}"]`).closest('.product-card');
-            
-            let currentQuantity = selectedQuantities[productId] || 0;
-            let newQuantity = currentQuantity + change;
-            
-            if (newQuantity < 0) newQuantity = 0;
-            
+        function addToCart(productId) {
             const productData = state.allProducts.find(p => p.id === productId);
             if (!productData) return;
 
-            const pricePerUnit = productData.price;
-            const newTotalPrice = pricePerUnit * newQuantity;
+            // Retrieve the current cart from localStorage
+            let cart = getCart();
 
-            // Update the temporary selected quantity
-            selectedQuantities[productId] = newQuantity;
-
-            // Update UI
-            productCard.querySelector('.quantity-value').textContent = newQuantity;
-            productCard.querySelector('.product-price span').textContent = newTotalPrice.toFixed(2);
-        }
-
-        function addToCart(productId) {
-            const quantityToAdd = selectedQuantities[productId] || 0;
-            
-            if (quantityToAdd > 0) {
-                const productData = state.allProducts.find(p => p.id === productId);
-                
-                // Retrieve the current cart from localStorage
-                let cart = getCart();
-
-                if (cart[productId]) {
-                    // Item already in cart, so just add the new quantity to the existing one
-                    cart[productId].quantity += quantityToAdd;
-                } else {
-                    // Item not in cart, add it as a new entry
-                    cart[productId] = { ...productData, quantity: quantityToAdd };
-                }
-
-                // Save the updated cart back to localStorage
-                saveCart(cart);
-                
-                // Update the state and UI
-                state.cart = cart;
-                updateCartBadge();
-                showToastMessage();
-
-                // Reset the quantity for this product after adding to cart
-                selectedQuantities[productId] = 0;
-                const productCard = productsContainer.querySelector(`.product-card .add-to-cart-btn[data-id="${productId}"]`).closest('.product-card');
-                productCard.querySelector('.quantity-value').textContent = 0;
-                productCard.querySelector('.product-price span').textContent = productData.price.toFixed(2);
+            if (cart[productId]) {
+                // Item already in cart, just add 1
+                cart[productId].quantity += 1;
+            } else {
+                // Item not in cart, add it with quantity 1
+                cart[productId] = { ...productData, quantity: 1 };
             }
+
+            // Save the updated cart back to localStorage
+            saveCart(cart);
+            
+            // Update the state and UI
+            state.cart = cart;
+            updateCartBadge();
+            showToastMessage(productData.name);
         }
         
         let toastTimeout;
-        function showToastMessage() {
+        function showToastMessage(productName) {
+            toastText.textContent = `${productName} added to cart!`;
             toastMessage.classList.add('show');
             clearTimeout(toastTimeout);
             toastTimeout = setTimeout(() => {
