@@ -5,19 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>B Mart - Home</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
     <style>
         :root {
-            --primary-color: #00796B; /* A rich teal */
+            --primary-color: #37474F; /* A dark, elegant slate */
             --on-primary-color: #ffffff;
+            --secondary-color: #FF7043; /* A vibrant orange for accents */
             --surface-color: #ffffff;
-            --background-color: #f7f7f7; /* A light gray for contrast */
-            --on-surface-color: #333333;
-            --on-background-color: #666666;
-            --outline-color: #e0e0e0;
-            --shadow-color-light: rgba(0, 0, 0, 0.05);
-            --shadow-color-dark: rgba(0, 0, 0, 0.1);
+            --background-color: #F5F5F5; /* A very light gray */
+            --on-surface-color: #263238; /* A dark gray for text */
+            --on-background-color: #546E7A;
+            --outline-color: #E0E0E0;
+            --shadow-color-light: rgba(0, 0, 0, 0.08);
+            --shadow-color-dark: rgba(0, 0, 0, 0.15);
             --success-color: #4CAF50;
             --danger-color: #d32f2f;
             --skeleton-color: #e8e8e8;
@@ -26,7 +27,7 @@
 
         * {
             box-sizing: border-box;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
@@ -49,9 +50,13 @@
         .header-row1 {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             margin-bottom: 16px;
-            position: relative;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
         }
 
         .logo {
@@ -60,15 +65,13 @@
             font-weight: 700;
             letter-spacing: -2px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-            position: absolute;
-            left: 20px;
+            margin-right: 10px;
         }
         
         .logo-text {
-            font-family: 'Pacifico', cursive;
+            font-family: 'Poppins', sans-serif;
             font-size: 28px;
             font-weight: 700;
-            margin-left: 50px;
         }
 
         .search-bar {
@@ -90,7 +93,7 @@
 
         .search-bar input:focus {
             outline: none;
-            box-shadow: 0 0 0 2px var(--primary-color), 0 4px 8px var(--shadow-color-dark);
+            box-shadow: 0 0 0 2px var(--secondary-color), 0 4px 8px var(--shadow-color-dark);
         }
 
         .search-bar .material-symbols-outlined {
@@ -131,8 +134,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 90px;
-            height: 90px;
+            width: 100px;
+            height: 100px;
             padding: 8px;
             text-align: center;
             cursor: pointer;
@@ -151,7 +154,7 @@
         .category-item.active {
             transform: scale(1.05);
             box-shadow: 0 6px 15px var(--shadow-color-dark);
-            background-color: var(--primary-color);
+            background-color: var(--secondary-color);
         }
 
         .category-item.active .category-icon,
@@ -160,14 +163,14 @@
         }
 
         .category-icon {
-            font-size: 36px;
+            font-size: 40px;
             color: var(--primary-color);
             margin-bottom: 4px;
             transition: color 0.2s;
         }
         
         .category-name {
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 500;
             color: var(--on-background-color);
             transition: color 0.2s;
@@ -196,7 +199,7 @@
         .product-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 20px var(--shadow-color-dark);
-            border-color: var(--primary-color);
+            border-color: var(--secondary-color);
         }
         
         .product-image-wrapper {
@@ -220,6 +223,14 @@
             flex-grow: 1;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .product-name {
@@ -243,7 +254,7 @@
         }
         
         .add-to-cart-btn {
-            background-color: var(--primary-color);
+            background-color: var(--secondary-color);
             color: var(--on-primary-color);
             border: none;
             padding: 12px 16px;
@@ -252,22 +263,15 @@
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.3s, transform 0.1s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            flex-grow: 1;
+            width: 100%;
+            text-align: center;
         }
 
         .add-to-cart-btn:hover {
-            background-color: #004d40;
+            background-color: #e64a19;
             transform: scale(1.02);
         }
         
-        .add-to-cart-btn .material-symbols-outlined {
-            font-size: 20px;
-        }
-
         .app-nav-bar {
             position: fixed;
             bottom: 0;
@@ -428,8 +432,14 @@
 
     <header class="header">
         <div class="header-row1">
-            <span class="logo">BM</span>
-            <div class="logo-text">Banerjee Mart</div>
+            <div class="logo-container">
+                <span class="logo">BM</span>
+                <span class="logo-text">Banerjee Mart</span>
+            </div>
+            <a href="cart.html" class="nav-item">
+                <span class="material-symbols-outlined nav-item-icon" style="color: var(--on-primary-color);">shopping_cart</span>
+                <span id="cart-badge" class="badge">0</span>
+            </a>
         </div>
         <div class="search-bar">
             <span class="material-symbols-outlined">search</span>
@@ -459,7 +469,7 @@
         <a href="cart.html" class="nav-item">
             <span class="material-symbols-outlined nav-item-icon">shopping_cart</span>
             <span class="nav-item-text">Cart</span>
-            <span id="cart-badge" class="badge">0</span>
+            <span id="cart-badge-bottom" class="badge">0</span>
         </a>
         <a href="orders.html" class="nav-item">
             <span class="material-symbols-outlined nav-item-icon">receipt_long</span>
@@ -509,7 +519,8 @@
         const categoriesContainer = document.getElementById('categories-container');
         const productsSectionTitle = document.getElementById('products-section-title');
         const searchInput = document.getElementById('search-input');
-        const cartBadge = document.getElementById('cart-badge');
+        const cartBadgeTop = document.getElementById('cart-badge');
+        const cartBadgeBottom = document.getElementById('cart-badge-bottom');
         const toastMessage = document.getElementById('toast-message');
         const toastText = document.getElementById('toast-text');
         
@@ -617,112 +628,4 @@
                     const skeletonCard = document.createElement('div');
                     skeletonCard.className = 'product-card skeleton-card';
                     skeletonCard.innerHTML = `
-                        <div class="product-image-wrapper"><div class="skeleton-image"></div></div>
-                        <div class="product-details skeleton-details">
-                            <div class="skeleton-line skeleton-name"></div>
-                            <div class="skeleton-line skeleton-price"></div>
-                            <div class="skeleton-button"></div>
-                        </div>
-                    `;
-                    productsContainer.appendChild(skeletonCard);
-                }
-                return;
-            }
-
-            if (state.products.length === 0) {
-                productsContainer.innerHTML = '<h3 style="text-align: center; color: var(--on-background-color);">No products found.</h3>';
-                return;
-            }
-
-            state.products.forEach(product => {
-                const productCard = document.createElement('div');
-                productCard.className = 'product-card';
-                
-                productCard.innerHTML = `
-                    <div class="product-image-wrapper">
-                        <img src="${product.image}" alt="${product.name}" class="product-image">
-                    </div>
-                    <div class="product-details">
-                        <div class="product-name">${product.name}</div>
-                        <div class="product-price">₹${product.price.toFixed(2)}</div>
-                        <button class="add-to-cart-btn" data-id="${product.id}">
-                            <span class="material-symbols-outlined">add_shopping_cart</span>
-                            Add to Cart
-                        </button>
-                    </div>
-                `;
-                productsContainer.appendChild(productCard);
-            });
-            
-            attachEventListeners();
-        }
-        
-        function attachEventListeners() {
-            productsContainer.querySelectorAll('.add-to-cart-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const productId = e.target.closest('.add-to-cart-btn').dataset.id;
-                    addToCart(productId);
-                });
-            });
-        }
-
-        function addToCart(productId) {
-            const productData = state.allProducts.find(p => p.id === productId);
-            if (!productData) return;
-
-            // Retrieve the current cart from localStorage
-            let cart = getCart();
-
-            if (cart[productId]) {
-                // Item already in cart, just add 1
-                cart[productId].quantity += 1;
-            } else {
-                // Item not in cart, add it with quantity 1
-                cart[productId] = { ...productData, quantity: 1 };
-            }
-
-            // Save the updated cart back to localStorage
-            saveCart(cart);
-            
-            // Update the state and UI
-            state.cart = cart;
-            updateCartBadge();
-            showToastMessage(productData.name);
-        }
-        
-        let toastTimeout;
-        function showToastMessage(productName) {
-            toastText.textContent = `${productName} added to cart!`;
-            toastMessage.classList.add('show');
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toastMessage.classList.remove('show');
-            }, 2000);
-        }
-
-        function updateCartBadge() {
-            const cart = getCart();
-            const totalItems = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
-            cartBadge.textContent = totalItems;
-            if (totalItems > 0) {
-                cartBadge.classList.add('visible');
-            } else {
-                cartBadge.classList.remove('visible');
-            }
-        }
-        
-        searchInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                const searchTerm = searchInput.value.trim();
-                filterProducts(null, searchTerm);
-                document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchAllProducts();
-            updateCartBadge();
-        });
-    </script>
-</body>
-</html>
+                        <div class
