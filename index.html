@@ -8,22 +8,22 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap">
     <style>
         :root {
-            --primary-color: #00796B; /* A deep teal */
-            --primary-variant: #004d40;
-            --secondary-color: #26C6DA; /* A vibrant Cyan */
+            --primary-color: #2874F0; /* Flipkart's signature blue */
+            --primary-variant: #1a60cf;
+            --secondary-color: #FFC107; /* A vibrant amber, like Flipkart's accents */
             --on-primary-color: #ffffff;
             --on-secondary-color: #212121;
             --surface-color: #ffffff;
-            --background-color: #E0F7FA; /* A very light cyan for the background */
-            --on-surface-color: #263238;
-            --on-background-color: #546E7A;
-            --outline-color: #B2EBF2;
+            --background-color: #f0f4f8; /* A light, clean background */
+            --on-surface-color: #212121;
+            --on-background-color: #424242;
+            --outline-color: #e0e0e0;
             --shadow-color-light: rgba(0, 0, 0, 0.08);
             --shadow-color-dark: rgba(0, 0, 0, 0.15);
             --success-color: #4CAF50;
             --danger-color: #d32f2f;
-            --skeleton-color: #B2EBF2;
-            --skeleton-highlight: #80DEEA;
+            --skeleton-color: #E0E0E0;
+            --skeleton-highlight: #CFD8DC;
         }
 
         * {
@@ -47,7 +47,7 @@
             padding: 24px;
             box-shadow: 0 4px 12px var(--shadow-color-dark);
             color: var(--on-primary-color);
-            text-align: center; /* Center the entire header content */
+            text-align: center;
         }
 
         .logo-text {
@@ -55,8 +55,8 @@
             font-weight: 900;
             letter-spacing: 1px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-            margin-bottom: 16px; /* Add margin for spacing */
-            display: inline-block; /* Helps in centering */
+            margin-bottom: 16px;
+            display: inline-block;
         }
 
         .search-bar {
@@ -171,37 +171,35 @@
 
         .products-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 20px;
             padding: 20px;
         }
         
-        /* New Product Card Design */
+        /* Flipkart-style Product Card */
         .product-card {
-            background: linear-gradient(135deg, #E0F7FA 0%, #B3E5FC 100%); /* Soft sky blue gradient */
-            border-radius: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            background-color: var(--surface-color);
+            border-radius: 4px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             text-align: center;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: box-shadow 0.2s;
             display: flex;
             flex-direction: column;
-            border: 1px solid #B3E5FC; /* Subtle border for definition */
         }
 
         .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 25px var(--shadow-color-dark);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
         
         .product-image-wrapper {
             position: relative;
             aspect-ratio: 1; 
-            background-color: #fcfcfc;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 10px;
+            border-bottom: 1px solid var(--outline-color);
         }
         
         .product-image {
@@ -211,58 +209,88 @@
         }
 
         .product-details {
-            background-color: var(--surface-color); /* Use a solid color to prevent the "wide bar" issue */
-            padding: 16px;
+            padding: 12px;
+            text-align: left;
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
-            align-items: stretch;
-            flex-grow: 1; /* Make the details section fill the remaining space */
+            justify-content: space-between; /* Ensures button is at the bottom */
         }
 
         .product-name {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 500;
             color: var(--on-surface-color);
-            margin-bottom: 8px;
             min-height: 40px;
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
+            margin-bottom: 8px;
+        }
+        
+        .product-price-wrapper {
+            display: flex;
+            align-items: center;
+            margin-top: auto;
+            margin-bottom: 8px;
         }
 
         .product-price {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 16px;
+            color: var(--on-surface-color);
+            margin: 0;
         }
         
-        /* Upgraded button style to fill the row */
-        .add-to-cart-btn {
-            background-color: var(--secondary-color);
-            color: var(--on-secondary-color);
-            border: none;
-            padding: 14px;
+        .product-discount {
+            font-size: 12px;
+            color: #388E3C;
+            font-weight: 500;
+            margin-left: 8px;
+        }
+        
+        .product-rating {
+            display: flex;
+            align-items: center;
+            background-color: #388E3C;
+            color: white;
+            padding: 2px 6px;
             border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 4px;
+            width: fit-content;
+        }
+        
+        .product-rating .material-symbols-outlined {
+            font-size: 12px;
+            margin-left: 2px;
+            font-variation-settings: 'FILL' 1;
+        }
+
+        .add-to-cart-btn {
+            background-color: var(--primary-color);
+            color: var(--on-primary-color);
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.1s, box-shadow 0.2s;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: background-color 0.3s, box-shadow 0.2s;
             width: 100%;
-            margin-top: auto;
-            display: flex; /* Change to flex for cool design */
-            justify-content: center; /* Center content horizontally */
-            align-items: center; /* Center content vertically */
+            display: flex;
+            justify-content: center;
+            align-items: center;
             gap: 8px;
+            margin-top: 10px;
         }
 
         .add-to-cart-btn:hover {
-            background-color: #00BCD4;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            background-color: var(--primary-variant);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
         
         .app-nav-bar {
@@ -366,8 +394,8 @@
         
         .skeleton-card {
             background-color: var(--surface-color);
-            border-radius: 20px;
-            box-shadow: 0 4px 12px var(--shadow-color-light);
+            border-radius: 4px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             height: 250px;
             animation: pulse 1.5s infinite;
@@ -380,34 +408,40 @@
         }
 
         .skeleton-details {
-            padding: 16px;
+            padding: 12px;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-start;
         }
 
         .skeleton-line {
             background-color: var(--skeleton-color);
-            height: 16px;
-            border-radius: 8px;
-            margin-bottom: 12px;
+            height: 14px;
+            border-radius: 2px;
+            margin-bottom: 8px;
         }
 
         .skeleton-name {
-            width: 80%;
-            margin-top: 8px;
+            width: 90%;
+            margin-top: 0;
+        }
+        .skeleton-name.small {
+            width: 60%;
         }
 
         .skeleton-price {
             width: 50%;
+            height: 18px;
+            margin-top: 10px;
         }
 
         .skeleton-button {
             width: 100%;
-            height: 40px;
-            border-radius: 12px;
+            height: 38px;
+            border-radius: 4px;
             background-color: var(--skeleton-color);
+            margin-top: auto;
         }
 
         @keyframes pulse {
@@ -610,7 +644,7 @@
             state.products = filteredProducts;
             renderProducts();
         }
-
+        
         function renderProducts(isLoading = false) {
             productsContainer.innerHTML = '';
             if (isLoading) {
@@ -621,6 +655,7 @@
                         <div class="skeleton-image"></div>
                         <div class="product-details skeleton-details">
                             <div class="skeleton-line skeleton-name"></div>
+                            <div class="skeleton-line skeleton-name small"></div>
                             <div class="skeleton-line skeleton-price"></div>
                             <div class="skeleton-button"></div>
                         </div>
@@ -639,13 +674,25 @@
                 const productCard = document.createElement('div');
                 productCard.className = 'product-card';
                 
+                const productRating = product.rating || 4.2; // Example static rating
+                const productDiscount = product.discount || '10% off'; // Example static discount
+
                 productCard.innerHTML = `
                     <div class="product-image-wrapper">
                         <img src="${product.image}" alt="${product.name}" class="product-image">
                     </div>
                     <div class="product-details">
-                        <div class="product-name">${product.name}</div>
-                        <div class="product-price">₹${product.price.toFixed(2)}</div>
+                        <div>
+                            <div class="product-name">${product.name}</div>
+                            <div class="product-rating">
+                                ${productRating}
+                                <span class="material-symbols-outlined">star</span>
+                            </div>
+                            <div class="product-price-wrapper">
+                                <div class="product-price">₹${product.price.toFixed(2)}</div>
+                                <div class="product-discount">${productDiscount}</div>
+                            </div>
+                        </div>
                         <button class="add-to-cart-btn" data-id="${product.id}">
                             Add to Cart
                         </button>
