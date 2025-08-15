@@ -4,87 +4,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>B Mart - Login / Sign Up</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
-        /* Material 3.0 Inspired Color Palette */
         :root {
-            --md-sys-color-primary: #2874f0;
-            --md-sys-color-on-primary: #ffffff;
-            --md-sys-color-surface: #ffffff;
-            --md-sys-color-on-surface: #1f1f1f;
-            --md-sys-color-surface-container-high: #e3e8ed;
-            --md-sys-color-on-surface-variant: #585858;
-            --md-sys-color-background: #f0f2f5;
-            --md-sys-color-outline: #c4c6d0;
-            --md-sys-color-outline-variant: #e0e0e0;
-            --md-sys-color-error: #b3261e;
-            --md-sys-color-on-error: #ffffff;
-            --md-sys-color-tertiary: #5f5d72;
-            --md-sys-color-on-tertiary: #ffffff;
+            --primary-color: #2E86DE; /* Modern Sky Blue */
+            --primary-variant: #1B65A3;
+            --secondary-color: #F8B400; /* Sunny yellow for accents */
+            --background-color: #F8F9FA; /* Off-white for clean background */
+            --surface-color: #FFFFFF;
+            --on-primary-color: #FFFFFF;
+            --on-secondary-color: #212121;
+            --on-background-color: #333333;
+            --on-surface-color: #444444;
+            --outline-color: #E0E0E0;
+            --shadow-color-light: rgba(0, 0, 0, 0.05);
+            --shadow-color-dark: rgba(0, 0, 0, 0.15);
+            --success-color: #28A745;
+            --danger-color: #DC3545;
+            --skeleton-color: #EFEFEF;
+            --skeleton-highlight: #F5F5F5;
         }
 
         * {
             box-sizing: border-box;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
         }
 
         body {
-            background-color: var(--md-sys-color-background);
+            background-color: var(--background-color);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            color: var(--md-sys-color-on-surface-variant);
-            padding: 16px;
+            color: var(--on-background-color);
+            padding: 20px;
         }
 
         .auth-container {
-            background-color: var(--md-sys-color-surface);
+            background-color: var(--surface-color);
             width: 100%;
-            max-width: 420px;
-            padding: 48px 32px;
-            border-radius: 28px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px var(--shadow-color-dark);
             position: relative;
             transition: transform 0.4s ease-in-out;
         }
 
         .auth-toggle-buttons {
             display: flex;
-            gap: 8px;
-            margin-bottom: 32px;
+            background-color: var(--background-color);
+            padding: 5px;
+            border-radius: 15px;
+            margin-bottom: 30px;
             justify-content: center;
         }
 
         .auth-toggle-button {
+            flex-grow: 1;
             padding: 12px 24px;
             text-align: center;
             cursor: pointer;
-            font-weight: 500;
-            font-size: 16px;
-            color: var(--md-sys-color-on-surface-variant);
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--on-surface-color);
             background-color: transparent;
             border: none;
-            border-radius: 100px;
-            transition: background-color 0.3s, color 0.3s;
+            border-radius: 12px;
+            transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
         }
 
         .auth-toggle-button.active {
-            background-color: var(--md-sys-color-primary);
-            color: var(--md-sys-color-on-primary);
+            background-color: var(--primary-color);
+            color: var(--on-primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
-            font-size: 28px;
+            font-size: 1.8rem;
             font-weight: 700;
             margin-top: 0;
             margin-bottom: 24px;
             text-align: center;
-            color: var(--md-sys-color-on-surface);
+            color: var(--on-surface-color);
         }
 
         .form-group {
@@ -93,33 +101,31 @@
 
         .input-container {
             position: relative;
-            display: flex;
-            align-items: center;
             width: 100%;
         }
-
+        
         .input-container label {
             position: absolute;
-            top: 14px;
+            top: 18px;
             left: 16px;
             pointer-events: none;
-            color: var(--md-sys-color-on-surface-variant);
+            color: var(--on-background-color);
             transition: all 0.2s ease-out;
-            font-size: 16px;
-            background-color: var(--md-sys-color-surface-container-high);
+            font-size: 1rem;
+            background-color: var(--surface-color);
             padding: 0 4px;
         }
 
         .input-container input,
         .input-container select {
             width: 100%;
-            padding: 24px 16px 8px;
-            border: 1px solid var(--md-sys-color-outline);
-            border-radius: 16px;
-            font-size: 16px;
-            color: var(--md-sys-color-on-surface);
-            background-color: var(--md-sys-color-surface-container-high);
-            transition: border-color 0.2s, box-shadow 0.2s;
+            padding: 20px 16px 12px;
+            border: 2px solid var(--outline-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            color: var(--on-surface-color);
+            background-color: var(--background-color);
+            transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
         }
         
         .input-container select {
@@ -129,16 +135,21 @@
         .input-container input:focus,
         .input-container select:focus {
             outline: none;
-            border-color: var(--md-sys-color-primary);
+            border-color: var(--primary-color);
+            background-color: var(--surface-color);
+            box-shadow: 0 4px 10px var(--shadow-color-light);
         }
         
         .input-container input:not(:placeholder-shown) + label,
         .input-container input:focus + label,
         .input-container select:focus + label,
         .input-container select:valid + label {
-            transform: translateY(-16px) scale(0.75);
-            background-color: var(--md-sys-color-surface-container-high);
+            top: 0;
+            transform: translateY(-50%) scale(0.85);
+            background-color: var(--surface-color);
             padding: 0 4px;
+            left: 12px;
+            font-weight: 500;
         }
         
         .phone-input-group {
@@ -149,59 +160,72 @@
         .phone-input-group .country-code-display {
             display: flex;
             align-items: center;
-            padding: 14px;
-            background-color: var(--md-sys-color-surface-container-high);
-            border: 1px solid var(--md-sys-color-outline);
-            border-radius: 16px;
-            font-size: 16px;
-            color: var(--md-sys-color-on-surface-variant);
+            padding: 16px;
+            background-color: var(--background-color);
+            border: 2px solid var(--outline-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--on-surface-color);
             white-space: nowrap;
         }
         
         .phone-input-group input {
             flex: 1;
         }
+        
+        .phone-input-group input:focus + label {
+            background-color: var(--surface-color);
+        }
 
         .input-icon {
             position: absolute;
             right: 16px;
-            color: var(--md-sys-color-on-surface-variant);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--on-background-color);
             cursor: pointer;
             user-select: none;
-            font-size: 24px;
+            font-size: 1.5rem;
             transition: color 0.3s;
+            font-variation-settings: 'FILL' 0;
         }
 
         .btn {
-            background-color: var(--md-sys-color-primary);
-            color: var(--md-sys-color-on-primary);
+            background-color: var(--primary-color);
+            color: var(--on-primary-color);
             border: none;
             width: 100%;
             padding: 16px;
-            border-radius: 100px;
+            border-radius: 12px;
             cursor: pointer;
-            font-size: 18px;
-            font-weight: 500;
+            font-size: 1.1rem;
+            font-weight: 600;
             transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px var(--shadow-color-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .btn:hover {
-            background-color: #1c5fd6;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            background-color: var(--primary-variant);
+            box-shadow: 0 6px 15px var(--shadow-color-dark);
         }
         .btn:active {
-            transform: scale(0.99);
+            transform: scale(0.98);
         }
 
         .forgot-password-link {
             text-align: right;
             margin-bottom: 20px;
-            font-size: 14px;
+            font-size: 0.9rem;
+            font-weight: 500;
         }
 
         .forgot-password-link a {
-            color: var(--md-sys-color-primary);
+            color: var(--primary-color);
             text-decoration: none;
             transition: color 0.3s;
         }
@@ -237,9 +261,9 @@
         }
 
         .modal-content {
-            background-color: var(--md-sys-color-surface);
+            background-color: var(--surface-color);
             padding: 32px;
-            border-radius: 28px;
+            border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             width: 90%;
             max-width: 400px;
@@ -260,24 +284,24 @@
         }
 
         .modal-header h2 {
-            font-size: 24px;
+            font-size: 1.5rem;
             font-weight: 700;
             margin: 0;
-            color: var(--md-sys-color-on-surface);
+            color: var(--on-surface-color);
         }
 
         .modal-close-btn {
             background: none;
             border: none;
             cursor: pointer;
-            color: var(--md-sys-color-on-surface-variant);
-            font-size: 24px;
+            color: var(--on-background-color);
+            font-size: 1.5rem;
             line-height: 1;
             transition: color 0.3s;
         }
 
         .modal-close-btn:hover {
-            color: var(--md-sys-color-error);
+            color: var(--danger-color);
         }
     </style>
 </head>
@@ -309,7 +333,10 @@
                 <div class="forgot-password-link">
                     <a href="#" onclick="openForgotPasswordModal()">Forgot Password?</a>
                 </div>
-                <button type="submit" class="btn">Login</button>
+                <button type="submit" class="btn">
+                    <span class="material-symbols-outlined">login</span>
+                    Login
+                </button>
             </form>
         </div>
 
@@ -332,7 +359,7 @@
                     <div class="input-container phone-input-group">
                         <span class="country-code-display">+91</span>
                         <input type="tel" id="signup-phone" placeholder=" " required pattern="[0-9]{10}">
-                        <label for="signup-phone" style="left: 64px;">Phone Number</label>
+                        <label for="signup-phone">Phone Number</label>
                     </div>
                 </div>
                 <div class="form-group">
@@ -351,7 +378,10 @@
                         <span class="material-symbols-outlined input-icon" onclick="togglePasswordVisibility('signup-password')">visibility_off</span>
                     </div>
                 </div>
-                <button type="submit" class="btn">Sign Up</button>
+                <button type="submit" class="btn">
+                    <span class="material-symbols-outlined">person_add</span>
+                    Sign Up
+                </button>
             </form>
         </div>
     </div>
@@ -360,7 +390,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Reset Password</h2>
-                <button class="modal-close-btn" onclick="closeForgotPasswordModal()">&times;</button>
+                <button class="modal-close-btn" onclick="closeForgotPasswordModal()">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
             </div>
             <form id="forgot-password-form">
                 <div class="form-group">
@@ -430,8 +462,11 @@
         const forgotPasswordModal = document.getElementById('forgot-password-modal');
         const loginFormContainer = document.getElementById('login-form-container');
         const signupFormContainer = document.getElementById('signup-form-container');
+        const authContainer = document.querySelector('.auth-container');
 
         function showForm(form) {
+            authContainer.style.transform = 'translateY(10px)'; // Little animation
+            
             if (form === 'login') {
                 loginFormContainer.classList.remove('hidden');
                 signupFormContainer.classList.add('hidden');
@@ -443,22 +478,22 @@
                 loginToggleButton.classList.remove('active');
                 signupToggleButton.classList.add('active');
             }
+            
+            setTimeout(() => {
+                authContainer.style.transform = 'translateY(0)';
+            }, 100);
         }
         window.showForm = showForm;
 
         window.togglePasswordVisibility = function(passwordFieldId) {
             const passwordInput = document.getElementById(passwordFieldId);
             const icon = passwordInput.nextElementSibling;
-            const filledIcon = 'visibility';
-            const outlinedIcon = 'visibility_off';
 
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
-                icon.textContent = filledIcon;
                 icon.style.fontVariationSettings = `'FILL' 1`;
             } else {
                 passwordInput.type = 'password';
-                icon.textContent = outlinedIcon;
                 icon.style.fontVariationSettings = `'FILL' 0`;
             }
         };
