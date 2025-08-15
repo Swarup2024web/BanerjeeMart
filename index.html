@@ -114,10 +114,15 @@
         }
 
         .categories-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            display: flex;
+            overflow-x: scroll;
             padding: 16px 20px;
             gap: 16px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .categories-container::-webkit-scrollbar {
+            display: none;
         }
 
         .category-item {
@@ -126,7 +131,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 100%;
+            width: 90px;
             height: 90px;
             padding: 8px;
             text-align: center;
@@ -365,7 +370,7 @@
             border-radius: 16px;
             box-shadow: 0 4px 10px var(--shadow-color-light);
             overflow: hidden;
-            height: 250px; /* Adjusted height for new design */
+            height: 250px;
             animation: pulse 1.5s infinite;
         }
 
