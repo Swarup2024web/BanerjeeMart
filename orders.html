@@ -4,33 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>B Mart - My Orders</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
     <style>
         :root {
-            --primary-color: #f57c00;
-            --on-primary-color: #ffffff;
-            --surface-color: #ffffff;
-            --background-color: #fff8e1;
-            --on-surface-color: #1f1f1f;
-            --on-background-color: #585858;
-            --outline-color: #d1d1d1;
-            --shadow-color-light: rgba(0, 0, 0, 0.08);
+            --primary-color: #2E86DE; /* Modern Sky Blue */
+            --primary-variant: #1B65A3;
+            --secondary-color: #F8B400; /* Sunny yellow for accents */
+            --background-color: #F8F9FA; /* Off-white for clean background */
+            --surface-color: #FFFFFF;
+            --on-primary-color: #FFFFFF;
+            --on-secondary-color: #212121;
+            --on-background-color: #333333;
+            --on-surface-color: #444444;
+            --outline-color: #E0E0E0;
+            --shadow-color-light: rgba(0, 0, 0, 0.05);
             --shadow-color-dark: rgba(0, 0, 0, 0.15);
-            --success-color: #4CAF50;
-            --danger-color: #d32f2f;
+            --success-color: #28A745;
+            --danger-color: #DC3545;
+            --skeleton-color: #EFEFEF;
+            --skeleton-highlight: #F5F5F5;
         }
 
         * {
             box-sizing: border-box;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            margin: 0;
-            padding: 0;
             background-color: var(--background-color);
             color: var(--on-background-color);
+            line-height: 1.6;
         }
 
         .header {
@@ -38,35 +46,34 @@
             top: 0;
             z-index: 1000;
             background-color: var(--primary-color);
-            padding: 16px 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-shadow: 0 4px 12px var(--shadow-color-dark);
             color: var(--on-primary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            text-align: center;
         }
         
         .header-title {
-            font-size: 24px;
+            font-size: 2rem;
             font-weight: 700;
+            letter-spacing: 1px;
         }
 
         .main-content {
-            padding: 16px;
-            padding-bottom: 70px;
-            min-height: calc(100vh - 130px);
+            padding: 20px;
+            padding-bottom: 90px;
+            min-height: calc(100vh - 110px);
         }
 
         .page-title {
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 1.8rem;
+            font-weight: 600;
             color: var(--on-surface-color);
-            margin: 0 0 24px;
+            margin: 0 0 20px;
         }
         
         .orders-section-title {
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 1.2rem;
+            font-weight: 600;
             color: var(--on-surface-color);
             margin: 24px 0 16px;
         }
@@ -96,7 +103,7 @@
         }
 
         .order-id {
-            font-size: 14px;
+            font-size: 0.9rem;
             font-weight: 500;
             color: var(--on-background-color);
         }
@@ -104,13 +111,13 @@
         .order-status {
             padding: 4px 12px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 0.75rem;
             font-weight: 700;
             color: var(--on-primary-color);
         }
 
         .status-processing {
-            background-color: #ff9800; /* Orange */
+            background-color: #FFC107; /* Amber */
         }
 
         .status-packed {
@@ -131,7 +138,7 @@
         
         .order-item {
             display: flex;
-            gap: 12px;
+            gap: 16px;
             margin-bottom: 12px;
             align-items: center;
         }
@@ -142,6 +149,7 @@
             object-fit: contain;
             border-radius: 8px;
             border: 1px solid var(--outline-color);
+            background-color: var(--background-color);
         }
 
         .order-item-details {
@@ -149,22 +157,25 @@
         }
 
         .order-item-name {
-            font-size: 16px;
+            font-size: 1rem;
             font-weight: 500;
             color: var(--on-surface-color);
         }
 
         .order-item-price {
-            font-size: 14px;
+            font-size: 0.9rem;
             color: var(--on-background-color);
         }
 
         .order-summary {
             display: flex;
             justify-content: space-between;
-            font-size: 16px;
-            font-weight: 500;
+            font-size: 1.1rem;
+            font-weight: 600;
             margin-top: 8px;
+            color: var(--on-surface-color);
+            border-top: 1px dashed var(--outline-color);
+            padding-top: 12px;
         }
 
         .cancel-btn-container {
@@ -178,14 +189,16 @@
             border: none;
             padding: 12px;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 10px var(--shadow-color-light);
         }
 
         .cancel-order-btn:hover {
             background-color: #c62828;
+            box-shadow: 0 6px 15px var(--shadow-color-dark);
         }
 
         /* Pop-up Styles */
@@ -200,17 +213,23 @@
             justify-content: center;
             align-items: center;
             z-index: 2000;
+            animation: fadeIn 0.3s ease-out;
         }
 
         .popup-card {
             background-color: var(--surface-color);
             padding: 24px;
             border-radius: 12px;
-            max-width: 350px;
+            max-width: 400px;
             width: 90%;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
             position: relative;
-            animation: fadeIn 0.3s ease-out;
+            transform: scale(0.95);
+            transition: transform 0.3s ease-out;
+        }
+        
+        .popup-overlay.show .popup-card {
+            transform: scale(1);
         }
         
         .popup-close-btn {
@@ -219,15 +238,21 @@
             right: 12px;
             background: none;
             border: none;
-            font-size: 24px;
+            font-size: 1.5rem;
             cursor: pointer;
             color: var(--on-background-color);
+            font-variation-settings: 'FILL' 0;
+            transition: color 0.3s, font-variation-settings 0.3s;
+        }
+        .popup-close-btn:hover {
+            color: var(--danger-color);
+            font-variation-settings: 'FILL' 1;
         }
 
         .popup-card h3 {
             margin: 0 0 16px;
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 1.2rem;
+            font-weight: 600;
             color: var(--on-surface-color);
             text-align: center;
         }
@@ -243,7 +268,7 @@
             align-items: center;
             gap: 12px;
             padding: 12px;
-            border: 1px solid var(--outline-color);
+            border: 2px solid var(--outline-color);
             border-radius: 8px;
             cursor: pointer;
             transition: background-color 0.2s, border-color 0.2s;
@@ -252,9 +277,23 @@
         .reason-option:hover {
             background-color: var(--background-color);
         }
+        
+        .reason-option.selected {
+            border-color: var(--primary-color);
+            background-color: var(--background-color);
+        }
 
         .reason-option input[type="radio"] {
             display: none;
+        }
+        
+        .custom-radio {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--on-background-color);
+            transition: border-color 0.3s, background-color 0.3s;
+            flex-shrink: 0;
         }
         
         .reason-option input[type="radio"]:checked + .custom-radio {
@@ -262,31 +301,8 @@
             background-color: var(--primary-color);
         }
 
-        .reason-option input[type="radio"]:checked + .custom-radio .material-symbols-outlined {
-            color: var(--on-primary-color);
-            opacity: 1;
-        }
-
-        .custom-radio {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid var(--outline-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            flex-shrink: 0;
-        }
-        
-        .custom-radio .material-symbols-outlined {
-            font-size: 16px;
-            color: transparent;
-            opacity: 0;
-        }
-
         .reason-text {
-            font-size: 16px;
+            font-size: 1rem;
             font-weight: 500;
             color: var(--on-surface-color);
         }
@@ -298,26 +314,28 @@
             border: none;
             padding: 12px;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, box-shadow 0.3s;
             margin-top: 24px;
+            box-shadow: 0 4px 10px var(--shadow-color-light);
         }
         
         .confirm-cancel-btn:hover {
             background-color: #c62828;
+            box-shadow: 0 6px 15px var(--shadow-color-dark);
+        }
+        
+        .confirm-cancel-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            box-shadow: none;
         }
         
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         /* Empty State */
@@ -336,17 +354,18 @@
         .empty-state-icon {
             font-size: 80px;
             color: var(--outline-color);
+            font-variation-settings: 'FILL' 0;
         }
 
         .empty-state h3, .section-empty-state h3 {
             margin: 16px 0 8px;
-            font-size: 20px;
-            font-weight: 500;
+            font-size: 1.2rem;
+            font-weight: 600;
         }
 
         .empty-state p, .section-empty-state p {
             margin: 0;
-            font-size: 16px;
+            font-size: 1rem;
         }
         
         .continue-shopping-btn {
@@ -362,7 +381,7 @@
         }
 
         .continue-shopping-btn:hover {
-            background-color: #d84315;
+            background-color: var(--primary-variant);
         }
 
         /* Nav bar styles */
@@ -371,13 +390,15 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 60px;
+            height: 70px;
             background-color: var(--surface-color);
-            box-shadow: 0 -2px 10px var(--shadow-color-light);
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
             display: flex;
             justify-content: space-around;
             align-items: center;
             z-index: 1000;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
         }
 
         .nav-item {
@@ -385,9 +406,10 @@
             flex-direction: column;
             align-items: center;
             text-decoration: none;
-            color: var(--on-background-color);
+            color: #AAAAAA;
             transition: color 0.2s;
             position: relative;
+            padding: 8px;
         }
 
         .nav-item.active {
@@ -399,22 +421,27 @@
         }
 
         .nav-item-icon {
-            font-size: 24px;
+            font-size: 1.8rem;
             margin-bottom: 2px;
+            font-variation-settings: 'FILL' 0;
+        }
+        
+        .nav-item.active .nav-item-icon {
+            font-variation-settings: 'FILL' 1;
         }
 
         .nav-item-text {
-            font-size: 12px;
+            font-size: 0.75rem;
             font-weight: 500;
         }
 
         .nav-item .badge {
             position: absolute;
-            top: -2px;
-            right: -8px;
+            top: 4px;
+            right: 8px;
             background-color: var(--danger-color);
             color: var(--on-primary-color);
-            font-size: 10px;
+            font-size: 0.6rem;
             font-weight: 700;
             padding: 2px 6px;
             border-radius: 50%;
@@ -433,7 +460,7 @@
 <body>
 
     <header class="header">
-        <div class="header-title">Banerjee Mart</div>
+        <div class="header-title">B Mart</div>
     </header>
 
     <main class="main-content">
@@ -476,27 +503,24 @@
             <div class="reason-options" id="reason-options">
                 <label class="reason-option">
                     <input type="radio" name="cancel-reason" value="Order placed by mistake">
-                    <span class="custom-radio">
-                        <span class="material-symbols-outlined">done</span>
-                    </span>
+                    <span class="custom-radio"></span>
                     <span class="reason-text">Order placed by mistake</span>
                 </label>
                 <label class="reason-option">
                     <input type="radio" name="cancel-reason" value="I will order again">
-                    <span class="custom-radio">
-                        <span class="material-symbols-outlined">done</span>
-                    </span>
+                    <span class="custom-radio"></span>
                     <span class="reason-text">I will order again</span>
                 </label>
                 <label class="reason-option">
                     <input type="radio" name="cancel-reason" value="I want to add more items">
-                    <span class="custom-radio">
-                        <span class="material-symbols-outlined">done</span>
-                    </span>
+                    <span class="custom-radio"></span>
                     <span class="reason-text">I want to add more items</span>
                 </label>
             </div>
-            <button class="confirm-cancel-btn" id="confirm-cancel-btn" disabled>Confirm Cancellation</button>
+            <button class="confirm-cancel-btn" id="confirm-cancel-btn" disabled>
+                <span class="material-symbols-outlined">cancel</span>
+                Confirm Cancellation
+            </button>
         </div>
     </div>
 
@@ -660,7 +684,7 @@
                 orderCard.dataset.id = order.id;
 
                 const statusClass = `status-${order.status.toLowerCase().replace(/\s/g, '-')}`;
-                const date = order.orderDate ? new Date(order.orderDate.seconds * 1000).toLocaleDateString() : 'N/A';
+                const date = order.orderDate ? new Date(order.orderDate.seconds * 1000).toLocaleDateString('en-IN') : 'N/A';
                 
                 let itemsHtml = await Promise.all(order.items.map(async item => {
                     const imageUrl = await getProductImage(item.productId);
@@ -686,8 +710,8 @@
                         <span class="order-id">Order ID: ...${order.id.slice(-4)}</span>
                         <span class="order-status ${statusClass}">${order.status}</span>
                     </div>
-                    <div class="order-date">
-                        <span style="font-size: 12px;">Ordered on: ${date}</span>
+                    <div class="order-date" style="font-size: 0.8rem; color: #999; margin-bottom: 12px;">
+                        Ordered on: ${date}
                     </div>
                     ${itemsHtml.join('')}
                     <div class="order-summary">
@@ -703,13 +727,20 @@
         function openCancelPopup(orderId) {
             selectedOrderIdToCancel = orderId;
             cancelPopupOverlay.style.display = 'flex';
+            cancelPopupOverlay.classList.add('show');
             confirmCancelBtn.disabled = true;
         }
 
         function closeCancelPopup() {
-            cancelPopupOverlay.style.display = 'none';
+            cancelPopupOverlay.classList.remove('show');
+            setTimeout(() => {
+                cancelPopupOverlay.style.display = 'none';
+            }, 300);
             selectedOrderIdToCancel = null;
-            document.querySelectorAll('input[name="cancel-reason"]').forEach(radio => radio.checked = false);
+            document.querySelectorAll('input[name="cancel-reason"]').forEach(radio => {
+                radio.checked = false;
+                radio.closest('label').classList.remove('selected');
+            });
             confirmCancelBtn.disabled = true;
         }
 
@@ -750,9 +781,15 @@
             }
         });
 
-        reasonOptions.addEventListener('change', () => {
-            const selectedReason = document.querySelector('input[name="cancel-reason"]:checked');
-            confirmCancelBtn.disabled = !selectedReason;
+        reasonOptions.addEventListener('change', (e) => {
+            document.querySelectorAll('.reason-option').forEach(option => option.classList.remove('selected'));
+            const selectedReason = e.target.closest('.reason-option');
+            if (selectedReason) {
+                selectedReason.classList.add('selected');
+                confirmCancelBtn.disabled = false;
+            } else {
+                confirmCancelBtn.disabled = true;
+            }
         });
 
         confirmCancelBtn.addEventListener('click', () => {
