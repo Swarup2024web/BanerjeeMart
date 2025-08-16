@@ -3,29 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+    <title>Google Admin Panel</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
+        /* Google-inspired Color Palette */
         :root {
-            --primary-color: #2a55e5;
-            --primary-light-color: #eaf1ff;
-            --secondary-color: #f1f2f4;
+            --primary-color: #1a73e8; /* Google Blue */
+            --primary-light-color: #e8f0fe; /* Light Blue for hover/backgrounds */
+            --secondary-color: #f1f3f4; /* Light Gray for background */
             --surface-color: #ffffff;
-            --text-color: #212121;
-            --subtle-text-color: #616161;
-            --border-color: #e0e0e0;
-            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
-            --shadow-hover: 0 4px 6px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
-            --success-color: #388e3c;
-            --warning-color: #fbc02d;
-            --danger-color: #d32f2f;
-            --info-color: #2196f3;
-            --card-bg-light: #fafafa;
+            --text-color: #202124; /* Dark gray for main text */
+            --subtle-text-color: #5f6368; /* Muted gray for secondary text */
+            --border-color: #dadce0; /* Lighter gray for borders */
+            --shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+            --shadow-hover: 0 4px 6px -1px rgba(60,64,67,.2), 0 2px 4px -1px rgba(60,64,67,.1);
+            --success-color: #34a853; /* Google Green */
+            --warning-color: #fbbc04; /* Google Yellow */
+            --danger-color: #ea4335; /* Google Red */
+            --info-color: #4285f4; /* A lighter blue */
         }
 
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Google Sans', 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
             background-color: var(--secondary-color);
@@ -34,7 +34,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 24px;
         }
@@ -47,13 +47,26 @@
         }
         
         .header h1 {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 700;
             color: var(--text-color);
             margin: 0;
-            animation: slideInLeft 0.5s ease-out;
         }
 
+        /* Card-based container for content */
+        .card {
+            background-color: var(--surface-color);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: box-shadow 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Tab Navigation */
         .tabs-container {
             background-color: var(--surface-color);
             border-radius: 8px;
@@ -81,9 +94,8 @@
             text-decoration: none;
             color: var(--subtle-text-color);
             font-weight: 500;
-            transition: color 0.2s, border-bottom-color 0.2s;
+            transition: color 0.2s;
             white-space: nowrap;
-            border-bottom: 3px solid transparent;
             position: relative;
         }
         .tab-list li a:hover {
@@ -91,25 +103,19 @@
         }
         .tab-list li a.active {
             color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
-            animation: fadeIn 0.3s ease-in;
         }
-        .tab-list li a .material-symbols-outlined {
-            margin-right: 8px;
-        }
-        .tab-list li a::after {
+        .tab-list li a.active::after {
             content: '';
             position: absolute;
             left: 0;
-            bottom: -3px;
+            bottom: -1px; /* Align with border-bottom of the parent container */
             height: 3px;
             width: 100%;
             background-color: var(--primary-color);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
         }
-        .tab-list li a.active::after {
-            transform: scaleX(1);
+        .tab-list li a .material-symbols-outlined {
+            margin-right: 8px;
+            font-size: 20px;
         }
 
         .tab-content-wrapper {
@@ -117,28 +123,31 @@
             background-color: var(--surface-color);
             border-radius: 8px;
             box-shadow: var(--shadow);
-            animation: fadeIn 0.5s ease-in-out;
         }
         .hidden {
             display: none !important;
         }
+        
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 16px;
-            margin-bottom: 16px;
+            margin-bottom: 24px;
         }
         .section-header h2 {
             font-size: 24px;
             font-weight: 600;
             margin: 0;
         }
+        .section-header .material-symbols-outlined {
+            color: var(--subtle-text-color);
+        }
 
+        /* Forms */
         .form-group {
             margin-bottom: 20px;
-            animation: fadeInUp 0.4s ease-out;
         }
         .form-group label {
             display: block;
@@ -156,14 +165,14 @@
             box-sizing: border-box;
             font-size: 16px;
             transition: border-color 0.2s, box-shadow 0.2s;
-            background-color: var(--card-bg-light);
+            background-color: var(--secondary-color);
         }
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(42, 85, 229, 0.2);
+            box-shadow: 0 0 0 1px var(--primary-color);
         }
         .btn {
             background-color: var(--primary-color);
@@ -174,12 +183,14 @@
             cursor: pointer;
             font-size: 16px;
             font-weight: 500;
-            transition: background-color 0.2s, box-shadow 0.2s, transform 0.2s;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
         .btn:hover {
-            background-color: #1a42b1;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transform: translateY(-2px);
+            background-color: #1565c0; /* Darker blue */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .btn-secondary {
             background-color: transparent;
@@ -189,17 +200,16 @@
         .btn-secondary:hover {
             background-color: var(--primary-light-color);
         }
-        
+
+        /* Tables */
         .table-responsive {
             overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
         }
         .data-table {
             width: 100%;
             min-width: 600px;
             border-collapse: collapse;
             margin-top: 16px;
-            animation: fadeIn 0.6s ease-in;
         }
         .data-table th,
         .data-table td {
@@ -214,46 +224,34 @@
             color: var(--subtle-text-color);
             position: sticky;
             top: 0;
-            z-index: 10;
-        }
-        .data-table tbody tr:last-child td {
-            border-bottom: none;
         }
         .data-table tbody tr:hover {
-            background-color: #f5f5f5;
-            transition: background-color 0.2s;
+            background-color: #f8f9fa;
         }
         .product-image {
             width: 60px;
             height: 60px;
             object-fit: contain;
             border-radius: 4px;
-            border: 1px solid var(--border-color);
-            transition: transform 0.2s;
-        }
-        .product-image:hover {
-            transform: scale(1.1);
         }
         .action-buttons button {
-            padding: 8px;
+            background: none;
             border: none;
+            padding: 8px;
             border-radius: 50%;
             cursor: pointer;
-            transition: background-color 0.2s, transform 0.2s;
+            transition: background-color 0.2s;
             display: inline-flex;
             align-items: center;
             justify-content: center;
         }
-        .action-buttons button .material-symbols-outlined {
-            font-size: 20px;
-        }
         .action-buttons button:hover {
-            background-color: rgba(0,0,0,0.08);
-            transform: scale(1.1);
+            background-color: var(--primary-light-color);
         }
         .btn-edit { color: var(--warning-color); }
         .btn-delete { color: var(--danger-color); }
-        .btn-status { color: var(--primary-color); }
+
+        /* Status Badges */
         .order-status {
             padding: 4px 12px;
             border-radius: 20px;
@@ -262,19 +260,20 @@
             display: inline-block;
             color: var(--surface-color);
         }
-        .status-processing { background-color: #9e9e9e; }
-        .status-packed { background-color: #ff9800; }
-        .status-shipped { background-color: var(--primary-color); }
-        .status-delivered { background-color: var(--success-color); }
-        .status-cancelled { background-color: var(--danger-color); }
-        
+        .status-processing { background-color: #9aa0a6; } /* Google Gray */
+        .status-packed { background-color: #f29900; } /* Google Orange */
+        .status-shipped { background-color: #4285f4; } /* Google Blue */
+        .status-delivered { background-color: #34a853; } /* Google Green */
+        .status-cancelled { background-color: #ea4335; } /* Google Red */
+
+        /* Modal */
         .modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
+            background-color: rgba(32, 33, 36, 0.6); /* Darker backdrop */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -295,11 +294,6 @@
             width: 90%;
             max-width: 500px;
             position: relative;
-            transform: translateY(-50px);
-            transition: transform 0.3s ease-out;
-        }
-        .modal.visible .modal-content {
-            transform: translateY(0);
         }
         .modal-close-btn {
             position: absolute;
@@ -311,44 +305,21 @@
             border: none;
             color: var(--subtle-text-color);
         }
+
+        /* Filter Section */
         .filter-section {
-            margin-bottom: 20px;
             display: flex;
             gap: 16px;
-            align-items: center;
+            align-items: flex-end;
             flex-wrap: wrap;
+            margin-bottom: 24px;
         }
         .filter-section .form-group {
             margin-bottom: 0;
             flex-grow: 1;
         }
-        .filter-section .form-group label {
-            margin-bottom: 4px;
-        }
-        .filter-section .form-group input,
-        .filter-section .form-group select {
-            width: auto;
-            min-width: 150px;
-        }
-        .filter-section .btn {
-            align-self: flex-end;
-            min-width: 120px;
-        }
-        .status-dropdown {
-            padding: 8px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 14px;
-            background-color: transparent;
-            transition: border-color 0.2s;
-        }
-        .status-dropdown.Processing { border-color: #9e9e9e; }
-        .status-dropdown.Packed { border-color: #ff9800; }
-        .status-dropdown.Shipped { border-color: var(--primary-color); }
-        .status-dropdown.Delivered { border-color: var(--success-color); }
-        .status-dropdown.Cancelled { border-color: var(--danger-color); }
 
-        /* Card-based layout for orders */
+        /* Orders Card-based Layout */
         #order-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -361,15 +332,13 @@
             border-radius: 8px;
             box-shadow: var(--shadow);
             padding: 24px;
-            transition: box-shadow 0.2s, transform 0.2s;
+            transition: box-shadow 0.2s;
             display: flex;
             flex-direction: column;
             border: 1px solid var(--border-color);
-            animation: fadeIn 0.5s ease-in;
         }
         .order-card:hover {
             box-shadow: var(--shadow-hover);
-            transform: translateY(-4px);
         }
         .order-card-header {
             display: flex;
@@ -378,12 +347,8 @@
             margin-bottom: 16px;
         }
         .order-id {
-            font-size: 14px;
-            color: var(--subtle-text-color);
             font-family: monospace;
-            padding: 4px 8px;
-            background-color: var(--secondary-color);
-            border-radius: 4px;
+            color: var(--subtle-text-color);
         }
         .order-date {
             font-size: 14px;
@@ -421,8 +386,6 @@
             font-size: 14px;
             color: var(--text-color);
             margin-bottom: 4px;
-            display: flex;
-            align-items: center;
         }
         .order-items li:before {
             content: '•';
@@ -445,15 +408,16 @@
             font-weight: 700;
             color: var(--primary-color);
         }
+        
         .empty-state {
             text-align: center;
             padding: 48px 0;
             color: var(--subtle-text-color);
-            animation: fadeIn 0.5s ease-in;
         }
         .empty-state .material-symbols-outlined {
             font-size: 48px;
             color: var(--border-color);
+            margin-bottom: 16px;
         }
 
         /* Analytics Tab CSS */
@@ -471,16 +435,6 @@
             flex-direction: column;
             justify-content: space-between;
             border: 1px solid var(--border-color);
-            transition: box-shadow 0.2s, transform 0.2s;
-            animation: scaleIn 0.4s ease-out;
-        }
-        .analytics-card:nth-child(1) { animation-delay: 0s; }
-        .analytics-card:nth-child(2) { animation-delay: 0.1s; }
-        .analytics-card:nth-child(3) { animation-delay: 0.2s; }
-
-        .analytics-card:hover {
-            box-shadow: var(--shadow-hover);
-            transform: translateY(-4px);
         }
         .analytics-card h3 {
             font-size: 16px;
@@ -501,10 +455,6 @@
             color: var(--primary-color);
             margin: 0;
             line-height: 1;
-            transition: color 0.3s;
-        }
-        .analytics-card:hover .metric-value {
-            color: #1a42b1;
         }
         .analytics-card .metric-label {
             font-size: 14px;
@@ -515,7 +465,6 @@
             list-style: none;
             padding: 0;
             margin: 0;
-            animation: fadeIn 0.6s ease-in;
         }
         .top-products-list li {
             display: flex;
@@ -524,11 +473,6 @@
             padding: 12px 0;
             border-bottom: 1px solid var(--border-color);
             font-size: 14px;
-            animation: fadeInUp 0.5s ease-out;
-            transition: background-color 0.2s;
-        }
-        .top-products-list li:hover {
-            background-color: #f9f9f9;
         }
         .top-products-list li:last-child {
             border-bottom: none;
@@ -540,26 +484,7 @@
             font-weight: 700;
             color: var(--primary-color);
         }
-
-        /* Keyframe Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes slideInLeft {
-            from { transform: translateX(-20px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes fadeInUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes scaleIn {
-            from { transform: scale(0.95); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
         
-
         @media (max-width: 768px) {
             .container {
                 padding: 16px;
@@ -574,15 +499,21 @@
                 padding: 12px 16px;
                 font-size: 14px;
             }
-            .tab-content-wrapper {
+            .card, .tab-content-wrapper {
                 padding: 16px;
             }
             .section-header {
                 flex-direction: column;
                 align-items: flex-start;
+                margin-bottom: 16px;
             }
             .section-header h2 {
+                font-size: 20px;
                 margin-bottom: 8px;
+            }
+            .btn {
+                width: 100%;
+                justify-content: center;
             }
             .btn-secondary {
                 width: 100%;
@@ -594,13 +525,6 @@
                 flex-direction: column;
                 align-items: stretch;
             }
-            .filter-section .form-group input,
-            .filter-section .form-group select {
-                width: 100%;
-            }
-            .filter-section .btn {
-                width: 100%;
-            }
         }
     </style>
 </head>
@@ -608,27 +532,28 @@
 
     <div class="container">
         <div class="header">
-            <h1>Admin Panel</h1>
+            <h1>Banerjee Mart Admin</h1>
         </div>
 
-        <div class="tabs-container">
+        <div class="tabs-container card">
             <ul class="tab-list">
-                <li><a href="#" class="tab-link active" data-tab="allProductsTab"><span class="material-symbols-outlined">view_list</span>All Products</a></li>
+                <li><a href="#" class="tab-link active" data-tab="allProductsTab"><span class="material-symbols-outlined">inventory_2</span>All Products</a></li>
                 <li><a href="#" class="tab-link" data-tab="addProductTab"><span class="material-symbols-outlined">add_circle</span>Add Products</a></li>
-                <li><a href="#" class="tab-link" data-tab="updateProductTab"><span class="material-symbols-outlined">edit</span>Update Products</a></li>
+                <li><a href="#" class="tab-link" data-tab="updateProductTab"><span class="material-symbols-outlined">edit</span>Update/Delete</a></li>
                 <li><a href="#" class="tab-link" data-tab="manageOrdersTab"><span class="material-symbols-outlined">local_shipping</span>Manage Orders</a></li>
-                <li><a href="#" class="tab-link" data-tab="analyticsTab"><span class="material-symbols-outlined">analytics</span>Analytics</a></li>
+                <li><a href="#" class="tab-link" data-tab="analyticsTab"><span class="material-symbols-outlined">monitoring</span>Analytics</a></li>
             </ul>
         </div>
 
-        <div class="tab-content-wrapper">
+        <div class="tab-content-wrapper card">
             
             <div id="allProductsTab" class="tab-content">
                 <div class="section-header">
                     <h2>All Products</h2>
+                    <span class="material-symbols-outlined">filter_alt</span>
                 </div>
                 <div class="filter-section">
-                    <div class="form-group" style="flex-grow: 1;">
+                    <div class="form-group">
                         <label for="all-products-filter">Filter by Category</label>
                         <select id="all-products-filter" onchange="filterProducts('allProductsTab')">
                             <option value="All">All</option>
@@ -662,6 +587,7 @@
             <div id="addProductTab" class="tab-content hidden">
                 <div class="section-header">
                     <h2>Add New Product</h2>
+                    <span class="material-symbols-outlined">add_circle</span>
                 </div>
                 <form id="product-form">
                     <div class="form-group">
@@ -688,16 +614,17 @@
                         <label for="product-image">Image File Name (e.g., apple.png)</label>
                         <input type="text" id="product-image" placeholder="productname.png" required>
                     </div>
-                    <button type="submit" class="btn">Add Product</button>
+                    <button type="submit" class="btn"><span class="material-symbols-outlined">add</span>Add Product</button>
                 </form>
             </div>
 
             <div id="updateProductTab" class="tab-content hidden">
                 <div class="section-header">
                     <h2>Update/Delete Products</h2>
+                    <span class="material-symbols-outlined">edit_square</span>
                 </div>
                 <div class="filter-section">
-                    <div class="form-group" style="flex-grow: 1;">
+                    <div class="form-group">
                         <label for="update-products-filter">Filter by Category</label>
                         <select id="update-products-filter" onchange="filterProducts('updateProductTab')">
                             <option value="All">All</option>
@@ -732,6 +659,7 @@
             <div id="manageOrdersTab" class="tab-content hidden">
                 <div class="section-header">
                     <h2>Manage Orders</h2>
+                    <span class="material-symbols-outlined">shopping_cart</span>
                 </div>
                 <div class="filter-section">
                     <div class="form-group">
@@ -742,7 +670,7 @@
                         <label for="end-date">To</label>
                         <input type="date" id="end-date">
                     </div>
-                    <button class="btn" onclick="filterAndDownloadOrders()"><span class="material-symbols-outlined">download</span> Download</button>
+                    <button class="btn btn-secondary" onclick="filterAndDownloadOrders()"><span class="material-symbols-outlined">download</span> Download Report</button>
                 </div>
                 <div id="order-list" class="order-grid">
                     <div class="empty-state">
@@ -755,26 +683,28 @@
             <div id="analyticsTab" class="tab-content hidden">
                 <div class="section-header">
                     <h2>Analytics Dashboard</h2>
+                    <span class="material-symbols-outlined">monitoring</span>
                 </div>
                 <div class="analytics-grid">
                     <div class="analytics-card">
-                        <h3><span class="material-symbols-outlined">shopping_cart</span>Total Orders</h3>
+                        <h3><span class="material-symbols-outlined" style="color: var(--primary-color);">shopping_cart_checkout</span>Total Orders</h3>
                         <p class="metric-value" id="total-orders-metric">...</p>
                     </div>
                     <div class="analytics-card">
-                        <h3><span class="material-symbols-outlined">paid</span>Total Revenue</h3>
-                        <p class="metric-value" id="total-revenue-metric">...</p>
+                        <h3><span class="material-symbols-outlined" style="color: var(--success-color);">payments</span>Total Revenue</h3>
+                        <p class="metric-value" id="total-revenue-metric" style="color: var(--success-color);">...</p>
                     </div>
                     <div class="analytics-card">
-                        <h3><span class="material-symbols-outlined">inventory_2</span>Total Products</h3>
-                        <p class="metric-value" id="total-products-metric">...</p>
+                        <h3><span class="material-symbols-outlined" style="color: var(--warning-color);">inventory_2</span>Total Products</h3>
+                        <p class="metric-value" id="total-products-metric" style="color: var(--warning-color);">...</p>
                     </div>
                 </div>
 
                 <div class="section-header" style="margin-top: 32px;">
                     <h2>Top Selling Products</h2>
+                    <span class="material-symbols-outlined">trending_up</span>
                 </div>
-                <div class="tab-content-wrapper">
+                <div class="card" style="padding: 16px;">
                     <ul id="top-products-list" class="top-products-list">
                         <li><span class="product-name">Loading...</span><span class="product-count"></span></li>
                     </ul>
@@ -788,6 +718,7 @@
             <button class="modal-close-btn">&times;</button>
             <div class="section-header">
                 <h2>Edit Product</h2>
+                <span class="material-symbols-outlined">edit</span>
             </div>
             <form id="edit-product-form">
                 <div class="form-group">
@@ -814,7 +745,7 @@
                     <label for="edit-product-image">Image File Name (e.g., apple.png)</label>
                     <input type="text" id="edit-product-image" required>
                 </div>
-                <button type="submit" class="btn">Save Changes</button>
+                <button type="submit" class="btn"><span class="material-symbols-outlined">save</span>Save Changes</button>
             </form>
         </div>
     </div>
@@ -826,7 +757,7 @@
         import { getFirestore, collection, addDoc, getDocs, doc, getDoc, updateDoc, deleteDoc, query, where, orderBy, Timestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
         
         // =========================================================
-        // FIREBASE CONFIGURATION
+        // FIREBASE CONFIGURATION (unchanged)
         // =========================================================
         const firebaseConfig = {
             apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
@@ -846,7 +777,7 @@
         const IMAGE_BASE_URL = 'https://raw.githubusercontent.com/Swarup2024web/Tester/main/assets/';
 
         // =========================================================
-        // ADMIN AUTHENTICATION CHECK
+        // ADMIN AUTHENTICATION CHECK (unchanged)
         // =========================================================
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
@@ -870,7 +801,7 @@
         });
 
         // =========================================================
-        // TAB SWITCHING LOGIC
+        // TAB SWITCHING LOGIC (unchanged)
         // =========================================================
         const tabLinks = document.querySelectorAll('.tab-link');
         const tabContents = document.querySelectorAll('.tab-content');
@@ -912,7 +843,7 @@
         });
 
         // =========================================================
-        // ADD PRODUCT LOGIC
+        // ADD PRODUCT LOGIC (unchanged)
         // =========================================================
         const productForm = document.getElementById('product-form');
         const productNameInput = document.getElementById('product-name');
@@ -941,7 +872,7 @@
         });
 
         // =========================================================
-        // ALL PRODUCTS TAB & UPDATE PRODUCTS TAB LOGIC
+        // ALL PRODUCTS TAB & UPDATE PRODUCTS TAB LOGIC (unchanged)
         // =========================================================
         const allProductsList = document.getElementById('all-products-list');
         const updateProductsList = document.getElementById('update-products-list');
@@ -1011,7 +942,7 @@
         const fetchAndUpdateProducts = () => fetchProducts('updateProductTab', document.getElementById('update-products-filter').value);
 
         // =========================================================
-        // UPDATE/DELETE PRODUCT MODAL LOGIC
+        // UPDATE/DELETE PRODUCT MODAL LOGIC (unchanged)
         // =========================================================
         const editModal = document.getElementById('edit-product-modal');
         const editForm = document.getElementById('edit-product-form');
@@ -1091,7 +1022,7 @@
         }
 
         // =========================================================
-        // MANAGE ORDERS LOGIC & EXCEL DOWNLOAD
+        // MANAGE ORDERS LOGIC & EXCEL DOWNLOAD (unchanged)
         // =========================================================
         const orderList = document.getElementById('order-list');
         const startDateInput = document.getElementById('start-date');
@@ -1261,7 +1192,7 @@
         };
 
         // =========================================================
-        // ANALYTICS TAB LOGIC
+        // ANALYTICS TAB LOGIC (unchanged)
         // =========================================================
         const totalOrdersMetric = document.getElementById('total-orders-metric');
         const totalRevenueMetric = document.getElementById('total-revenue-metric');
@@ -1336,4 +1267,4 @@
         }
     </script>
 </body>
-                                </html>
+</html>
