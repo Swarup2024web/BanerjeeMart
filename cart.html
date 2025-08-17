@@ -424,6 +424,40 @@
                 transform: scale(1);
             }
         }
+        /* Skeleton loading styles */
+        @keyframes pulse {
+            0% { background-color: var(--skeleton-color); }
+            50% { background-color: var(--skeleton-highlight); }
+            100% { background-color: var(--skeleton-color); }
+        }
+        .skeleton-card {
+            background-color: var(--surface-color);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            gap: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .skeleton-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+        .skeleton-details {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 8px;
+        }
+        .skeleton-line {
+            height: 16px;
+            border-radius: 4px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+        .skeleton-line.short { width: 60%; }
+        .skeleton-line.medium { width: 80%; }
     </style>
 </head>
 <body>
@@ -557,12 +591,37 @@
         function saveCart(cart) {
             localStorage.setItem('cart', JSON.stringify(cart));
         }
-        
+
+        function showSkeletonLoading() {
+            cartItemsContainer.innerHTML = `
+                <div class="skeleton-card">
+                    <div class="skeleton-image"></div>
+                    <div class="skeleton-details">
+                        <div class="skeleton-line medium"></div>
+                        <div class="skeleton-line short"></div>
+                    </div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton-image"></div>
+                    <div class="skeleton-details">
+                        <div class="skeleton-line medium"></div>
+                        <div class="skeleton-line short"></div>
+                    </div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton-image"></div>
+                    <div class="skeleton-details">
+                        <div class="skeleton-line medium"></div>
+                        <div class="skeleton-line short"></div>
+                    </div>
+                </div>
+            `;
+        }
+
         async function renderCart() {
             const cart = getCart();
             const cartItemIds = Object.keys(cart);
-            cartItemsContainer.innerHTML = '';
-        
+
             if (cartItemIds.length === 0) {
                 cartContent.style.display = 'none';
                 emptyCartMessage.style.display = 'block';
@@ -571,13 +630,13 @@
                 return;
             }
 
-            // Show loading state
             cartContent.style.display = 'block';
             emptyCartMessage.style.display = 'none';
-            cartItemsContainer.innerHTML = '<div style="text-align: center; padding: 20px;">Loading cart...</div>';
+            checkoutBtn.disabled = false;
+            
+            showSkeletonLoading();
 
             try {
-                // Fetch product details for all items in the cart
                 const productsSnapshot = await getDocs(query(productsCollection, where(documentId(), 'in', cartItemIds)));
                 const productsMap = {};
                 productsSnapshot.forEach(doc => {
@@ -622,7 +681,6 @@
                     }
                 }
                 
-                checkoutBtn.disabled = false;
                 updateSummary(subtotal);
                 updateCartBadge();
 
@@ -658,26 +716,77 @@
             }
         }
         
-        function updateQuantity(productId, change) {
+        async function updateQuantity(productId, change) {
             const cart = getCart();
             if (!cart[productId]) return;
 
             const newQuantity = cart[productId].quantity + change;
+            
             if (newQuantity <= 0) {
-                delete cart[productId];
-            } else {
-                cart[productId].quantity = newQuantity;
+                removeItem(productId);
+                return;
             }
             
+            cart[productId].quantity = newQuantity;
             saveCart(cart);
-            renderCart();
-        }
 
+            const itemCard = document.querySelector(`.cart-item[data-id="${productId}"]`);
+            if (itemCard) {
+                const quantitySpan = itemCard.querySelector('.quantity-value');
+                const totalSpan = itemCard.querySelector('.cart-item-total');
+                
+                try {
+                    const productsSnapshot = await getDocs(query(productsCollection, where(documentId(), 'in', Object.keys(cart))));
+                    const productsMap = {};
+                    productsSnapshot.forEach(doc => {
+                        productsMap[doc.id] = doc.data();
+                    });
+                    
+                    const price = productsMap[productId].price;
+                    quantitySpan.textContent = newQuantity;
+                    totalSpan.textContent = `₹${(newQuantity * price).toFixed(2)}`;
+                } catch (error) {
+                    console.error("Error fetching price for quantity update:", error);
+                }
+            }
+            
+            updateSummaryFromCart();
+        }
+        
         function removeItem(productId) {
             const cart = getCart();
             delete cart[productId];
             saveCart(cart);
-            renderCart();
+            renderCart(); // Re-render the whole cart after deletion
+        }
+
+        async function updateSummaryFromCart() {
+            const cart = getCart();
+            const cartItemIds = Object.keys(cart);
+            
+            if (cartItemIds.length === 0) {
+                updateSummary(0);
+                updateCartBadge();
+                return;
+            }
+            
+            const productsSnapshot = await getDocs(query(productsCollection, where(documentId(), 'in', cartItemIds)));
+            const productsMap = {};
+            productsSnapshot.forEach(doc => {
+                productsMap[doc.id] = doc.data();
+            });
+
+            let subtotal = 0;
+            for (const productId of cartItemIds) {
+                const item = cart[productId];
+                const productData = productsMap[productId];
+                if (productData) {
+                    subtotal += productData.price * item.quantity;
+                }
+            }
+            
+            updateSummary(subtotal);
+            updateCartBadge();
         }
 
         cartItemsContainer.addEventListener('click', (e) => {
