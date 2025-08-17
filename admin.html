@@ -145,37 +145,6 @@
             color: var(--subtle-text-color);
         }
         
-        /* New Nested Tab Styles */
-        .nested-tabs {
-            display: flex;
-            gap: 12px;
-            background-color: var(--secondary-color);
-            border-radius: 8px;
-            margin-bottom: 20px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            white-space: nowrap;
-        }
-        .nested-tabs::-webkit-scrollbar {
-            display: none;
-        }
-        .nested-tabs a {
-            flex-grow: 1;
-            text-align: center;
-            padding: 12px 16px;
-            text-decoration: none;
-            color: var(--subtle-text-color);
-            font-weight: 500;
-            border-bottom: 2px solid transparent;
-            transition: color 0.2s, border-bottom 0.2s;
-        }
-        .nested-tabs a.active {
-            color: var(--primary-color);
-            border-bottom: 2px solid var(--primary-color);
-        }
-
         /* Forms */
         .form-group {
             margin-bottom: 20px;
@@ -578,7 +547,6 @@
                 <li><a href="#" class="tab-link" data-tab="updateProductTab"><span class="material-symbols-outlined">edit</span>Update/Delete</a></li>
                 <li><a href="#" class="tab-link" data-tab="manageOrdersTab"><span class="material-symbols-outlined">local_shipping</span>Manage Orders</a></li>
                 <li><a href="#" class="tab-link" data-tab="manageUsersTab"><span class="material-symbols-outlined">group</span>Manage Users</a></li>
-                <li><a href="#" class="tab-link" data-tab="artsTab"><span class="material-symbols-outlined">palette</span>Arts</a></li>
                 <li><a href="#" class="tab-link" data-tab="analyticsTab"><span class="material-symbols-outlined">monitoring</span>Analytics</a></li>
             </ul>
         </div>
@@ -602,6 +570,7 @@
                             <option value="Stationery">Stationery</option>
                             <option value="Books">Books</option>
                             <option value="Dresses">Dresses</option>
+                            <option value="Arts">Arts</option>
                         </select>
                     </div>
                 </div>
@@ -646,6 +615,7 @@
                             <option value="Stationery">Stationery</option>
                             <option value="Books">Books</option>
                             <option value="Dresses">Dresses</option>
+                            <option value="Arts">Arts</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -673,6 +643,7 @@
                             <option value="Stationery">Stationery</option>
                             <option value="Books">Books</option>
                             <option value="Dresses">Dresses</option>
+                            <option value="Arts">Arts</option>
                         </select>
                     </div>
                 </div>
@@ -740,62 +711,6 @@
                 </div>
             </div>
             
-            <div id="artsTab" class="tab-content hidden">
-                <div class="section-header">
-                    <h2>Art Management</h2>
-                    <span class="material-symbols-outlined">palette</span>
-                </div>
-                <div class="nested-tabs">
-                    <a href="#" class="nested-tab-link active" data-nested-tab="addArtTab">Add Art Product</a>
-                    <a href="#" class="nested-tab-link" data-nested-tab="updateArtTab">Update/Delete Art</a>
-                </div>
-                
-                <div id="addArtTab" class="nested-tab-content">
-                    <form id="add-art-form">
-                        <div class="form-group">
-                            <label for="art-name">Art Name</label>
-                            <input type="text" id="art-name" placeholder="Enter art name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="art-price">Price (₹)</label>
-                            <input type="number" id="art-price" step="0.01" placeholder="0.00" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="art-image">Image File Name (e.g., painting.png)</label>
-                            <input type="text" id="art-image" placeholder="artpiece.png" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="art-artist">Artist</label>
-                            <input type="text" id="art-artist" placeholder="Enter artist's name">
-                        </div>
-                        <div class="form-group">
-                            <label for="art-info">Info</label>
-                            <textarea id="art-info" rows="4" placeholder="Enter additional information about the art"></textarea>
-                        </div>
-                        <button type="submit" class="btn"><span class="material-symbols-outlined">add</span>Add Art Product</button>
-                    </form>
-                </div>
-                
-                <div id="updateArtTab" class="nested-tab-content hidden">
-                    <div class="table-responsive">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Image</th>
-                                    <th>Art Name</th>
-                                    <th>Price</th>
-                                    <th>Artist</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="update-art-list">
-                                <tr><td colspan="5" style="text-align: center;">Loading art products...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
             <div id="analyticsTab" class="tab-content hidden">
                 <div class="section-header">
                     <h2>Analytics Dashboard</h2>
@@ -867,40 +782,6 @@
         </div>
     </div>
 
-    <div id="edit-art-modal" class="modal hidden">
-        <div class="modal-content">
-            <button class="modal-close-btn">&times;</button>
-            <div class="section-header">
-                <h2>Edit Art Product</h2>
-                <span class="material-symbols-outlined">edit</span>
-            </div>
-            <form id="edit-art-form">
-                <div class="form-group">
-                    <label for="edit-art-name">Art Name</label>
-                    <input type="text" id="edit-art-name" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-art-price">Price (₹)</label>
-                    <input type="number" id="edit-art-price" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-art-image">Image File Name (e.g., painting.png)</label>
-                    <input type="text" id="edit-art-image" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-art-artist">Artist</label>
-                    <input type="text" id="edit-art-artist">
-                </div>
-                <div class="form-group">
-                    <label for="edit-art-info">Info</label>
-                    <textarea id="edit-art-info" rows="4"></textarea>
-                </div>
-                <button type="submit" class="btn"><span class="material-symbols-outlined">save</span>Save Changes</button>
-            </form>
-        </div>
-    </div>
-
-
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
@@ -956,8 +837,6 @@
         // =========================================================
         const tabLinks = document.querySelectorAll('.tab-link');
         const tabContents = document.querySelectorAll('.tab-content');
-        const nestedTabLinks = document.querySelectorAll('.nested-tab-link');
-        const nestedTabContents = document.querySelectorAll('.nested-tab-content');
 
         function openTab(tabId) {
             tabContents.forEach(tab => tab.classList.add('hidden'));
@@ -985,42 +864,13 @@
                 fetchAndDisplayUsers();
             } else if (tabId === 'analyticsTab') {
                 fetchAndDisplayAnalytics();
-            } else if (tabId === 'artsTab') {
-                // Open the default nested tab (Add Art Product)
-                openNestedTab('addArtTab');
             }
         }
         
-        function openNestedTab(tabId) {
-            nestedTabContents.forEach(tab => tab.classList.add('hidden'));
-            nestedTabLinks.forEach(link => link.classList.remove('active'));
-            
-            const selectedTab = document.getElementById(tabId);
-            const selectedLink = document.querySelector(`[data-nested-tab="${tabId}"]`);
-            
-            if (selectedTab) {
-                selectedTab.classList.remove('hidden');
-            }
-            if (selectedLink) {
-                selectedLink.classList.add('active');
-            }
-            
-            if (tabId === 'updateArtTab') {
-                fetchArtProducts();
-            }
-        }
-
         tabLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 openTab(e.currentTarget.dataset.tab);
-            });
-        });
-        
-        nestedTabLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                openNestedTab(e.currentTarget.dataset.nestedTab);
             });
         });
 
@@ -1029,7 +879,7 @@
         });
 
         // =========================================================
-        // ADD PRODUCT LOGIC (unchanged)
+        // ADD PRODUCT LOGIC (MODIFIED)
         // =========================================================
         const productForm = document.getElementById('product-form');
         const productNameInput = document.getElementById('product-name');
@@ -1128,7 +978,7 @@
         const fetchAndUpdateProducts = () => fetchProducts('updateProductTab', document.getElementById('update-products-filter').value);
 
         // =========================================================
-        // UPDATE/DELETE PRODUCT MODAL LOGIC (UPDATED)
+        // UPDATE/DELETE PRODUCT MODAL LOGIC (MODIFIED)
         // =========================================================
         const editModal = document.getElementById('edit-product-modal');
         const editForm = document.getElementById('edit-product-form');
@@ -1207,150 +1057,6 @@
             }
         }
         
-        // =========================================================
-        // NEW ART PRODUCT LOGIC
-        // =========================================================
-        const addArtForm = document.getElementById('add-art-form');
-        const addArtName = document.getElementById('art-name');
-        const addArtPrice = document.getElementById('art-price');
-        const addArtImage = document.getElementById('art-image');
-        const addArtArtist = document.getElementById('art-artist');
-        const addArtInfo = document.getElementById('art-info');
-        const updateArtList = document.getElementById('update-art-list');
-        
-        const editArtModal = document.getElementById('edit-art-modal');
-        const editArtForm = document.getElementById('edit-art-form');
-        const editArtName = document.getElementById('edit-art-name');
-        const editArtPrice = document.getElementById('edit-art-price');
-        const editArtImage = document.getElementById('edit-art-image');
-        const editArtArtist = document.getElementById('edit-art-artist');
-        const editArtInfo = document.getElementById('edit-art-info');
-        const closeArtModalBtn = editArtModal.querySelector('.modal-close-btn');
-        let currentEditingArtId = null;
-
-        addArtForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const productData = {
-                name: addArtName.value,
-                price: parseFloat(addArtPrice.value),
-                category: "Arts",
-                image: `${IMAGE_BASE_URL}${addArtImage.value}`,
-                artist: addArtArtist.value,
-                info: addArtInfo.value
-            };
-
-            try {
-                await addDoc(productsCollection, productData);
-                alert('Art product added successfully!');
-                addArtForm.reset();
-            } catch (error) {
-                console.error("Error adding art product: ", error);
-                alert('Error adding art product: ' + error.message);
-            }
-        });
-
-        async function fetchArtProducts() {
-            updateArtList.innerHTML = `<tr><td colspan="5" style="text-align: center;">Loading art products...</td></tr>`;
-            try {
-                const q = query(productsCollection, where('category', '==', 'Arts'), orderBy('name'));
-                const snapshot = await getDocs(q);
-                
-                const products = [];
-                snapshot.forEach(doc => {
-                    products.push({ id: doc.id, ...doc.data() });
-                });
-
-                updateArtList.innerHTML = '';
-                if (products.length === 0) {
-                    updateArtList.innerHTML = `<tr><td colspan="5" style="text-align: center;">No art products found.</td></tr>`;
-                    return;
-                }
-                
-                products.forEach(product => {
-                    const productItem = `
-                        <tr>
-                            <td><img src="${product.image}" alt="${product.name}" class="product-image"></td>
-                            <td>${product.name}</td>
-                            <td>₹${product.price.toFixed(2)}</td>
-                            <td>${product.artist || 'N/A'}</td>
-                            <td class="action-buttons">
-                                <button class="btn-edit" data-id="${product.id}" data-type="art"><span class="material-symbols-outlined">edit</span></button>
-                                <button class="btn-delete" data-id="${product.id}"><span class="material-symbols-outlined">delete</span></button>
-                            </td>
-                        </tr>
-                    `;
-                    updateArtList.innerHTML += productItem;
-                });
-                
-                document.querySelectorAll('#update-art-list .btn-edit').forEach(button => {
-                    button.addEventListener('click', (e) => openEditArtModal(e.currentTarget.dataset.id));
-                });
-                document.querySelectorAll('#update-art-list .btn-delete').forEach(button => {
-                    button.addEventListener('click', (e) => deleteProduct(e.currentTarget.dataset.id));
-                });
-            } catch (error) {
-                console.error("Error fetching art products: ", error);
-                updateArtList.innerHTML = `<tr><td colspan="5" style="text-align: center;">Error fetching art products.</td></tr>`;
-            }
-        }
-        
-        async function openEditArtModal(id) {
-            const productDocRef = doc(productsCollection, id);
-            const productDoc = await getDoc(productDocRef);
-            
-            if (productDoc.exists()) {
-                const product = productDoc.data();
-                
-                editArtName.value = product.name;
-                editArtPrice.value = product.price;
-                const filename = product.image.split('/').pop();
-                editArtImage.value = filename;
-                editArtArtist.value = product.artist || '';
-                editArtInfo.value = product.info || '';
-
-                currentEditingArtId = id;
-                editArtModal.classList.remove('hidden');
-                editArtModal.classList.add('visible');
-            }
-        }
-        
-        editArtForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const productData = {
-                name: editArtName.value,
-                price: parseFloat(editArtPrice.value),
-                image: `${IMAGE_BASE_URL}${editArtImage.value}`,
-                artist: editArtArtist.value,
-                info: editArtInfo.value
-            };
-
-            try {
-                await updateDoc(doc(productsCollection, currentEditingArtId), productData);
-                alert('Art product updated successfully!');
-                closeEditArtModal();
-                fetchArtProducts();
-            } catch (error) {
-                console.error("Error updating art product: ", error);
-                alert('Error updating art product: ' + error.message);
-            }
-        });
-        
-        function closeEditArtModal() {
-            editArtModal.classList.remove('visible');
-            setTimeout(() => {
-                editArtModal.classList.add('hidden');
-            }, 300);
-            editArtForm.reset();
-            currentEditingArtId = null;
-        }
-        
-        closeArtModalBtn.addEventListener('click', closeEditArtModal);
-        window.addEventListener('click', (e) => {
-            if (e.target === editArtModal) {
-                closeEditArtModal();
-            }
-        });
-
         // =========================================================
         // MANAGE ORDERS LOGIC & EXCEL DOWNLOAD (unchanged)
         // =========================================================
