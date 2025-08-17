@@ -478,10 +478,6 @@
             <span class="material-symbols-outlined nav-item-icon">home</span>
             <span class="nav-item-text">Home</span>
         </a>
-        <a href="artmart.html" class="nav-item">
-            <span class="material-symbols-outlined nav-item-icon">palette</span>
-            <span class="nav-item-text">Art Mart</span>
-        </a>
         <a href="cart.html" class="nav-item">
             <span class="material-symbols-outlined nav-item-icon">shopping_cart</span>
             <span class="nav-item-text">Cart</span>
@@ -571,17 +567,19 @@
         
         async function fetchAllProducts() {
             renderProducts(true);
-            const q = query(collection(db, 'products'), orderBy('name'));
             try {
-                const querySnapshot = await getDocs(q);
-                state.allProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                // Fetch products from the main 'products' collection
+                const productsQuery = query(collection(db, 'products'), orderBy('name'));
+                const productsSnapshot = await getDocs(productsQuery);
+                const productsData = productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-                // Fetch products from the 'arts' collection as well
-                const artsQuerySnapshot = await getDocs(collection(db, 'arts'));
-                const artsProducts = artsQuerySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                // Fetch products from the 'arts' collection
+                const artsQuery = query(collection(db, 'arts'), orderBy('name'));
+                const artsSnapshot = await getDocs(artsQuery);
+                const artsData = artsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
-                // Merge and sort products from both collections
-                state.allProducts = [...state.allProducts, ...artsProducts].sort((a, b) => a.name.localeCompare(b.name));
+                // Merge products from both collections and set state
+                state.allProducts = [...productsData, ...artsData];
                 state.products = [...state.allProducts];
                 state.cart = getCart();
                 
