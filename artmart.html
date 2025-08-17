@@ -170,14 +170,14 @@
 
         .products-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px; /* Reduced gap */
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
             padding: 20px;
         }
         
         @media (min-width: 600px) {
             .products-container {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             }
         }
 
@@ -234,6 +234,28 @@
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             margin-bottom: 8px;
+        }
+        
+        .artist-info {
+            font-size: 0.85rem;
+            color: #777;
+            margin-bottom: 5px;
+        }
+
+        .artist-info strong {
+            color: #444;
+        }
+
+        .art-info {
+            font-size: 0.8rem;
+            color: #999;
+            margin-bottom: 10px;
+            min-height: 30px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
         }
         
         .product-price {
@@ -529,6 +551,7 @@
         
         async function fetchAllProducts() {
             renderProducts(true);
+            // Fetch only products with the 'Arts' category
             const q = query(collection(db, 'products'), where("category", "==", "Arts"), orderBy('name'));
             try {
                 const querySnapshot = await getDocs(q);
@@ -549,7 +572,10 @@
             
             if (searchTerm) {
                 productsSectionTitle.textContent = `Search results for "${searchTerm}"`;
-                filteredProducts = filteredProducts.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+                filteredProducts = filteredProducts.filter(p => 
+                    p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    (p.artist && p.artist.toLowerCase().includes(searchTerm.toLowerCase()))
+                );
             } else {
                 productsSectionTitle.textContent = 'Art Products';
             }
@@ -568,6 +594,7 @@
                         <div class="skeleton-image"></div>
                         <div class="skeleton-details">
                             <div class="skeleton-line skeleton-name"></div>
+                            <div class="skeleton-line skeleton-name small"></div>
                             <div class="skeleton-line skeleton-price"></div>
                             <div class="skeleton-button"></div>
                         </div>
@@ -592,9 +619,13 @@
                     </div>
                     <div class="product-details">
                         <div class="product-name">${product.name}</div>
-                        <div class="product-price-wrapper">
-                            <div class="product-price">₹${product.price.toFixed(2)}</div>
+                        <div class="artist-info">
+                            <strong>Artist:</strong> ${product.artist || 'Unknown'}
                         </div>
+                        <div class="art-info">
+                           ${product.info || ''}
+                        </div>
+                        <div class="product-price">₹${product.price.toFixed(2)}</div>
                         <button class="add-to-cart-btn" data-id="${product.id}">
                             Add to Cart
                         </button>
