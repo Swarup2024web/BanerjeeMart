@@ -52,6 +52,28 @@
             text-align: center;
         }
 
+        .app-header-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+        }
+
+        .art-mart-icon {
+            position: absolute;
+            left: 20px;
+            color: var(--on-primary-color);
+            font-size: 2rem;
+            text-decoration: none;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        
+        .art-mart-icon:hover {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+
         .logo-text {
             font-size: 2rem;
             font-weight: 700;
@@ -428,7 +450,12 @@
 <body>
 
     <header class="header">
-        <div class="logo-text">Banerjee Mart</div>
+        <div class="app-header-row">
+            <a href="artmart.html" class="art-mart-icon">
+                <span class="material-symbols-outlined">palette</span>
+            </a>
+            <div class="logo-text">Banerjee Mart</div>
+        </div>
         <div class="search-bar">
             <span class="material-symbols-outlined">search</span>
             <input type="text" id="search-input" placeholder="Search for products...">
