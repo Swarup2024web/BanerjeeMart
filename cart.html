@@ -504,6 +504,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getFirestore, collection, getDocs, query, where, documentId } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
         
         // Firebase configuration
         const firebaseConfig = {
@@ -517,7 +518,9 @@
         
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        
+        const db = getFirestore(app);
+        const productsCollection = collection(db, 'products');
+
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 window.location.href = 'auth.html';
@@ -555,7 +558,7 @@
             localStorage.setItem('cart', JSON.stringify(cart));
         }
         
-        function renderCart() {
+        async function renderCart() {
             const cart = getCart();
             const cartItemIds = Object.keys(cart);
             cartItemsContainer.innerHTML = '';
@@ -567,46 +570,67 @@
                 updateCartBadge();
                 return;
             }
-        
+
+            // Show loading state
             cartContent.style.display = 'block';
             emptyCartMessage.style.display = 'none';
-            checkoutBtn.disabled = false;
-            
-            let subtotal = 0;
+            cartItemsContainer.innerHTML = '<div style="text-align: center; padding: 20px;">Loading cart...</div>';
+
+            try {
+                // Fetch product details for all items in the cart
+                const productsSnapshot = await getDocs(query(productsCollection, where(documentId(), 'in', cartItemIds)));
+                const productsMap = {};
+                productsSnapshot.forEach(doc => {
+                    productsMap[doc.id] = doc.data();
+                });
+
+                let subtotal = 0;
+                cartItemsContainer.innerHTML = ''; // Clear loading state
+
+                for (const productId of cartItemIds) {
+                    const item = cart[productId];
+                    const productData = productsMap[productId];
+
+                    if (productData) {
+                        const itemTotal = productData.price * item.quantity;
+                        subtotal += itemTotal;
         
-            cartItemIds.forEach(productId => {
-                const item = cart[productId];
-                const itemTotal = item.price * item.quantity;
-                subtotal += itemTotal;
-        
-                const cartItemElement = document.createElement('div');
-                cartItemElement.className = 'cart-item';
-                cartItemElement.dataset.id = productId;
+                        const cartItemElement = document.createElement('div');
+                        cartItemElement.className = 'cart-item';
+                        cartItemElement.dataset.id = productId;
+                        
+                        cartItemElement.innerHTML = `
+                            <img src="${productData.image}" alt="${productData.name}" class="cart-item-image">
+                            <div class="cart-item-details">
+                                <div class="cart-item-name">${productData.name}</div>
+                                <div class="cart-item-price">₹${productData.price.toFixed(2)}</div>
+                                <div class="quantity-controls">
+                                    <button class="decrease-btn" data-id="${productId}">-</button>
+                                    <span class="quantity-value">${item.quantity}</span>
+                                    <button class="increase-btn" data-id="${productId}">+</button>
+                                </div>
+                            </div>
+                            <div class="cart-item-actions">
+                                <span class="cart-item-total">₹${itemTotal.toFixed(2)}</span>
+                                <button class="remove-item-btn" data-id="${productId}">
+                                    <span class="material-symbols-outlined">delete</span>
+                                    Remove
+                                </button>
+                            </div>
+                        `;
+                        cartItemsContainer.appendChild(cartItemElement);
+                    }
+                }
                 
-                cartItemElement.innerHTML = `
-                    <img src="${item.image}" alt="${item.name}" class="cart-item-image">
-                    <div class="cart-item-details">
-                        <div class="cart-item-name">${item.name}</div>
-                        <div class="cart-item-price">₹${item.price.toFixed(2)}</div>
-                        <div class="quantity-controls">
-                            <button class="decrease-btn" data-id="${productId}">-</button>
-                            <span class="quantity-value">${item.quantity}</span>
-                            <button class="increase-btn" data-id="${productId}">+</button>
-                        </div>
-                    </div>
-                    <div class="cart-item-actions">
-                        <span class="cart-item-total">₹${itemTotal.toFixed(2)}</span>
-                        <button class="remove-item-btn" data-id="${productId}">
-                            <span class="material-symbols-outlined">delete</span>
-                            Remove
-                        </button>
-                    </div>
-                `;
-                cartItemsContainer.appendChild(cartItemElement);
-            });
-        
-            updateSummary(subtotal);
-            updateCartBadge();
+                checkoutBtn.disabled = false;
+                updateSummary(subtotal);
+                updateCartBadge();
+
+            } catch (error) {
+                console.error("Error fetching products:", error);
+                cartItemsContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--danger-color);">Failed to load cart items. Please try again.</div>';
+                checkoutBtn.disabled = true;
+            }
         }
         
         function updateSummary(subtotal) {
