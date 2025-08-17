@@ -163,66 +163,59 @@
             word-break: break-word;
         }
 
+        /* Changes for two cards per row */
         .profile-actions {
             width: 100%;
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             margin-top: 12px;
         }
         
-        .action-btn {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: 600;
-            text-align: center;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+        .action-card {
+            background-color: var(--surface-color);
+            border-radius: 12px;
             box-shadow: 0 2px 5px var(--shadow-color-light);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--on-surface-color);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        
-        .action-btn:hover {
+
+        .action-card:hover {
+            transform: translateY(-4px);
             box-shadow: 0 4px 10px var(--shadow-color-dark);
         }
 
-        .edit-profile-btn {
-            background-color: var(--primary-color);
-            color: var(--on-primary-color);
+        .action-card .material-symbols-outlined {
+            font-size: 48px;
+            margin-bottom: 4px;
         }
-        .edit-profile-btn:hover {
-            background-color: var(--primary-variant);
+
+        .action-card-text {
+            font-weight: 600;
+            font-size: 1rem;
         }
         
-        .admin-link {
-            background-color: var(--admin-color);
-            color: var(--on-primary-color);
+        .edit-profile-card .material-symbols-outlined {
+            color: var(--primary-color);
         }
-        .admin-link:hover {
-            background-color: #512da8;
+        .admin-card .material-symbols-outlined {
+            color: var(--admin-color);
         }
-
-        .contact-btn {
-            background-color: #6c757d;
-            color: var(--on-primary-color);
+        .contact-card .material-symbols-outlined {
+            color: #6c757d;
         }
-        .contact-btn:hover {
-            background-color: #5a6268;
+        .work-card .material-symbols-outlined {
+            color: var(--success-color);
         }
-
-        .signout-btn {
-            background-color: var(--danger-color);
-            color: var(--on-primary-color);
-        }
-        .signout-btn:hover {
-            background-color: #c82333;
+        .signout-card .material-symbols-outlined {
+            color: var(--danger-color);
         }
         
         .hidden {
@@ -546,22 +539,26 @@
             </div>
             
             <div class="profile-actions">
-                <button class="action-btn edit-profile-btn" id="edit-profile-btn">
+                <a href="#" class="action-card edit-profile-card" id="edit-profile-card">
                     <span class="material-symbols-outlined">edit</span>
-                    Edit Profile
-                </button>
-                <a href="admin.html" id="admin-panel-link" class="action-btn admin-link hidden">
+                    <span class="action-card-text">Edit Profile</span>
+                </a>
+                <a href="admin.html" id="admin-panel-card" class="action-card admin-card hidden">
                     <span class="material-symbols-outlined">shield</span>
-                    Admin Panel
+                    <span class="action-card-text">Admin Panel</span>
                 </a>
-                <a href="contact.html" id="contact-link" class="action-btn contact-btn">
+                <a href="contact.html" id="contact-card" class="action-card contact-card">
                     <span class="material-symbols-outlined">support_agent</span>
-                    Contact B Mart
+                    <span class="action-card-text">Contact Us</span>
                 </a>
-                <button class="action-btn signout-btn" id="sign-out-btn">
+                <a href="work.html" id="work-with-us-card" class="action-card work-card">
+                    <span class="material-symbols-outlined">work</span>
+                    <span class="action-card-text">Work With Us</span>
+                </a>
+                <a href="#" class="action-card signout-card" id="sign-out-card">
                     <span class="material-symbols-outlined">logout</span>
-                    Sign Out
-                </button>
+                    <span class="action-card-text">Sign Out</span>
+                </a>
             </div>
         </div>
     </main>
@@ -650,9 +647,9 @@
         const phoneNumberElement = document.getElementById('user-phone-number');
         const addressElement = document.getElementById('user-address');
         const adminBadge = document.getElementById('admin-badge');
-        const adminPanelLink = document.getElementById('admin-panel-link');
-        const signOutBtn = document.getElementById('sign-out-btn');
-        const editProfileBtn = document.getElementById('edit-profile-btn');
+        const adminPanelCard = document.getElementById('admin-panel-card');
+        const signOutCard = document.getElementById('sign-out-card');
+        const editProfileCard = document.getElementById('edit-profile-card');
         const editPopupOverlay = document.getElementById('edit-popup-overlay');
         const popupCloseBtn = document.getElementById('popup-close-btn');
         const profileUpdateForm = document.getElementById('profile-update-form');
@@ -721,10 +718,10 @@
                     // Check if the user is an admin
                     if (userData.role === 'admin') {
                         adminBadge.classList.remove('hidden');
-                        adminPanelLink.classList.remove('hidden');
+                        adminPanelCard.classList.remove('hidden');
                     } else {
                         adminBadge.classList.add('hidden');
-                        adminPanelLink.classList.add('hidden');
+                        adminPanelCard.classList.add('hidden');
                     }
                 } else {
                     fullNameElement.textContent = 'User profile not found';
@@ -743,7 +740,8 @@
         }
 
         // Event listeners
-        editProfileBtn.addEventListener('click', () => {
+        editProfileCard.addEventListener('click', (e) => {
+            e.preventDefault();
             editPopupOverlay.style.display = 'flex';
             editPopupOverlay.classList.add('show');
         });
@@ -806,7 +804,8 @@
             }
         });
 
-        signOutBtn.addEventListener('click', async () => {
+        signOutCard.addEventListener('click', async (e) => {
+            e.preventDefault();
             try {
                 await signOut(auth);
                 window.location.href = 'auth.html';
