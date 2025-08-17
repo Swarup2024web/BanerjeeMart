@@ -302,7 +302,9 @@
             width: 100%;
         }
         
-        .loading .profile-content {
+        /* The key change is here: using a single class to control visibility */
+        .loading .profile-content,
+        .loading .profile-actions {
             display: none;
         }
         
@@ -310,9 +312,8 @@
             display: flex;
         }
         
-        .loading .profile-actions {
-            opacity: 0.5; /* Optional: Visually indicate actions are not ready */
-            pointer-events: none;
+        .skeleton-placeholder {
+            display: none; /* Initially hide the skeleton */
         }
 
         @keyframes pulse {
@@ -656,6 +657,7 @@
         const profileCard = document.getElementById('profile-card');
         const profileContent = document.getElementById('profile-content');
         const skeletonPlaceholder = document.getElementById('skeleton-placeholder');
+        const profileActions = document.querySelector('.profile-actions');
 
         const fullNameElement = document.getElementById('user-full-name');
         const emailElement = document.getElementById('user-email');
@@ -707,8 +709,11 @@
         }
 
         async function fetchUserProfile(user) {
-            profileCard.classList.add('loading');
-            
+            // Show skeleton and hide content
+            skeletonPlaceholder.classList.remove('hidden');
+            profileContent.classList.add('hidden');
+            profileActions.classList.add('hidden');
+
             try {
                 const userDocRef = doc(db, 'users', user.uid);
                 const userDoc = await getDoc(userDocRef);
@@ -746,7 +751,10 @@
                 console.error("Error fetching user data:", error);
                 alert("Failed to load profile data. Please try again later.");
             } finally {
-                profileCard.classList.remove('loading');
+                // Hide skeleton and show content
+                skeletonPlaceholder.classList.add('hidden');
+                profileContent.classList.remove('hidden');
+                profileActions.classList.remove('hidden');
             }
         }
 
