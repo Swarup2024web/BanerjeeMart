@@ -178,7 +178,7 @@
         }
 
         .submit-btn {
-            background-color: var(--primary-color);
+            background-color: var(--success-color);
             color: var(--on-primary-color);
             padding: 12px;
             border-radius: 8px;
@@ -197,7 +197,7 @@
         }
 
         .submit-btn:hover {
-            background-color: var(--primary-variant);
+            background-color: #218838;
             box-shadow: 0 4px 10px var(--shadow-color-dark);
         }
 
@@ -322,7 +322,7 @@
         <div class="content-card">
             <h2>Apply Today</h2>
             <p class="intro-text">
-                Fill out the form below and we'll get in touch with you about available positions.
+                Fill out the form below and send us your application directly on WhatsApp!
             </p>
             <form id="application-form" class="contact-form">
                 <div class="form-group">
@@ -347,7 +347,7 @@
                 </div>
                 <button type="submit" class="submit-btn">
                     <span class="material-symbols-outlined">send</span>
-                    Submit Application
+                    Send on WhatsApp
                 </button>
             </form>
         </div>
@@ -376,7 +376,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-        import { getFirestore, addDoc, collection, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         // =========================================================
         // FIREBASE CONFIGURATION
@@ -459,33 +459,27 @@
             updateCartBadge();
         });
 
-        applicationForm.addEventListener('submit', async (e) => {
+        applicationForm.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            const formData = new FormData(applicationForm);
-            const applicationData = {
-                fullName: formData.get('fullName'),
-                email: formData.get('email'),
-                phone: formData.get('phone'),
-                position: formData.get('position'),
-                message: formData.get('message'),
-                submittedAt: new Date()
-            };
+            const fullName = fullNameInput.value;
+            const email = emailInput.value;
+            const phone = phoneInput.value;
+            const position = document.getElementById('position').value;
+            const message = document.getElementById('message').value;
 
-            try {
-                await addDoc(collection(db, 'job_applications'), applicationData);
-                alert('Your application has been submitted successfully! We will contact you soon.');
-                applicationForm.reset();
-                
-                // Re-populate the form with user data after a successful submission
-                const user = auth.currentUser;
-                if(user) {
-                    fetchAndFillUserData(user);
-                }
-            } catch (error) {
-                console.error("Error submitting application:", error);
-                alert('Failed to submit application. Please try again.');
-            }
+            // Construct the message for WhatsApp
+            const whatsappMessage = `*Job Application - B Mart*\n\n` +
+                                    `*Full Name:* ${fullName}\n` +
+                                    `*Email:* ${email}\n` +
+                                    `*Phone:* ${phone}\n` +
+                                    `*Position of Interest:* ${position}\n\n` +
+                                    `*Message:*\n${message}`;
+
+            const phoneNumber = '+916294390641';
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+            
+            window.open(whatsappUrl, '_blank');
         });
 
     </script>
