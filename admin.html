@@ -148,12 +148,21 @@
         /* New Nested Tab Styles */
         .nested-tabs {
             display: flex;
+            gap: 12px;
             background-color: var(--secondary-color);
             border-radius: 8px;
             margin-bottom: 20px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            white-space: nowrap;
+        }
+        .nested-tabs::-webkit-scrollbar {
+            display: none;
         }
         .nested-tabs a {
-            flex: 1;
+            flex-grow: 1;
             text-align: center;
             padding: 12px 16px;
             text-decoration: none;
@@ -977,7 +986,8 @@
             } else if (tabId === 'analyticsTab') {
                 fetchAndDisplayAnalytics();
             } else if (tabId === 'artsTab') {
-                openNestedTab('updateArtTab');
+                // Open the default nested tab (Add Art Product)
+                openNestedTab('addArtTab');
             }
         }
         
@@ -1010,7 +1020,7 @@
         nestedTabLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-                openNestedTab(e.currentTarget.dataset.nested-tab);
+                openNestedTab(e.currentTarget.dataset.nestedTab);
             });
         });
 
