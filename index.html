@@ -501,7 +501,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-        import { getFirestore, collection, getDocs, query, orderBy, where } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         // Firebase configuration
         const firebaseConfig = {
@@ -540,8 +540,8 @@
             cart: {}
         };
         
-        const categories = {
-            "All Products": "widgets",
+        // Maps category names to Material Symbols icons
+        const categoryIcons = {
             "Groceries": "local_grocery_store",
             "Foods": "lunch_dining",
             "Cold drinks": "local_cafe",
@@ -570,16 +570,14 @@
             try {
                 const productsQuery = query(collection(db, 'products'), orderBy('name'));
                 const productsSnapshot = await getDocs(productsQuery);
-                const productsData = productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                state.allProducts = productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-                const artsQuery = query(collection(db, 'arts'), orderBy('name'));
-                const artsSnapshot = await getDocs(artsQuery);
-                const artsData = artsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                
-                state.allProducts = [...productsData, ...artsData];
-                
+                // Sort products alphabetically by name
+                state.allProducts.sort((a, b) => a.name.localeCompare(b.name));
+
                 state.cart = getCart();
                 
+                renderCategories();
                 renderProducts(); // Render actual products
                 updateCartBadge();
             } catch (error) {
@@ -591,15 +589,29 @@
         function renderCategories() {
             categoriesContainer.innerHTML = '';
             
-            for (const categoryName in categories) {
-                const icon = categories[categoryName];
+            // Get unique categories from the fetched products
+            const uniqueCategories = [...new Set(state.allProducts.map(p => p.category))].sort();
+
+            // Add the "All Products" button first
+            const allProductsItem = document.createElement('div');
+            allProductsItem.className = 'category-item active';
+            allProductsItem.onclick = () => {
+                filterProducts();
+                document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
+                allProductsItem.classList.add('active');
+            };
+            allProductsItem.innerHTML = `
+                <span class="material-symbols-outlined category-icon">widgets</span>
+                <span class="category-name">All Products</span>
+            `;
+            categoriesContainer.appendChild(allProductsItem);
+
+            uniqueCategories.forEach(categoryName => {
+                const icon = categoryIcons[categoryName] || 'label'; // Default icon is 'label'
                 const categoryItem = document.createElement('div');
                 categoryItem.className = 'category-item';
-                if (categoryName === "All Products") {
-                    categoryItem.classList.add('active');
-                }
                 categoryItem.onclick = () => {
-                    filterProducts(categoryName === "All Products" ? null : categoryName);
+                    filterProducts(categoryName);
                     document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
                     categoryItem.classList.add('active');
                 };
@@ -608,7 +620,7 @@
                     <span class="category-name">${categoryName}</span>
                 `;
                 categoriesContainer.appendChild(categoryItem);
-            }
+            });
         }
         
         function filterProducts(categoryName = null, searchTerm = '') {
@@ -740,8 +752,7 @@
         });
 
         document.addEventListener('DOMContentLoaded', () => {
-            renderCategories(); // Render categories immediately
-            fetchAllProducts(); // Then fetch products
+            fetchAllProducts();
             updateCartBadge();
         });
     </script>
