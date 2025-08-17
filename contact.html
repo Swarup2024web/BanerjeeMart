@@ -3,34 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B Mart - Contact Us</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+    <title>Banerjee Mart - Contact Us</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
         :root {
-            --primary-color: #f57c00;
-            --on-primary-color: #ffffff;
-            --surface-color: #ffffff;
-            --background-color: #fff8e1;
-            --on-surface-color: #1f1f1f;
-            --on-background-color: #585858;
-            --outline-color: #d1d1d1;
-            --shadow-color-light: rgba(0, 0, 0, 0.08);
+            --primary-color: #2E86DE; /* Modern Sky Blue */
+            --primary-variant: #1B65A3;
+            --secondary-color: #F8B400; /* Sunny yellow for accents */
+            --background-color: #F8F9FA; /* Off-white for clean background */
+            --surface-color: #FFFFFF;
+            --on-primary-color: #FFFFFF;
+            --on-secondary-color: #212121;
+            --on-background-color: #333333;
+            --on-surface-color: #444444;
+            --outline-color: #E0E0E0;
+            --shadow-color-light: rgba(0, 0, 0, 0.05);
             --shadow-color-dark: rgba(0, 0, 0, 0.15);
-            --success-color: #4CAF50;
-            --danger-color: #d32f2f;
+            --success-color: #28A745;
+            --danger-color: #DC3545;
+            --admin-color: #673ab7; /* Indigo for admin */
+            --skeleton-color: #e0e0e0;
         }
 
         * {
             box-sizing: border-box;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            margin: 0;
-            padding: 0;
             background-color: var(--background-color);
             color: var(--on-background-color);
+            line-height: 1.6;
         }
         
         /* Reusable Header */
@@ -39,28 +47,31 @@
             top: 0;
             z-index: 1000;
             background-color: var(--primary-color);
-            padding: 16px 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-shadow: 0 4px 12px var(--shadow-color-dark);
             color: var(--on-primary-color);
             text-align: center;
-            font-size: 24px;
+            font-size: 2rem;
             font-weight: 700;
+            letter-spacing: 1px;
         }
 
         .main-content {
-            padding: 16px;
-            padding-bottom: 70px;
-            min-height: calc(100vh - 130px);
+            padding: 20px;
+            padding-bottom: 90px;
+            min-height: calc(100vh - 110px);
         }
+
         .page-title {
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 1.8rem;
+            font-weight: 600;
             color: var(--on-surface-color);
-            margin: 0 0 24px;
+            margin: 0 0 20px;
+            text-align: center;
         }
 
         /* Contact Card */
-        .contact-card {
+        .content-card {
             background-color: var(--surface-color);
             border-radius: 12px;
             box-shadow: 0 4px 10px var(--shadow-color-light);
@@ -71,7 +82,7 @@
         }
 
         .intro-text {
-            font-size: 16px;
+            font-size: 1rem;
             line-height: 1.5;
             color: var(--on-background-color);
             margin: 0;
@@ -90,7 +101,7 @@
         }
 
         .form-group label {
-            font-size: 14px;
+            font-size: 0.9rem;
             font-weight: 500;
             color: var(--on-surface-color);
             margin-bottom: 8px;
@@ -102,7 +113,8 @@
             padding: 12px;
             border: 1px solid var(--outline-color);
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
             color: var(--on-surface-color);
             transition: border-color 0.2s, box-shadow 0.2s;
         }
@@ -111,7 +123,7 @@
         .form-group textarea:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(245, 124, 0, 0.2);
+            box-shadow: 0 0 0 3px rgba(46, 134, 222, 0.2);
         }
 
         .form-group textarea {
@@ -122,17 +134,23 @@
         .submit-btn {
             width: 100%;
             padding: 12px;
-            background-color: var(--primary-color);
+            background-color: var(--success-color);
             color: var(--on-primary-color);
             border: none;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px var(--shadow-color-light);
         }
         .submit-btn:hover {
-            background-color: #e65100;
+            background-color: #218838;
+            box-shadow: 0 4px 10px var(--shadow-color-dark);
         }
 
         .contact-info-section {
@@ -145,8 +163,8 @@
         
         .contact-info-section h3 {
             margin: 0;
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 1.2rem;
+            font-weight: 600;
             color: var(--on-surface-color);
         }
 
@@ -154,9 +172,14 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 16px;
+            font-size: 1rem;
             color: var(--on-background-color);
-            text-decoration: none; /* Ensure no underline for links */
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .info-item:hover {
+            color: var(--primary-color);
         }
         
         .info-item .material-symbols-outlined {
@@ -170,22 +193,25 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 60px;
+            height: 70px;
             background-color: var(--surface-color);
-            box-shadow: 0 -2px 10px var(--shadow-color-light);
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
             display: flex;
             justify-content: space-around;
             align-items: center;
             z-index: 1000;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
         }
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
             text-decoration: none;
-            color: var(--on-background-color);
+            color: #AAAAAA;
             transition: color 0.2s;
             position: relative;
+            padding: 8px;
         }
         .nav-item.active {
             color: var(--primary-color);
@@ -194,20 +220,24 @@
             color: var(--primary-color);
         }
         .nav-item-icon {
-            font-size: 24px;
+            font-size: 1.8rem;
             margin-bottom: 2px;
+            font-variation-settings: 'FILL' 0;
+        }
+        .nav-item.active .nav-item-icon {
+            font-variation-settings: 'FILL' 1;
         }
         .nav-item-text {
-            font-size: 12px;
+            font-size: 0.75rem;
             font-weight: 500;
         }
         .nav-item .badge {
             position: absolute;
-            top: -2px;
-            right: -8px;
+            top: 4px;
+            right: 8px;
             background-color: var(--danger-color);
             color: var(--on-primary-color);
-            font-size: 10px;
+            font-size: 0.6rem;
             font-weight: 700;
             padding: 2px 6px;
             border-radius: 50%;
@@ -231,8 +261,8 @@
     <main class="main-content">
         <h1 class="page-title">Contact Us</h1>
         
-        <div class="contact-card">
-            <p class="intro-text">Have a question or need assistance? Send us a message on WhatsApp or fill out the form below to email us.</p>
+        <div class="content-card">
+            <p class="intro-text">Have a question or need assistance? Send us a message on WhatsApp or reach out via the contact information below.</p>
 
             <form id="contact-form" class="contact-form">
                 <div class="form-group">
@@ -251,7 +281,10 @@
                     <label for="message">Message</label>
                     <textarea id="message" name="message" required placeholder="Type your message here..."></textarea>
                 </div>
-                <button type="button" class="submit-btn" id="whatsapp-btn">Send on WhatsApp</button>
+                <button type="button" class="submit-btn" id="whatsapp-btn">
+                    <span class="material-symbols-outlined">send</span>
+                    Send on WhatsApp
+                </button>
             </form>
             
             <div class="contact-info-section">
@@ -288,8 +321,7 @@
         </a>
     </nav>
 
-    <script type="module">
-        const contactForm = document.getElementById('contact-form');
+    <script>
         const whatsappBtn = document.getElementById('whatsapp-btn');
         const cartBadge = document.getElementById('cart-badge');
         
