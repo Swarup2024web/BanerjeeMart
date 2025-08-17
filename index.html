@@ -501,7 +501,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, query, orderBy, where } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         // Firebase configuration
         const firebaseConfig = {
@@ -536,11 +536,22 @@
         const toastText = document.getElementById('toast-text');
         
         const state = {
-            products: [],
             allProducts: [],
             cart: {}
         };
         
+        const categories = {
+            "All Products": "widgets",
+            "Groceries": "local_grocery_store",
+            "Foods": "lunch_dining",
+            "Cold drinks": "local_cafe",
+            "Care": "medical_services",
+            "Stationery": "edit_note",
+            "Books": "book",
+            "Dresses": "checkroom",
+            "Arts": "brush"
+        };
+
         function getCart() {
             try {
                 return JSON.parse(localStorage.getItem('cart')) || {};
@@ -554,67 +565,41 @@
             localStorage.setItem('cart', JSON.stringify(cart));
         }
 
-        const categoryIcons = {
-            "Groceries": "local_grocery_store",
-            "Foods": "lunch_dining",
-            "Cold drinks": "local_cafe",
-            "Care": "medical_services",
-            "Stationery": "edit_note",
-            "Books": "book",
-            "Dresses": "checkroom",
-            "Arts": "brush"
-        };
-        
         async function fetchAllProducts() {
-            renderProducts(true);
+            renderProducts(true); // Show skeleton cards
             try {
-                // Fetch products from the main 'products' collection
                 const productsQuery = query(collection(db, 'products'), orderBy('name'));
                 const productsSnapshot = await getDocs(productsQuery);
                 const productsData = productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-                // Fetch products from the 'arts' collection
                 const artsQuery = query(collection(db, 'arts'), orderBy('name'));
                 const artsSnapshot = await getDocs(artsQuery);
                 const artsData = artsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
-                // Merge products from both collections and set state
                 state.allProducts = [...productsData, ...artsData];
-                state.products = [...state.allProducts];
+                
                 state.cart = getCart();
                 
-                renderCategories();
-                renderProducts();
+                renderProducts(); // Render actual products
                 updateCartBadge();
             } catch (error) {
                 console.error("Error fetching products:", error);
-                productsContainer.innerHTML = '<h3 style="text-align: center;">Failed to load products.</h3>';
+                productsContainer.innerHTML = '<h3 style="text-align: center;">Failed to load products. Please check your Firebase connection and security rules.</h3>';
             }
         }
 
         function renderCategories() {
             categoriesContainer.innerHTML = '';
-            const uniqueCategories = [...new Set(state.allProducts.map(p => p.category))];
             
-            const allProductsItem = document.createElement('div');
-            allProductsItem.className = 'category-item active';
-            allProductsItem.onclick = () => {
-                filterProducts();
-                document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
-                allProductsItem.classList.add('active');
-            };
-            allProductsItem.innerHTML = `
-                <span class="material-symbols-outlined category-icon">widgets</span>
-                <span class="category-name">All Products</span>
-            `;
-            categoriesContainer.appendChild(allProductsItem);
-
-            uniqueCategories.forEach(categoryName => {
-                const icon = categoryIcons[categoryName] || 'label';
+            for (const categoryName in categories) {
+                const icon = categories[categoryName];
                 const categoryItem = document.createElement('div');
                 categoryItem.className = 'category-item';
+                if (categoryName === "All Products") {
+                    categoryItem.classList.add('active');
+                }
                 categoryItem.onclick = () => {
-                    filterProducts(categoryName);
+                    filterProducts(categoryName === "All Products" ? null : categoryName);
                     document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
                     categoryItem.classList.add('active');
                 };
@@ -623,7 +608,7 @@
                     <span class="category-name">${categoryName}</span>
                 `;
                 categoriesContainer.appendChild(categoryItem);
-            });
+            }
         }
         
         function filterProducts(categoryName = null, searchTerm = '') {
@@ -641,11 +626,10 @@
                 filteredProducts = filteredProducts.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
             }
 
-            state.products = filteredProducts;
-            renderProducts();
+            renderProducts(false, filteredProducts);
         }
         
-        function renderProducts(isLoading = false) {
+        function renderProducts(isLoading = false, productsToRender = state.allProducts) {
             productsContainer.innerHTML = '';
             if (isLoading) {
                 for (let i = 0; i < 4; i++) {
@@ -664,12 +648,12 @@
                 return;
             }
 
-            if (state.products.length === 0) {
+            if (productsToRender.length === 0) {
                 productsContainer.innerHTML = '<h3 style="text-align: center; color: var(--on-background-color);">No products found.</h3>';
                 return;
             }
 
-            state.products.forEach(product => {
+            productsToRender.forEach(product => {
                 const productCard = document.createElement('div');
                 productCard.className = 'product-card';
                 
@@ -756,7 +740,8 @@
         });
 
         document.addEventListener('DOMContentLoaded', () => {
-            fetchAllProducts();
+            renderCategories(); // Render categories immediately
+            fetchAllProducts(); // Then fetch products
             updateCartBadge();
         });
     </script>
