@@ -478,6 +478,10 @@
             <span class="material-symbols-outlined nav-item-icon">home</span>
             <span class="nav-item-text">Home</span>
         </a>
+        <a href="artmart.html" class="nav-item">
+            <span class="material-symbols-outlined nav-item-icon">palette</span>
+            <span class="nav-item-text">Art Mart</span>
+        </a>
         <a href="cart.html" class="nav-item">
             <span class="material-symbols-outlined nav-item-icon">shopping_cart</span>
             <span class="nav-item-text">Cart</span>
@@ -571,8 +575,8 @@
             try {
                 const querySnapshot = await getDocs(q);
                 state.allProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                
-                // Add an extra line to fetch from the 'arts' collection as well.
+
+                // Fetch products from the 'arts' collection as well
                 const artsQuerySnapshot = await getDocs(collection(db, 'arts'));
                 const artsProducts = artsQuerySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
