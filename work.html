@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B Mart - Work With Us</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        :root {
+            --primary-color: #2E86DE; /* Modern Sky Blue */
+            --primary-variant: #1B65A3;
+            --secondary-color: #F8B400; /* Sunny yellow for accents */
+            --background-color: #F8F9FA; /* Off-white for clean background */
+            --surface-color: #FFFFFF;
+            --on-primary-color: #FFFFFF;
+            --on-secondary-color: #212121;
+            --on-background-color: #333333;
+            --on-surface-color: #444444;
+            --outline-color: #E0E0E0;
+            --shadow-color-light: rgba(0, 0, 0, 0.05);
+            --shadow-color-dark: rgba(0, 0, 0, 0.15);
+            --success-color: #28A745;
+            --danger-color: #DC3545;
+            --admin-color: #673ab7; /* Indigo for admin */
+            --skeleton-color: #e0e0e0;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--on-background-color);
+            line-height: 1.6;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: var(--primary-color);
+            padding: 20px;
+            box-shadow: 0 4px 12px var(--shadow-color-dark);
+            color: var(--on-primary-color);
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .main-content {
+            padding: 20px;
+            padding-bottom: 90px;
+            min-height: calc(100vh - 110px);
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--on-surface-color);
+            margin: 0 0 20px;
+            text-align: center;
+        }
+
+        .content-card {
+            background-color: var(--surface-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px var(--shadow-color-light);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .content-card h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        .intro-text {
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .job-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .job-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background-color: var(--background-color);
+            border-radius: 8px;
+            border: 1px solid var(--outline-color);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .job-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px var(--shadow-color-light);
+        }
+
+        .job-icon {
+            font-size: 32px;
+            color: var(--on-surface-color);
+            flex-shrink: 0;
+        }
+
+        .job-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .job-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .job-description {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* Form Styles */
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--on-surface-color);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--outline-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--on-surface-color);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(46, 134, 222, 0.2);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: var(--on-primary-color);
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px var(--shadow-color-light);
+        }
+
+        .submit-btn:hover {
+            background-color: var(--primary-variant);
+            box-shadow: 0 4px 10px var(--shadow-color-dark);
+        }
+
+        .app-nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background-color: var(--surface-color);
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #AAAAAA;
+            transition: color 0.2s;
+            position: relative;
+            padding: 8px;
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+
+        .nav-item:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-item-icon {
+            font-size: 1.8rem;
+            margin-bottom: 2px;
+            font-variation-settings: 'FILL' 0;
+        }
+        
+        .nav-item.active .nav-item-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+
+        .nav-item-text {
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .nav-item .badge {
+            position: absolute;
+            top: 4px;
+            right: 8px;
+            background-color: var(--danger-color);
+            color: var(--on-primary-color);
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 50%;
+            line-height: 1;
+            min-width: 18px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+        
+        .nav-item .badge.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        B Mart
+    </header>
+
+    <main class="main-content">
+        <h1 class="page-title">Work With Us</h1>
+        
+        <div class="content-card">
+            <h2>Join Our Team!</h2>
+            <p class="intro-text">
+                Looking for a part-time job that fits your schedule? B Mart offers flexible opportunities for students. Join us and gain valuable experience while earning money.
+            </p>
+            <div class="job-list">
+                <div class="job-item">
+                    <span class="material-symbols-outlined job-icon">cycle</span>
+                    <div class="job-details">
+                        <span class="job-title">Delivery Agent</span>
+                        <span class="job-description">Deliver groceries and other goods to our customers.</span>
+                    </div>
+                </div>
+                <div class="job-item">
+                    <span class="material-symbols-outlined job-icon">store</span>
+                    <div class="job-details">
+                        <span class="job-title">Store Manager</span>
+                        <span class="job-description">Assist in managing store operations, inventory, and staff.</span>
+                    </div>
+                </div>
+                <div class="job-item">
+                    <span class="material-symbols-outlined job-icon">paid</span>
+                    <div class="job-details">
+                        <span class="job-title">Accountant Assistant</span>
+                        <span class="job-description">Help with financial record-keeping, transactions, and reports.</span>
+                    </div>
+                </div>
+                <div class="job-item">
+                    <span class="material-symbols-outlined job-icon">package</span>
+                    <div class="job-details">
+                        <span class="job-title">Packaging and Logistics</span>
+                        <span class="job-description">Prepare customer orders for delivery and manage stock.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <h2>Apply Today</h2>
+            <p class="intro-text">
+                Fill out the form below and we'll get in touch with you about available positions.
+            </p>
+            <form id="application-form" class="contact-form">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="position">Position of Interest</label>
+                    <input type="text" id="position" name="position" placeholder="e.g., Delivery Agent" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Your Message / Skills</label>
+                    <textarea id="message" name="message" rows="4" placeholder="Tell us about yourself and why you'd be a great fit!"></textarea>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <span class="material-symbols-outlined">send</span>
+                    Submit Application
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <nav class="app-nav-bar">
+        <a href="index.html" class="nav-item">
+            <span class="material-symbols-outlined nav-item-icon">home</span>
+            <span class="nav-item-text">Home</span>
+        </a>
+        <a href="cart.html" class="nav-item">
+            <span class="material-symbols-outlined nav-item-icon">shopping_cart</span>
+            <span class="nav-item-text">Cart</span>
+            <span id="cart-badge" class="badge">0</span>
+        </a>
+        <a href="orders.html" class="nav-item">
+            <span class="material-symbols-outlined nav-item-icon">receipt_long</span>
+            <span class="nav-item-text">Orders</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <span class="material-symbols-outlined nav-item-icon">person</span>
+            <span class="nav-item-text">Profile</span>
+        </a>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+        // =========================================================
+        // FIREBASE CONFIGURATION
+        // =========================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
+            authDomain: "banerjee-mart.firebaseapp.com",
+            projectId: "banerjee-mart",
+            storageBucket: "banerjee-mart.firebasestorage.app",
+            messagingSenderId: "183628570952",
+            appId: "1:183628570952:web:3028bb258001d004d9537d"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // =========================================================
+        // DOM ELEMENTS & LOGIC
+        // =========================================================
+        const applicationForm = document.getElementById('application-form');
+        const cartBadge = document.getElementById('cart-badge');
+        
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                // Redirect to auth page if no user is signed in
+                window.location.href = 'auth.html';
+            }
+        });
+
+        function getCart() {
+            try {
+                return JSON.parse(localStorage.getItem('cart')) || {};
+            } catch (e) {
+                console.error("Failed to parse cart from localStorage", e);
+                return {};
+            }
+        }
+        
+        function updateCartBadge() {
+            const cart = getCart();
+            const totalItems = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+            cartBadge.textContent = totalItems;
+            if (totalItems > 0) {
+                cartBadge.classList.add('visible');
+            } else {
+                cartBadge.classList.remove('visible');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartBadge();
+        });
+
+        applicationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(applicationForm);
+            const applicationData = {
+                fullName: formData.get('fullName'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                position: formData.get('position'),
+                message: formData.get('message'),
+                submittedAt: new Date()
+            };
+
+            try {
+                await addDoc(collection(db, 'job_applications'), applicationData);
+                alert('Your application has been submitted successfully! We will contact you soon.');
+                applicationForm.reset();
+            } catch (error) {
+                console.error("Error submitting application:", error);
+                alert('Failed to submit application. Please try again.');
+            }
+        });
+
+    </script>
+</body>
+</html>
