@@ -88,6 +88,7 @@
             flex-direction: column;
             align-items: center;
             gap: 8px;
+            width: 100%;
         }
 
         .profile-icon {
@@ -100,6 +101,8 @@
             display: flex;
             flex-direction: column;
             gap: 4px;
+            width: 100%;
+            align-items: center;
         }
         
         .profile-name-and-badge {
@@ -163,17 +166,18 @@
             word-break: break-word;
         }
 
-        /* Changes for two cards per row */
+        /* Improved Profile Actions Grid */
         .profile-actions {
             width: 100%;
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 12px;
             margin-top: 12px;
         }
         
         .action-card {
             background-color: var(--surface-color);
+            border: 1px solid var(--outline-color);
             border-radius: 12px;
             box-shadow: 0 2px 5px var(--shadow-color-light);
             padding: 16px;
@@ -184,17 +188,19 @@
             gap: 8px;
             text-decoration: none;
             color: var(--on-surface-color);
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
         }
 
         .action-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 4px 10px var(--shadow-color-dark);
+            border-color: var(--primary-color);
         }
 
         .action-card .material-symbols-outlined {
             font-size: 48px;
             margin-bottom: 4px;
+            transition: color 0.2s;
         }
 
         .action-card-text {
@@ -222,7 +228,15 @@
             display: none !important;
         }
 
-        /* Skeleton Loading */
+        /* SKELETON LOADING - FIXED STYLING */
+        .skeleton-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
         .skeleton {
             animation: pulse 1.5s infinite ease-in-out;
             background-color: var(--skeleton-color);
@@ -233,12 +247,19 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background-color: var(--skeleton-color);
         }
 
         .skeleton-text {
             height: 1.2rem;
             margin: 4px 0;
+        }
+
+        .skeleton-header-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
         }
 
         .skeleton-name {
@@ -252,15 +273,20 @@
             height: 16px;
         }
 
-        .skeleton-detail {
-            height: 16px;
+        .skeleton-details-section {
+            display: flex;
+            flex-direction: column;
             width: 100%;
+            gap: 12px;
+            border-top: 1px solid var(--outline-color);
+            padding-top: 20px;
         }
 
-        .skeleton-item-wrapper {
+        .skeleton-detail-item {
             display: flex;
             gap: 12px;
             align-items: flex-start;
+            width: 100%;
         }
 
         .skeleton-detail-icon {
@@ -270,34 +296,23 @@
             border-radius: 4px;
             flex-shrink: 0;
         }
-        
-        .loading .profile-icon,
-        .loading .profile-name-and-badge,
-        .loading .profile-email,
-        .loading .detail-item {
-            visibility: hidden;
-        }
 
-        .loading .skeleton-icon,
-        .loading .skeleton-name,
-        .loading .skeleton-email,
-        .loading .skeleton-detail {
-            visibility: visible;
+        .skeleton-detail-text {
+            height: 16px;
+            width: 100%;
+        }
+        
+        .loading .profile-content {
+            display: none;
         }
         
         .loading .skeleton-placeholder {
             display: flex;
-            flex-direction: column;
-            align-items: center;
         }
         
-        .loading .skeleton-details-placeholder {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            gap: 12px;
-            border-top: 1px solid var(--outline-color);
-            padding-top: 20px;
+        .loading .profile-actions {
+            opacity: 0.5; /* Optional: Visually indicate actions are not ready */
+            pointer-events: none;
         }
 
         @keyframes pulse {
@@ -494,22 +509,22 @@
         <h1 class="page-title">My Profile</h1>
         
         <div class="profile-card" id="profile-card">
-            <div id="skeleton-loading" class="skeleton-placeholder">
-                <div class="skeleton skeleton-icon"></div>
-                <div class="profile-info-section">
-                    <div class="profile-name-and-badge">
+            <div id="skeleton-placeholder" class="skeleton-wrapper">
+                <div class="skeleton-header-section">
+                    <div class="skeleton skeleton-icon"></div>
+                    <div class="profile-info-section">
                         <div class="skeleton skeleton-name"></div>
+                        <div class="skeleton skeleton-email"></div>
                     </div>
-                    <div class="skeleton skeleton-email"></div>
                 </div>
-                <div class="skeleton-details-placeholder">
-                    <div class="skeleton-item-wrapper">
+                <div class="skeleton-details-section">
+                    <div class="skeleton-detail-item">
                         <div class="skeleton-detail-icon"></div>
-                        <div class="skeleton skeleton-detail" style="width: 150px;"></div>
+                        <div class="skeleton skeleton-detail-text" style="width: 150px;"></div>
                     </div>
-                    <div class="skeleton-item-wrapper">
+                    <div class="skeleton-detail-item">
                         <div class="skeleton-detail-icon"></div>
-                        <div class="skeleton skeleton-detail" style="width: 250px;"></div>
+                        <div class="skeleton skeleton-detail-text" style="width: 250px;"></div>
                     </div>
                 </div>
             </div>
@@ -640,7 +655,7 @@
         // =========================================================
         const profileCard = document.getElementById('profile-card');
         const profileContent = document.getElementById('profile-content');
-        const skeletonLoading = document.getElementById('skeleton-loading');
+        const skeletonPlaceholder = document.getElementById('skeleton-placeholder');
 
         const fullNameElement = document.getElementById('user-full-name');
         const emailElement = document.getElementById('user-email');
@@ -693,9 +708,7 @@
 
         async function fetchUserProfile(user) {
             profileCard.classList.add('loading');
-            profileContent.classList.add('hidden');
-            skeletonLoading.classList.remove('hidden');
-
+            
             try {
                 const userDocRef = doc(db, 'users', user.uid);
                 const userDoc = await getDoc(userDocRef);
@@ -734,8 +747,6 @@
                 alert("Failed to load profile data. Please try again later.");
             } finally {
                 profileCard.classList.remove('loading');
-                profileContent.classList.remove('hidden');
-                skeletonLoading.classList.add('hidden');
             }
         }
 
