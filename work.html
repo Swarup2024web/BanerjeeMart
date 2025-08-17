@@ -376,7 +376,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-        import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, addDoc, collection, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         // =========================================================
         // FIREBASE CONFIGURATION
@@ -399,14 +399,42 @@
         // =========================================================
         const applicationForm = document.getElementById('application-form');
         const cartBadge = document.getElementById('cart-badge');
+        const fullNameInput = document.getElementById('fullName');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
         
         onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                // Redirect to auth page if no user is signed in
+            if (user) {
+                fetchAndFillUserData(user);
+                updateCartBadge();
+            } else {
                 window.location.href = 'auth.html';
             }
         });
 
+        async function fetchAndFillUserData(user) {
+            try {
+                const userDocRef = doc(db, 'users', user.uid);
+                const userDoc = await getDoc(userDocRef);
+
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    
+                    // Fill the form fields with data from Firestore
+                    fullNameInput.value = userData.fullName || '';
+                    emailInput.value = user.email || '';
+                    phoneInput.value = userData.phoneNumber || '';
+                } else {
+                    // User document doesn't exist, fill with only email
+                    emailInput.value = user.email || '';
+                }
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+                // Continue without pre-filling if there's an error
+                emailInput.value = user.email || '';
+            }
+        }
+        
         function getCart() {
             try {
                 return JSON.parse(localStorage.getItem('cart')) || {};
@@ -448,6 +476,12 @@
                 await addDoc(collection(db, 'job_applications'), applicationData);
                 alert('Your application has been submitted successfully! We will contact you soon.');
                 applicationForm.reset();
+                
+                // Re-populate the form with user data after a successful submission
+                const user = auth.currentUser;
+                if(user) {
+                    fetchAndFillUserData(user);
+                }
             } catch (error) {
                 console.error("Error submitting application:", error);
                 alert('Failed to submit application. Please try again.');
