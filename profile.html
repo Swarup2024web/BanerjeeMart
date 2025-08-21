@@ -9,29 +9,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
-        /* Facebook-inspired Color Palette */
         :root {
-            --primary-color: #1877F2; /* Facebook Blue */
-            --primary-variant: #115293;
-            --secondary-color: #42B72A; /* Messenger Green */
-            --background-color: #F0F2F5; /* Light Gray Background */
+            --primary-color: #2E86DE; /* Modern Sky Blue */
+            --primary-variant: #1B65A3;
+            --secondary-color: #F8B400; /* Sunny yellow for accents */
+            --background-color: #F8F9FA; /* Off-white for clean background */
             --surface-color: #FFFFFF;
             --on-primary-color: #FFFFFF;
-            --on-secondary-color: #FFFFFF;
-            --on-background-color: #050505;
-            --on-surface-color: #65676B;
-            --on-surface-variant: #222222;
-            --outline-color: #DADDE1;
+            --on-secondary-color: #212121;
+            --on-background-color: #333333;
+            --on-surface-color: #444444;
+            --outline-color: #E0E0E0;
             --shadow-color-light: rgba(0, 0, 0, 0.05);
             --shadow-color-dark: rgba(0, 0, 0, 0.15);
-            --success-color: #42B72A;
-            --danger-color: #E74C3C;
-            --admin-color: #8E44AD;
-            --skeleton-color: #E0E0E0;
-            --font-color-primary: #050505;
-            --font-color-secondary: #65676B;
+            --success-color: #28A745;
+            --danger-color: #DC3545;
+            --admin-color: #673ab7; /* Indigo for admin */
+            --skeleton-color: #e0e0e0;
         }
-
+        
         * {
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
@@ -41,87 +37,93 @@
 
         body {
             background-color: var(--background-color);
-            color: var(--font-color-primary);
+            color: var(--on-background-color);
             line-height: 1.6;
+        }
+        
+        /* Reusable Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: var(--primary-color);
+            padding: 20px;
+            box-shadow: 0 4px 12px var(--shadow-color-dark);
+            color: var(--on-primary-color);
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
         }
 
         .main-content {
+            padding: 20px;
             padding-bottom: 90px;
-        }
-
-        /* Profile Container with Cover Photo */
-        .profile-container {
-            width: 100%;
-            background-color: var(--surface-color);
-            box-shadow: 0 1px 2px var(--shadow-color-light);
-            margin: 0 auto;
+            min-height: calc(100vh - 110px);
         }
         
-        .profile-header-area {
-            position: relative;
-            padding-bottom: 24px;
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--on-surface-color);
+            margin: 0 0 20px;
         }
 
-        .cover-photo {
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(to top right, var(--primary-color), var(--primary-variant));
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
-        }
-
-        .profile-pic-area {
+        /* Profile Card */
+        .profile-card {
+            background-color: var(--surface-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px var(--shadow-color-light);
+            padding: 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            position: absolute;
-            bottom: -50px;
-            left: 50%;
-            transform: translateX(-50%);
+            text-align: center;
+            gap: 20px;
+            position: relative;
+        }
+
+        .profile-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
             width: 100%;
         }
 
-        .profile-pic-wrapper {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background-color: var(--surface-color);
-            padding: 5px;
-            box-shadow: 0 2px 4px var(--shadow-color-dark);
-        }
-
-        .profile-pic {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
+        .profile-icon {
+            font-size: 80px;
             color: var(--primary-color);
-            font-size: 110px;
             font-variation-settings: 'FILL' 1;
         }
 
-        .user-info-section {
-            text-align: center;
-            margin-top: 60px;
-            padding: 0 20px;
+        .profile-info-section {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            width: 100%;
+            align-items: center;
         }
-
+        
         .profile-name-and-badge {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            margin-bottom: 4px;
         }
 
         .profile-name {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 600;
-            color: var(--on-background-color);
+            color: var(--on-surface-color);
+            margin: 0;
+            line-height: 1.2;
         }
 
         .profile-email {
             font-size: 1rem;
-            color: var(--font-color-secondary);
+            color: #888888;
+            margin: 0;
             font-weight: 400;
         }
 
@@ -135,30 +137,22 @@
             text-transform: uppercase;
         }
 
-        /* Main Content Section */
-        .profile-details-card {
-            background-color: var(--surface-color);
-            padding: 24px;
-            border-radius: 8px;
-            box-shadow: 0 1px 2px var(--shadow-color-light);
-            margin: 20px;
+        .profile-details-section {
+            width: 100%;
+            border-top: 1px solid var(--outline-color);
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
             text-align: left;
-        }
-
-        .card-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--font-color-primary);
-            margin-bottom: 16px;
         }
         
         .detail-item {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 12px;
             font-size: 1rem;
-            color: var(--font-color-primary);
-            margin-bottom: 12px;
+            color: var(--on-background-color);
         }
         
         .detail-item .material-symbols-outlined {
@@ -169,68 +163,78 @@
         }
         
         .detail-text {
-            color: var(--font-color-secondary);
+            word-break: break-word;
         }
 
-        /* Action Buttons */
+        /* Improved Profile Actions Grid */
         .profile-actions {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .action-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--outline-color);
+            border-radius: 12px;
+            box-shadow: 0 2px 5px var(--shadow-color-light);
+            padding: 16px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin: 20px;
-        }
-        
-        .action-btn {
-            background-color: var(--primary-color);
-            color: var(--on-primary-color);
-            border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-            display: flex;
             align-items: center;
-            justify-content: center;
+            text-align: center;
             gap: 8px;
-            transition: background-color 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            color: var(--on-surface-color);
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
         }
 
-        .action-btn.secondary {
-            background-color: #E4E6EB;
-            color: var(--font-color-primary);
+        .action-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 10px var(--shadow-color-dark);
+            border-color: var(--primary-color);
+        }
+
+        .action-card .material-symbols-outlined {
+            font-size: 48px;
+            margin-bottom: 4px;
+            transition: color 0.2s;
+        }
+
+        .action-card-text {
+            font-weight: 600;
+            font-size: 1rem;
         }
         
-        .action-btn.sign-out-btn {
-            background-color: var(--danger-color);
+        .edit-profile-card .material-symbols-outlined {
+            color: var(--primary-color);
         }
-
-        .action-btn:hover {
-            background-color: var(--primary-variant);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        .admin-card .material-symbols-outlined {
+            color: var(--admin-color);
+        }
+        .contact-card .material-symbols-outlined {
+            color: #6c757d;
+        }
+        .work-card .material-symbols-outlined {
+            color: var(--success-color);
+        }
+        .signout-card .material-symbols-outlined {
+            color: var(--danger-color);
         }
         
-        .action-btn.secondary:hover {
-            background-color: #D8DAE0;
-        }
-
-        .action-btn.sign-out-btn:hover {
-            background-color: #C0392B;
-        }
-
-        .action-btn .material-symbols-outlined {
-            font-size: 20px;
-        }
-
         .hidden {
             display: none !important;
         }
 
-        /* SKELETON LOADING */
+        /* SKELETON LOADING - FIXED STYLING */
         .skeleton-wrapper {
             width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
         }
 
         .skeleton {
@@ -238,58 +242,51 @@
             background-color: var(--skeleton-color);
             border-radius: 4px;
         }
-        
-        .skeleton-cover {
-            width: 100%;
-            height: 200px;
-            background-color: var(--skeleton-color);
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
-        }
 
-        .skeleton-profile-pic {
-            width: 120px;
-            height: 120px;
+        .skeleton-icon {
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
-            position: absolute;
-            bottom: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #f0f0f0;
-            border: 5px solid white;
         }
 
-        .skeleton-user-info {
-            text-align: center;
-            margin-top: 60px;
-            padding: 0 20px;
+        .skeleton-text {
+            height: 1.2rem;
+            margin: 4px 0;
+        }
+
+        .skeleton-header-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
         }
 
         .skeleton-name {
-            width: 180px;
-            height: 28px;
-            margin: 0 auto 8px;
+            width: 150px;
+            height: 24px;
+            margin-bottom: 4px;
         }
         
         .skeleton-email {
-            width: 250px;
-            height: 18px;
-            margin: 0 auto;
+            width: 200px;
+            height: 16px;
         }
 
-        .skeleton-details-card {
-            background-color: var(--surface-color);
-            padding: 24px;
-            border-radius: 8px;
-            box-shadow: 0 1px 2px var(--shadow-color-light);
-            margin: 20px;
+        .skeleton-details-section {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 12px;
+            border-top: 1px solid var(--outline-color);
+            padding-top: 20px;
         }
 
         .skeleton-detail-item {
             display: flex;
             gap: 12px;
-            align-items: center;
-            margin-bottom: 12px;
+            align-items: flex-start;
+            width: 100%;
         }
 
         .skeleton-detail-icon {
@@ -305,26 +302,27 @@
             width: 100%;
         }
         
+        /* The key change is here: using a single class to control visibility */
         .loading .profile-content,
         .loading .profile-actions {
             display: none;
         }
         
         .loading .skeleton-placeholder {
-            display: block;
+            display: flex;
         }
         
         .skeleton-placeholder {
-            display: none;
+            display: none; /* Initially hide the skeleton */
         }
 
         @keyframes pulse {
-            0% { background-color: #E0E0E0; }
+            0% { background-color: var(--skeleton-color); }
             50% { background-color: #cccccc; }
-            100% { background-color: #E0E0E0; }
+            100% { background-color: var(--skeleton-color); }
         }
 
-        /* Pop-up Styles (unchanged from previous version) */
+        /* Pop-up Styles */
         .popup-overlay {
             position: fixed;
             top: 0;
@@ -377,7 +375,7 @@
             margin: 0 0 16px;
             font-size: 1.2rem;
             font-weight: 600;
-            color: var(--on-surface-variant);
+            color: var(--on-surface-color);
             text-align: center;
         }
         
@@ -390,7 +388,7 @@
         .edit-form-group label {
             font-size: 0.9rem;
             font-weight: 500;
-            color: var(--on-surface-variant);
+            color: var(--on-surface-color);
             margin-bottom: 8px;
         }
 
@@ -401,7 +399,7 @@
             border: 1px solid var(--outline-color);
             border-radius: 8px;
             font-size: 1rem;
-            color: var(--font-color-primary);
+            color: var(--on-surface-color);
             transition: border-color 0.2s, box-shadow 0.2s;
             font-family: 'Poppins', sans-serif;
             background-color: var(--background-color);
@@ -411,7 +409,7 @@
         .edit-form-group textarea:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(24, 119, 242, 0.2);
+            box-shadow: 0 0 0 3px rgba(46, 134, 222, 0.2);
         }
 
         .save-btn {
@@ -419,13 +417,17 @@
             color: var(--on-primary-color);
             margin-top: 8px;
         }
+        
+        .save-btn:hover {
+            background-color: var(--primary-variant);
+        }
 
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
 
-        /* Nav Bar (unchanged from previous version) */
+        /* Reusable Nav Bar */
         .app-nav-bar {
             position: fixed;
             bottom: 0;
@@ -500,17 +502,23 @@
 </head>
 <body>
 
+    <header class="header">
+        Banerjee Mart
+    </header>
+
     <main class="main-content">
+        <h1 class="page-title">My Profile</h1>
         
-        <div class="profile-container" id="profile-container">
+        <div class="profile-card" id="profile-card">
             <div id="skeleton-placeholder" class="skeleton-wrapper">
-                <div class="skeleton-cover"></div>
-                <div class="skeleton-profile-pic"></div>
-                <div class="skeleton-user-info">
-                    <div class="skeleton skeleton-name"></div>
-                    <div class="skeleton skeleton-email"></div>
+                <div class="skeleton-header-section">
+                    <div class="skeleton skeleton-icon"></div>
+                    <div class="profile-info-section">
+                        <div class="skeleton skeleton-name"></div>
+                        <div class="skeleton skeleton-email"></div>
+                    </div>
                 </div>
-                <div class="skeleton-details-card">
+                <div class="skeleton-details-section">
                     <div class="skeleton-detail-item">
                         <div class="skeleton-detail-icon"></div>
                         <div class="skeleton skeleton-detail-text" style="width: 150px;"></div>
@@ -523,24 +531,18 @@
             </div>
 
             <div id="profile-content" class="hidden">
-                <div class="profile-header-area">
-                    <div class="cover-photo"></div>
-                    <div class="profile-pic-area">
-                        <div class="profile-pic-wrapper">
-                            <span class="material-symbols-outlined profile-pic">account_circle</span>
+                <div class="profile-header">
+                    <span class="material-symbols-outlined profile-icon">account_circle</span>
+                    <div class="profile-info-section">
+                        <div class="profile-name-and-badge">
+                            <span class="profile-name" id="user-full-name"></span>
+                            <span id="admin-badge" class="admin-badge hidden">Admin</span>
                         </div>
-                        <div class="user-info-section">
-                            <div class="profile-name-and-badge">
-                                <span class="profile-name" id="user-full-name"></span>
-                                <span id="admin-badge" class="admin-badge hidden">Admin</span>
-                            </div>
-                            <p class="profile-email" id="user-email"></p>
-                        </div>
+                        <p class="profile-email" id="user-email"></p>
                     </div>
                 </div>
 
-                <div class="profile-details-card">
-                    <h2 class="card-title">My Info</h2>
+                <div class="profile-details-section">
                     <div class="detail-item">
                         <span class="material-symbols-outlined">call</span>
                         <span id="user-phone-number" class="detail-text"></span>
@@ -553,25 +555,25 @@
             </div>
             
             <div class="profile-actions">
-                <a href="#" class="action-btn" id="edit-profile-btn">
+                <a href="#" class="action-card edit-profile-card" id="edit-profile-card">
                     <span class="material-symbols-outlined">edit</span>
-                    Edit Profile
+                    <span class="action-card-text">Edit Profile</span>
                 </a>
-                <a href="admin.html" id="admin-panel-btn" class="action-btn secondary hidden">
+                <a href="admin.html" id="admin-panel-card" class="action-card admin-card hidden">
                     <span class="material-symbols-outlined">shield</span>
-                    Admin Panel
+                    <span class="action-card-text">Admin Panel</span>
                 </a>
-                <a href="contact.html" id="contact-btn" class="action-btn secondary">
+                <a href="contact.html" id="contact-card" class="action-card contact-card">
                     <span class="material-symbols-outlined">support_agent</span>
-                    Contact Us
+                    <span class="action-card-text">Contact Us</span>
                 </a>
-                <a href="work.html" id="work-with-us-btn" class="action-btn secondary">
+                <a href="work.html" id="work-with-us-card" class="action-card work-card">
                     <span class="material-symbols-outlined">work</span>
-                    Work With Us
+                    <span class="action-card-text">Work With Us</span>
                 </a>
-                <a href="#" class="action-btn sign-out-btn" id="sign-out-btn">
+                <a href="#" class="action-card signout-card" id="sign-out-card">
                     <span class="material-symbols-outlined">logout</span>
-                    Sign Out
+                    <span class="action-card-text">Sign Out</span>
                 </a>
             </div>
         </div>
@@ -652,7 +654,7 @@
         // =========================================================
         // DOM ELEMENTS & LOGIC
         // =========================================================
-        const profileContainer = document.getElementById('profile-container');
+        const profileCard = document.getElementById('profile-card');
         const profileContent = document.getElementById('profile-content');
         const skeletonPlaceholder = document.getElementById('skeleton-placeholder');
         const profileActions = document.querySelector('.profile-actions');
@@ -662,9 +664,9 @@
         const phoneNumberElement = document.getElementById('user-phone-number');
         const addressElement = document.getElementById('user-address');
         const adminBadge = document.getElementById('admin-badge');
-        const adminPanelBtn = document.getElementById('admin-panel-btn');
-        const signOutBtn = document.getElementById('sign-out-btn');
-        const editProfileBtn = document.getElementById('edit-profile-btn');
+        const adminPanelCard = document.getElementById('admin-panel-card');
+        const signOutCard = document.getElementById('sign-out-card');
+        const editProfileCard = document.getElementById('edit-profile-card');
         const editPopupOverlay = document.getElementById('edit-popup-overlay');
         const popupCloseBtn = document.getElementById('popup-close-btn');
         const profileUpdateForm = document.getElementById('profile-update-form');
@@ -707,7 +709,10 @@
         }
 
         async function fetchUserProfile(user) {
-            profileContainer.classList.add('loading');
+            // Show skeleton and hide content
+            skeletonPlaceholder.classList.remove('hidden');
+            profileContent.classList.add('hidden');
+            profileActions.classList.add('hidden');
 
             try {
                 const userDocRef = doc(db, 'users', user.uid);
@@ -716,22 +721,25 @@
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
                     
+                    // Display user data
                     fullNameElement.textContent = userData.fullName || 'User';
                     emailElement.textContent = user.email || 'No email provided';
                     phoneNumberElement.textContent = userData.phoneNumber || 'N/A';
                     addressElement.textContent = userData.address || 'N/A';
 
+                    // Populate pop-up form fields
                     fullNameInput.value = userData.fullName || '';
                     emailInput.value = user.email || '';
                     phoneNumberInput.value = userData.phoneNumber || '';
                     addressInput.value = userData.address || '';
 
+                    // Check if the user is an admin
                     if (userData.role === 'admin') {
                         adminBadge.classList.remove('hidden');
-                        adminPanelBtn.classList.remove('hidden');
+                        adminPanelCard.classList.remove('hidden');
                     } else {
                         adminBadge.classList.add('hidden');
-                        adminPanelBtn.classList.add('hidden');
+                        adminPanelCard.classList.add('hidden');
                     }
                 } else {
                     fullNameElement.textContent = 'User profile not found';
@@ -743,13 +751,15 @@
                 console.error("Error fetching user data:", error);
                 alert("Failed to load profile data. Please try again later.");
             } finally {
-                profileContainer.classList.remove('loading');
+                // Hide skeleton and show content
+                skeletonPlaceholder.classList.add('hidden');
                 profileContent.classList.remove('hidden');
                 profileActions.classList.remove('hidden');
             }
         }
 
-        editProfileBtn.addEventListener('click', (e) => {
+        // Event listeners
+        editProfileCard.addEventListener('click', (e) => {
             e.preventDefault();
             editPopupOverlay.style.display = 'flex';
             editPopupOverlay.classList.add('show');
@@ -800,6 +810,7 @@
                 }, 300);
             } catch (error) {
                 console.error("Error updating profile:", error);
+                // Handle specific Firebase errors
                 let errorMessage = "Failed to update profile. Please try again.";
                 if (error.code === 'auth/requires-recent-login') {
                     errorMessage = "Please sign in again to update your email. For your security, this action requires a recent login.";
@@ -812,7 +823,7 @@
             }
         });
 
-        signOutBtn.addEventListener('click', async (e) => {
+        signOutCard.addEventListener('click', async (e) => {
             e.preventDefault();
             try {
                 await signOut(auth);
@@ -824,4 +835,4 @@
         });
     </script>
 </body>
-</html>
+    </html>
