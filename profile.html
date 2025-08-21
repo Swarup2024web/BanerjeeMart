@@ -20,9 +20,10 @@
             --on-background-color: #333333;
             --on-surface-color: #444444;
             --outline-color: #E0E0E0;
-            --shadow-color-light: rgba(0, 0, 0, 0.05);
-            --shadow-color-dark: rgba(0, 0, 0, 0.15);
-            --success-color: #28A745;
+            /* UPGRADE: Stronger shadows for elevation */
+            --shadow-color-1: rgba(0, 0, 0, 0.08); /* Lighter shadow for basic cards */
+            --shadow-color-2: rgba(0, 0, 0, 0.15); /* Stronger shadow for hover/active */
+            --success-color: #28A745; /* UPGRADE: Green for success/ratings */
             --danger-color: #DC3545;
             --admin-color: #673ab7; /* Indigo for admin */
             --skeleton-color: #e0e0e0;
@@ -48,7 +49,7 @@
             z-index: 1000;
             background-color: var(--primary-color);
             padding: 20px;
-            box-shadow: 0 4px 12px var(--shadow-color-dark);
+            box-shadow: 0 4px 12px var(--shadow-color-2);
             color: var(--on-primary-color);
             text-align: center;
             font-size: 2rem;
@@ -69,11 +70,12 @@
             margin: 0 0 20px;
         }
 
-        /* Profile Card - Keeping this as is, but it's not in the new design */
+        /* Profile Card */
         .profile-card {
             background-color: var(--surface-color);
             border-radius: 12px;
-            box-shadow: 0 4px 10px var(--shadow-color-light);
+            /* UPGRADE: Use stronger shadow for better elevation */
+            box-shadow: 0 4px 10px var(--shadow-color-1);
             padding: 24px;
             display: flex;
             flex-direction: column;
@@ -83,86 +85,154 @@
             position: relative;
         }
 
-        /* NEW STYLES FOR THE CARDS */
-        .action-card-list {
+        .profile-header {
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            padding: 20px;
-        }
-        
-        .action-card {
-            background-color: var(--surface-color);
-            border-radius: 12px;
-            box-shadow: 0 2px 5px var(--shadow-color-light);
-            padding: 20px;
-            display: flex;
             align-items: center;
-            justify-content: flex-start;
-            gap: 16px;
-            text-decoration: none;
-            color: var(--on-surface-color);
+            gap: 8px;
+            width: 100%;
         }
 
-        .action-card:hover {
-            box-shadow: 0 4px 10px var(--shadow-color-dark);
+        .profile-icon {
+            font-size: 80px;
+            color: var(--primary-color);
+            font-variation-settings: 'FILL' 1;
         }
 
-        .action-card-content {
+        .profile-info-section {
             display: flex;
+            flex-direction: column;
+            gap: 4px;
+            width: 100%;
             align-items: center;
-            gap: 16px;
-        }
-
-        .action-card-icon {
-            font-size: 28px;
-            color: var(--success-color); /* Fallback color */
         }
         
-        .action-card-text {
-            font-weight: 500;
-            font-size: 1.1rem;
-            color: var(--on-surface-color);
-            margin: 0;
-        }
-        
-        .action-card-description {
-            font-size: 0.9rem;
-            color: #888888;
-            margin: 0;
-        }
-
-        .sign-out-btn {
+        .profile-name-and-badge {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            width: 100%;
-            padding: 16px;
-            background-color: transparent;
-            color: var(--danger-color);
-            border: 1px solid var(--danger-color);
-            border-radius: 12px;
-            font-size: 1.1rem;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
             font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s, color 0.2s;
+            color: var(--on-surface-color);
+            margin: 0;
+            line-height: 1.2;
         }
 
-        .sign-out-btn:hover {
-            background-color: var(--danger-color);
+        .profile-email {
+            font-size: 1rem;
+            color: #888888;
+            margin: 0;
+            font-weight: 400;
+        }
+
+        .admin-badge {
+            background-color: var(--admin-color);
             color: var(--on-primary-color);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
         }
 
-        .sign-out-btn .material-symbols-outlined {
+        .profile-details-section {
+            width: 100%;
+            border-top: 1px solid var(--outline-color);
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            text-align: left;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 1rem;
+            color: var(--on-background-color);
+        }
+        
+        .detail-item .material-symbols-outlined {
             font-size: 24px;
+            color: var(--primary-color);
+            flex-shrink: 0;
+            font-variation-settings: 'FILL' 0;
+        }
+        
+        .detail-text {
+            word-break: break-word;
         }
 
+        /* Improved Profile Actions Grid */
+        .profile-actions {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .action-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--outline-color);
+            border-radius: 12px;
+            /* UPGRADE: Use lighter shadow for base state */
+            box-shadow: 0 2px 5px var(--shadow-color-1);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--on-surface-color);
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+
+        .action-card:hover {
+            transform: translateY(-4px);
+            /* UPGRADE: Use a stronger shadow on hover */
+            box-shadow: 0 4px 10px var(--shadow-color-2);
+            border-color: var(--primary-color);
+        }
+
+        .action-card .material-symbols-outlined {
+            font-size: 48px;
+            margin-bottom: 4px;
+            transition: color 0.2s;
+        }
+
+        .action-card-text {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .edit-profile-card .material-symbols-outlined {
+            color: var(--primary-color);
+        }
+        .admin-card .material-symbols-outlined {
+            color: var(--admin-color);
+        }
+        .contact-card .material-symbols-outlined {
+            color: #6c757d; /* UPGRADE: Keeping this grey for neutral/utility action */
+        }
+        .work-card .material-symbols-outlined {
+            color: var(--success-color);
+        }
+        .signout-card .material-symbols-outlined {
+            color: var(--danger-color);
+        }
+        
         .hidden {
             display: none !important;
         }
 
-        /* Rest of the original CSS (skeleton, pop-up, nav bar) remains unchanged */
+        /* SKELETON LOADING - FIXED STYLING */
         .skeleton-wrapper {
             width: 100%;
             display: flex;
@@ -236,6 +306,7 @@
             width: 100%;
         }
         
+        /* The key change is here: using a single class to control visibility */
         .loading .profile-content,
         .loading .profile-actions {
             display: none;
@@ -246,7 +317,7 @@
         }
         
         .skeleton-placeholder {
-            display: none;
+            display: none; /* Initially hide the skeleton */
         }
 
         @keyframes pulse {
@@ -255,6 +326,7 @@
             100% { background-color: var(--skeleton-color); }
         }
 
+        /* Pop-up Styles */
         .popup-overlay {
             position: fixed;
             top: 0;
@@ -359,6 +431,7 @@
             to { opacity: 1; }
         }
 
+        /* Reusable Nav Bar */
         .app-nav-bar {
             position: fixed;
             bottom: 0;
@@ -441,66 +514,329 @@
         <h1 class="page-title">My Profile</h1>
         
         <div class="profile-card" id="profile-card">
+            <div id="skeleton-placeholder" class="skeleton-wrapper">
+                <div class="skeleton-header-section">
+                    <div class="skeleton skeleton-icon"></div>
+                    <div class="profile-info-section">
+                        <div class="skeleton skeleton-name"></div>
+                        <div class="skeleton skeleton-email"></div>
+                    </div>
+                </div>
+                <div class="skeleton-details-section">
+                    <div class="skeleton-detail-item">
+                        <div class="skeleton-detail-icon"></div>
+                        <div class="skeleton skeleton-detail-text" style="width: 150px;"></div>
+                    </div>
+                    <div class="skeleton-detail-item">
+                        <div class="skeleton-detail-icon"></div>
+                        <div class="skeleton skeleton-detail-text" style="width: 250px;"></div>
+                    </div>
+                </div>
             </div>
 
-        <div class="action-card-list">
-            <a href="#" class="action-card">
-                <div class="action-card-content">
-                    <span class="material-symbols-outlined action-card-icon" style="color: #4CAF50;">favorite</span>
-                    <div>
-                        <p class="action-card-text">Wishlist</p>
-                        <p class="action-card-description">Your saved items</p>
+            <div id="profile-content" class="hidden">
+                <div class="profile-header">
+                    <span class="material-symbols-outlined profile-icon">account_circle</span>
+                    <div class="profile-info-section">
+                        <div class="profile-name-and-badge">
+                            <span class="profile-name" id="user-full-name"></span>
+                            <span id="admin-badge" class="admin-badge hidden">Admin</span>
+                        </div>
+                        <p class="profile-email" id="user-email"></p>
                     </div>
                 </div>
-            </a>
+
+                <div class="profile-details-section">
+                    <div class="detail-item">
+                        <span class="material-symbols-outlined">call</span>
+                        <span id="user-phone-number" class="detail-text"></span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="material-symbols-outlined">home</span>
+                        <span id="user-address" class="detail-text"></span>
+                    </div>
+                </div>
+            </div>
             
-            <a href="#" class="action-card">
-                <div class="action-card-content">
-                    <span class="material-symbols-outlined action-card-icon" style="color: #FFC107;">history</span>
-                    <div>
-                        <p class="action-card-text">Recently Viewed</p>
-                        <p class="action-card-description">Products you viewed</p>
-                    </div>
-                </div>
-            </a>
-
-            <a href="#" class="action-card">
-                <div class="action-card-content">
-                    <span class="material-symbols-outlined action-card-icon" style="color: #607D8B;">settings</span>
-                    <div>
-                        <p class="action-card-text">Settings</p>
-                        <p class="action-card-description">Account preferences</p>
-                    </div>
-                </div>
-            </a>
-
-            <a href="#" class="action-card">
-                <div class="action-card-content">
-                    <span class="material-symbols-outlined action-card-icon" style="color: #2196F3;">location_on</span>
-                    <div>
-                        <p class="action-card-text">Delivery Address</p>
-                        <p class="action-card-description">Manage your addresses</p>
-                    </div>
-                </div>
-            </a>
-
-            <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 16px 0;">
-
-            <button class="sign-out-btn" id="sign-out-card">
-                <span class="material-symbols-outlined">logout</span>
-                Sign Out
-            </button>
+            <div class="profile-actions">
+                <a href="#" class="action-card edit-profile-card" id="edit-profile-card">
+                    <span class="material-symbols-outlined">edit</span>
+                    <span class="action-card-text">Edit Profile</span>
+                </a>
+                <a href="admin.html" id="admin-panel-card" class="action-card admin-card hidden">
+                    <span class="material-symbols-outlined">shield</span>
+                    <span class="action-card-text">Admin Panel</span>
+                </a>
+                <a href="contact.html" id="contact-card" class="action-card contact-card">
+                    <span class="material-symbols-outlined">support_agent</span>
+                    <span class="action-card-text">Contact Us</span>
+                </a>
+                <a href="work.html" id="work-with-us-card" class="action-card work-card">
+                    <span class="material-symbols-outlined">work</span>
+                    <span class="action-card-text">Work With Us</span>
+                </a>
+                <a href="#" class="action-card signout-card" id="sign-out-card">
+                    <span class="material-symbols-outlined">logout</span>
+                    <span class="action-card-text">Sign Out</span>
+                </a>
+            </div>
         </div>
     </main>
 
     <div id="edit-popup-overlay" class="popup-overlay">
+        <div class="popup-card">
+            <button id="popup-close-btn" class="popup-close-btn">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <h3>Edit Profile</h3>
+            <form id="profile-update-form">
+                <div class="edit-form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" placeholder="Enter your full name">
+                </div>
+                <div class="edit-form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email address">
+                </div>
+                <div class="edit-form-group">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Enter your phone number">
+                </div>
+                <div class="edit-form-group">
+                    <label for="address">Address</label>
+                    <textarea id="address" name="address" rows="3" placeholder="Enter your full address"></textarea>
+                </div>
+                <button type="submit" class="action-btn save-btn">
+                    <span class="material-symbols-outlined">save</span>
+                    Save Changes
+                </button>
+            </form>
         </div>
+    </div>
 
     <nav class="app-nav-bar">
-        </nav>
+        <a href="index.html" class="nav-item">
+            <span class="material-symbols-outlined nav-item-icon">home</span>
+            <span class="nav-item-text">Home</span>
+        </a>
+        <a href="cart.html" class="nav-item">
+            <span class="material-symbols-outlined nav-item-icon">shopping_cart</span>
+            <span class="nav-item-text">Cart</span>
+            <span id="cart-badge" class="badge">0</span>
+        </a>
+        <a href="orders.html" class="nav-item">
+            <span class="material-symbols-outlined nav-item-icon">receipt_long</span>
+            <span class="nav-item-text">Orders</span>
+        </a>
+        <a href="profile.html" class="nav-item active">
+            <span class="material-symbols-outlined nav-item-icon">person</span>
+            <span class="nav-item-text">Profile</span>
+        </a>
+    </nav>
 
     <script type="module">
-        // Your existing JavaScript code here. The event listener for sign-out will work without changes.
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut, updateEmail } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+        // =========================================================
+        // FIREBASE CONFIGURATION
+        // =========================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
+            authDomain: "banerjee-mart.firebaseapp.com",
+            projectId: "banerjee-mart",
+            storageBucket: "banerjee-mart.firebasestorage.app",
+            messagingSenderId: "183628570952",
+            appId: "1:183628570952:web:3028bb258001d004d9537d"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // =========================================================
+        // DOM ELEMENTS & LOGIC
+        // =========================================================
+        const profileCard = document.getElementById('profile-card');
+        const profileContent = document.getElementById('profile-content');
+        const skeletonPlaceholder = document.getElementById('skeleton-placeholder');
+        const profileActions = document.querySelector('.profile-actions');
+
+        const fullNameElement = document.getElementById('user-full-name');
+        const emailElement = document.getElementById('user-email');
+        const phoneNumberElement = document.getElementById('user-phone-number');
+        const addressElement = document.getElementById('user-address');
+        const adminBadge = document.getElementById('admin-badge');
+        const adminPanelCard = document.getElementById('admin-panel-card');
+        const signOutCard = document.getElementById('sign-out-card');
+        const editProfileCard = document.getElementById('edit-profile-card');
+        const editPopupOverlay = document.getElementById('edit-popup-overlay');
+        const popupCloseBtn = document.getElementById('popup-close-btn');
+        const profileUpdateForm = document.getElementById('profile-update-form');
+        const fullNameInput = document.getElementById('fullName');
+        const emailInput = document.getElementById('email');
+        const phoneNumberInput = document.getElementById('phoneNumber');
+        const addressInput = document.getElementById('address');
+        const cartBadge = document.getElementById('cart-badge');
+
+        let currentUser = null;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                fetchUserProfile(user);
+                updateCartBadge();
+            } else {
+                window.location.href = 'auth.html';
+            }
+        });
+        
+        function getCart() {
+            try {
+                return JSON.parse(localStorage.getItem('cart')) || {};
+            } catch (e) {
+                console.error("Failed to parse cart from localStorage", e);
+                return {};
+            }
+        }
+        
+        function updateCartBadge() {
+            const cart = getCart();
+            const totalItems = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+            cartBadge.textContent = totalItems;
+            if (totalItems > 0) {
+                cartBadge.classList.add('visible');
+            } else {
+                cartBadge.classList.remove('visible');
+            }
+        }
+
+        async function fetchUserProfile(user) {
+            // Show skeleton and hide content
+            skeletonPlaceholder.classList.remove('hidden');
+            profileContent.classList.add('hidden');
+            profileActions.classList.add('hidden');
+
+            try {
+                const userDocRef = doc(db, 'users', user.uid);
+                const userDoc = await getDoc(userDocRef);
+
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    
+                    // Display user data
+                    fullNameElement.textContent = userData.fullName || 'User';
+                    emailElement.textContent = user.email || 'No email provided';
+                    phoneNumberElement.textContent = userData.phoneNumber || 'N/A';
+                    addressElement.textContent = userData.address || 'N/A';
+
+                    // Populate pop-up form fields
+                    fullNameInput.value = userData.fullName || '';
+                    emailInput.value = user.email || '';
+                    phoneNumberInput.value = userData.phoneNumber || '';
+                    addressInput.value = userData.address || '';
+
+                    // Check if the user is an admin
+                    if (userData.role === 'admin') {
+                        adminBadge.classList.remove('hidden');
+                        adminPanelCard.classList.remove('hidden');
+                    } else {
+                        adminBadge.classList.add('hidden');
+                        adminPanelCard.classList.add('hidden');
+                    }
+                } else {
+                    fullNameElement.textContent = 'User profile not found';
+                    emailElement.textContent = user.email || 'N/A';
+                    phoneNumberElement.textContent = 'N/A';
+                    addressElement.textContent = 'N/A';
+                }
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+                alert("Failed to load profile data. Please try again later.");
+            } finally {
+                // Hide skeleton and show content
+                skeletonPlaceholder.classList.add('hidden');
+                profileContent.classList.remove('hidden');
+                profileActions.classList.remove('hidden');
+            }
+        }
+
+        // Event listeners
+        editProfileCard.addEventListener('click', (e) => {
+            e.preventDefault();
+            editPopupOverlay.style.display = 'flex';
+            editPopupOverlay.classList.add('show');
+        });
+
+        popupCloseBtn.addEventListener('click', () => {
+            editPopupOverlay.classList.remove('show');
+            setTimeout(() => {
+                editPopupOverlay.style.display = 'none';
+            }, 300);
+        });
+
+        editPopupOverlay.addEventListener('click', (e) => {
+            if (e.target === editPopupOverlay) {
+                editPopupOverlay.classList.remove('show');
+                setTimeout(() => {
+                    editPopupOverlay.style.display = 'none';
+                }, 300);
+            }
+        });
+
+        profileUpdateForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            const updatedUserData = {
+                fullName: fullNameInput.value,
+                phoneNumber: phoneNumberInput.value,
+                address: addressInput.value,
+            };
+
+            const newEmail = emailInput.value;
+            const oldEmail = currentUser.email;
+
+            try {
+                if (newEmail !== oldEmail) {
+                    await updateEmail(currentUser, newEmail);
+                }
+
+                const userDocRef = doc(db, 'users', currentUser.uid);
+                await updateDoc(userDocRef, updatedUserData);
+                
+                alert("Profile updated successfully!");
+                fetchUserProfile(currentUser); 
+                editPopupOverlay.classList.remove('show');
+                setTimeout(() => {
+                    editPopupOverlay.style.display = 'none';
+                }, 300);
+            } catch (error) {
+                console.error("Error updating profile:", error);
+                // Handle specific Firebase errors
+                let errorMessage = "Failed to update profile. Please try again.";
+                if (error.code === 'auth/requires-recent-login') {
+                    errorMessage = "Please sign in again to update your email. For your security, this action requires a recent login.";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = "The email address is not valid.";
+                } else if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = "This email is already in use by another account.";
+                }
+                alert(errorMessage);
+            }
+        });
+
+        signOutCard.addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                await signOut(auth);
+                window.location.href = 'auth.html';
+            } catch (error) {
+                console.error("Error signing out:", error);
+                alert("Failed to sign out. Please try again.");
+            }
+        });
     </script>
 </body>
 </html>
