@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banerjee Mart - My Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        :root {
+            /* ACCENT (Plum Place) */
+            --primary-color: #764BA2; /* Start of Accent Gradient */
+            --primary-variant: #667EEA; /* End of Accent Gradient */
+            
+            /* SURFACE / BACKGROUND / TEXT */
+            --secondary-color: #FFFFFF; /* White for Secondary/Surface */
+            --surface-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white for Glass Card background */
+            --on-primary-color: #FFFFFF; /* White text on accent */
+            --on-secondary-color: #161926; /* Dark Text */
+            --on-background-color: #161926; /* Dark Text */
+            --on-surface-color: #161926; /* Dark Text */
+            
+            /* UTILITY */
+            --outline-color: rgba(255, 255, 255, 0.2);
+            --shadow-color-light: rgba(0, 0, 0, 0.05);
+            --shadow-color-dark: rgba(0, 0, 0, 0.15);
+            --success-color: #388E3C;
+            --danger-color: #FF5252;
+            --admin-color: #5D40C0; /* Darker Indigo for admin badge contrast */
+            --skeleton-color: #e0e0e0;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            /* Keep existing light subtle background */
+            background-image: linear-gradient(135deg, #fce5e6, #ddeef8);
+            color: var(--on-background-color);
+            line-height: 1.6;
+        }
+        
+        /* Glassmorphism effect base */
+        .glass-card {
+            background: var(--surface-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.5); 
+        }
+        
+        /* Reusable Header - Using New Accent Gradient */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-variant));
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            color: var(--on-primary-color);
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .main-content {
+            padding: 20px;
+            padding-bottom: 90px;
+            min-height: calc(100vh - 110px);
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--on-background-color);
+            margin: 0 0 20px;
+            text-align: center;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 20px;
+            position: relative;
+        }
+
+        .profile-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .profile-icon {
+            font-size: 80px;
+            color: var(--primary-color);
+            font-variation-settings: 'FILL' 1;
+        }
+
+        .profile-info-section {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            width: 100%;
+            align-items: center;
+        }
+        
+        .profile-name-and-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--on-surface-color);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .profile-email {
+            font-size: 1rem;
+            color: #555555; 
+            margin: 0;
+            font-weight: 400;
+        }
+
+        .admin-badge {
+            background-color: var(--admin-color);
+            color: var(--on-primary-color);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .profile-details-section {
+            width: 100%;
+            border-top: 1px dashed rgba(22, 25, 38, 0.1);
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            text-align: left;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 1rem;
+            color: var(--on-background-color);
+        }
+        
+        .detail-item .material-symbols-outlined {
+            font-size: 24px;
+            color: var(--primary-color);
+            flex-shrink: 0;
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        .detail-text {
+            word-break: break-word;
+        }
+
+        /* Improved Profile Actions Grid */
+        .profile-actions {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .action-card {
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            box-shadow: 0 2px 5px var(--shadow-color-light);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            text-decoration: none;
+            color: var(--on-surface-color);
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.2s;
+        }
+
+        .action-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 10px var(--shadow-color-dark);
+            border-color: var(--primary-color);
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .action-card .material-symbols-outlined {
+            font-size: 48px;
+            margin-bottom: 4px;
+            transition: color 0.2s;
+            font-variation-settings: 'FILL' 1;
+        }
+
+        .action-card-text {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .edit-profile-card .material-symbols-outlined {
+            color: var(--primary-color);
+        }
+        .admin-card .material-symbols-outlined {
+            color: var(--admin-color);
+        }
+        .contact-card .material-symbols-outlined {
+            color: #6c757d;
+        }
+        .work-card .material-symbols-outlined {
+            color: var(--success-color);
+        }
+        .signout-card .material-symbols-outlined {
+            color: var(--danger-color);
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+
+        /* SKELETON LOADING */
+        .skeleton-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .skeleton {
+            animation: pulse 1.5s infinite ease-in-out;
+            background-color: var(--skeleton-color);
+            border-radius: 4px;
+        }
+
+        .skeleton-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+        }
+
+        .skeleton-text {
+            height: 1.2rem;
+            margin: 4px 0;
+        }
+
+        .skeleton-header-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .skeleton-name {
+            width: 150px;
+            height: 24px;
+            margin-bottom: 4px;
+        }
+        
+        .skeleton-email {
+            width: 200px;
+            height: 16px;
+        }
+
+        .skeleton-details-section {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 12px;
+            border-top: 1px dashed rgba(22, 25, 38, 0.1); 
+            padding-top: 20px;
+        }
+
+        .skeleton-detail-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        .skeleton-detail-icon {
+            width: 24px;
+            height: 24px;
+            background-color: var(--skeleton-color);
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .skeleton-detail-text {
+            height: 16px;
+            width: 100%;
+        }
+        
+        /* The key change is here: using a single class to control visibility */
+        .loading .profile-content,
+        .loading .profile-actions {
+            display: none;
+        }
+        
+        .loading .skeleton-placeholder {
+            display: flex;
+        }
+        
+        .skeleton-placeholder {
+            display: none; /* Initially hide the skeleton */
+        }
+
+        @keyframes pulse {
+            0% { background-color: var(--skeleton-color); }
+            50% { background-color: #cccccc; }
+            100% { background-color: var(--skeleton-color); }
+        }
+
+        /* Pop-up Styles */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .popup-card {
+            padding: 24px;
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.3s ease-out;
+        }
+
+        .popup-overlay.show .popup-card {
+            transform: scale(1);
+        }
+        
+        .popup-close-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--on-background-color);
+            font-variation-settings: 'FILL' 0;
+            transition: color 0.3s, font-variation-settings 0.3s;
+        }
+        
+        .popup-close-btn:hover {
+            color: var(--danger-color);
+            font-variation-settings: 'FILL' 1;
+        }
+
+        .popup-card h3 {
+            margin: 0 0 16px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--on-surface-color);
+            text-align: center;
+        }
+        
+        .edit-form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 16px;
+        }
+
+        .edit-form-group label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--on-surface-color);
+            margin-bottom: 8px;
+        }
+
+        .edit-form-group input,
+        .edit-form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: var(--on-surface-color);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            font-family: 'Roboto', sans-serif;
+            background: rgba(255, 255, 255, 0.4);
+        }
+        
+        .edit-form-group input:focus,
+        .edit-form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.2); /* Adjust shadow color for new primary */
+        }
+        
+        /* Style for read-only fields */
+        .edit-form-group input[readonly],
+        .edit-form-group textarea[readonly] {
+            background: rgba(240, 240, 240, 0.7);
+            border-color: rgba(220, 220, 220, 0.7);
+            cursor: not-allowed;
+            color: #555555;
+        }
+
+        /* Save button - Using Accent Gradient */
+        .save-btn {
+            width: 100%;
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-variant));
+            color: var(--on-primary-color);
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s, box-shadow 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .save-btn:hover {
+            opacity: 0.9;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Reusable Nav Bar */
+        .app-nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.9); 
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #888;
+            transition: color 0.2s;
+            position: relative;
+            padding: 5px;
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+
+        .nav-item-icon {
+            font-size: 1.5rem;
+            margin-bottom: 2px;
+            font-variation-settings: 'FILL' 0;
+        }
+        
+        .nav-item.active .nav-item-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+
+        .nav-item-text {
+            font-size: 0.6rem;
+            font-weight: 500;
+        }
+
+        .nav-item .badge {
+            position: absolute;
+            top: 2px;
+            right: 0px;
+            background-color: var(--danger-color);
+            color: var(--on-primary-color);
+            font-size: 0.5rem;
+            font-weight: 700;
+            padding: 2px 5px;
+            border-radius: 50%;
+            line-height: 1;
+            min-width: 16px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+        
+        .nav-item .badge.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        Banerjee Mart
+    </header>
+
+    <main class="main-content">
+        <h1 class="page-title">My Profile</h1>
+        
+        <div class="profile-card glass-card" id="profile-card">
+            <div id="skeleton-placeholder" class="skeleton-wrapper">
+                <div class="skeleton-header-section">
+                    <div class="skeleton skeleton-icon"></div>
+                    <div class="profile-info-section">
+                        <div class="skeleton skeleton-name"></div>
+                        <div class="skeleton skeleton-email"></div>
+                    </div>
+                </div>
+                <div class="skeleton-details-section">
+                    <div class="skeleton-detail-item">
+                        <div class="skeleton-detail-icon"></div>
+                        <div class="skeleton skeleton-detail-text" style="width: 150px;"></div>
+                    </div>
+                    <div class="skeleton-detail-item">
+                        <div class="skeleton-detail-icon"></div>
+                        <div class="skeleton skeleton-detail-text" style="width: 250px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="profile-content" class="hidden">
+                <div class="profile-header">
+                    <span class="material-symbols-outlined profile-icon">account_circle</span>
+                    <div class="profile-info-section">
+                        <div class="profile-name-and-badge">
+                            <span class="profile-name" id="user-full-name"></span>
+                            <span id="admin-badge" class="admin-badge hidden">Admin</span>
+                        </div>
+                        <p class="profile-email" id="user-email"></p>
+                    </div>
+                </div>
+
+                <div class="profile-details-section">
+                    <div class="detail-item">
+                        <span class="material-symbols-outlined">call</span>
+                        <span id="user-phone-number" class="detail-text"></span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="material-symbols-outlined">home</span>
+                        <span id="user-address" class="detail-text"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-actions">
+                <a href="#" class="action-card edit-profile-card" id="edit-profile-card">
+                    <span class="material-symbols-outlined">edit</span>
+                    <span class="action-card-text">Edit Profile</span>
+                </a>
+                <a href="admin.html" id="admin-panel-card" class="action-card admin-card hidden">
+                    <span class="material-symbols-outlined">shield</span>
+                    <span class="action-card-text">Admin Panel</span>
+                </a>
+                <a href="contact.html" id="contact-card" class="action-card contact-card">
+                    <span class="material-symbols-outlined">support_agent</span>
+                    <span class="action-card-text">Contact Us</span>
+                </a>
+                <a href="work.html" id="work-with-us-card" class="action-card work-card">
+                    <span class="material-symbols-outlined">work</span>
+                    <span class="action-card-text">Work With Us</span>
+                </a>
+                <a href="#" class="action-card signout-card" id="sign-out-card">
+                    <span class="material-symbols-outlined">logout</span>
+                    <span class="action-card-text">Sign Out</span>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <div id="edit-popup-overlay" class="popup-overlay">
+        <div class="popup-card glass-card">
+            <button id="popup-close-btn" class="popup-close-btn">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <h3>Edit Profile</h3>
+            <form id="profile-update-form">
+                <div class="edit-form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName">
+                </div>
+                <div class="edit-form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email">
+                </div>
+                <div class="edit-form-group">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="tel" id="phoneNumber" name="phoneNumber">
+                </div>
+                <div class="edit-form-group">
+                    <label for="address">Address (Fixed)</label>
+                    <textarea id="address" name="address" rows="3" readonly>Pakurtala</textarea>
+                </div>
+                <button type="submit" class="save-btn">
+                    <span class="material-symbols-outlined">save</span>
+                    Save Changes
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <nav class="app-nav-bar">
+        <a href="index.html" class="nav-item">
+            <span class="material-symbols-outlined nav-item-icon">home</span>
+            <span class="nav-item-text">Home</span>
+        </a>
+        <a href="cart.html" class="nav-item">
+            <span class="material-symbols-outlined nav-item-icon">shopping_cart</span>
+            <span class="nav-item-text">Cart</span>
+            <span id="cart-badge" class="badge">0</span>
+        </a>
+        <a href="orders.html" class="nav-item">
+            <span class="material-symbols-outlined nav-item-icon">receipt_long</span>
+            <span class="nav-item-text">Orders</span>
+        </a>
+        <a href="profile.html" class="nav-item active">
+            <span class="material-symbols-outlined nav-item-icon">person</span>
+            <span class="nav-item-text">Profile</span>
+        </a>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut, updateEmail } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+        // =========================================================
+        // FIREBASE CONFIGURATION
+        // =========================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbBiAnCjdEcv2PdTRGDuI_eDnTfnnK8g8",
+            authDomain: "banerjee-mart.firebaseapp.com",
+            projectId: "banerjee-mart",
+            storageBucket: "banerjee-mart.firebasestorage.app",
+            messagingSenderId: "183628570952",
+            appId: "1:183628570952:web:3028bb258001d004d9537d"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // =========================================================
+        // DOM ELEMENTS & LOGIC
+        // =========================================================
+        const profileCard = document.getElementById('profile-card');
+        const profileContent = document.getElementById('profile-content');
+        const skeletonPlaceholder = document.getElementById('skeleton-placeholder');
+        const profileActions = document.querySelector('.profile-actions');
+
+        const fullNameElement = document.getElementById('user-full-name');
+        const emailElement = document.getElementById('user-email');
+        const phoneNumberElement = document.getElementById('user-phone-number');
+        const addressElement = document.getElementById('user-address');
+        const adminBadge = document.getElementById('admin-badge');
+        const adminPanelCard = document.getElementById('admin-panel-card');
+        const signOutCard = document.getElementById('sign-out-card');
+        const editProfileCard = document.getElementById('edit-profile-card');
+        const editPopupOverlay = document.getElementById('edit-popup-overlay');
+        const popupCloseBtn = document.getElementById('popup-close-btn');
+        const profileUpdateForm = document.getElementById('profile-update-form');
+        const fullNameInput = document.getElementById('fullName');
+        const emailInput = document.getElementById('email');
+        const phoneNumberInput = document.getElementById('phoneNumber');
+        const addressInput = document.getElementById('address');
+        const cartBadge = document.getElementById('cart-badge');
+
+        let currentUser = null;
+        
+        // Fixed Address Constant as per user request
+        const FIXED_ADDRESS = 'Pakurtala';
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                fetchUserProfile(user);
+                updateCartBadge();
+            } else {
+                window.location.href = 'auth.html';
+            }
+        });
+        
+        function getCart() {
+            try {
+                return JSON.parse(localStorage.getItem('cart')) || {};
+            } catch (e) {
+                console.error("Failed to parse cart from localStorage", e);
+                return {};
+            }
+        }
+        
+        function updateCartBadge() {
+            const cart = getCart();
+            const totalItems = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+            cartBadge.textContent = totalItems;
+            if (totalItems > 0) {
+                cartBadge.classList.add('visible');
+            } else {
+                cartBadge.classList.remove('visible');
+            }
+        }
+
+        async function fetchUserProfile(user) {
+            // Show skeleton and hide content
+            skeletonPlaceholder.classList.remove('hidden');
+            profileContent.classList.add('hidden');
+            profileActions.classList.add('hidden');
+
+            try {
+                const userDocRef = doc(db, 'users', user.uid);
+                const userDoc = await getDoc(userDocRef);
+
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    
+                    // Display user data (Address is always the fixed one)
+                    fullNameElement.textContent = userData.fullName || 'User';
+                    emailElement.textContent = user.email || 'No email provided';
+                    phoneNumberElement.textContent = userData.phoneNumber || 'N/A';
+                    addressElement.textContent = FIXED_ADDRESS; // Always show fixed address
+
+                    // Populate pop-up form fields
+                    fullNameInput.value = userData.fullName || '';
+                    emailInput.value = user.email || '';
+                    phoneNumberInput.value = userData.phoneNumber || '';
+                    addressInput.value = FIXED_ADDRESS; // Always set fixed address
+
+                    // Check if the user is an admin
+                    if (userData.role === 'admin') {
+                        adminBadge.classList.remove('hidden');
+                        adminPanelCard.classList.remove('hidden');
+                    } else {
+                        adminBadge.classList.add('hidden');
+                        adminPanelCard.classList.add('hidden');
+                    }
+                } else {
+                    // Profile not found case
+                    fullNameElement.textContent = 'User profile not found';
+                    emailElement.textContent = user.email || 'N/A';
+                    phoneNumberElement.textContent = 'N/A';
+                    addressElement.textContent = FIXED_ADDRESS; // Still show fixed address
+                }
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+                alert("Failed to load profile data. Please try again later.");
+                addressElement.textContent = FIXED_ADDRESS; // Fallback
+            } finally {
+                // Hide skeleton and show content
+                skeletonPlaceholder.classList.add('hidden');
+                profileContent.classList.remove('hidden');
+                profileActions.classList.remove('hidden');
+            }
+        }
+
+        // Event listeners
+        editProfileCard.addEventListener('click', (e) => {
+            e.preventDefault();
+            editPopupOverlay.style.display = 'flex';
+            editPopupOverlay.classList.add('show');
+        });
+
+        popupCloseBtn.addEventListener('click', () => {
+            editPopupOverlay.classList.remove('show');
+            setTimeout(() => {
+                editPopupOverlay.style.display = 'none';
+            }, 300);
+        });
+
+        editPopupOverlay.addEventListener('click', (e) => {
+            if (e.target === editPopupOverlay) {
+                editPopupOverlay.classList.remove('show');
+                setTimeout(() => {
+                    editPopupOverlay.style.display = 'none';
+                }, 300);
+            }
+        });
+
+        profileUpdateForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            // Updated User Data uses the fixed address
+            const updatedUserData = {
+                fullName: fullNameInput.value,
+                phoneNumber: phoneNumberInput.value,
+                address: FIXED_ADDRESS, // Address is fixed to Pakurtala
+            };
+
+            const newEmail = emailInput.value;
+            const oldEmail = currentUser.email;
+
+            try {
+                // Only update email if it has changed
+                if (newEmail !== oldEmail) {
+                    // Note: Firebase requires re-authentication for this action. 
+                    // If this fails, the alert provides the necessary feedback.
+                    await updateEmail(currentUser, newEmail); 
+                }
+
+                const userDocRef = doc(db, 'users', currentUser.uid);
+                await updateDoc(userDocRef, updatedUserData);
+                
+                alert("Profile updated successfully!");
+                // Re-fetch to ensure all displayed data is current
+                fetchUserProfile(currentUser); 
+                editPopupOverlay.classList.remove('show');
+                setTimeout(() => {
+                    editPopupOverlay.style.display = 'none';
+                }, 300);
+            } catch (error) {
+                console.error("Error updating profile:", error);
+                // Handle specific Firebase errors
+                let errorMessage = "Failed to update profile. Please try again.";
+                if (error.code === 'auth/requires-recent-login') {
+                    errorMessage = "Please sign in again to update your email. For your security, this action requires a recent login.";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = "The email address is not valid.";
+                } else if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = "This email is already in use by another account.";
+                }
+                alert(errorMessage);
+            }
+        });
+
+        signOutCard.addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                await signOut(auth);
+                window.location.href = 'auth.html';
+            } catch (error) {
+                console.error("Error signing out:", error);
+                alert("Failed to sign out. Please try again.");
+            }
+        });
+    </script>
+</body>
+</html>
